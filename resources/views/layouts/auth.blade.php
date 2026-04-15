@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title') — PT Ecogreen Oleochemicals</title>
+    @vite(['resources/css/app.css'])
+    <style>
+        .bg-gradient-eco {
+            background: linear-gradient(135deg, #f0fdf4 0%, #f9fafb 40%, #f9fafb 60%, #ecfdf5 100%);
+        }
+        .green-blob-left {
+            position: absolute;
+            top: 10%;
+            left: -5%;
+            width: 400px;
+            height: 500px;
+            background: radial-gradient(ellipse, rgba(187, 247, 208, 0.4) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .green-blob-right {
+            position: absolute;
+            top: 5%;
+            right: -5%;
+            width: 450px;
+            height: 600px;
+            background: radial-gradient(ellipse, rgba(187, 247, 208, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .green-blob-bottom {
+            position: absolute;
+            bottom: 10%;
+            right: 10%;
+            width: 350px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(220, 252, 231, 0.5) 0%, transparent 70%);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50">
+
+    <!-- Navbar -->
+    <nav class="bg-green-900 px-10 py-3 flex items-center justify-between relative z-50">
+        <div class="flex items-center gap-3">
+            <!-- Logo + Company Name -->
+            <a href="/" class="flex items-center gap-3">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">
+                <span class="text-white font-semibold text-sm hidden sm:inline">PT Ecogreen Oleochemicals</span>
+            </a>
+        </div>
+        <div class="flex items-center gap-3">
+            <!-- Help Icon -->
+            <a href="#" class="text-white hover:text-green-200 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <path d="M12 17h.01"/>
+                </svg>
+            </a>
+            @yield('nav-right')
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 relative overflow-hidden bg-gradient-eco">
+        <!-- Decorative blobs -->
+        <div class="green-blob-left"></div>
+        <div class="green-blob-right"></div>
+        <div class="green-blob-bottom"></div>
+
+        <div class="relative z-10 flex items-center justify-center py-12 px-4">
+            @yield('content')
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-900 text-white py-8 px-10 relative z-50">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div>
+                <h3 class="font-bold text-lg">@yield('footer-title', 'PT Ecogreen Oleochemicals')</h3>
+                <p class="text-green-300 text-sm mt-1">© 2024 PT Ecogreen Oleochemicals. All rights reserved.</p>
+            </div>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-green-200">
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                <a href="#" class="hover:text-white transition-colors">Sustainability Report</a>
+                <a href="#" class="hover:text-white transition-colors">Contact Support</a>
+            </div>
+        </div>
+    </footer>
+
+    @yield('scripts')
+</body>
+</html>
