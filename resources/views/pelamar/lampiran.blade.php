@@ -131,7 +131,10 @@
 
 <!-- Modal Porto -->
 <div id="modal-porto" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
-    <div class="bg-white rounded-2xl w-full max-w-lg mx-4 p-8">
+    <div class="bg-white rounded-2xl w-full max-w-lg mx-4 p-8 relative">
+        <button class="modal-close-porto absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
         <h2 class="text-lg font-bold text-gray-900 mb-6">Tambah Portofolio</h2>
         <div class="space-y-4">
             <div>
@@ -217,6 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('modal-porto');
     document.getElementById('btn-tambah-porto').addEventListener('click', () => modal.classList.remove('hidden'));
     document.getElementById('btn-porto-batal').addEventListener('click', () => modal.classList.add('hidden'));
+    document.querySelector('.modal-close-porto').addEventListener('click', () => modal.classList.add('hidden'));
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
 
     document.querySelectorAll('input[name="porto-type"]').forEach(r => {

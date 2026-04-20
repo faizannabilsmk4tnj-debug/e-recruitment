@@ -13,6 +13,22 @@ Route::get('/', function () {
     return view('landing');
 });
 
+Route::get('/lowongan', function () {
+    return view('lowongan');
+});
+
+Route::get('/pelamar/lowongan', function () {
+    return view('lowongan', ['layout' => 'layouts.pelamar-public']);
+});
+
+Route::get('/lowongan/{id}', function ($id) {
+    return view('detail-lowongan');
+});
+
+Route::get('/pelamar/lowongan/{id}', function ($id) {
+    return view('detail-lowongan', ['layout' => 'layouts.pelamar-public']);
+});
+
 // ===== AUTH =====
 Route::get('/login', function () {
     return view('auth.login');

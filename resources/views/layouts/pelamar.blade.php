@@ -40,19 +40,10 @@
             </a>
         </div>
 
-        <!-- Center-Right: Nav Links -->
-        <div class="flex items-center gap-8">
-            <a href="/" class="text-green-200 hover:text-white text-sm transition-colors">Beranda</a>
-            <a href="/#lowongan" class="text-green-200 hover:text-white text-sm transition-colors">Lowongan</a>
-            <a href="/" class="text-green-200 hover:text-white text-sm transition-colors">Tentang Kami</a>
-            <a href="/pelamar/profil" class="text-white font-semibold text-sm">Profil Saya</a>
-
-            <!-- Notification Bell -->
-            <a href="/pelamar/dashboard" class="text-green-200 hover:text-white transition-colors relative">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
-                </svg>
-            </a>
+        <!-- Nav Links -->
+        <div class="flex items-center gap-6">
+            <a href="/pelamar/lowongan" class="text-green-300 hover:text-white text-sm transition-colors">Lowongan</a>
+            <a href="/pelamar/profil" class="text-green-300 hover:text-white text-sm transition-colors">Profil Saya</a>
 
             <!-- Avatar -->
             <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-green-900 font-bold text-sm ring-2 ring-green-300 overflow-hidden" id="user-avatar">
