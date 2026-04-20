@@ -17,59 +17,81 @@
     </a>
 </div>
 
-<!-- Education Cards -->
-<div class="grid grid-cols-2 gap-5" id="education-list">
-    <!-- Card 1 -->
-    <div class="bg-white rounded-xl border border-gray-200 p-6" data-id="1">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-11 h-11 bg-green-50 rounded-xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
-                </svg>
-            </div>
-            <div class="flex gap-1.5">
-                <button class="btn-edit w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-green-700 hover:bg-green-50 transition-colors" data-id="1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-                </button>
-                <button class="btn-hapus w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors" data-id="1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                </button>
-            </div>
-        </div>
-        <span class="text-xs font-bold text-green-700 uppercase tracking-wider">S1 Teknik Kimia</span>
-        <h3 class="text-lg font-bold text-gray-900 mt-1">Universitas Indonesia</h3>
-        <p class="text-sm text-gray-500 mt-1">Agustus 2018 - Juli 2022</p>
-        <div class="flex items-center gap-1.5 mt-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-            <span class="text-xs text-green-600 font-medium">Ijazah Terverifikasi</span>
-        </div>
-    </div>
-
-    <!-- Card 2 -->
-    <div class="bg-white rounded-xl border border-gray-200 p-6" data-id="2">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-                </svg>
-            </div>
-            <div class="flex gap-1.5">
-                <button class="btn-edit w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-green-700 hover:bg-green-50 transition-colors" data-id="2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-                </button>
-                <button class="btn-hapus w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors" data-id="2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                </button>
-            </div>
-        </div>
-        <span class="text-xs font-bold text-blue-700 uppercase tracking-wider">SMA - IPA</span>
-        <h3 class="text-lg font-bold text-gray-900 mt-1">SMA Negeri 1 Jakarta</h3>
-        <p class="text-sm text-gray-500 mt-1">Juli 2015 - Mei 2018</p>
-        <div class="flex items-center gap-1.5 mt-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-            <span class="text-xs text-green-600 font-medium">Ijazah Terverifikasi</span>
-        </div>
-    </div>
+<!-- Education Table -->
+<div class="bg-white rounded-xl border border-gray-200 overflow-hidden" id="education-list">
+    <table class="w-full">
+        <thead>
+            <tr class="bg-gray-50">
+                <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Institusi</th>
+                <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Tingkat / Jurusan</th>
+                <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Periode</th>
+                <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Status</th>
+                <th class="text-right text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="border-t border-gray-100 hover:bg-green-50/30 transition-colors" data-id="1">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+                        </div>
+                        <p class="font-semibold text-sm text-gray-900">Universitas Indonesia</p>
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <span class="text-[10px] font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded uppercase">S1 Teknik Kimia</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500">2018 - 2022</td>
+                <td class="px-6 py-4">
+                    <span class="text-xs text-green-600 font-medium flex items-center gap-1 w-fit">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                        Terverifikasi
+                    </span>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex gap-1 justify-end">
+                        <button class="btn-edit w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-green-700 hover:bg-green-50 transition-colors" data-id="1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                        </button>
+                        <button class="btn-hapus w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors" data-id="1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <tr class="border-t border-gray-100 hover:bg-green-50/30 transition-colors" data-id="2">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="14" x="3" y="7" rx="2"/><path d="M12 3v4"/></svg>
+                        </div>
+                        <p class="font-semibold text-sm text-gray-900">SMA Negeri 1 Jakarta</p>
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    <span class="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded uppercase">SMA - IPA</span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500">2015 - 2018</td>
+                <td class="px-6 py-4">
+                    <span class="text-xs text-green-600 font-medium flex items-center gap-1 w-fit">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                        Terverifikasi
+                    </span>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex gap-1 justify-end">
+                        <button class="btn-edit w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-green-700 hover:bg-green-50 transition-colors" data-id="2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                        </button>
+                        <button class="btn-hapus w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors" data-id="2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <!-- Empty State -->

@@ -279,119 +279,42 @@
     </div>
 </div>
 
-<!-- ========== ONBOARDING TUTORIAL ========== -->
-<div id="onboarding-overlay" class="fixed inset-0 bg-black/60 z-[70] flex items-center justify-center hidden">
-    <div class="bg-white rounded-2xl w-full max-w-lg mx-4 overflow-hidden shadow-2xl">
-        <!-- Progress bar -->
-        <div class="h-1.5 bg-gray-100">
-            <div id="onboarding-progress" class="h-1.5 bg-green-600 rounded-full transition-all duration-500" style="width: 12.5%"></div>
+<!-- ========== ONBOARDING GUIDED TOUR ========== -->
+<div id="tour-overlay" class="fixed inset-0 z-[70] hidden" style="pointer-events:none;">
+    <!-- Dark backdrop with hole -->
+    <svg id="tour-backdrop" class="absolute inset-0 w-full h-full" style="pointer-events:all;">
+        <defs>
+            <mask id="tour-mask">
+                <rect width="100%" height="100%" fill="white"/>
+                <rect id="tour-hole" rx="12" fill="black"/>
+            </mask>
+        </defs>
+        <rect width="100%" height="100%" fill="rgba(0,0,0,0.6)" mask="url(#tour-mask)"/>
+    </svg>
+
+    <!-- Tooltip card -->
+    <div id="tour-tooltip" class="absolute bg-white rounded-xl shadow-2xl border border-gray-200 w-80 p-5 transition-all duration-300" style="pointer-events:all;">
+        <!-- Progress -->
+        <div class="flex items-center justify-between mb-3">
+            <span id="tour-step-label" class="text-[10px] font-bold text-green-700 uppercase tracking-widest"></span>
+            <button id="tour-skip" class="text-[10px] text-gray-400 hover:text-gray-600 transition-colors uppercase tracking-wider font-medium">Lewati</button>
         </div>
-
-        <div class="p-8">
-            <!-- Step indicator -->
-            <div class="flex items-center justify-between mb-6">
-                <span id="onboarding-step-label" class="text-xs font-bold text-green-700 uppercase tracking-widest">Langkah 1 dari 8</span>
-                <button id="onboarding-skip" class="text-xs text-gray-400 hover:text-gray-600 transition-colors">Lewati Tutorial</button>
-            </div>
-
-            <!-- Steps Content -->
-            <div class="onboarding-step" data-step="1">
-                <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900 text-center mb-2">Selamat Datang di Portal Karir!</h2>
-                <p class="text-sm text-gray-500 text-center leading-relaxed">Kami akan memandu Anda langkah demi langkah untuk melengkapi profil dan mulai melamar pekerjaan di PT Ecogreen Oleochemicals.</p>
-            </div>
-
-            <div class="onboarding-step hidden" data-step="2">
-                <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900 text-center mb-2">1. Lengkapi Profil</h2>
-                <p class="text-sm text-gray-500 text-center leading-relaxed">Mulai dengan mengisi data pribadi Anda: nama lengkap, NIK, nomor telepon, email, tempat tanggal lahir, status pernikahan, dan alamat. Upload juga foto profil Anda.</p>
-                <div class="mt-4 bg-gray-50 rounded-lg p-3 text-xs text-gray-500 text-center">
-                    <span class="font-semibold text-gray-700">Menu:</span> Sidebar → Profil
-                </div>
-            </div>
-
-            <div class="onboarding-step hidden" data-step="3">
-                <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900 text-center mb-2">2. Pengalaman Kerja</h2>
-                <p class="text-sm text-gray-500 text-center leading-relaxed">Tambahkan riwayat pekerjaan Anda: posisi, nama perusahaan, industri, jenis pekerjaan, lokasi, periode kerja, dan deskripsi tugas. Bisa lebih dari satu pengalaman.</p>
-                <div class="mt-4 bg-gray-50 rounded-lg p-3 text-xs text-gray-500 text-center">
-                    <span class="font-semibold text-gray-700">Menu:</span> Sidebar → Pengalaman Kerja → Tambah
-                </div>
-            </div>
-
-            <div class="onboarding-step hidden" data-step="4">
-                <div class="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 6 3 6 3s3 0 6-3v-5"/></svg>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900 text-center mb-2">3. Pendidikan</h2>
-                <p class="text-sm text-gray-500 text-center leading-relaxed">Isi riwayat pendidikan Anda: nama sekolah/universitas, tingkat pendidikan, jurusan, nomor ijazah, IPK, dan upload dokumen ijazah serta SKHU.</p>
-                <div class="mt-4 bg-gray-50 rounded-lg p-3 text-xs text-gray-500 text-center">
-                    <span class="font-semibold text-gray-700">Menu:</span> Sidebar → Pendidikan → Tambah
-                </div>
-            </div>
-
-            <div class="onboarding-step hidden" data-step="5">
-                <div class="w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-teal-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900 text-center mb-2">4. Pengalaman Organisasi</h2>
-                <p class="text-sm text-gray-500 text-center leading-relaxed">Punya pengalaman organisasi? Tambahkan di sini: jabatan, nama organisasi, periode aktif, dan deskripsi kegiatan. Ini akan menjadi nilai tambah di mata HRD.</p>
-                <div class="mt-4 bg-gray-50 rounded-lg p-3 text-xs text-gray-500 text-center">
-                    <span class="font-semibold text-gray-700">Menu:</span> Sidebar → Pengalaman Organisasi → Tambah
-                </div>
-            </div>
-
-            <div class="onboarding-step hidden" data-step="6">
-                <div class="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-rose-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900 text-center mb-2">5. Lampiran & Sertifikat</h2>
-                <p class="text-sm text-gray-500 text-center leading-relaxed">Upload dokumen pendukung seperti sertifikat pelatihan, TOEFL/IELTS, portofolio, atau dokumen lain yang relevan. Format PDF, JPG, atau PNG.</p>
-                <div class="mt-4 bg-gray-50 rounded-lg p-3 text-xs text-gray-500 text-center">
-                    <span class="font-semibold text-gray-700">Menu:</span> Sidebar → Lampiran
-                </div>
-            </div>
-
-            <div class="onboarding-step hidden" data-step="7">
-                <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900 text-center mb-2">6. Buat CV Anda</h2>
-                <p class="text-sm text-gray-500 text-center leading-relaxed">Setelah semua data terisi, buka menu CV Saya untuk memilih template CV profesional. CV akan otomatis terisi dari data yang sudah Anda lengkapi. Download dalam format PDF.</p>
-                <div class="mt-4 bg-gray-50 rounded-lg p-3 text-xs text-gray-500 text-center">
-                    <span class="font-semibold text-gray-700">Menu:</span> Sidebar → CV Saya
-                </div>
-            </div>
-
-            <div class="onboarding-step hidden" data-step="8">
-                <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                </div>
-                <h2 class="text-xl font-bold text-gray-900 text-center mb-2">Siap Melamar!</h2>
-                <p class="text-sm text-gray-500 text-center leading-relaxed">Profil Anda sudah lengkap! Sekarang buka halaman <strong>Lowongan</strong> untuk melihat posisi yang tersedia, lalu klik <strong>Lamar Sekarang</strong>. Pantau status lamaran Anda di menu <strong>Status Lamaran</strong>.</p>
-                <div class="mt-4 bg-green-50 rounded-lg p-3 text-xs text-green-700 text-center font-medium">
-                    Selamat memulai karir berkelanjutan Anda!
-                </div>
-            </div>
-
-            <!-- Navigation Buttons -->
-            <div class="flex items-center justify-between mt-8">
-                <button id="onboarding-prev" class="text-sm text-gray-400 hover:text-gray-700 transition-colors hidden flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-                    Sebelumnya
-                </button>
-                <div></div>
-                <button id="onboarding-next" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-2">
-                    Selanjutnya
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-                </button>
-            </div>
+        <div class="h-1 bg-gray-100 rounded-full mb-4">
+            <div id="tour-progress" class="h-1 bg-green-600 rounded-full transition-all duration-500"></div>
+        </div>
+        <h3 id="tour-title" class="font-bold text-gray-900 mb-1.5"></h3>
+        <p id="tour-desc" class="text-sm text-gray-500 leading-relaxed"></p>
+        <!-- Nav -->
+        <div class="flex items-center justify-between mt-5">
+            <button id="tour-prev" class="text-sm text-gray-400 hover:text-gray-700 transition-colors flex items-center gap-1 hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+                Kembali
+            </button>
+            <div></div>
+            <button id="tour-next" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-colors flex items-center gap-1">
+                Lanjut
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
         </div>
     </div>
 </div>
@@ -402,59 +325,147 @@
 <script src="{{ asset('js/pelamar/dashboard.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const overlay = document.getElementById('onboarding-overlay');
-    const steps = document.querySelectorAll('.onboarding-step');
-    const progress = document.getElementById('onboarding-progress');
-    const stepLabel = document.getElementById('onboarding-step-label');
-    const btnNext = document.getElementById('onboarding-next');
-    const btnPrev = document.getElementById('onboarding-prev');
-    const btnSkip = document.getElementById('onboarding-skip');
-    const totalSteps = steps.length;
-    let current = 1;
+    if (sessionStorage.getItem('tour-done')) return;
 
-    // Show tutorial only once (check sessionStorage)
-    if (!sessionStorage.getItem('onboarding-done')) {
-        setTimeout(() => overlay.classList.remove('hidden'), 800);
+    const steps = [
+        {
+            target: '#greeting-card',
+            title: 'Selamat Datang!',
+            desc: 'Ini adalah Dashboard Anda. Bar hijau ini menunjukkan progres kelengkapan profil. Klik untuk langsung ke halaman Profil dan mulai melengkapi data Anda.',
+            pos: 'bottom'
+        },
+        {
+            target: '#sidebar-profil',
+            title: '1. Lengkapi Profil',
+            desc: 'Mulai dari sini! Isi data pribadi: nama, NIK, telepon, email, tempat tanggal lahir, alamat, dan upload foto profil Anda.',
+            pos: 'right'
+        },
+        {
+            target: '#sidebar-pengalaman',
+            title: '2. Pengalaman Kerja',
+            desc: 'Tambahkan riwayat pekerjaan Anda: posisi, perusahaan, industri, lokasi, periode kerja, dan deskripsi tugas.',
+            pos: 'right'
+        },
+        {
+            target: '#sidebar-pendidikan',
+            title: '3. Pendidikan',
+            desc: 'Isi riwayat pendidikan: sekolah/universitas, jurusan, IPK, dan upload ijazah serta SKHU.',
+            pos: 'right'
+        },
+        {
+            target: '#sidebar-organisasi',
+            title: '4. Pengalaman Organisasi',
+            desc: 'Tambahkan pengalaman organisasi sebagai nilai tambah: jabatan, nama organisasi, dan deskripsi kegiatan.',
+            pos: 'right'
+        },
+        {
+            target: '#sidebar-lampiran',
+            title: '5. Lampiran & Sertifikat',
+            desc: 'Upload dokumen pendukung: sertifikat pelatihan, TOEFL/IELTS, portofolio, dan dokumen lain yang relevan.',
+            pos: 'right'
+        },
+        {
+            target: '#sidebar-cv',
+            title: '6. Buat CV Anda',
+            desc: 'Pilih template CV profesional. Data dari profil Anda otomatis terisi di CV. Tinggal pilih desain dan download PDF.',
+            pos: 'right'
+        },
+        {
+            target: '#sidebar-status',
+            title: '7. Pantau Status Lamaran',
+            desc: 'Setelah melamar, pantau perkembangan lamaran Anda di sini. Lihat timeline dari terkirim hingga keputusan akhir.',
+            pos: 'right'
+        }
+    ];
+
+    const overlay = document.getElementById('tour-overlay');
+    const hole = document.getElementById('tour-hole');
+    const tooltip = document.getElementById('tour-tooltip');
+    const titleEl = document.getElementById('tour-title');
+    const descEl = document.getElementById('tour-desc');
+    const labelEl = document.getElementById('tour-step-label');
+    const progressEl = document.getElementById('tour-progress');
+    const btnNext = document.getElementById('tour-next');
+    const btnPrev = document.getElementById('tour-prev');
+    const btnSkip = document.getElementById('tour-skip');
+    let current = 0;
+    const pad = 8;
+
+    function showStep(i) {
+        const step = steps[i];
+        const el = document.querySelector(step.target);
+        if (!el) return;
+
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        setTimeout(() => {
+            const rect = el.getBoundingClientRect();
+
+            // Spotlight hole
+            hole.setAttribute('x', rect.left - pad);
+            hole.setAttribute('y', rect.top - pad);
+            hole.setAttribute('width', rect.width + pad * 2);
+            hole.setAttribute('height', rect.height + pad * 2);
+
+            // Highlight target
+            el.style.position = 'relative';
+            el.style.zIndex = '71';
+            el.style.pointerEvents = 'none';
+
+            // Position tooltip
+            if (step.pos === 'right') {
+                tooltip.style.left = (rect.right + 16) + 'px';
+                tooltip.style.top = Math.max(8, rect.top - 10) + 'px';
+            } else if (step.pos === 'bottom') {
+                tooltip.style.left = rect.left + 'px';
+                tooltip.style.top = (rect.bottom + 16) + 'px';
+            }
+
+            // Content
+            titleEl.textContent = step.title;
+            descEl.textContent = step.desc;
+            labelEl.textContent = `Langkah ${i + 1} dari ${steps.length}`;
+            progressEl.style.width = ((i + 1) / steps.length * 100) + '%';
+
+            btnPrev.classList.toggle('hidden', i === 0);
+            if (i === steps.length - 1) {
+                btnNext.innerHTML = 'Mulai! <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+            } else {
+                btnNext.innerHTML = 'Lanjut <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>';
+            }
+        }, 300);
     }
 
-    function showStep(n) {
-        steps.forEach(s => s.classList.add('hidden'));
-        document.querySelector(`[data-step="${n}"]`).classList.remove('hidden');
-
-        progress.style.width = ((n / totalSteps) * 100) + '%';
-        stepLabel.textContent = `Langkah ${n} dari ${totalSteps}`;
-
-        btnPrev.classList.toggle('hidden', n === 1);
-
-        if (n === totalSteps) {
-            btnNext.innerHTML = 'Mulai Sekarang <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
-        } else {
-            btnNext.innerHTML = 'Selanjutnya <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>';
-        }
+    function clearHighlights() {
+        steps.forEach(s => {
+            const el = document.querySelector(s.target);
+            if (el) { el.style.position = ''; el.style.zIndex = ''; el.style.pointerEvents = ''; }
+        });
     }
 
-    btnNext.addEventListener('click', function () {
-        if (current < totalSteps) {
-            current++;
-            showStep(current);
-        } else {
-            closeTutorial();
-        }
-    });
-
-    btnPrev.addEventListener('click', function () {
-        if (current > 1) {
-            current--;
-            showStep(current);
-        }
-    });
-
-    btnSkip.addEventListener('click', closeTutorial);
-
-    function closeTutorial() {
+    function closeTour() {
+        clearHighlights();
         overlay.classList.add('hidden');
-        sessionStorage.setItem('onboarding-done', '1');
+        sessionStorage.setItem('tour-done', '1');
     }
+
+    btnNext.addEventListener('click', () => {
+        clearHighlights();
+        if (current < steps.length - 1) { current++; showStep(current); }
+        else closeTour();
+    });
+
+    btnPrev.addEventListener('click', () => {
+        if (current > 0) { clearHighlights(); current--; showStep(current); }
+    });
+
+    btnSkip.addEventListener('click', closeTour);
+
+    // Start tour
+    setTimeout(() => {
+        overlay.classList.remove('hidden');
+        showStep(0);
+    }, 1000);
 });
 </script>
 @endsection

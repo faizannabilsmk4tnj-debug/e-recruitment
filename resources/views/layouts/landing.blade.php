@@ -21,7 +21,7 @@
         <div class="flex items-center gap-6">
             <a href="/" class="text-sm transition-colors @yield('nav-beranda', 'text-green-300 hover:text-white')">Beranda</a>
             <a href="/lowongan" class="text-sm transition-colors @yield('nav-lowongan', 'text-green-300 hover:text-white')">Lowongan</a>
-            <a href="#" class="text-sm transition-colors text-green-300 hover:text-white">Tentang Kami</a>
+            <a href="/tentang-kami" class="text-sm transition-colors text-green-300 hover:text-white">Tentang Kami</a>
             <a href="/register" class="border border-white text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-white hover:text-green-900 transition-colors">
                 Daftar
             </a>

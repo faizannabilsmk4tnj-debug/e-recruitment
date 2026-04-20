@@ -154,10 +154,17 @@
             <div class="bg-white rounded-xl border border-gray-200 p-6">
                 <h3 class="font-bold text-gray-900 mb-2">Tindakan Cepat</h3>
                 <p class="text-sm text-gray-500 mb-5">Tertarik dengan posisi ini? Lamar sekarang sebelum kuota penuh.</p>
+                @if(isset($layout))
+                <a href="/pelamar/review-lamaran/1" class="flex items-center justify-center gap-2 w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Lamar Sekarang
+                </a>
+                @else
                 <button data-auth-required class="flex items-center justify-center gap-2 w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors mb-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     Lamar Sekarang
                 </button>
+                @endif
                 <button data-auth-required class="flex items-center justify-center gap-2 w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg text-sm hover:bg-gray-50 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
                     Simpan Pekerjaan

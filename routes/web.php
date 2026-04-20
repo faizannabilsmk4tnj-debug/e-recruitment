@@ -13,6 +13,10 @@ Route::get('/', function () {
     return view('landing');
 });
 
+Route::get('/tentang-kami', function () {
+    return view('tentang-kami');
+});
+
 Route::get('/lowongan', function () {
     return view('lowongan');
 });
@@ -27,6 +31,14 @@ Route::get('/lowongan/{id}', function ($id) {
 
 Route::get('/pelamar/lowongan/{id}', function ($id) {
     return view('detail-lowongan', ['layout' => 'layouts.pelamar-public']);
+});
+
+Route::get('/pelamar/review-lamaran/{id}', function ($id) {
+    return view('pelamar.review-lamaran');
+});
+
+Route::get('/pelamar/lamaran-terkirim', function () {
+    return view('pelamar.lamaran-terkirim');
 });
 
 // ===== AUTH =====
@@ -87,3 +99,8 @@ Route::get('/pelamar/cv', function () {
 Route::get('/pelamar/status-lamaran', function () {
     return view('pelamar.status-lamaran');
 });
+
+// ===== HR ROUTES =====
+Route::get('/hr/login', function () { return view('hr.login'); });
+Route::get('/hr/setting', function () { return view('hr.setting'); });
+Route::get('/hr/tim', function () { return view('hr.tim'); });

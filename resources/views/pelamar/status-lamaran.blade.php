@@ -156,13 +156,13 @@
 
             <!-- Action Buttons -->
             <div class="mt-8 space-y-2.5">
-                <button class="w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">
+                <button class="btn-konfirmasi w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">
                     Konfirmasi Kehadiran
                 </button>
-                <button class="btn-tarik w-full border border-red-300 text-red-600 font-semibold py-2.5 rounded-lg text-sm hover:bg-red-50 transition-colors">
+                <button disabled class="w-full border border-gray-200 text-gray-400 font-semibold py-2.5 rounded-lg text-sm cursor-not-allowed bg-gray-50">
                     Tarik Lamaran
                 </button>
-                <p class="text-xs text-gray-400 text-center">Penarikan lamaran bersifat permanen.</p>
+                <p class="text-xs text-gray-400 text-center">Lamaran tidak dapat ditarik setelah tahap seleksi berkas.</p>
             </div>
         </div>
 
@@ -236,6 +236,107 @@
 
 </div>
 
+<!-- ========== MODAL: Tarik Lamaran ========== -->
+<div id="modal-tarik" class="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl w-full max-w-sm mx-4 p-8 text-center relative">
+        <button onclick="document.getElementById('modal-tarik').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" x2="12" y1="8" y2="12"/>
+                <line x1="12" x2="12.01" y1="16" y2="16"/>
+            </svg>
+        </div>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Tarik Lamaran?</h2>
+        <p class="text-sm text-gray-500 mb-2">Apakah Anda yakin ingin menarik lamaran ini?</p>
+        <div class="bg-red-50 rounded-lg p-3 mb-6">
+            <p class="text-xs text-red-600 font-medium">Tindakan ini bersifat PERMANEN dan tidak dapat dibatalkan. Anda tidak akan bisa melamar kembali untuk posisi yang sama.</p>
+        </div>
+        <div class="space-y-2.5">
+            <button id="btn-confirm-tarik" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">
+                Ya, Tarik Lamaran
+            </button>
+            <button onclick="document.getElementById('modal-tarik').classList.add('hidden')" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">
+                Batal
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ========== MODAL: Konfirmasi Kehadiran ========== -->
+<div id="modal-hadir" class="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl w-full max-w-md mx-4 overflow-hidden relative">
+        <button onclick="document.getElementById('modal-hadir').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+
+        <!-- Header -->
+        <div class="bg-green-800 px-6 py-5 text-white">
+            <p class="text-xs uppercase tracking-widest text-green-300 font-medium mb-1">Undangan Interview</p>
+            <h2 class="text-lg font-bold">Process Engineer — PT Ecogreen</h2>
+        </div>
+
+        <!-- Content: default state -->
+        <div id="hadir-form" class="p-6">
+            <div class="space-y-4 mb-6">
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tanggal & Waktu</p>
+                        <p class="text-sm font-semibold text-gray-900">20 Oktober 2023 • 13:00 WIB</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Lokasi</p>
+                        <p class="text-sm font-semibold text-gray-900">Kantor Pusat Ecogreen, Kabil, Batam</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Interviewer</p>
+                        <p class="text-sm font-semibold text-gray-900">Ibu Sarah — HR Manager</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 rounded-lg p-3 mb-6">
+                <p class="text-xs text-amber-700 font-medium flex items-start gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                    Harap membawa identitas diri (KTP) dan CV hardcopy. Datang 15 menit sebelum jadwal.
+                </p>
+            </div>
+
+            <div class="space-y-2.5">
+                <button id="btn-confirm-hadir" class="w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    Konfirmasi Kehadiran
+                </button>
+                <button onclick="document.getElementById('modal-hadir').classList.add('hidden')" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">
+                    Nanti Saja
+                </button>
+            </div>
+        </div>
+
+        <!-- Content: success state -->
+        <div id="hadir-success" class="p-8 text-center hidden">
+            <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Kehadiran Dikonfirmasi!</h3>
+            <p class="text-sm text-gray-500 mb-1">Kami telah mencatat konfirmasi Anda.</p>
+            <p class="text-sm text-gray-500 mb-6">Sampai jumpa di interview!</p>
+            <button onclick="document.getElementById('modal-hadir').classList.add('hidden')" class="w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -278,11 +379,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const row = this.closest('.lamaran-row') || this;
             const id = row.dataset.id || this.dataset.id;
 
-            // Highlight active row
             document.querySelectorAll('.lamaran-row').forEach(r => r.classList.remove('bg-green-50'));
             row.classList.add('bg-green-50');
 
-            // Show timeline
             document.getElementById('timeline-empty').classList.add('hidden');
             document.querySelectorAll('.timeline-panel').forEach(p => p.classList.add('hidden'));
             const panel = document.getElementById('timeline-' + id);
@@ -290,15 +389,55 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ===== TARIK LAMARAN =====
+    // ===== TARIK LAMARAN (open modal) =====
     document.querySelectorAll('.btn-tarik').forEach(btn => {
         btn.addEventListener('click', function () {
-            if (confirm('Apakah Anda yakin ingin menarik lamaran ini? Tindakan ini bersifat PERMANEN dan tidak dapat dibatalkan.')) {
-                alert('Lamaran berhasil ditarik. (demo)');
-            }
+            document.getElementById('modal-tarik').classList.remove('hidden');
         });
+    });
+
+    // Confirm tarik
+    document.getElementById('btn-confirm-tarik').addEventListener('click', function () {
+        this.disabled = true;
+        this.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
+        setTimeout(() => {
+            document.getElementById('modal-tarik').classList.add('hidden');
+            alert('Lamaran berhasil ditarik. (demo)');
+            this.disabled = false;
+            this.textContent = 'Ya, Tarik Lamaran';
+        }, 1200);
+    });
+
+    // Close modal on overlay
+    document.getElementById('modal-tarik').addEventListener('click', function (e) {
+        if (e.target === this) this.classList.add('hidden');
+    });
+
+    // ===== KONFIRMASI KEHADIRAN (open modal) =====
+    document.querySelectorAll('.btn-konfirmasi').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.getElementById('hadir-form').classList.remove('hidden');
+            document.getElementById('hadir-success').classList.add('hidden');
+            document.getElementById('modal-hadir').classList.remove('hidden');
+        });
+    });
+
+    // Confirm hadir
+    document.getElementById('btn-confirm-hadir').addEventListener('click', function () {
+        this.disabled = true;
+        this.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
+        setTimeout(() => {
+            document.getElementById('hadir-form').classList.add('hidden');
+            document.getElementById('hadir-success').classList.remove('hidden');
+            this.disabled = false;
+            this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Konfirmasi Kehadiran';
+        }, 1000);
+    });
+
+    document.getElementById('modal-hadir').addEventListener('click', function (e) {
+        if (e.target === this) this.classList.add('hidden');
     });
 
 });
 </script>
-@endsection
+@endsection 
