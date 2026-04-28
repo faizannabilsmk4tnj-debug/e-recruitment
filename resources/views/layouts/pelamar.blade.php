@@ -36,7 +36,6 @@
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-9 w-auto">
-                <span class="text-white font-bold text-sm">PT Eco green Oleochemicals</span>
             </a>
         </div>
 
@@ -152,7 +151,6 @@
                     <div>
                         <div class="flex items-center gap-2 mb-1">
                             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-5 w-auto">
-                            <span class="font-bold text-sm">PT Ecogreen Oleochemicals</span>
                         </div>
                         <p class="text-green-400 text-xs">© 2023 Human Resources Department. Seluruh Hak Cipta Dilindungi.</p>
                     </div>

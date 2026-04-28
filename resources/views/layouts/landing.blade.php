@@ -15,7 +15,6 @@
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">
-                <span class="text-white font-bold text-sm">PT Eco green Oleochemicals</span>
             </a>
         </div>
         <div class="flex items-center gap-6">
