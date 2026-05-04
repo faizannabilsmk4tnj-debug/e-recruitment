@@ -1,1 +1,0 @@
-﻿ini sql yang menjadi patokan  kami dalam membuat erd nya, tapi saya lupa kenapa jumlah table antara erd dan dari sql nya berbeda, bisa bantu saya mencari tau alasannya?
