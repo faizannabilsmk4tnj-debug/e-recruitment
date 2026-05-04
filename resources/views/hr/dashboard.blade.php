@@ -14,10 +14,10 @@
 <div class="px-8 py-8">
 
     <!-- ===== STAT CARDS ===== -->
-    <div class="grid grid-cols-4 gap-5 mb-8">
+    <div class="grid grid-cols-3 gap-5 mb-8">
 
         <!-- Lowongan Aktif -->
-        <div class="bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden">
+        <a href="/hr/lowongan" class="block bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden hover:shadow-lg hover:border-green-200 transition-all cursor-pointer">
             <div class="flex items-start justify-between mb-4">
                 <div class="w-11 h-11 bg-green-50 rounded-xl flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
@@ -26,10 +26,10 @@
             </div>
             <p class="text-sm text-gray-500 mb-1">Lowongan Aktif</p>
             <p class="text-3xl font-extrabold text-gray-900">24</p>
-        </div>
+        </a>
 
         <!-- Total Pelamar Hari Ini -->
-        <div class="bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden">
+        <a href="/hr/pelamar" class="block bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden hover:shadow-lg hover:border-green-200 transition-all cursor-pointer">
             <div class="flex items-start justify-between mb-4">
                 <div class="w-11 h-11 bg-green-50 rounded-xl flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -38,10 +38,10 @@
             </div>
             <p class="text-sm text-gray-500 mb-1">Total Pelamar Hari Ini</p>
             <p class="text-3xl font-extrabold text-gray-900">158</p>
-        </div>
+        </a>
 
         <!-- Wawancara Minggu Ini -->
-        <div class="bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden">
+        <a href="/hr/wawancara/daftar" class="block bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden hover:shadow-lg hover:border-green-200 transition-all cursor-pointer">
             <div class="flex items-start justify-between mb-4">
                 <div class="w-11 h-11 bg-green-50 rounded-xl flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
@@ -50,19 +50,9 @@
             </div>
             <p class="text-sm text-gray-500 mb-1">Wawancara Minggu Ini</p>
             <p class="text-3xl font-extrabold text-gray-900">42</p>
-        </div>
+        </a>
 
-        <!-- Posisi Hampir Tutup -->
-        <div class="bg-white rounded-2xl border border-gray-100 p-5 relative overflow-hidden">
-            <div class="flex items-start justify-between mb-4">
-                <div class="w-11 h-11 bg-red-50 rounded-xl flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-                </div>
-                <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">Urgent</span>
-            </div>
-            <p class="text-sm text-gray-500 mb-1">Posisi Hampir Tutup</p>
-            <p class="text-3xl font-extrabold text-gray-900">5</p>
-        </div>
+
     </div>
 
     <!-- ===== MAIN GRID ===== -->
@@ -202,61 +192,31 @@
         <!-- RIGHT (col-span-1) -->
         <div class="space-y-5">
 
-            <!-- Jadwal Wawancara Hari Ini -->
+            <!-- Jadwal Wawancara -->
             <div class="bg-white rounded-2xl border border-gray-100 p-6">
-                <div class="flex items-center justify-between mb-5">
-                    <h2 class="font-bold text-gray-900">Jadwal Wawancara Hari Ini</h2>
-                    <span class="text-xs font-bold text-green-700 bg-green-50 px-2 py-1 rounded-full">3 Sesi</span>
+                <div class="flex flex-col mb-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="font-bold text-gray-900">Jadwal Wawancara</h2>
+                        <span id="wawancara-count" class="text-xs font-bold text-green-700 bg-green-50 px-2 py-1 rounded-full">3 Sesi</span>
+                    </div>
+                    <select id="wawancara-date" class="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-green-700 text-gray-700 w-full font-medium cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                        <option value="2026-04-30">Kamis, 30 Apr 2026</option>
+                        <option value="2026-05-01">Jumat, 1 Mei 2026</option>
+                        <option value="2026-05-05">Selasa, 5 Mei 2026</option>
+                        <option value="2026-05-12">Selasa, 12 Mei 2026</option>
+                    </select>
                 </div>
 
-                <div class="space-y-4">
-                    <!-- Sesi 1 -->
-                    <div class="flex gap-4 items-start">
-                        <div class="text-center shrink-0 w-12">
-                            <p class="text-sm font-bold text-gray-900 leading-none">09:00</p>
-                            <p class="text-[10px] text-gray-400 font-medium">AM</p>
-                        </div>
-                        <div class="flex-1 bg-gray-50 rounded-xl p-3 border-l-4 border-green-700">
-                            <p class="font-bold text-sm text-gray-900">Budi Santoso</p>
-                            <p class="text-xs text-gray-500 mt-0.5">Technical Lead - R&D</p>
-                            <div class="flex items-center gap-1 mt-2 text-xs text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="14" x="3" y="5" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                                Google Meet
-                            </div>
-                        </div>
+                <div id="wawancara-list" class="space-y-4">
+                    <!-- Diisi oleh JavaScript -->
+                </div>
+                
+                <div id="wawancara-empty" class="hidden text-center py-6">
+                    <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     </div>
-
-                    <!-- Sesi 2 -->
-                    <div class="flex gap-4 items-start">
-                        <div class="text-center shrink-0 w-12">
-                            <p class="text-sm font-bold text-gray-900 leading-none">11:30</p>
-                            <p class="text-[10px] text-gray-400 font-medium">AM</p>
-                        </div>
-                        <div class="flex-1 bg-gray-50 rounded-xl p-3 border-l-4 border-gray-300">
-                            <p class="font-bold text-sm text-gray-900">Siska Wijaya</p>
-                            <p class="text-xs text-gray-500 mt-0.5">Finance Supervisor</p>
-                            <div class="flex items-center gap-1 mt-2 text-xs text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                                Ruang Meeting A2
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sesi 3 -->
-                    <div class="flex gap-4 items-start">
-                        <div class="text-center shrink-0 w-12">
-                            <p class="text-sm font-bold text-gray-900 leading-none">02:00</p>
-                            <p class="text-[10px] text-gray-400 font-medium">PM</p>
-                        </div>
-                        <div class="flex-1 bg-gray-50 rounded-xl p-3 border-l-4 border-gray-300">
-                            <p class="font-bold text-sm text-gray-900">Ahmad Fauzi</p>
-                            <p class="text-xs text-gray-500 mt-0.5">Maintenance Staff</p>
-                            <div class="flex items-center gap-1 mt-2 text-xs text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                                Workshop Utama
-                            </div>
-                        </div>
-                    </div>
+                    <p class="text-sm font-medium text-gray-600">Tidak ada jadwal</p>
+                    <p class="text-[11px] text-gray-400 mt-0.5">Belum ada wawancara untuk hari ini.</p>
                 </div>
             </div>
 
@@ -272,6 +232,28 @@
         </div>
     </div>
 </div>
+
+    <!-- Modal Detail Chart -->
+    <div id="chart-modal" class="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl w-full max-w-md mx-4 p-7 relative">
+            <button id="btn-close-chart-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+            <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-1">Detail Pelamar - <span id="chart-modal-title"></span></h3>
+            <p id="chart-modal-desc" class="text-sm text-gray-500 mb-6">Berikut adalah rincian data harian pelamar pada periode ini.</p>
+            
+            <div class="bg-gray-50 rounded-xl p-4 mb-6" id="chart-modal-content">
+                <!-- Injected via JS -->
+            </div>
+
+            <a href="/hr/pelamar" class="w-full flex items-center justify-center bg-green-700 hover:bg-green-800 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">
+                Kelola Data Pelamar
+            </a>
+        </div>
+    </div>
 @endsection
 
 @section('js')

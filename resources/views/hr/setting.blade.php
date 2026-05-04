@@ -265,10 +265,9 @@
                 @php
                 $notifItems = [
                     ['title' => 'Pelamar Baru', 'desc' => 'Notifikasi saat ada pelamar baru mendaftar', 'default' => true],
-                    ['title' => 'Lamaran Masuk', 'desc' => 'Notifikasi saat ada lamaran baru untuk lowongan aktif', 'default' => true],
                     ['title' => 'Jadwal Wawancara', 'desc' => 'Pengingat jadwal wawancara yang akan datang', 'default' => true],
-                    ['title' => 'Laporan Mingguan', 'desc' => 'Ringkasan aktivitas rekrutmen setiap minggu', 'default' => false],
-                    ['title' => 'Update Sistem', 'desc' => 'Pembaruan fitur dan pemberitahuan sistem', 'default' => false],
+                    ['title' => 'Kapasitas Loker Terpenuhi', 'desc' => 'Notifikasi saat lowongan sudah memenuhi kapasitas namun belum ditutup secara otomatis', 'default' => true],
+                    ['title' => 'Batas Waktu Loker Berakhir', 'desc' => 'Notifikasi saat lowongan melewati batas waktu pendaftaran namun belum ditutup secara otomatis', 'default' => true],
                 ];
                 @endphp
                 @foreach($notifItems as $item)

@@ -1,0 +1,213 @@
+﻿ The user wants me to just copy all the steps from the module quickly so they can finish fast.Siap! Ini semua langkah dari modul Part 2 - Trigger, tinggal salin dan jalankan urut dari atas ke bawah! 🚀
+
+---
+
+## LANGKAH 0 — Buat Database & Tabel Dulu
+
+```sql
+CREATE DATABASE db_2017;
+USE db_2017;
+
+CREATE TABLE barang (
+    id_brg VARCHAR(10),
+    nama_brg VARCHAR(50),
+    stok INT
+);
+
+CREATE TABLE pembelian (
+    id_pem INT,
+    id_brg VARCHAR(10),
+    jml_beli INT
+);
+
+INSERT INTO barang VALUES ('A10', 'Mouse', 10);
+INSERT INTO barang VALUES ('A11', 'Keyboard', 15);
+INSERT INTO barang VALUES ('A12', 'DVD R-W', 10);
+
+INSERT INTO pembelian VALUES (1, 'A10', 5);
+```
+
+---
+
+## LANGKAH 1 — Trigger Pertama (inkremenStok2)
+
+Buka menu **Trigger** di phpMyAdmin → klik **Add Trigger** → isi seperti ini:
+
+- **Trigger name:** `inkremenStok2`
+- **Table:** `barang`
+- **Time:** `BEFORE`
+- **Event:** `INSERT`
+- **Definition:**
+
+```sql
+SET NEW.stok = NEW.stok + 1
+```
+
+Klik **Go**.
+
+Lalu test triggernya dengan jalankan:
+
+```sql
+INSERT INTO barang VALUES('A13', 'Modem', 5);
+```
+
+Cek hasilnya:
+```sql
+SELECT * FROM barang;
+```
+
+**Hasil:** Modem harusnya stoknya **6** (bukan 5, karena trigger menambah +1 otomatis)
+
+Lihat daftar trigger:
+```sql
+SHOW TRIGGERS;
+```
+
+Hapus trigger:
+```sql
+DROP TRIGGER inkremenStok2;
+```
+
+---
+
+## LANGKAH 2 — Keyword NEW: Trigger updateStok
+
+Buka **Add Trigger** → isi:
+
+- **Trigger name:** `updateStok`
+- **Table:** `pembelian`
+- **Time:** `AFTER`
+- **Event:** `INSERT`
+- **Definition:**
+
+```sql
+UPDATE barang
+SET stok = stok - NEW.jml_beli
+WHERE id_brg = NEW.id_brg
+```
+
+Klik **Go**.
+
+Cek data barang dulu:
+```sql
+SELECT * FROM barang;
+```
+
+Lalu masukkan data pembelian:
+```sql
+INSERT INTO `pembelian` (`id_pembelian`, `id_brg`, `jml_beli`) VALUES ('2', 'A10', '10');
+```
+
+Cek barang lagi — stok Mouse harusnya **berkurang** sesuai jumlah pembelian:
+```sql
+SELECT * FROM barang;
+```
+
+---
+
+## LANGKAH 3 — Keyword OLD: Trigger deleteChild
+
+Buka **Add Trigger** → isi:
+
+- **Trigger name:** `deleteChild`
+- **Table:** `barang`
+- **Time:** `AFTER`
+- **Event:** `DELETE`
+- **Definition:**
+
+```sql
+-- Hapus data pembelian yang berkorespondensi
+DELETE FROM pembelian
+WHERE id_brg = OLD.id_brg
+```
+
+Klik **Go**.
+
+Lalu hapus data barang A10:
+```sql
+DELETE FROM barang WHERE id_brg = 'A10';
+```
+
+Cek tabel pembelian — data pembelian dengan id_brg A10 harusnya **ikut terhapus otomatis:**
+```sql
+SELECT * FROM pembelian;
+```
+
+---
+
+## LANGKAH 4 — Keyword NEW & OLD: Trigger updateStokEdit
+
+Buka **Add Trigger** → isi:
+
+- **Trigger name:** `updateStokEdit`
+- **Table:** `pembelian`
+- **Time:** `AFTER`
+- **Event:** `UPDATE`
+- **Definition:**
+
+```sql
+-- Update nilai stok barang
+UPDATE barang
+SET stok = stok + (NEW.jml_beli - OLD.jml_beli)
+WHERE id_brg = NEW.id_brg;
+```
+
+Klik **Go**.
+
+Lalu update data pembelian:
+```sql
+UPDATE pembelian SET jml_beli = 20 WHERE id_pembelian = 3;
+```
+
+Cek tabel barang — stok harusnya **berubah menyesuaikan selisih** jumlah beli baru dan lama:
+```sql
+SELECT * FROM barang;
+```
+
+---
+
+## LANGKAH 5 — Trigger Kompleks (auditBarang)
+
+Untuk yang ini jalankan langsung di SQL:
+
+```sql
+DELIMITER //
+CREATE TRIGGER auditBarang
+BEFORE INSERT ON barang
+FOR EACH ROW
+BEGIN
+    IF NOT EXISTS (SELECT id_brg FROM barang WHERE id_brg = NEW.id_brg)
+    THEN
+        SET NEW.nama_brg = NEW.nama_brg, NEW.stok = NEW.stok;
+    ELSE
+        SET @status = CONCAT('Id ', NEW.id_brg, ' sudah ada');
+    END IF;
+END //
+DELIMITER ;
+```
+
+Test dengan insert barang baru:
+```sql
+-- Barang baru (belum ada) → berhasil masuk
+INSERT INTO barang VALUES ('A14', 'Printer', 8);
+
+-- Barang lama (sudah ada) → tidak masuk, status terisi
+INSERT INTO barang VALUES ('A11', 'Keyboard', 5);
+
+-- Cek status
+SELECT @status;
+```
+
+---
+
+## Ringkasan Cepat
+
+| Trigger | Tabel | Time | Event | Fungsi |
+|---|---|---|---|---|
+| inkremenStok2 | barang | BEFORE | INSERT | Tambah stok +1 otomatis |
+| updateStok | pembelian | AFTER | INSERT | Kurangi stok saat ada pembelian |
+| deleteChild | barang | AFTER | DELETE | Hapus pembelian saat barang dihapus |
+| updateStokEdit | pembelian | AFTER | UPDATE | Update stok saat pembelian diubah |
+| auditBarang | barang | BEFORE | INSERT | Cek duplikat sebelum insert |
+
+Selamat mengerjakan! 🎉
