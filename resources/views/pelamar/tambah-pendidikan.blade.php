@@ -7,7 +7,7 @@
 
 <!-- Breadcrumb -->
 <div class="flex items-center gap-2 text-sm text-gray-400 mb-4">
-    <a href="/pelamar/pendidikan" class="hover:text-green-700 transition-colors">Pendidikan</a>
+    <a href="/pelamar/pendidikan" class="hover:text-green-700 transition-colors">Education</a>
     <span>›</span>
     <span class="text-gray-700 font-medium">Tambah Baru</span>
 </div>
@@ -88,7 +88,7 @@
                     </div>
                     <div id="preview-ijazah" class="hidden">
                         <p class="text-sm text-green-700 font-medium" id="name-ijazah"></p>
-                        <button type="button" class="remove-file text-xs text-red-500 mt-1" data-target="ijazah">Hapus</button>
+                        <button type="button" class="remove-file text-xs text-red-500 mt-1" data-target="ijazah">Delete</button>
                     </div>
                     <input type="file" id="file-ijazah" accept="image/jpeg,image/png,application/pdf" class="hidden">
                 </div>
@@ -103,7 +103,7 @@
                     </div>
                     <div id="preview-skhu" class="hidden">
                         <p class="text-sm text-green-700 font-medium" id="name-skhu"></p>
-                        <button type="button" class="remove-file text-xs text-red-500 mt-1" data-target="skhu">Hapus</button>
+                        <button type="button" class="remove-file text-xs text-red-500 mt-1" data-target="skhu">Delete</button>
                     </div>
                     <input type="file" id="file-skhu" accept="image/jpeg,image/png,application/pdf" class="hidden">
                 </div>
@@ -112,8 +112,8 @@
 
         <!-- Buttons -->
         <div class="flex gap-4 pt-4 justify-end">
-            <a href="/pelamar/pendidikan" class="border border-gray-300 text-gray-700 font-semibold px-8 py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</a>
-            <button type="button" id="btn-simpan" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-8 py-2.5 rounded-lg text-sm transition-colors">Simpan Perubahan</button>
+            <a href="/pelamar/pendidikan" class="border border-gray-300 text-gray-700 font-semibold px-8 py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</a>
+            <button type="button" id="btn-simpan" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-8 py-2.5 rounded-lg text-sm transition-colors">Save Changes</button>
         </div>
 
     </div>

@@ -168,8 +168,8 @@
             </div>
         </div>
         <div class="flex gap-3 mt-8">
-            <button type="button" id="btn-porto-simpan" class="flex-1 bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm">Simpan</button>
-            <button type="button" id="btn-porto-batal" class="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50">Batal</button>
+            <button type="button" id="btn-porto-simpan" class="flex-1 bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm">Save</button>
+            <button type="button" id="btn-porto-batal" class="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50">Cancel</button>
         </div>
     </div>
 </div>
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const card = document.createElement('div');
             card.className = 'rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-all';
             card.dataset.id = id;
-            card.innerHTML = `<div class="h-40 bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="p-4"><p class="font-semibold text-sm text-gray-900 truncate">${file.name.replace(/\.[^/.]+$/, '')}</p><p class="text-xs text-gray-400 mt-0.5">${ext} • ${size} MB • ${date}</p><div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100"><button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50">Lihat</button><button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50">Unduh</button><button class="btn-hapus-file flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-red-50 hover:text-red-600" data-id="${id}">Hapus</button></div></div>`;
+            card.innerHTML = `<div class="h-40 bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="p-4"><p class="font-semibold text-sm text-gray-900 truncate">${file.name.replace(/\.[^/.]+$/, '')}</p><p class="text-xs text-gray-400 mt-0.5">${ext} • ${size} MB • ${date}</p><div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100"><button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50">Lihat</button><button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50">Unduh</button><button class="btn-hapus-file flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-red-50 hover:text-red-600" data-id="${id}">Delete</button></div></div>`;
             document.querySelector('#sertifikat-grid label').parentNode.insertBefore(card, document.querySelector('#sertifikat-grid label'));
         });
         this.value = '';

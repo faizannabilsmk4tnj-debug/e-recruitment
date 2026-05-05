@@ -18,11 +18,11 @@
             </a>
         </div>
         <div class="flex items-center gap-6">
-            <a href="/" class="text-sm transition-colors @yield('nav-beranda', 'text-green-300 hover:text-white')">Beranda</a>
-            <a href="/lowongan" class="text-sm transition-colors @yield('nav-lowongan', 'text-green-300 hover:text-white')">Lowongan</a>
-            <a href="/tentang-kami" class="text-sm transition-colors text-green-300 hover:text-white">Tentang Kami</a>
+            <a href="/" class="text-sm transition-colors @yield('nav-beranda', 'text-green-300 hover:text-white')">Home</a>
+            <a href="/lowongan" class="text-sm transition-colors @yield('nav-lowongan', 'text-green-300 hover:text-white')">Vacancies</a>
+            <a href="/tentang-kami" class="text-sm transition-colors text-green-300 hover:text-white">About Us</a>
             <a href="/register" class="border border-white text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-white hover:text-green-900 transition-colors">
-                Daftar
+                Register
             </a>
         </div>
     </nav>
@@ -64,15 +64,15 @@
                 </svg>
             </div>
             <!-- Title -->
-            <h2 class="text-xl font-bold text-gray-900 mb-2">Anda Belum Login</h2>
-            <p class="text-sm text-gray-500 mb-8">Silahkan masukkan akun Anda atau jika belum punya silahkan mendaftar.</p>
+            <h2 class="text-xl font-bold text-gray-900 mb-2">You Are Not Logged In</h2>
+            <p class="text-sm text-gray-500 mb-8">Please login to your account or register if you don't have one.</p>
             <!-- Buttons -->
             <div class="space-y-3">
                 <a href="/login" class="block w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors">
                     Login
                 </a>
                 <a href="/register" class="block w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg text-sm hover:bg-gray-50 transition-colors">
-                    Daftar
+                    Register
                 </a>
             </div>
         </div>

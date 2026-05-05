@@ -231,7 +231,7 @@
                     <p class="text-sm font-semibold text-gray-800 text-center mb-5" id="modal-device-name"></p>
                     <div class="space-y-2.5">
                         <button id="btn-confirm-session-logout" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Ya, Logout Perangkat Ini</button>
-                        <button id="btn-cancel-session-modal" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</button>
+                        <button id="btn-cancel-session-modal" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -245,11 +245,11 @@
                     <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
                     </div>
-                    <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Logout Semua Perangkat?</h3>
-                    <p class="text-sm text-gray-500 text-center mb-5">Semua sesi aktif selain perangkat ini akan dikeluarkan secara permanen.</p>
+                    <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Logout All Perangkat?</h3>
+                    <p class="text-sm text-gray-500 text-center mb-5">All sesi aktif selain perangkat ini akan dikeluarkan secara permanen.</p>
                     <div class="space-y-2.5">
-                        <button id="btn-confirm-all-logout" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Ya, Logout Semua</button>
-                        <button id="btn-cancel-all-modal" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</button>
+                        <button id="btn-confirm-all-logout" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Ya, Logout All</button>
+                        <button id="btn-cancel-all-modal" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -264,7 +264,7 @@
             <div class="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
                 @php
                 $notifItems = [
-                    ['title' => 'Pelamar Baru', 'desc' => 'Notifikasi saat ada pelamar baru mendaftar', 'default' => true],
+                    ['title' => 'Pelamar Baru', 'desc' => 'Notifikasi saat ada applicants baru mendaftar', 'default' => true],
                     ['title' => 'Jadwal Wawancara', 'desc' => 'Pengingat jadwal wawancara yang akan datang', 'default' => true],
                     ['title' => 'Kapasitas Loker Terpenuhi', 'desc' => 'Notifikasi saat lowongan sudah memenuhi kapasitas namun belum ditutup secara otomatis', 'default' => true],
                     ['title' => 'Batas Waktu Loker Berakhir', 'desc' => 'Notifikasi saat lowongan melewati batas waktu pendaftaran namun belum ditutup secara otomatis', 'default' => true],

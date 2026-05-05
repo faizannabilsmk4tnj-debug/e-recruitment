@@ -8,7 +8,7 @@
 <!-- Header -->
 <div class="flex items-start justify-between mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-gray-900">Pengalaman Organisasi</h1>
+        <h1 class="text-2xl font-bold text-gray-900">Organization Experience</h1>
         <p class="text-gray-500 mt-1">Kelola riwayat keterlibatan organisasi dan kepanitiaan Anda.</p>
     </div>
     <a href="/pelamar/organisasi/tambah" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm flex items-center gap-2 shrink-0">

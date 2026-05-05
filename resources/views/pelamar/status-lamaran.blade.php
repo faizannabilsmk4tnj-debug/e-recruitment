@@ -17,14 +17,14 @@
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         </div>
-        <input type="text" id="search-input" placeholder="Cari posisi atau departemen..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+        <input type="text" id="search-input" placeholder="Search posisi atau departemen..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
     </div>
     <div class="flex gap-2">
-        <button class="filter-btn active bg-green-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors" data-filter="semua">Semua</button>
-        <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="terkirim">Terkirim</button>
+        <button class="filter-btn active bg-green-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors" data-filter="semua">All</button>
+        <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="terkirim">Submitted</button>
         <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="seleksi berkas">Seleksi Berkas</button>
         <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="interview">Interview</button>
-        <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="selesai">Selesai</button>
+        <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="selesai">Finish</button>
     </div>
 </div>
 
@@ -38,9 +38,9 @@
                 <thead>
                     <tr class="border-b border-gray-100 bg-gray-50">
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Nama Posisi</th>
-                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Tanggal</th>
+                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Date</th>
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Status</th>
-                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Aksi</th>
+                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="lamaran-tbody">
@@ -107,10 +107,10 @@
             <div class="relative pl-6 space-y-6">
                 <div class="absolute left-[7px] top-2 bottom-8 w-0.5 bg-gray-200"></div>
 
-                <!-- Step 1: Terkirim ✓ -->
+                <!-- Step 1: Submitted ✓ -->
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
-                    <p class="font-semibold text-sm text-gray-900">Lamaran Terkirim</p>
+                    <p class="font-semibold text-sm text-gray-900">Lamaran Submitted</p>
                     <p class="text-xs text-gray-400 mt-0.5">12 Okt 2023, 10:45 WIB</p>
                     <p class="text-xs text-gray-500 mt-1">Dokumen berhasil diunggah dan diverifikasi sistem.</p>
                 </div>
@@ -176,7 +176,7 @@
                 <div class="absolute left-[7px] top-2 bottom-8 w-0.5 bg-gray-200"></div>
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
-                    <p class="font-semibold text-sm text-gray-900">Lamaran Terkirim</p>
+                    <p class="font-semibold text-sm text-gray-900">Lamaran Submitted</p>
                     <p class="text-xs text-gray-400 mt-0.5">05 Okt 2023, 14:30 WIB</p>
                 </div>
                 <div class="relative">
@@ -210,7 +210,7 @@
                 <div class="absolute left-[7px] top-2 bottom-8 w-0.5 bg-gray-200"></div>
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-500 rounded-full border-2 border-white ring-4 ring-gray-100"></div>
-                    <p class="font-semibold text-sm text-gray-700">Lamaran Terkirim</p>
+                    <p class="font-semibold text-sm text-gray-700">Lamaran Submitted</p>
                     <p class="text-xs text-gray-400 mt-0.5">28 Sep 2023, 09:15 WIB</p>
                     <p class="text-xs text-gray-500 mt-1">Menunggu proses review oleh HRD.</p>
                 </div>
@@ -291,7 +291,7 @@
                 <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                     <div>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Lokasi</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Location</p>
                         <p class="text-sm font-semibold text-gray-900">Kantor Pusat Ecogreen, Kabil, Batam</p>
                     </div>
                 </div>

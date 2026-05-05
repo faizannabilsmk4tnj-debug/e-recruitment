@@ -10,9 +10,9 @@
 <!-- Breadcrumb -->
 <div class="px-16 py-4 bg-white border-b border-gray-100">
     <div class="flex items-center gap-2 text-sm text-gray-400">
-        <a href="{{ isset($layout) ? '/pelamar/dashboard' : '/' }}" class="hover:text-green-700 transition-colors">Beranda</a>
+        <a href="{{ isset($layout) ? '/pelamar/dashboard' : '/' }}" class="hover:text-green-700 transition-colors">Home</a>
         <span>›</span>
-        <a href="{{ isset($layout) ? '/pelamar/lowongan' : '/lowongan' }}" class="hover:text-green-700 transition-colors">Lowongan</a>
+        <a href="{{ isset($layout) ? '/pelamar/lowongan' : '/lowongan' }}" class="hover:text-green-700 transition-colors">Vacancies</a>
         <span>›</span>
         <span class="text-gray-700 font-medium" id="breadcrumb-title">Senior Web Developer</span>
     </div>
@@ -48,7 +48,7 @@
                             </span>
                             <span class="flex items-center gap-1.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                                <span id="job-posted">Diposting 2 hari yang lalu</span>
+                                <span id="job-posted">Diposting 2 days yang lalu</span>
                             </span>
                         </div>
                     </div>
@@ -140,7 +140,7 @@
                         </div>
                         <div>
                             <p class="font-semibold text-sm text-gray-900">Bonus Tahunan</p>
-                            <p class="text-xs text-gray-500">Tunjangan hari raya dan performa.</p>
+                            <p class="text-xs text-gray-500">Tunjangan days raya dan performa.</p>
                         </div>
                     </div>
                 </div>
@@ -192,7 +192,7 @@
 
             <!-- Tentang Perusahaan -->
             <div class="bg-green-50 rounded-xl border border-green-200 p-6">
-                <h3 class="font-bold text-green-900 mb-2">Tentang Perusahaan</h3>
+                <h3 class="font-bold text-green-900 mb-2">About Company</h3>
                 <p class="text-sm text-green-800 leading-relaxed">PT Ecogreen Oleochemicals adalah salah satu produsen alkohol lemak alami terkemuka di dunia yang berkomitmen pada keberlanjutan dan kualitas tinggi.</p>
                 <a href="#" class="text-sm font-semibold text-green-700 hover:text-green-600 flex items-center gap-1 mt-3 transition-colors">
                     Lihat Profil Perusahaan

@@ -1,7 +1,7 @@
 @extends('layouts.hr')
 
-@section('title', 'Lowongan')
-@section('page-title', 'Lowongan')
+@section('title', 'Vacancies')
+@section('page-title', 'Vacancies')
 @section('nav-lowongan', 'text-green-800 border-green-700 font-semibold')
 
 @section('content')
@@ -263,7 +263,7 @@
             </div>
         </div>
         <div class="px-6 pb-6 flex gap-3">
-            <button id="btn-cancel-vacancy" class="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</button>
+            <button id="btn-cancel-vacancy" class="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</button>
             <button id="btn-save-vacancy" class="flex-1 bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Create Vacancy</button>
         </div>
     </div>
@@ -278,11 +278,11 @@
         <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
         </div>
-        <h3 class="text-lg font-bold text-gray-900 mb-2">Tutup Lowongan?</h3>
-        <p class="text-sm text-gray-500 mb-5">Lowongan ini akan ditutup dan tidak menerima pelamar baru.</p>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Close Vacancy?</h3>
+        <p class="text-sm text-gray-500 mb-5">This vacancy will be closed and will not accept new applicants.</p>
         <div class="space-y-2.5">
-            <button id="btn-confirm-close-vacancy" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Ya, Tutup Lowongan</button>
-            <button id="btn-cancel-close-vacancy" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</button>
+            <button id="btn-confirm-close-vacancy" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Yes, Close Vacancy</button>
+            <button id="btn-cancel-close-vacancy" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</button>
         </div>
     </div>
 </div>

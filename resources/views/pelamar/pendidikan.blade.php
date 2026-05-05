@@ -8,7 +8,7 @@
 <!-- Header -->
 <div class="flex items-start justify-between mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-gray-900">Pendidikan</h1>
+        <h1 class="text-2xl font-bold text-gray-900">Education</h1>
         <p class="text-gray-500 mt-1">Kelola riwayat pendidikan formal Anda untuk melengkapi profil profesional.<br>Pastikan data yang dimasukkan sesuai dengan ijazah asli.</p>
     </div>
     <a href="/pelamar/pendidikan/tambah" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm flex items-center gap-2 shrink-0">
@@ -26,7 +26,7 @@
                 <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Tingkat / Jurusan</th>
                 <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Periode</th>
                 <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Status</th>
-                <th class="text-right text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Aksi</th>
+                <th class="text-right text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Actions</th>
             </tr>
         </thead>
         <tbody>

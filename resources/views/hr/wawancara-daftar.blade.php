@@ -10,7 +10,7 @@
     <div class="flex items-start justify-between mb-8">
         <div>
             <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest mb-1">SISTEM MANAJEMEN</p>
-            <h1 class="text-3xl font-extrabold text-gray-900">Daftar Wawancara</h1>
+            <h1 class="text-3xl font-extrabold text-gray-900">Interview List</h1>
         </div>
         <div class="flex items-center gap-4">
             <div class="relative">
@@ -51,7 +51,7 @@
             <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">TIPE</label>
             <div class="relative">
                 <select class="pl-4 pr-10 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none w-[180px] appearance-none">
-                    <option>Semua Tipe</option>
+                    <option>All Tipe</option>
                     <option>Technical</option>
                     <option>HR</option>
                     <option>User</option>
@@ -231,7 +231,7 @@
 
         <!-- Pagination Footer -->
         <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
-            <span class="text-xs text-gray-500">Menampilkan <strong>4</strong> dari <strong>24</strong> sesi wawancara</span>
+            <span class="text-xs text-gray-500">Showing <strong>4</strong> dari <strong>24</strong> sesi wawancara</span>
             <div class="flex items-center gap-1">
                 <button class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>

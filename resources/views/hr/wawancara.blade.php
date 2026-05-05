@@ -21,7 +21,7 @@
     <!-- Header -->
     <div class="flex items-start justify-between mb-8">
         <div>
-            <h1 class="text-3xl font-extrabold text-green-900">Jadwal Wawancara</h1>
+            <h1 class="text-3xl font-extrabold text-green-900">Interview Schedule</h1>
             <p class="text-sm text-gray-500 mt-1">Pantau dan kelola seluruh jadwal wawancara kandidat dalam tampilan kalender.</p>
         </div>
         <div class="flex items-center gap-3">

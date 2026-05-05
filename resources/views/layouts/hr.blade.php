@@ -25,7 +25,7 @@
 
         {{-- Right side --}}
         <div class="flex items-center gap-4">
-            <a href="/hr/tim" class="text-sm text-green-200 hover:text-white font-medium transition-colors">Tim HR</a>
+            <a href="/hr/tim" class="text-sm text-green-200 hover:text-white font-medium transition-colors">HR Team</a>
 
             {{-- Notification --}}
             <div class="relative">
@@ -40,8 +40,8 @@
                 {{-- Dropdown Notif --}}
                 <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
                     <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                        <h3 class="text-sm font-bold text-gray-800">Notifikasi</h3>
-                        <span id="notif-header-count" class="text-[10px] text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded-full">4 Baru</span>
+                        <h3 class="text-sm font-bold text-gray-800">Notifications</h3>
+                        <span id="notif-header-count" class="text-[10px] text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded-full">4 New</span>
                     </div>
                     <div class="max-h-80 overflow-y-auto">
                         <!-- Notif Pelamar Baru -->
@@ -51,9 +51,9 @@
                                     <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-800 font-medium">Pelamar Baru Mendaftar</p>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Ahmad Fauzi telah mendaftar untuk posisi <span class="font-semibold text-gray-700">Maintenance Staff</span>.</p>
-                                    <p class="text-[9px] text-gray-400 mt-1">10 menit yang lalu</p>
+                                    <p class="text-xs text-gray-800 font-medium">New Applicant Registered</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">Ahmad Fauzi has applied for the <span class="font-semibold text-gray-700">Maintenance Staff</span> position.</p>
+                                    <p class="text-[9px] text-gray-400 mt-1">10 minutes ago</p>
                                 </div>
                             </div>
                         </a>
@@ -65,9 +65,9 @@
                                     <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-800 font-medium">Pengingat Jadwal Wawancara</p>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Wawancara dengan <span class="font-semibold text-gray-700">Siska Wijaya</span> akan dimulai pukul 11:30 AM.</p>
-                                    <p class="text-[9px] text-gray-400 mt-1">Baru saja</p>
+                                    <p class="text-xs text-gray-800 font-medium">Interview Schedule Reminder</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">Interview with <span class="font-semibold text-gray-700">Siska Wijaya</span> will start at 11:30 AM.</p>
+                                    <p class="text-[9px] text-gray-400 mt-1">Just now</p>
                                 </div>
                             </div>
                         </a>
@@ -79,9 +79,9 @@
                                     <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-800 font-medium">Kapasitas Loker Terpenuhi</p>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Lowongan <span class="font-semibold text-gray-700">Senior Chemical Engineer</span> telah mencapai batas pelamar namun belum ditutup.</p>
-                                    <p class="text-[9px] text-gray-400 mt-1">2 jam yang lalu</p>
+                                    <p class="text-xs text-gray-800 font-medium">Vacancy Capacity Reached</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">Vacancy <span class="font-semibold text-gray-700">Senior Chemical Engineer</span> has reached the applicant limit but is not closed yet.</p>
+                                    <p class="text-[9px] text-gray-400 mt-1">2 hours ago</p>
                                 </div>
                             </div>
                         </a>
@@ -93,15 +93,15 @@
                                     <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-800 font-medium">Batas Waktu Loker Berakhir</p>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Lowongan <span class="font-semibold text-gray-700">Sustainability Officer</span> telah melewati batas waktu penutupan namun belum ditutup.</p>
-                                    <p class="text-[9px] text-gray-400 mt-1">Kemarin</p>
+                                    <p class="text-xs text-gray-800 font-medium">Vacancy Deadline Reached</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">Vacancy <span class="font-semibold text-gray-700">Sustainability Officer</span> has passed the closing deadline but is not closed yet.</p>
+                                    <p class="text-[9px] text-gray-400 mt-1">Yesterday</p>
                                 </div>
                             </div>
                         </a>
                     </div>
                     <div class="px-4 py-2 border-t border-gray-100 text-center">
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('notif-badge').classList.add('hidden'); document.getElementById('notif-header-count').innerText = '0 Baru';" class="text-xs font-semibold text-green-700 hover:text-green-900 transition-colors">Tandai semua dibaca</a>
+                        <a href="#" onclick="event.preventDefault(); document.getElementById('notif-badge').classList.add('hidden'); document.getElementById('notif-header-count').innerText = '0 New';" class="text-xs font-semibold text-green-700 hover:text-green-900 transition-colors">Mark all as read</a>
                     </div>
                 </div>
             </div>
@@ -164,28 +164,28 @@
             <a href="/hr/lowongan"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-lowongan', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
-                Lowongan
+                Vacancies
             </a>
             <a href="/hr/pelamar"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-pelamar', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
-                Pelamar
+                Applicants
             </a>
             <a href="/hr/wawancara"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-wawancara', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
-                Wawancara
+                Interviews
             </a>
 
             <a href="/hr/laporan"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-laporan', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
-                Laporan
+                Reports
             </a>
             <a href="/hr/template-cv"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-template', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
-                Template CV
+                CV Templates
             </a>
 
         </div>

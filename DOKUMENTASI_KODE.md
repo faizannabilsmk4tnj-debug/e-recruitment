@@ -13,7 +13,7 @@ Laravel memiliki struktur folder standar. Berikut adalah penjelasan logis untuk 
    *   **Fungsi:** Ini adalah otak dan jantung aplikasi (Backend). Di sini berisi logika komputasi PHP (Models untuk database, Controllers untuk logika bisnis, Middleware untuk keamanan).
    *   **Tujuan:** Saat Anda mulai membuat API nanti, semua kodingan pemrosesan data akan ditaruh di sini. Folder ini **tidak boleh dihapus** karena tanpanya sistem akan mati.
 2. **`bootstrap/`**
-   *   **Fungsi:** Folder ini mengatur proses *startup* (booting) saat Laravel pertama kali dijalankan. Terdapat file `app.php` dan folder `cache/` untuk mempercepat pemuatan (loading) framework ke memori.
+   *   **Fungsi:** Folder ini mengatur proses *startup* (booting) saat <!--TODO: Laravel pertama kali dijalankan -->. Terdapat file `app.php` dan folder `cache/` untuk mempercepat pemuatan (loading) framework ke memori.
 3. **`config/`**
    *   **Fungsi:** Pusat pengaturan (*settings*). Semua konfigurasi krusial seperti koneksi database (`database.php`), pengaturan sesi login user (`session.php`), dan zona waktu ada di sini.
 4. **`database/`**
