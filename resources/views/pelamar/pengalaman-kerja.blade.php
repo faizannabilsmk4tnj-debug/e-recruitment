@@ -10,11 +10,11 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Work Experience</h1>
-            <p class="text-gray-500 mt-1">Daftar riwayat pekerjaan profesional Anda</p>
+            <p class="text-gray-500 mt-1">List of your professional work history</p>
         </div>
         <a href="/pelamar/pengalaman-kerja/tambah" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-            Tambah Pengalaman
+            Add Experience
         </a>
     </div>
 </div>
@@ -51,7 +51,7 @@
             </button>
             <button class="btn-hapus flex items-center gap-1 px-3 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-colors" data-id="1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                Hapus
+                Delete
             </button>
         </div>
     </div>
@@ -86,7 +86,7 @@
             </button>
             <button class="btn-hapus flex items-center gap-1 px-3 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-colors" data-id="2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                Hapus
+                Delete
             </button>
         </div>
     </div>
@@ -96,7 +96,7 @@
 <div class="hidden bg-white rounded-xl border border-gray-200 p-16 text-center" id="empty-state">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-300 mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
     <p class="text-gray-500 font-medium">Belum ada pengalaman kerja.</p>
-    <p class="text-gray-400 text-sm mt-1">Klik "Tambah Pengalaman" untuk menambahkan.</p>
+    <p class="text-gray-400 text-sm mt-1">Click "Add Experience" to add.</p>
 </div>
 
 @endsection

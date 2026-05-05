@@ -388,8 +388,8 @@
 
                     <button type="submit" class="w-full text-white bg-green-900 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-3 text-center transition flex justify-center items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
-                        Simpan Perubahan
-                    </button>
+            Save Changes
+        </button>
                 </form>
             </div>
 
@@ -591,7 +591,7 @@
         <div class="border-t border-gray-100 px-8 py-4 flex items-center justify-between bg-white">
             <button type="button" id="btn-cancel-modal" class="text-sm font-semibold text-gray-600 hover:text-gray-900 px-4 py-2 transition-colors flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-                Batal
+                Cancel
             </button>
             <div class="flex items-center gap-3">
                 <button type="button" id="btn-submit-modal" class="inline-flex items-center gap-2 bg-green-800 hover:bg-green-900 text-white text-sm font-semibold px-6 py-2.5 rounded-lg shadow-md transition-all hover:shadow-lg active:scale-95">

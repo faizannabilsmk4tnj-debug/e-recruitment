@@ -7,8 +7,8 @@
 
 <!-- Header -->
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Riwayat & Tracking Lamaran</h1>
-    <p class="text-gray-500 mt-1">Pantau perkembangan status lamaran pekerjaan Anda secara real-time.</p>
+    <h1 class="text-2xl font-bold text-gray-900">Application History & Tracking</h1>
+    <p class="text-gray-500 mt-1">Track the development of your job application status in real-time.</p>
 </div>
 
 <!-- Search + Filters -->
@@ -17,12 +17,12 @@
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         </div>
-        <input type="text" id="search-input" placeholder="Search posisi atau departemen..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+        <input type="text" id="search-input" placeholder="Search position or department..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
     </div>
     <div class="flex gap-2">
         <button class="filter-btn active bg-green-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors" data-filter="semua">All</button>
         <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="terkirim">Submitted</button>
-        <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="seleksi berkas">Seleksi Berkas</button>
+        <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="seleksi berkas">Document Review</button>
         <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="interview">Interview</button>
         <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="selesai">Finish</button>
     </div>
@@ -37,7 +37,7 @@
             <table class="w-full">
                 <thead>
                     <tr class="border-b border-gray-100 bg-gray-50">
-                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Nama Posisi</th>
+                        <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Position Name</th>
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Date</th>
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Status</th>
                         <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-5 py-3">Actions</th>
@@ -64,7 +64,7 @@
                         </td>
                         <td class="px-5 py-4 text-sm text-gray-600">05 Okt 2023</td>
                         <td class="px-5 py-4">
-                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">SELEKSI BERKAS</span>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">DOCUMENT REVIEW</span>
                         </td>
                         <td class="px-5 py-4">
                             <button class="btn-detail text-sm font-semibold text-green-700 hover:text-green-600 transition-colors" data-id="2">Detail ›</button>
@@ -77,7 +77,7 @@
                         </td>
                         <td class="px-5 py-4 text-sm text-gray-600">28 Sep 2023</td>
                         <td class="px-5 py-4">
-                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">TERKIRIM</span>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">SUBMITTED</span>
                         </td>
                         <td class="px-5 py-4">
                             <button class="btn-detail text-sm font-semibold text-green-700 hover:text-green-600 transition-colors" data-id="3">Detail ›</button>
@@ -93,7 +93,7 @@
         <!-- Empty state -->
         <div class="bg-white rounded-xl border border-gray-200 p-8 text-center" id="timeline-empty">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-300 mx-auto mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/></svg>
-            <p class="text-sm text-gray-400">Klik "Detail" pada lamaran untuk melihat timeline status.</p>
+            <p class="text-sm text-gray-400">Click "Detail" on an application to see the status timeline.</p>
         </div>
 
         <!-- Timeline: Process Engineer (id=1) -->
@@ -110,7 +110,7 @@
                 <!-- Step 1: Submitted ✓ -->
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
-                    <p class="font-semibold text-sm text-gray-900">Lamaran Submitted</p>
+                    <p class="font-semibold text-sm text-gray-900">Application Submitted</p>
                     <p class="text-xs text-gray-400 mt-0.5">12 Okt 2023, 10:45 WIB</p>
                     <p class="text-xs text-gray-500 mt-1">Dokumen berhasil diunggah dan diverifikasi sistem.</p>
                 </div>
@@ -118,9 +118,9 @@
                 <!-- Step 2: Seleksi ✓ -->
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
-                    <p class="font-semibold text-sm text-gray-900">Seleksi Berkas</p>
-                    <p class="text-xs text-gray-400 mt-0.5">14 Okt 2023, 15:20 WIB</p>
-                    <p class="text-xs text-gray-500 mt-1">Berkas Anda sedang ditinjau oleh tim rekrutmen.</p>
+                    <p class="font-semibold text-sm text-gray-900">Document Review</p>
+                    <p class="text-xs text-gray-400 mt-0.5">14 Oct 2023, 15:20</p>
+                    <p class="text-xs text-gray-500 mt-1">Your documents are being reviewed by the recruitment team.</p>
                 </div>
 
                 <!-- Step 3: Interview (Active) -->
@@ -138,31 +138,31 @@
                         <div class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                             <div>
-                                <span class="text-sm font-medium text-gray-700">Kantor Pusat Ecogreen</span>
-                                <a href="#" class="block text-xs text-green-700 hover:text-green-600 underline">Lihat di Google Maps</a>
+                                <span class="text-sm font-medium text-gray-700">Ecogreen Head Office</span>
+                                <a href="#" class="block text-xs text-green-700 hover:text-green-600 underline">View on Google Maps</a>
                             </div>
                         </div>
-                        <p class="text-xs text-gray-500 bg-amber-50 px-3 py-2 rounded-md">Harap membawa identitas diri (KTP) dan CV hardcopy.</p>
+                        <p class="text-xs text-gray-500 bg-amber-50 px-3 py-2 rounded-md">Please bring a valid ID and printed CV. Arrive 15 minutes before the scheduled time.</p>
                     </div>
                 </div>
 
                 <!-- Step 4: Keputusan (Pending) -->
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
-                    <p class="font-semibold text-sm text-gray-400">Keputusan Akhir</p>
-                    <p class="text-xs text-gray-400 mt-0.5 italic">Menunggu hasil interview.</p>
+                    <p class="font-semibold text-sm text-gray-400">Final Decision</p>
+                    <p class="text-xs text-gray-400 mt-0.5 italic">Awaiting interview results.</p>
                 </div>
             </div>
 
             <!-- Action Buttons -->
             <div class="mt-8 space-y-2.5">
                 <button class="btn-konfirmasi w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">
-                    Konfirmasi Kehadiran
+                    Confirm Attendance
                 </button>
                 <button disabled class="w-full border border-gray-200 text-gray-400 font-semibold py-2.5 rounded-lg text-sm cursor-not-allowed bg-gray-50">
-                    Tarik Lamaran
+                    Withdraw Application
                 </button>
-                <p class="text-xs text-gray-400 text-center">Lamaran tidak dapat ditarik setelah tahap seleksi berkas.</p>
+                <p class="text-xs text-gray-400 text-center">Application cannot be withdrawn after the document review stage.</p>
             </div>
         </div>
 
@@ -176,22 +176,22 @@
                 <div class="absolute left-[7px] top-2 bottom-8 w-0.5 bg-gray-200"></div>
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
-                    <p class="font-semibold text-sm text-gray-900">Lamaran Submitted</p>
+                    <p class="font-semibold text-sm text-gray-900">Application Submitted</p>
                     <p class="text-xs text-gray-400 mt-0.5">05 Okt 2023, 14:30 WIB</p>
                 </div>
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-amber-500 rounded-full border-2 border-white ring-4 ring-amber-100"></div>
-                    <p class="font-semibold text-sm text-amber-700">Seleksi Berkas</p>
-                    <p class="text-xs text-gray-400 mt-0.5">Berkas sedang ditinjau.</p>
+                    <p class="font-semibold text-sm text-amber-700">Document Review</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Documents under review.</p>
                 </div>
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
                     <p class="font-semibold text-sm text-gray-400">Interview</p>
-                    <p class="text-xs text-gray-400 mt-0.5 italic">Menunggu hasil seleksi.</p>
+                    <p class="text-xs text-gray-400 mt-0.5 italic">Awaiting document review results.</p>
                 </div>
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
-                    <p class="font-semibold text-sm text-gray-400">Keputusan Akhir</p>
+                    <p class="font-semibold text-sm text-gray-400">Final Decision</p>
                 </div>
             </div>
             <div class="mt-8">
@@ -210,13 +210,13 @@
                 <div class="absolute left-[7px] top-2 bottom-8 w-0.5 bg-gray-200"></div>
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-500 rounded-full border-2 border-white ring-4 ring-gray-100"></div>
-                    <p class="font-semibold text-sm text-gray-700">Lamaran Submitted</p>
+                    <p class="font-semibold text-sm text-gray-700">Application Submitted</p>
                     <p class="text-xs text-gray-400 mt-0.5">28 Sep 2023, 09:15 WIB</p>
-                    <p class="text-xs text-gray-500 mt-1">Menunggu proses review oleh HRD.</p>
+                    <p class="text-xs text-gray-500 mt-1">Awaiting review process by HR.</p>
                 </div>
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
-                    <p class="font-semibold text-sm text-gray-400">Seleksi Berkas</p>
+                    <p class="font-semibold text-sm text-gray-400">Document Review</p>
                 </div>
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
@@ -224,7 +224,7 @@
                 </div>
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
-                    <p class="font-semibold text-sm text-gray-400">Keputusan Akhir</p>
+                    <p class="font-semibold text-sm text-gray-400">Final Decision</p>
                 </div>
             </div>
             <div class="mt-8">
@@ -249,17 +249,17 @@
                 <line x1="12" x2="12.01" y1="16" y2="16"/>
             </svg>
         </div>
-        <h2 class="text-xl font-bold text-gray-900 mb-2">Tarik Lamaran?</h2>
-        <p class="text-sm text-gray-500 mb-2">Apakah Anda yakin ingin menarik lamaran ini?</p>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Withdraw Application?</h2>
+        <p class="text-sm text-gray-500 mb-2">Are you sure you want to withdraw this application?</p>
         <div class="bg-red-50 rounded-lg p-3 mb-6">
-            <p class="text-xs text-red-600 font-medium">Tindakan ini bersifat PERMANEN dan tidak dapat dibatalkan. Anda tidak akan bisa melamar kembali untuk posisi yang sama.</p>
+            <p class="text-xs text-red-600 font-medium">This action is PERMANENT and cannot be undone. You will not be able to reapply for the same position.</p>
         </div>
         <div class="space-y-2.5">
             <button id="btn-confirm-tarik" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">
-                Ya, Tarik Lamaran
+                Yes, Withdraw Application
             </button>
             <button onclick="document.getElementById('modal-tarik').classList.add('hidden')" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">
-                Batal
+                Cancel
             </button>
         </div>
     </div>
@@ -274,7 +274,7 @@
 
         <!-- Header -->
         <div class="bg-green-800 px-6 py-5 text-white">
-            <p class="text-xs uppercase tracking-widest text-green-300 font-medium mb-1">Undangan Interview</p>
+            <p class="text-xs uppercase tracking-widest text-green-300 font-medium mb-1">Interview Invitation</p>
             <h2 class="text-lg font-bold">Process Engineer — PT Ecogreen</h2>
         </div>
 
@@ -284,7 +284,7 @@
                 <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                     <div>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tanggal & Waktu</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Date & Time</p>
                         <p class="text-sm font-semibold text-gray-900">20 Oktober 2023 • 13:00 WIB</p>
                     </div>
                 </div>
@@ -292,7 +292,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                     <div>
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Location</p>
-                        <p class="text-sm font-semibold text-gray-900">Kantor Pusat Ecogreen, Kabil, Batam</p>
+                        <p class="text-sm font-semibold text-gray-900">Ecogreen Head Office, Kabil, Batam</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
@@ -307,17 +307,17 @@
             <div class="bg-amber-50 rounded-lg p-3 mb-6">
                 <p class="text-xs text-amber-700 font-medium flex items-start gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-                    Harap membawa identitas diri (KTP) dan CV hardcopy. Datang 15 menit sebelum jadwal.
+                    Please bring a valid ID and printed CV. Arrive 15 minutes before the scheduled time.
                 </p>
             </div>
 
             <div class="space-y-2.5">
                 <button id="btn-confirm-hadir" class="w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                    Konfirmasi Kehadiran
+                    Confirm Attendance
                 </button>
                 <button onclick="document.getElementById('modal-hadir').classList.add('hidden')" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">
-                    Nanti Saja
+                    Maybe Later
                 </button>
             </div>
         </div>
@@ -327,11 +327,11 @@
             <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">Kehadiran Dikonfirmasi!</h3>
-            <p class="text-sm text-gray-500 mb-1">Kami telah mencatat konfirmasi Anda.</p>
-            <p class="text-sm text-gray-500 mb-6">Sampai jumpa di interview!</p>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Attendance Confirmed!</h3>
+            <p class="text-sm text-gray-500 mb-1">We have recorded your confirmation.</p>
+            <p class="text-sm text-gray-500 mb-6">See you at the interview!</p>
             <button onclick="document.getElementById('modal-hadir').classList.add('hidden')" class="w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">
-                Tutup
+                Close
             </button>
         </div>
     </div>
@@ -402,9 +402,9 @@ document.addEventListener('DOMContentLoaded', function () {
         this.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
         setTimeout(() => {
             document.getElementById('modal-tarik').classList.add('hidden');
-            alert('Lamaran berhasil ditarik. (demo)');
+            alert('Application withdrawn successfully. (demo)');
             this.disabled = false;
-            this.textContent = 'Ya, Tarik Lamaran';
+            this.textContent = 'Yes, Withdraw Application';
         }, 1200);
     });
 
@@ -430,7 +430,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('hadir-form').classList.add('hidden');
             document.getElementById('hadir-success').classList.remove('hidden');
             this.disabled = false;
-            this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Konfirmasi Kehadiran';
+            this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Confirm Attendance';
         }, 1000);
     });
 

@@ -8,7 +8,7 @@
 <!-- Header -->
 <div class="mb-8">
     <h1 class="text-2xl font-bold text-gray-900">Profile</h1>
-    <p class="text-gray-500 mt-1">Lengkapi data diri Anda sesuai dengan dokumen resmi untuk keperluan verifikasi.</p>
+    <p class="text-gray-500 mt-1">Complete your personal data according to official documents for verification purposes.</p>
 </div>
 
 <div class="bg-white rounded-xl border border-gray-200 p-8">
@@ -29,9 +29,9 @@
             <input type="file" id="foto-input" accept="image/jpeg,image/png" class="hidden">
         </div>
         <div>
-            <p class="font-semibold text-gray-900">Foto Profil</p>
-            <p class="text-xs text-gray-400">Format JPG, PNG (Maks 2MB).</p>
-            <p class="text-xs text-gray-400">Gunakan foto formal terbaik Anda.</p>
+            <p class="font-semibold text-gray-900">Profile Photo</p>
+            <p class="text-xs text-gray-400">JPG, PNG format (Max 2MB).</p>
+            <p class="text-xs text-gray-400">Use your best formal photo.</p>
         </div>
     </div>
 
@@ -39,17 +39,17 @@
     <div class="grid grid-cols-2 gap-x-8 gap-y-5 mb-10">
         <!-- NIK -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">NIK (Nomor Induk Kependudukan)</label>
-            <input type="text" id="nik" placeholder="Masukkan 16 digit NIK" maxlength="16" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">NIK (National ID Number)</label>
+            <input type="text" id="nik" placeholder="Enter 16-digit NIK" maxlength="16" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
         </div>
         <!-- Nama Lengkap -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Lengkap</label>
-            <input type="text" id="nama" placeholder="Nama lengkap sesuai KTP" value="Budi Santoso" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
+            <input type="text" id="nama" placeholder="Full name as per ID card" value="Budi Santoso" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
         </div>
         <!-- Jenis Kelamin -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Jenis Kelamin</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Gender</label>
             <select id="jenis-kelamin" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all appearance-none">
                 <option value="">Select</option>
                 <option value="L" selected>Male</option>
@@ -68,25 +68,25 @@
         </div>
         <!-- Tempat/Tanggal Lahir -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Tempat/Tanggal Lahir</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Place / Date of Birth</label>
             <div class="grid grid-cols-2 gap-3">
-                <input type="text" id="tempat-lahir" placeholder="Tempat" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <input type="text" id="tempat-lahir" placeholder="City" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
                 <input type="date" id="tanggal-lahir" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
         </div>
         <!-- Umur -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Umur</label>
-            <input type="number" id="umur" placeholder="Contoh: 25" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Age</label>
+            <input type="number" id="umur" placeholder="Example: 25" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
         </div>
         <!-- Status Pernikahan -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Status Pernikahan</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Marital Status</label>
             <select id="status-nikah" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all appearance-none">
                 <option value="">Select</option>
-                <option value="belum" selected>Belum Menikah</option>
-                <option value="menikah">Menikah</option>
-                <option value="cerai">Cerai</option>
+                <option value="belum" selected>Single</option>
+                <option value="menikah">Married</option>
+                <option value="cerai">Divorced</option>
             </select>
         </div>
     </div>
@@ -112,16 +112,16 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Sekolah/Universitas</label>
-                <input type="text" id="sekolah" placeholder="Nama Institusi" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">School / University</label>
+                <input type="text" id="sekolah" placeholder="Institution Name" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Selesai Pendidikan</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Education Completion</label>
                 <input type="month" id="selesai-pendidikan" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nilai Rata-Rata/IPK</label>
-                <input type="text" id="ipk" placeholder="Contoh: 3.75 / 4.00" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">GPA / Average Score</label>
+                <input type="text" id="ipk" placeholder="Example: 3.75 / 4.00" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
         </div>
     </div>
@@ -132,28 +132,28 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
-            <h2 class="text-base font-bold text-gray-900">Alamat Sesuai KTP</h2>
+            <h2 class="text-base font-bold text-gray-900">ID Card Address</h2>
         </div>
         <div class="grid grid-cols-2 gap-x-8 gap-y-5">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Provinsi</label>
-                <input type="text" id="ktp-provinsi" placeholder="Provinsi" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Province</label>
+                <input type="text" id="ktp-provinsi" placeholder="Province" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Kota/Kabupaten</label>
-                <input type="text" id="ktp-kota" placeholder="Kota/Kabupaten" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">City / Regency</label>
+                <input type="text" id="ktp-kota" placeholder="City / Regency" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Kecamatan</label>
-                <input type="text" id="ktp-kecamatan" placeholder="Kecamatan" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">District</label>
+                <input type="text" id="ktp-kecamatan" placeholder="District" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Kelurahan</label>
-                <input type="text" id="ktp-kelurahan" placeholder="Kelurahan" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Sub-district</label>
+                <input type="text" id="ktp-kelurahan" placeholder="Sub-district" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
             <div class="col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Alamat Lengkap</label>
-                <input type="text" id="ktp-alamat" placeholder="Nama Jalan, No. Rumah, RT/RW" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Full Address</label>
+                <input type="text" id="ktp-alamat" placeholder="Street Name, House No., RT/RW" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
         </div>
     </div>
@@ -165,33 +165,33 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
                 </svg>
-                <h2 class="text-base font-bold text-gray-900">Alamat Domisili</h2>
+                <h2 class="text-base font-bold text-gray-900">Current Residence Address</h2>
             </div>
             <label class="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" id="sama-ktp" class="h-4 w-4 rounded border-gray-300 text-green-700 focus:ring-green-600 accent-green-800 cursor-pointer">
-                <span class="text-sm text-gray-500">Sama dengan KTP</span>
+                <span class="text-sm text-gray-500">Same as ID Card</span>
             </label>
         </div>
         <div class="grid grid-cols-2 gap-x-8 gap-y-5" id="domisili-fields">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Provinsi</label>
-                <input type="text" id="dom-provinsi" placeholder="Provinsi" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Province</label>
+                <input type="text" id="dom-provinsi" placeholder="Province" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Kota/Kabupaten</label>
-                <input type="text" id="dom-kota" placeholder="Kota/Kabupaten" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">City / Regency</label>
+                <input type="text" id="dom-kota" placeholder="City / Regency" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Kecamatan</label>
-                <input type="text" id="dom-kecamatan" placeholder="Kecamatan" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">District</label>
+                <input type="text" id="dom-kecamatan" placeholder="District" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Kelurahan</label>
-                <input type="text" id="dom-kelurahan" placeholder="Kelurahan" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Sub-district</label>
+                <input type="text" id="dom-kelurahan" placeholder="Sub-district" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
             <div class="col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Alamat Lengkap</label>
-                <input type="text" id="dom-alamat" placeholder="Nama Jalan, No. Rumah, RT/RW" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Full Address</label>
+                <input type="text" id="dom-alamat" placeholder="Street Name, House No., RT/RW" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
         </div>
     </div>
@@ -202,7 +202,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
             </svg>
-            Simpan Perubahan
+            Save Changes
         </button>
     </div>
 

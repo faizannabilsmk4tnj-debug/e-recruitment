@@ -9,12 +9,12 @@
 <div class="flex items-start justify-between mb-6">
     <div>
         <h1 class="text-2xl font-bold text-gray-900">Organization Experience</h1>
-        <p class="text-gray-500 mt-1">Kelola riwayat keterlibatan organisasi dan kepanitiaan Anda.</p>
+        <p class="text-gray-500 mt-1">Manage your organization and committee involvement history.</p>
     </div>
     <a href="/pelamar/organisasi/tambah" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm flex items-center gap-2 shrink-0">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-        Tambah Pengalaman
-    </a>
+            Add Experience
+        </a>
 </div>
 
 <!-- Cards - 2 column grid -->
@@ -36,7 +36,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Edit
             </button>
             <button class="btn-hapus text-[11px] text-gray-400 hover:text-red-500 transition-colors flex items-center gap-1" data-id="1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg> Hapus
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                Delete
             </button>
         </div>
     </div>
@@ -57,7 +58,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Edit
             </button>
             <button class="btn-hapus text-[11px] text-gray-400 hover:text-red-500 transition-colors flex items-center gap-1" data-id="2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg> Hapus
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                Delete
             </button>
         </div>
     </div>
@@ -78,7 +80,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Edit
             </button>
             <button class="btn-hapus text-[11px] text-gray-400 hover:text-red-500 transition-colors flex items-center gap-1" data-id="3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg> Hapus
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                Delete
             </button>
         </div>
     </div>
@@ -88,8 +91,8 @@
 <!-- Empty State -->
 <div class="hidden bg-white rounded-xl border border-gray-200 p-16 text-center" id="empty-state">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-300 mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    <p class="text-gray-500 font-medium">Belum ada pengalaman organisasi.</p>
-    <p class="text-gray-400 text-sm mt-1">Klik "Tambah Pengalaman" untuk menambahkan.</p>
+    <p class="text-gray-500 font-medium">No organization experience found.</p>
+    <p class="text-gray-400 text-sm mt-1">Click "Add Experience" to add.</p>
 </div>
 
 @endsection
@@ -102,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     list.addEventListener('click', function (e) {
         const hapusBtn = e.target.closest('.btn-hapus');
-        if (hapusBtn && confirm('Yakin ingin menghapus pengalaman organisasi ini?')) {
+        if (hapusBtn && confirm('Are you sure you want to delete this organization experience?')) {
             const card = hapusBtn.closest('[data-id]');
             card.style.transition = 'opacity 0.3s, transform 0.3s';
             card.style.opacity = '0';

@@ -39,10 +39,10 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                             Unduh
                         </button>
-                        <button class="btn-hapus-file flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors" data-id="s1" title="Hapus">
+                        <button class="btn-hapus-file flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors" data-id="s1" title="Delete">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                            Hapus
-                        </button>
+                Delete
+            </button>
                     </div>
                 </div>
             </div>
@@ -66,8 +66,8 @@
                         </button>
                         <button class="btn-hapus-file flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors" data-id="s2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                            Hapus
-                        </button>
+                Delete
+            </button>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                     <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mb-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                     </div>
-                    <p class="text-sm text-gray-500 font-medium">Tambah Baru</p>
+                    <p class="text-sm text-gray-500 font-medium">Add New</p>
                 </div>
                 <input type="file" id="upload-sertifikat" accept="image/jpeg,image/png,application/pdf" class="hidden" multiple>
             </label>
@@ -123,7 +123,7 @@
                 <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mb-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                 </div>
-                <p class="text-sm text-gray-500 font-medium">Tambah Baru</p>
+                <p class="text-sm text-gray-500 font-medium">Add New</p>
             </button>
         </div>
     </div>

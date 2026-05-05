@@ -62,7 +62,7 @@
                         <button class="text-gray-400 hover:text-green-700 transition-colors" title="Lihat">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </button>
-                        <button id="file-remove" class="text-gray-400 hover:text-red-500 transition-colors" title="Hapus">
+                        <button id="file-remove" class="text-gray-400 hover:text-red-500 transition-colors" title="Delete">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                         </button>
                     </div>
@@ -128,7 +128,7 @@
                         Kirim Lamaran
                     </button>
                     <button onclick="history.back()" class="w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg text-sm hover:bg-gray-50 transition-colors">
-                        Kembali ke Edit
+                        Back to Edit
                     </button>
                 </div>
 

@@ -9,11 +9,11 @@
 <div class="flex items-center gap-2 text-sm text-gray-400 mb-4">
     <a href="/pelamar/organisasi" class="hover:text-green-700 transition-colors">Organization Experience</a>
     <span>›</span>
-    <span class="text-gray-700 font-medium">Tambah Baru</span>
+    <span class="text-gray-700 font-medium">Add New</span>
 </div>
 
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Tambah Pengalaman Organisasi</h1>
+    <h1 class="text-2xl font-bold text-gray-900">Add Organization Experience</h1>
     <p class="text-gray-500 mt-1">Lengkapi detail keterlibatan organisasi atau kepanitiaan Anda.</p>
 </div>
 
@@ -49,7 +49,7 @@
 
         <div class="flex gap-4 pt-4 justify-end">
             <a href="/pelamar/organisasi" class="border border-gray-300 text-gray-700 font-semibold px-8 py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</a>
-            <button type="button" id="btn-simpan" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-8 py-2.5 rounded-lg text-sm transition-colors">Simpan Pengalaman</button>
+            <button type="button" id="btn-simpan" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-8 py-2.5 rounded-lg text-sm transition-colors">Save Experience</button>
         </div>
     </div>
 </div>
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const jabatan = document.getElementById('jabatan').value.trim();
         const organisasi = document.getElementById('organisasi').value.trim();
         if (!jabatan || !organisasi) { alert('Jabatan dan Nama Organisasi wajib diisi.'); return; }
-        alert('Pengalaman organisasi berhasil disimpan! (demo)');
+        alert('Organization experience saved successfully! (demo)');
         window.location.href = '/pelamar/organisasi';
     });
 });

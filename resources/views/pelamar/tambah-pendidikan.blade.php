@@ -9,12 +9,12 @@
 <div class="flex items-center gap-2 text-sm text-gray-400 mb-4">
     <a href="/pelamar/pendidikan" class="hover:text-green-700 transition-colors">Education</a>
     <span>›</span>
-    <span class="text-gray-700 font-medium">Tambah Baru</span>
+    <span class="text-gray-700 font-medium">Add New</span>
 </div>
 
 <!-- Header -->
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Tambah Riwayat Pendidikan</h1>
+    <h1 class="text-2xl font-bold text-gray-900">Add Education History</h1>
     <p class="text-gray-500 mt-1">Lengkapi formulir di bawah ini dengan informasi pendidikan Anda.</p>
 </div>
 
@@ -31,7 +31,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Tingkat Pendidikan <span class="text-red-500">*</span></label>
                 <select id="tingkat" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none">
-                    <option value="">Pilih Tingkat</option>
+                    <option value="">Select Level</option>
                     <option value="SD">SD</option>
                     <option value="SMP">SMP</option>
                     <option value="SMA/SMK">SMA/SMK</option>
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const sekolah = document.getElementById('sekolah').value.trim();
         const tingkat = document.getElementById('tingkat').value;
         if (!sekolah || !tingkat) { alert('Nama Sekolah dan Tingkat Pendidikan wajib diisi.'); return; }
-        alert('Pendidikan berhasil disimpan! (demo)');
+        alert('Education saved successfully! (demo)');
         window.location.href = '/pelamar/pendidikan';
     });
 });
