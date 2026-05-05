@@ -21,10 +21,10 @@ document.addEventListener('DOMContentLoaded', function () {
         toggle.addEventListener('change', function () {
             const label = this.closest('td').querySelector('.status-label');
             if (this.checked) {
-                label.textContent = 'AKTIF';
+                label.textContent = 'ACTIVE';
                 label.className = 'text-xs font-semibold text-green-700 status-label';
             } else {
-                label.textContent = 'NONAKTIF';
+                label.textContent = 'INACTIVE';
                 label.className = 'text-xs font-semibold text-gray-400 status-label';
             }
         });
@@ -34,7 +34,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function openDropdown(btn, row) {
         activeRow = row;
         const rect = btn.getBoundingClientRect();
-        dropdown.style.top  = (rect.bottom + window.scrollY + 4) + 'px';
+        dropdown.style.position = 'fixed';
+        dropdown.style.top  = (rect.bottom + 4) + 'px';
+        dropdown.style.left = 'auto';
         dropdown.style.right = (window.innerWidth - rect.right) + 'px';
         dropdown.classList.toggle('hidden');
     }
@@ -69,8 +71,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const role  = document.getElementById('edit-role').value;
         const pass  = document.getElementById('edit-pass').value;
 
-        if (!name || !email || !role) { alert('Nama, email, dan peran wajib diisi.'); return; }
-        if (pass && pass.length < 8) { alert('Password minimal 8 karakter.'); return; }
+        if (!name || !email || !role) { alert('Name, email, and role are required.'); return; }
+        if (pass && pass.length < 8) { alert('Password must be at least 8 characters.'); return; }
 
         if (activeRow) {
             // Update data-* attributes
@@ -148,9 +150,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const role  = document.getElementById('new-role').value;
         const pass  = document.getElementById('new-pass').value;
 
-        if (!name || !email || !role || !pass) { alert('Semua field wajib diisi.'); return; }
-        if (pass.length < 8) { alert('Password minimal 8 karakter.'); return; }
-        if (!email.includes('@')) { alert('Format email tidak valid.'); return; }
+        if (!name || !email || !role || !pass) { alert('All fields are required.'); return; }
+        if (pass.length < 8) { alert('Password must be at least 8 characters.'); return; }
+        if (!email.includes('@')) { alert('Invalid email format.'); return; }
 
         const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
         const colors   = ['bg-green-600', 'bg-blue-500', 'bg-purple-500', 'bg-amber-500', 'bg-pink-500'];
@@ -182,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <input type="checkbox" class="sr-only peer toggle-status" checked>
                         <div class="w-10 h-6 bg-gray-200 rounded-full peer peer-checked:bg-green-700 peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                     </label>
-                    <span class="text-xs font-semibold text-green-700 status-label">AKTIF</span>
+                    <span class="text-xs font-semibold text-green-700 status-label">ACTIVE</span>
                 </div>
             </td>
             <td class="px-6 py-4 text-right">
@@ -194,8 +196,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Attach events to new row
         row.querySelector('.toggle-status').addEventListener('change', function () {
             const label = this.closest('td').querySelector('.status-label');
-            if (this.checked) { label.textContent = 'AKTIF'; label.className = 'text-xs font-semibold text-green-700 status-label'; }
-            else              { label.textContent = 'NONAKTIF'; label.className = 'text-xs font-semibold text-gray-400 status-label'; }
+            if (this.checked) { label.textContent = 'ACTIVE'; label.className = 'text-xs font-semibold text-green-700 status-label'; }
+            else              { label.textContent = 'INACTIVE'; label.className = 'text-xs font-semibold text-gray-400 status-label'; }
         });
         row.querySelector('.btn-action').addEventListener('click', function (e) {
             e.stopPropagation();

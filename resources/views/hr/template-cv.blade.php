@@ -9,12 +9,12 @@
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
-            <h2 class="text-3xl font-bold text-gray-900 mb-1">Manajemen Template CV</h2>
-            <p class="text-gray-500 text-sm">Kelola dan kustomisasi format ringkasan profil untuk seluruh kandidat.</p>
+            <h2 class="text-3xl font-bold text-gray-900 mb-1">CV Template Management</h2>
+            <p class="text-gray-500 text-sm">Manage and customize profile summary formats for all candidates.</p>
         </div>
         <button id="btn-tambah" class="bg-[#0f3c20] hover:bg-[#1b5e32] text-white font-semibold py-2.5 px-5 rounded-lg flex items-center gap-2 text-sm transition-colors shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-            Tambah Template Baru
+            Add New Template
         </button>
     </div>
 
@@ -22,7 +22,7 @@
     <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 mb-8 flex flex-col sm:flex-row gap-3 items-center">
         <div class="relative flex-1 w-full">
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" id="search-template" placeholder="Search berdasarkan nama template..." class="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400">
+            <input type="text" id="search-template" placeholder="Search by template name..." class="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400">
         </div>
         <div class="flex items-center gap-2 flex-shrink-0">
             <div class="flex rounded-lg border border-gray-200 overflow-hidden text-sm font-semibold">
@@ -32,7 +32,7 @@
             </div>
             <button class="flex items-center gap-1.5 text-sm font-semibold text-gray-600 border border-gray-200 rounded-lg px-3 py-2 hover:bg-gray-50 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"/></svg>
-                Urutkan
+                Sort
             </button>
         </div>
     </div>
@@ -215,8 +215,8 @@
         <div class="bg-[#0f3c20] p-6">
             <div class="flex justify-between items-center">
                 <div>
-                    <div class="text-xs font-bold uppercase tracking-widest text-green-300 mb-1">Manajemen Template CV</div>
-                    <h2 class="text-xl font-black text-white">Tambah Template Baru</h2>
+                    <div class="text-xs font-bold uppercase tracking-widest text-green-300 mb-1">CV Template Management</div>
+                    <h2 class="text-xl font-black text-white">Add New Template</h2>
                 </div>
                 <button id="modal-tambah-close" class="text-white/70 hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -225,15 +225,15 @@
         </div>
         <div class="p-6 space-y-4">
             <div>
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Nama Template</label>
-                <input id="input-nama-template" type="text" placeholder="Contoh: Modern Executive 2025" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400">
+                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Template Name</label>
+                <input id="input-nama-template" type="text" placeholder="Example: Modern Executive 2025" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400">
             </div>
             <div>
                 <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Description</label>
-                <textarea rows="3" placeholder="Deskripsi singkat template ini..." class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400 resize-none"></textarea>
+                <textarea rows="3" placeholder="Brief description of this template..." class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400 resize-none"></textarea>
             </div>
             <div>
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Status Awal</label>
+                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Initial Status</label>
                 <select class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400">
                     <option value="draft">Draft</option>
                     <option value="published">Published</option>
@@ -241,7 +241,7 @@
             </div>
             <div class="flex gap-3 pt-2">
                 <button id="modal-tambah-cancel" class="flex-1 border border-gray-200 text-gray-700 font-semibold text-sm py-2.5 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
-                <button id="btn-buat-template" class="flex-1 bg-[#0f3c20] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#1b5e32] transition-colors">Buat Template →</button>
+                <button id="btn-buat-template" class="flex-1 bg-[#0f3c20] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#1b5e32] transition-colors">Create Template →</button>
             </div>
         </div>
     </div>
@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('btn-default');
             this.removeEventListener('click', arguments.callee);
             initDefaultBtn(this);
-            showToast('Template berhasil dipublikasikan!', 'success');
+            showToast('Template published successfully!', 'success');
         });
     });
 
@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
             badge.classList.add('status-badge-primary');
             this.textContent = 'Primary ✓';
             this.style.background = '#166534';
-            showToast('Template dijadikan default untuk semua pelamar!', 'success');
+            showToast('Template set as default for all applicants!', 'success');
         });
     }
     document.querySelectorAll('.btn-default').forEach(initDefaultBtn);

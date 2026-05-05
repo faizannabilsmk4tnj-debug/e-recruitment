@@ -1,7 +1,7 @@
 @extends('layouts.hr')
 
-@section('title', 'Detail Pelamar')
-@section('page-title', 'Detail Pelamar')
+@section('title', 'Applicant Detail')
+@section('page-title', 'Applicant Detail')
 @section('nav-pelamar', 'text-green-800 border-green-800')
 
 @section('content')
@@ -86,15 +86,15 @@
                         <div class="text-sm font-semibold text-gray-900">2171011210920003</div>
                     </div>
                     <div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">NAMA LENGKAP</div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">FULL NAME</div>
                         <div class="text-sm font-semibold text-gray-900">Budi Santoso, S.T.</div>
                     </div>
                     <div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">JENIS KELAMIN</div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">GENDER</div>
                         <div class="text-sm font-semibold text-gray-900">Male</div>
                     </div>
                     <div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">NOMOR TELEPON</div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">PHONE NUMBER</div>
                         <div class="text-sm font-semibold text-gray-900">+62 812 3456 7890</div>
                     </div>
                     <div>
@@ -102,16 +102,16 @@
                         <div class="text-sm font-semibold text-gray-900">budi.santoso@email.com</div>
                     </div>
                     <div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">TEMPAT, TANGGAL LAHIR</div>
-                        <div class="text-sm font-semibold text-gray-900">Batam, 12 Oktober 1992</div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">PLACE, DATE OF BIRTH</div>
+                        <div class="text-sm font-semibold text-gray-900">Batam, 12 October 1992</div>
                     </div>
                     <div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">UMUR</div>
-                        <div class="text-sm font-semibold text-gray-900">31 Tahun</div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">AGE</div>
+                        <div class="text-sm font-semibold text-gray-900">31 Years Old</div>
                     </div>
                     <div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">STATUS PERNIKAHAN</div>
-                        <div class="text-sm font-semibold text-gray-900">Menikah</div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">MARITAL STATUS</div>
+                        <div class="text-sm font-semibold text-gray-900">Married</div>
                     </div>
                 </div>
             </section>
@@ -124,19 +124,19 @@
                 </div>
                 <div class="grid grid-cols-2 gap-x-8 gap-y-6">
                     <div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">PENDIDIKAN TERAKHIR</div>
-                        <div class="text-sm font-semibold text-gray-900">S1 Teknik Informatika</div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">LAST EDUCATION</div>
+                        <div class="text-sm font-semibold text-gray-900">B.Eng. Informatics Engineering</div>
                     </div>
                     <div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">SEKOLAH / UNIVERSITAS</div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">SCHOOL / UNIVERSITY</div>
                         <div class="text-sm font-semibold text-gray-900">Institut Teknologi Bandung</div>
                     </div>
                     <div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">SELESAI PENDIDIKAN</div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">GRADUATION YEAR</div>
                         <div class="text-sm font-semibold text-gray-900">September 2018</div>
                     </div>
                     <div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">NILAI RATA-RATA / IPK</div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">GPA</div>
                         <div class="text-sm font-semibold text-gray-900">3.85 / 4.00</div>
                     </div>
                 </div>
@@ -146,31 +146,31 @@
             <section>
                 <div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-3">
                     <svg class="w-5 h-5 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    <h3 class="text-lg font-bold text-gray-900">Informasi Alamat</h3>
+                    <h3 class="text-lg font-bold text-gray-900">Address Information</h3>
                 </div>
                 
                 {{-- KTP Address Card --}}
                 <div class="bg-green-50/30 border border-green-100 rounded-xl p-6 mb-5">
-                    <h4 class="text-sm font-bold text-green-900 tracking-wider mb-4">ALAMAT SESUAI KTP</h4>
+                    <h4 class="text-sm font-bold text-green-900 tracking-wider mb-4">ID CARD ADDRESS (KTP)</h4>
                     <div class="grid grid-cols-2 gap-x-8 gap-y-5">
                         <div>
-                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">PROVINSI</div>
+                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">PROVINCE</div>
                             <div class="text-sm font-semibold text-gray-900">Kepulauan Riau</div>
                         </div>
                         <div>
-                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">KOTA / KABUPATEN</div>
+                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">CITY / REGENCY</div>
                             <div class="text-sm font-semibold text-gray-900">Kota Batam</div>
                         </div>
                         <div>
-                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">KECAMATAN</div>
+                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">DISTRICT</div>
                             <div class="text-sm font-semibold text-gray-900">Batam Kota</div>
                         </div>
                         <div>
-                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">KELURAHAN</div>
+                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">SUB-DISTRICT</div>
                             <div class="text-sm font-semibold text-gray-900">Belian</div>
                         </div>
                         <div class="col-span-2">
-                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">ALAMAT LENGKAP</div>
+                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">FULL ADDRESS</div>
                             <div class="text-sm font-semibold text-gray-900">Jl. Gajah Mada No. 123, Komplek Mega Legenda Blok A1 No. 5</div>
                         </div>
                     </div>
@@ -179,28 +179,28 @@
                 {{-- Domisili Address Card --}}
                 <div class="bg-gray-50/50 border border-gray-100 rounded-xl p-6 relative">
                     <div class="absolute top-6 right-6 bg-gray-200 text-gray-700 px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase">
-                        SAMA DENGAN KTP
+                        SAME AS ID CARD
                     </div>
-                    <h4 class="text-sm font-bold text-green-900 tracking-wider mb-4">ALAMAT DOMISILI</h4>
+                    <h4 class="text-sm font-bold text-green-900 tracking-wider mb-4">DOMICILE ADDRESS</h4>
                     <div class="grid grid-cols-2 gap-x-8 gap-y-5">
                         <div>
-                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">PROVINSI</div>
+                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">PROVINCE</div>
                             <div class="text-sm font-semibold text-gray-900">Kepulauan Riau</div>
                         </div>
                         <div>
-                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">KOTA / KABUPATEN</div>
+                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">CITY / REGENCY</div>
                             <div class="text-sm font-semibold text-gray-900">Kota Batam</div>
                         </div>
                         <div>
-                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">KECAMATAN</div>
+                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">DISTRICT</div>
                             <div class="text-sm font-semibold text-gray-900">Batam Kota</div>
                         </div>
                         <div>
-                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">KELURAHAN</div>
+                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">SUB-DISTRICT</div>
                             <div class="text-sm font-semibold text-gray-900">Belian</div>
                         </div>
                         <div class="col-span-2">
-                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">ALAMAT LENGKAP</div>
+                            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">FULL ADDRESS</div>
                             <div class="text-sm font-semibold text-gray-900">Jl. Gajah Mada No. 123, Komplek Mega Legenda Blok A1 No. 5</div>
                         </div>
                     </div>
@@ -237,7 +237,7 @@
                             {{-- Left Sidebar --}}
                             <div class="w-full sm:w-1/3 border-b sm:border-b-0 sm:border-r border-gray-200 pb-6 sm:pb-0 sm:pr-8 space-y-6 sm:space-y-8 shrink-0">
                                 <div>
-                                    <h3 class="text-[11px] sm:text-xs font-black text-gray-900 border-b-2 border-gray-900 pb-1.5 mb-3 uppercase tracking-widest">Kontak</h3>
+                                    <h3 class="text-[11px] sm:text-xs font-black text-gray-900 border-b-2 border-gray-900 pb-1.5 mb-3 uppercase tracking-widest">Contact</h3>
                                     <div class="space-y-2.5 text-[10px] sm:text-[11px] text-gray-600">
                                         <div class="flex items-center gap-2.5">
                                             <div class="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
@@ -261,7 +261,7 @@
                                 </div>
                                 
                                 <div>
-                                    <h3 class="text-[11px] sm:text-xs font-black text-gray-900 border-b-2 border-gray-900 pb-1.5 mb-3 uppercase tracking-widest">Keahlian</h3>
+                                    <h3 class="text-[11px] sm:text-xs font-black text-gray-900 border-b-2 border-gray-900 pb-1.5 mb-3 uppercase tracking-widest">Skills</h3>
                                     <div class="flex flex-wrap gap-1.5">
                                         <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-[9px] sm:text-[10px] font-bold">PHP</span>
                                         <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-[9px] sm:text-[10px] font-bold">Laravel</span>
@@ -276,7 +276,7 @@
                                     <h3 class="text-[11px] sm:text-xs font-black text-gray-900 border-b-2 border-gray-900 pb-1.5 mb-3 uppercase tracking-widest">Languages</h3>
                                     <ul class="space-y-2 text-[10px] sm:text-[11px] text-gray-600 font-medium">
                                         <li class="flex justify-between"><span>Indonesia</span> <span class="font-bold text-gray-900">Native</span></li>
-                                        <li class="flex justify-between"><span>Inggris</span> <span class="font-bold text-gray-900">Fluent</span></li>
+                                        <li class="flex justify-between"><span>English</span> <span class="font-bold text-gray-900">Fluent</span></li>
                                     </ul>
                                 </div>
                             </div>
@@ -284,9 +284,9 @@
                             {{-- Right Main Content --}}
                             <div class="flex-1 space-y-6 sm:space-y-8">
                                 <div>
-                                    <h3 class="text-[11px] sm:text-xs font-black text-green-950 border-b-2 border-gray-200 pb-1.5 mb-3 uppercase tracking-widest">Profil Singkat</h3>
+                                    <h3 class="text-[11px] sm:text-xs font-black text-green-950 border-b-2 border-gray-200 pb-1.5 mb-3 uppercase tracking-widest">Professional Summary</h3>
                                     <p class="text-[10px] sm:text-[11px] text-gray-600 leading-relaxed text-justify">
-                                        Software Engineer profesional dengan pengalaman lebih dari 5 tahun di bidang web development modern. Ahli dalam merancang arsitektur aplikasi berskala besar, optimalisasi performa database, dan memimpin tim pengembangan agile. Sangat berkomitmen terhadap prinsip clean code dan delivery software yang berkualitas tinggi.
+                                        Professional Software Engineer with over 5 years of experience in modern web development. Expert in designing large-scale application architecture, database performance optimization, and leading agile development teams. Deeply committed to clean code principles and high-quality software delivery.
                                     </p>
                                 </div>
                                 
@@ -297,13 +297,13 @@
                                         <div class="absolute w-2 h-2 bg-green-600 rounded-full -left-[5px] top-1.5"></div>
                                         <div class="flex justify-between items-baseline mb-0.5">
                                             <h4 class="text-[11px] sm:text-xs font-black text-gray-900">Senior Web Developer</h4>
-                                            <span class="text-[9px] sm:text-[10px] font-bold text-gray-500 whitespace-nowrap">2020 - Saat Ini</span>
+                                            <span class="text-[9px] sm:text-[10px] font-bold text-gray-500 whitespace-nowrap">2020 - Present</span>
                                         </div>
                                         <div class="text-[10px] sm:text-[11px] font-bold text-green-800 mb-2">PT Teknologi Nusantara</div>
                                         <ul class="list-disc list-outside ml-3 text-[10px] sm:text-[11px] text-gray-600 leading-relaxed space-y-1">
-                                            <li>Merancang dan mendeploy arsitektur microservices untuk sistem ERP internal perusahaan.</li>
-                                            <li>Meningkatkan performa query database MySQL sebesar 40% dan mengoptimalkan waktu loading halaman.</li>
-                                            <li>Memimpin dan melakukan mentoring kepada 3 junior developer dalam tim engineering.</li>
+                                            <li>Designed and deployed a microservices architecture for the company's internal ERP system.</li>
+                                            <li>Improved MySQL database query performance by 40% and optimized page load times.</li>
+                                            <li>Led and mentored 3 junior developers in the engineering team.</li>
                                         </ul>
                                     </div>
                                     
@@ -315,9 +315,9 @@
                                         </div>
                                         <div class="text-[10px] sm:text-[11px] font-bold text-gray-700 mb-2">CV Kreatif Media</div>
                                         <ul class="list-disc list-outside ml-3 text-[10px] sm:text-[11px] text-gray-600 leading-relaxed space-y-1">
-                                            <li>Mengembangkan lebih dari 15 website klien berbasis framework Laravel dan Vue.js.</li>
-                                            <li>Melakukan integrasi berbagai payment gateway lokal (Midtrans, Xendit).</li>
-                                            <li>Mengimplementasikan CI/CD pipeline menggunakan GitHub Actions.</li>
+                                            <li>Developed over 15 client websites using the Laravel and Vue.js frameworks.</li>
+                                            <li>Integrated various local payment gateways (Midtrans, Xendit).</li>
+                                            <li>Implemented CI/CD pipeline using GitHub Actions.</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -327,11 +327,11 @@
                                     <div class="relative pl-4 border-l-2 border-gray-200">
                                         <div class="absolute w-2 h-2 bg-gray-300 rounded-full -left-[5px] top-1.5"></div>
                                         <div class="flex justify-between items-baseline mb-0.5">
-                                            <h4 class="text-[11px] sm:text-xs font-black text-gray-900">S1 Teknik Informatika</h4>
+                                            <h4 class="text-[11px] sm:text-xs font-black text-gray-900">B.Eng. Informatics Engineering</h4>
                                             <span class="text-[9px] sm:text-[10px] font-bold text-gray-500 whitespace-nowrap">2014 - 2018</span>
                                         </div>
                                         <div class="text-[10px] sm:text-[11px] font-bold text-gray-700">Institut Teknologi Bandung</div>
-                                        <div class="text-[9px] sm:text-[10px] text-gray-500 mt-1 font-medium">IPK: 3.85 / 4.00 | Predikat Cum Laude</div>
+                                        <div class="text-[9px] sm:text-[10px] text-gray-500 mt-1 font-medium">GPA: 3.85 / 4.00 | Cum Laude</div>
                                     </div>
                                 </div>
                             </div>
@@ -348,12 +348,12 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div class="flex items-center gap-3 mb-5">
                     <svg class="w-5 h-5 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    <h3 class="text-base font-bold text-gray-900">Ubah Status Pelamar</h3>
+                    <h3 class="text-base font-bold text-gray-900">Change Applicant Status</h3>
                 </div>
 
                 <form action="#" method="POST" id="form-ubah-status">
                     <div class="mb-4">
-                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">STATUS BARU</label>
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">NEW STATUS</label>
                         <div class="relative">
                             <select class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-2.5 appearance-none font-medium">
                                 <option value="Applied">Applied</option>
@@ -371,14 +371,14 @@
                     </div>
 
                     <div class="mb-5">
-                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">ALASAN PERUBAHAN</label>
-                        <textarea rows="3" class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3 placeholder-gray-400" placeholder="Tulis alasan atau catatan perubahan status..."></textarea>
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">REASON FOR CHANGE</label>
+                        <textarea rows="3" class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3 placeholder-gray-400" placeholder="Write the reason or notes for the status change..."></textarea>
                     </div>
 
                     <div class="flex items-center justify-between mb-6 pb-6 border-b border-gray-100">
                         <div class="flex items-center gap-2 text-sm text-gray-700 font-medium">
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            Kirim Notifikasi Email
+                            Send Email Notification
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" value="" class="sr-only peer" checked>
@@ -397,12 +397,12 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div class="flex items-center gap-3 mb-5">
                     <svg class="w-5 h-5 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                    <h3 class="text-base font-bold text-gray-900">Catatan Internal HR</h3>
+                    <h3 class="text-base font-bold text-gray-900">Internal HR Notes</h3>
                 </div>
 
                 {{-- Input Note --}}
                 <div class="relative mb-6">
-                    <input type="text" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3 pr-12 placeholder-gray-400" placeholder="Tambahkan catatan pribadi...">
+                    <input type="text" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block p-3 pr-12 placeholder-gray-400" placeholder="Add a personal note...">
                     <button class="absolute right-1.5 top-1.5 bottom-1.5 w-8 bg-green-900 hover:bg-green-800 text-white rounded flex items-center justify-center transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </button>
@@ -482,8 +482,8 @@
         <!-- Header -->
         <div class="flex items-center justify-between px-8 py-6 border-b border-gray-100">
             <div>
-                <h2 class="text-2xl font-extrabold text-green-900">Penjadwalan Sesi</h2>
-                <p class="text-sm text-gray-500 mt-1">Lengkapi detail berikut untuk mengirimkan undangan wawancara kepada kandidat.</p>
+                <h2 class="text-2xl font-extrabold text-green-900">Schedule Interview Session</h2>
+                <p class="text-sm text-gray-500 mt-1">Fill in the details below to send an interview invitation to the candidate.</p>
             </div>
             <button type="button" id="btn-close-modal" class="text-gray-400 hover:text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -496,28 +496,28 @@
                 <!-- Form (Col 3) -->
                 <div class="col-span-3 space-y-6">
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Kandidat</label>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Candidate</label>
                         <input type="text" id="jadwal-kandidat" value="Budi Santoso, S.T." readonly class="w-full px-4 py-2 border border-gray-200 bg-gray-50 rounded-lg text-sm text-gray-700 font-semibold focus:outline-none">
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Tanggal & Jam</label>
+                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Date & Time</label>
                             <input type="datetime-local" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Durasi</label>
                             <select class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
-                                <option>30 Menit</option>
-                                <option selected>60 Menit</option>
-                                <option>90 Menit</option>
-                                <option>120 Menit</option>
+                                <option>30 Minutes</option>
+                                <option selected>60 Minutes</option>
+                                <option>90 Minutes</option>
+                                <option>120 Minutes</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Tipe Wawancara</label>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Interview Type</label>
                         <div class="flex gap-2" id="tipe-wawancara-container">
                             <label class="flex-1 cursor-pointer">
                                 <input type="radio" name="tipe_wawancara" value="technical" class="peer sr-only" checked>
@@ -535,7 +535,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Lokasi / Link Meeting</label>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Location / Meeting Link</label>
                         <div class="relative">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                             <input type="text" placeholder="https://meet.google.com/..." class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
@@ -543,8 +543,8 @@
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Catatan Khusus</label>
-                        <textarea rows="3" placeholder="Tambahkan instruksi khusus untuk kandidat atau pewawancara..." class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Special Notes</label>
+                        <textarea rows="3" placeholder="Add special instructions for the candidate or interviewer..." class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
                     </div>
                 </div>
 
@@ -553,13 +553,13 @@
                     <div class="bg-gray-50 rounded-xl p-5 border border-gray-100">
                         <h3 class="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-widest mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                            Pratinjau Undangan
+                            Invitation Preview
                         </h3>
                         <div class="space-y-3 opacity-50">
                             <div class="h-2 bg-gray-200 rounded w-3/4"></div>
                             <div class="h-2 bg-gray-200 rounded w-1/2"></div>
                             <div class="h-16 bg-gray-200 rounded w-full mt-4"></div>
-                            <p class="text-[10px] text-center text-gray-400 mt-2">Isi formulir untuk melihat pratinjau</p>
+                            <p class="text-[10px] text-center text-gray-400 mt-2">Fill in the form to see the preview</p>
                         </div>
                     </div>
 
@@ -567,19 +567,19 @@
                         <div class="absolute -right-4 -bottom-4 opacity-10">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                         </div>
-                        <h3 class="text-sm font-bold mb-3 relative z-10">Panduan Penjadwalan</h3>
+                        <h3 class="text-sm font-bold mb-3 relative z-10">Scheduling Guidelines</h3>
                         <ul class="space-y-2 text-xs text-green-100 relative z-10">
                             <li class="flex items-start gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 mt-0.5 shrink-0 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                                Pastikan pewawancara tersedia di jam tersebut.
+                                Ensure the interviewer is available at that time.
                             </li>
                             <li class="flex items-start gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 mt-0.5 shrink-0 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                                Link meeting akan otomatis dilampirkan ke kalender.
+                                The meeting link will be automatically attached to the calendar.
                             </li>
                             <li class="flex items-start gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 mt-0.5 shrink-0 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                                Kandidat akan menerima email konfirmasi seketika.
+                                The candidate will receive a confirmation email immediately.
                             </li>
                         </ul>
                     </div>
@@ -595,7 +595,7 @@
             </button>
             <div class="flex items-center gap-3">
                 <button type="button" id="btn-submit-modal" class="inline-flex items-center gap-2 bg-green-800 hover:bg-green-900 text-white text-sm font-semibold px-6 py-2.5 rounded-lg shadow-md transition-all hover:shadow-lg active:scale-95">
-                    Jadwalkan Sesi & Simpan
+                    Schedule Session & Save
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </button>
             </div>
@@ -661,7 +661,7 @@
                         <svg class="w-5 h-5 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     </div>
                     <div>
-                        <h4 class="text-sm font-bold">Berhasil!</h4>
+                        <h4 class="text-sm font-bold">Success!</h4>
                         <p class="text-xs text-green-200 mt-0.5">${message}</p>
                     </div>
                     <button type="button" class="ml-4 text-green-400 hover:text-white transition-colors p-1" onclick="this.parentElement.classList.remove('translate-y-0', 'opacity-100'); this.parentElement.classList.add('-translate-y-full', 'opacity-0'); setTimeout(() => this.parentElement.remove(), 300)">
@@ -695,7 +695,7 @@
             } else {
                 // Let the form submit normally if not an interview
                 e.preventDefault();
-                showToast('Status applicants berhasil diubah menjadi ' + selectedStatus, 'success');
+                showToast('Applicant status successfully changed to ' + selectedStatus, 'success');
             }
         });
 
@@ -705,7 +705,7 @@
         
         btnSubmitModal.addEventListener('click', function() {
             closeModal();
-            showToast('Jadwal wawancara berhasil dibuat dan undangan telah dikirim!', 'success');
+            showToast('Interview schedule created and invitation sent successfully!', 'success');
             // Here you would normally submit the combined data to the server
         });
     });

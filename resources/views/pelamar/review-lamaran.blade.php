@@ -1,6 +1,6 @@
 @extends('layouts.pelamar-public')
 
-@section('title', 'Review Lamaran')
+@section('title', 'Review Application')
 
 @section('content')
 
@@ -11,14 +11,14 @@
         <span>›</span>
         <a href="/pelamar/lowongan" class="hover:text-green-700 transition-colors">Vacancies</a>
         <span>›</span>
-        <span class="text-green-700 font-medium">Review Lamaran</span>
+        <span class="text-green-700 font-medium">Review Application</span>
     </div>
 </div>
 
 <!-- Header -->
 <section class="px-16 pt-8 pb-2 bg-white">
-    <h1 class="text-3xl font-extrabold text-gray-900">Review Lamaran Kerja</h1>
-    <p class="text-gray-500 mt-2 max-w-lg">Pastikan seluruh informasi sudah benar sebelum menekan tombol Kirim Lamaran.</p>
+    <h1 class="text-3xl font-extrabold text-gray-900">Review Job Application</h1>
+    <p class="text-gray-500 mt-2 max-w-lg">Make sure all information is correct before clicking the Submit Application button.</p>
 </section>
 
 <!-- Main Content -->
@@ -34,7 +34,7 @@
                     <div class="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
                     </div>
-                    <h2 class="font-bold text-gray-900">Dokumen Terlampir</h2>
+                    <h2 class="font-bold text-gray-900">Attached Documents</h2>
                 </div>
 
                 <!-- Upload area (shown when no file) -->
@@ -42,8 +42,8 @@
                     <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
                     </div>
-                    <p class="text-sm font-semibold text-gray-700">Klik untuk upload dokumen</p>
-                    <p class="text-xs text-gray-400 mt-1">PDF, DOC, DOCX • Maks. 5 MB</p>
+                    <p class="text-sm font-semibold text-gray-700">Click to upload document</p>
+                    <p class="text-xs text-gray-400 mt-1">PDF, DOC, DOCX • Max. 5 MB</p>
                     <input type="file" id="file-input" class="hidden" accept=".pdf,.doc,.docx">
                 </div>
 
@@ -75,10 +75,10 @@
                     <div class="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                     </div>
-                    <h2 class="font-bold text-gray-900">Surat Lamaran (Cover Letter)</h2>
+                    <h2 class="font-bold text-gray-900">Cover Letter</h2>
                 </div>
 
-                <textarea id="cover-letter" rows="8" placeholder="Tuliskan surat lamaran Anda di sini..." class="w-full bg-gray-50 rounded-lg p-5 text-sm text-gray-600 leading-relaxed border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"></textarea>
+                <textarea id="cover-letter" rows="8" placeholder="Write your cover letter here..." class="w-full bg-gray-50 rounded-lg p-5 text-sm text-gray-600 leading-relaxed border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"></textarea>
             </div>
         </div>
 
@@ -87,14 +87,14 @@
             <div class="bg-white rounded-xl border border-gray-200 p-6">
                 <div class="flex items-center gap-2 mb-5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    <h2 class="font-bold text-gray-900">Informasi Kontak</h2>
+                    <h2 class="font-bold text-gray-900">Contact Information</h2>
                 </div>
 
                 <div class="space-y-5">
                     <div class="flex items-start gap-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         <div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Nama Lengkap</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Full Name</p>
                             <p class="text-sm font-semibold text-gray-900 mt-0.5">Andi Pratama Putra</p>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
                     <div class="flex items-start gap-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91"/></svg>
                         <div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">No. Telepon</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Phone Number</p>
                             <p class="text-sm font-semibold text-gray-900 mt-0.5">+62 812 3456 7890</p>
                         </div>
                     </div>
@@ -125,14 +125,14 @@
                 <div class="mt-8 space-y-3">
                     <button id="btn-kirim" class="flex items-center justify-center gap-2 w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                        Kirim Lamaran
+                        Submit Application
                     </button>
                     <button onclick="history.back()" class="w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg text-sm hover:bg-gray-50 transition-colors">
                         Back to Edit
                     </button>
                 </div>
 
-                <p class="text-xs text-gray-400 text-center mt-4 leading-relaxed">Dengan menekan "Kirim Lamaran", Anda menyetujui Kebijakan Privasi PT Ecogreen Oleochemicals.</p>
+                <p class="text-xs text-gray-400 text-center mt-4 leading-relaxed">By clicking "Submit Application", you agree to the Privacy Policy of PT Ecogreen Oleochemicals.</p>
             </div>
         </div>
     </div>
@@ -156,17 +156,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Validate size
         if (file.size > 5 * 1024 * 1024) {
-            alert('Ukuran file melebihi 5 MB.');
+            alert('File size exceeds 5 MB.');
             this.value = '';
             return;
         }
 
         const now = new Date();
-        const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
         const sizeStr = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
 
         fileName.textContent = file.name;
-        fileMeta.textContent = 'Diupload pada ' + dateStr + ' • ' + sizeStr;
+        fileMeta.textContent = 'Uploaded on ' + dateStr + ' • ' + sizeStr;
 
         uploadArea.classList.add('hidden');
         fileInfo.classList.remove('hidden');

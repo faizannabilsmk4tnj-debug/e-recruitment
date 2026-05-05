@@ -1,7 +1,7 @@
 @extends('layouts.hr')
 
-@section('title', 'Tambah Lowongan')
-@section('page-title', 'Tambah Lowongan')
+@section('title', 'Create Vacancy')
+@section('page-title', 'Create Vacancy')
 @section('nav-lowongan', 'text-green-800 border-green-700 font-semibold')
 
 @section('content')
@@ -15,12 +15,12 @@
                 <span>/</span>
                 <span class="text-green-700 font-medium">Create New</span>
             </div>
-            <h1 class="text-3xl font-extrabold text-green-800">Formulir Perekrutan</h1>
+            <h1 class="text-3xl font-extrabold text-green-800">Recruitment Form</h1>
         </div>
         <div class="flex items-center gap-3 mt-2">
             <div class="flex items-center gap-1.5 text-xs text-gray-400" id="autosave-indicator">
                 <svg id="autosave-icon" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                <span id="autosave-text">Draft tersimpan</span>
+                <span id="autosave-text">Draft saved</span>
             </div>
             <button id="btn-preview" class="px-5 py-2 border border-gray-300 text-gray-700 font-semibold rounded-lg text-sm hover:bg-gray-50 transition-colors">Preview</button>
             <button id="btn-publish" class="px-5 py-2 bg-green-800 hover:bg-green-700 text-white font-semibold rounded-lg text-sm transition-colors">Publish Vacancy</button>
@@ -36,7 +36,7 @@
             <div class="bg-white rounded-2xl border border-gray-200 p-6">
                 <div class="flex items-center gap-2 mb-5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                    <h2 class="font-bold text-gray-900">Dasar Jabatan</h2>
+                    <h2 class="font-bold text-gray-900">Position Basics</h2>
                 </div>
 
                 <div class="mb-5">
@@ -80,7 +80,7 @@
             <div class="bg-white rounded-2xl border border-gray-200 p-6">
                 <div class="flex items-center gap-2 mb-5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    <h2 class="font-bold text-gray-900">Deskripsi & Kualifikasi</h2>
+                    <h2 class="font-bold text-gray-900">Description & Requirements</h2>
                 </div>
 
                 <!-- Job Description -->
@@ -124,7 +124,7 @@
 
             <!-- Perencanaan -->
             <div class="bg-white rounded-2xl border border-gray-200 p-5">
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Perencanaan</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Planning</p>
 
                 <div class="mb-4">
                     <label class="block text-xs font-semibold text-gray-700 mb-2">Target Quota</label>
@@ -144,7 +144,7 @@
 
             <!-- Kompensasi -->
             <div class="bg-white rounded-2xl border border-gray-200 p-5">
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Kompensasi</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Compensation</p>
 
                 <div class="flex items-center justify-between mb-4">
                     <div>
@@ -226,8 +226,8 @@
 
         <div class="bg-white px-6 py-4 border-b border-gray-200 flex items-center justify-between shrink-0">
             <div>
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Preview Lowongan</p>
-                <p class="text-xs text-gray-500 mt-0.5">Tampilan di halaman publik / portal applicants</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Vacancy Preview</p>
+                <p class="text-xs text-gray-500 mt-0.5">Display on the public page / applicant portal</p>
             </div>
             <button id="btn-close-preview" class="text-gray-400 hover:text-gray-700 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -250,7 +250,7 @@
                     <div class="flex items-center gap-2 mb-1.5">
                         <span class="text-[10px] font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded uppercase" id="prev-category">Production &amp; Operations</span>
                     </div>
-                    <h1 class="text-2xl font-extrabold text-gray-900" id="prev-title">(Belum Diisi)</h1>
+                    <h1 class="text-2xl font-extrabold text-gray-900" id="prev-title">(Not Yet Filled)</h1>
                     <div class="flex items-center flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-gray-500">
                         <span class="flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -268,33 +268,33 @@
                 </div>
 
                 <div id="prev-salary-wrap" class="bg-green-50 border border-green-100 rounded-xl p-4 mb-5">
-                    <p class="text-[10px] font-bold text-green-700 uppercase tracking-wider mb-1">Rentang Gaji</p>
+                    <p class="text-[10px] font-bold text-green-700 uppercase tracking-wider mb-1">Salary Range</p>
                     <p class="text-lg font-bold text-green-900">Rp <span id="prev-salary-min">10.000.000</span> &ndash; Rp <span id="prev-salary-max">15.000.000</span></p>
                 </div>
 
                 <div class="mb-5">
-                    <h3 class="font-bold text-gray-900 mb-2">Deskripsi Pekerjaan</h3>
+                    <h3 class="font-bold text-gray-900 mb-2">Job Description</h3>
                     <div class="text-sm text-gray-600 leading-relaxed" id="prev-description">
-                        <em class="text-gray-400">Belum ada deskripsi.</em>
+                        <em class="text-gray-400">No description yet.</em>
                     </div>
                 </div>
 
                 <div class="mb-5">
-                    <h3 class="font-bold text-gray-900 mb-2">Kualifikasi</h3>
+                    <h3 class="font-bold text-gray-900 mb-2">Requirements</h3>
                     <div class="text-sm text-gray-600 leading-relaxed" id="prev-requirements">
-                        <em class="text-gray-400">Belum ada persyaratan.</em>
+                        <em class="text-gray-400">No requirements yet.</em>
                     </div>
                 </div>
 
                 <div id="prev-benefits-wrap" class="mb-5">
-                    <h3 class="font-bold text-gray-900 mb-2">Benefit &amp; Tunjangan</h3>
+                    <h3 class="font-bold text-gray-900 mb-2">Benefits & Allowances</h3>
                     <div class="flex flex-wrap gap-2" id="prev-benefits"></div>
                 </div>
 
                 <div class="border-t border-gray-100 pt-5 flex items-center justify-between">
-                    <p class="text-xs text-gray-400">Ini hanya preview untuk HR</p>
+                    <p class="text-xs text-gray-400">This is a preview for HR only</p>
                     <button class="bg-green-800 text-white font-semibold px-5 py-2.5 rounded-lg text-sm cursor-not-allowed opacity-60" disabled>
-                        Lamar Sekarang
+                        Apply Now
                     </button>
                 </div>
             </div>
@@ -308,7 +308,7 @@
         <button id="btn-close-benefit" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
-        <h3 class="font-bold text-gray-900 mb-4">Tambah Benefit</h3>
+        <h3 class="font-bold text-gray-900 mb-4">Add Benefit</h3>
         <input type="text" id="benefit-input" placeholder="e.g. BPJS Kesehatan" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mb-4">
         <button id="btn-confirm-benefit" class="w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Add</button>
     </div>

@@ -201,7 +201,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="saved-job-title font-semibold text-sm text-gray-900 truncate transition-colors">Maintenance Supervisor</p>
-                        <p class="text-xs text-gray-400">Batam • 5 days lalu</p>
+                        <p class="text-xs text-gray-400">Batam • 5 days ago</p>
                     </div>
                     <button class="text-gray-300 hover:text-yellow-500 transition-colors shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
@@ -213,7 +213,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="saved-job-title font-semibold text-sm text-gray-900 truncate transition-colors">Chemical Lab Tech</p>
-                        <p class="text-xs text-gray-400">Medan • 2 days lalu</p>
+                        <p class="text-xs text-gray-400">Medan • 2 days ago</p>
                     </div>
                     <button class="text-gray-300 hover:text-yellow-500 transition-colors shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
@@ -225,7 +225,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="saved-job-title font-semibold text-sm text-gray-900 truncate transition-colors">Talent Acquisition Lead</p>
-                        <p class="text-xs text-gray-400">Jakarta • Baru</p>
+                        <p class="text-xs text-gray-400">Jakarta • New</p>
                     </div>
                     <button class="text-gray-300 hover:text-yellow-500 transition-colors shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
@@ -330,50 +330,50 @@ document.addEventListener('DOMContentLoaded', function () {
     const steps = [
         {
             target: '#greeting-card',
-            title: 'Selamat Datang!',
-            desc: 'Ini adalah Dashboard Anda. Bar hijau ini menunjukkan progres kelengkapan profil. Klik untuk langsung ke halaman Profil dan mulai melengkapi data Anda.',
+            title: 'Welcome!',
+            desc: 'This is your Dashboard. The green bar shows your profile completion progress. Click to go directly to the Profile page and start filling in your data.',
             pos: 'bottom'
         },
         {
             target: '#sidebar-profil',
-            title: '1. Lengkapi Profil',
-            desc: 'Mulai dari sini! Isi data pribadi: nama, NIK, telepon, email, tempat tanggal lahir, alamat, dan upload foto profil Anda.',
+            title: '1. Complete Your Profile',
+            desc: 'Start here! Fill in your personal data: name, ID number, phone, email, date of birth, address, and upload your profile photo.',
             pos: 'right'
         },
         {
             target: '#sidebar-pengalaman',
-            title: '2. Pengalaman Kerja',
-            desc: 'Tambahkan riwayat pekerjaan Anda: posisi, perusahaan, industri, lokasi, periode kerja, dan deskripsi tugas.',
+            title: '2. Work Experience',
+            desc: 'Add your work history: position, company, industry, location, work period, and job description.',
             pos: 'right'
         },
         {
             target: '#sidebar-pendidikan',
-            title: '3. Pendidikan',
-            desc: 'Isi riwayat pendidikan: sekolah/universitas, jurusan, IPK, dan upload ijazah serta SKHU.',
+            title: '3. Education',
+            desc: 'Fill in your education history: school/university, major, GPA, and upload your diploma and certificate.',
             pos: 'right'
         },
         {
             target: '#sidebar-organisasi',
-            title: '4. Pengalaman Organisasi',
-            desc: 'Tambahkan pengalaman organisasi sebagai nilai tambah: jabatan, nama organisasi, dan deskripsi kegiatan.',
+            title: '4. Organization Experience',
+            desc: 'Add organization experience as an added value: position, organization name, and activity description.',
             pos: 'right'
         },
         {
             target: '#sidebar-lampiran',
-            title: '5. Lampiran & Sertifikat',
-            desc: 'Upload dokumen pendukung: sertifikat pelatihan, TOEFL/IELTS, portofolio, dan dokumen lain yang relevan.',
+            title: '5. Attachments & Certificates',
+            desc: 'Upload supporting documents: training certificates, TOEFL/IELTS, portfolio, and other relevant documents.',
             pos: 'right'
         },
         {
             target: '#sidebar-cv',
-            title: '6. Buat CV Anda',
-            desc: 'Pilih template CV profesional. Data dari profil Anda otomatis terisi di CV. Tinggal pilih desain dan download PDF.',
+            title: '6. Build Your CV',
+            desc: 'Choose a professional CV template. Data from your profile is automatically filled in the CV. Just pick a design and download the PDF.',
             pos: 'right'
         },
         {
             target: '#sidebar-status',
-            title: '7. Pantau Status Lamaran',
-            desc: 'Setelah melamar, pantau perkembangan lamaran Anda di sini. Lihat timeline dari terkirim hingga keputusan akhir.',
+            title: '7. Track Your Application Status',
+            desc: 'After applying, track your application progress here. View the timeline from submitted to final decision.',
             pos: 'right'
         }
     ];
@@ -424,14 +424,14 @@ document.addEventListener('DOMContentLoaded', function () {
             // Content
             titleEl.textContent = step.title;
             descEl.textContent = step.desc;
-            labelEl.textContent = `Langkah ${i + 1} dari ${steps.length}`;
+            labelEl.textContent = `Step ${i + 1} of ${steps.length}`;
             progressEl.style.width = ((i + 1) / steps.length * 100) + '%';
 
             btnPrev.classList.toggle('hidden', i === 0);
             if (i === steps.length - 1) {
-                btnNext.innerHTML = 'Mulai! <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+                btnNext.innerHTML = 'Get Started! <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
             } else {
-                btnNext.innerHTML = 'Lanjut <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>';
+                btnNext.innerHTML = 'Next <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>';
             }
         }, 300);
     }

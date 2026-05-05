@@ -1,6 +1,6 @@
 @extends($layout ?? 'layouts.landing')
 
-@section('title', 'Detail Lowongan')
+@section('title', 'Vacancy Detail')
 @if(!isset($layout))
 @section('nav-lowongan', 'text-white font-semibold')
 @endif
@@ -48,7 +48,7 @@
                             </span>
                             <span class="flex items-center gap-1.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                                <span id="job-posted">Diposting 2 days yang lalu</span>
+                                <span id="job-posted">Posted 2 days ago</span>
                             </span>
                         </div>
                     </div>
@@ -58,8 +58,8 @@
                 <div class="bg-gray-50 rounded-lg p-4">
                     <div class="flex items-center justify-between mb-1">
                         <div>
-                            <p class="text-sm font-bold text-gray-900">Slot Terisi</p>
-                            <p class="text-xs text-gray-500" id="slot-desc">7 posisi tersisa dari total 10</p>
+                            <p class="text-sm font-bold text-gray-900">Slots Filled</p>
+                            <p class="text-xs text-gray-500" id="slot-desc">7 positions remaining out of 10 total</p>
                         </div>
                         <span class="text-sm font-bold text-gray-900" id="slot-count">3/10</span>
                     </div>
@@ -71,37 +71,37 @@
 
             <!-- Deskripsi -->
             <div class="bg-white rounded-xl border border-gray-200 p-8">
-                <h2 class="text-lg font-bold text-gray-900 mb-4">Deskripsi Pekerjaan</h2>
+                <h2 class="text-lg font-bold text-gray-900 mb-4">Job Description</h2>
                 <div class="text-sm text-gray-600 leading-relaxed space-y-3" id="job-description">
-                    <p>Kami sedang mencari Senior Web Developer yang berpengalaman untuk bergabung dengan tim IT kami di Batam. Anda akan bertanggung jawab untuk membangun dan memelihara aplikasi web internal yang kritikal bagi operasional manufaktur oleokimia global kami.</p>
-                    <p>Anda akan bekerja dalam lingkungan yang dinamis dengan teknologi terbaru untuk memberikan solusi perangkat lunak yang skalabel dan aman.</p>
+                    <p>We are looking for an experienced Senior Web Developer to join our IT team in Batam. You will be responsible for building and maintaining critical internal web applications for our global oleochemical manufacturing operations.</p>
+                    <p>You will work in a dynamic environment with the latest technologies to deliver scalable and secure software solutions.</p>
                 </div>
 
-                <h2 class="text-lg font-bold text-gray-900 mt-8 mb-4">Kualifikasi</h2>
+                <h2 class="text-lg font-bold text-gray-900 mt-8 mb-4">Qualifications</h2>
                 <ul class="space-y-2.5 text-sm text-gray-600" id="job-qualifications">
                     <li class="flex items-start gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        Minimal 5 tahun pengalaman dalam pengembangan web full-stack.
+                        Minimum 5 years of experience in full-stack web development.
                     </li>
                     <li class="flex items-start gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        Keahlian mendalam dalam React.js, Node.js, dan database SQL/NoSQL.
+                        In-depth expertise in React.js, Node.js, and SQL/NoSQL databases.
                     </li>
                     <li class="flex items-start gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        Pengalaman dengan arsitektur microservices dan Docker/Kubernetes.
+                        Experience with microservices architecture and Docker/Kubernetes.
                     </li>
                     <li class="flex items-start gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        Memahami prinsip CI/CD dan pengujian otomatis.
+                        Understands CI/CD principles and automated testing.
                     </li>
                     <li class="flex items-start gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        Gelar Sarjana di bidang Ilmu Komputer, Teknik Informatika, atau bidang terkait.
+                        Bachelor's degree in Computer Science, Informatics Engineering, or a related field.
                     </li>
                     <li class="flex items-start gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        Mampu berkomunikasi dalam Bahasa Inggris (minimal pasif).
+                        Able to communicate in English (at minimum passive).
                     </li>
                 </ul>
 
@@ -112,8 +112,8 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
                         </div>
                         <div>
-                            <p class="font-semibold text-sm text-gray-900">Gaji Kompetitif</p>
-                            <p class="text-xs text-gray-500">Penyesuaian berkala berdasarkan performa.</p>
+                            <p class="font-semibold text-sm text-gray-900">Competitive Salary</p>
+                            <p class="text-xs text-gray-500">Regular adjustments based on performance.</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-3 bg-gray-50 rounded-lg p-4">
@@ -121,8 +121,8 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                         </div>
                         <div>
-                            <p class="font-semibold text-sm text-gray-900">Asuransi Kesehatan</p>
-                            <p class="text-xs text-gray-500">Cover penuh untuk karyawan dan keluarga.</p>
+                            <p class="font-semibold text-sm text-gray-900">Health Insurance</p>
+                            <p class="text-xs text-gray-500">Full coverage for employees and family.</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-3 bg-gray-50 rounded-lg p-4">
@@ -131,7 +131,7 @@
                         </div>
                         <div>
                             <p class="font-semibold text-sm text-gray-900">Work Equipment</p>
-                            <p class="text-xs text-gray-500">Perangkat kerja high-end disediakan.</p>
+                            <p class="text-xs text-gray-500">High-end work devices provided.</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-3 bg-gray-50 rounded-lg p-4">
@@ -139,8 +139,8 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                         </div>
                         <div>
-                            <p class="font-semibold text-sm text-gray-900">Bonus Tahunan</p>
-                            <p class="text-xs text-gray-500">Tunjangan days raya dan performa.</p>
+                            <p class="font-semibold text-sm text-gray-900">Annual Bonus</p>
+                            <p class="text-xs text-gray-500">Holiday allowance and performance bonus.</p>
                         </div>
                     </div>
                 </div>
@@ -152,29 +152,29 @@
 
             <!-- Tindakan Cepat -->
             <div class="bg-white rounded-xl border border-gray-200 p-6">
-                <h3 class="font-bold text-gray-900 mb-2">Tindakan Cepat</h3>
-                <p class="text-sm text-gray-500 mb-5">Tertarik dengan posisi ini? Lamar sekarang sebelum kuota penuh.</p>
+                <h3 class="font-bold text-gray-900 mb-2">Quick Actions</h3>
+                <p class="text-sm text-gray-500 mb-5">Interested in this position? Apply now before the quota is full.</p>
                 @if(isset($layout))
                 <a href="/pelamar/review-lamaran/1" class="flex items-center justify-center gap-2 w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors mb-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    Lamar Sekarang
+                    Apply Now
                 </a>
                 @else
                 <button data-auth-required class="flex items-center justify-center gap-2 w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors mb-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    Lamar Sekarang
+                    Apply Now
                 </button>
                 @endif
                 <button data-auth-required class="flex items-center justify-center gap-2 w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg text-sm hover:bg-gray-50 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
-                    Simpan Pekerjaan
+                    Save Job
                 </button>
 
                 <!-- Share -->
                 <div class="mt-5 pt-4 border-t border-gray-100">
                     <p class="text-sm text-gray-500 flex items-center gap-2 mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
-                        Bagikan lowongan ini
+                        Share this vacancy
                     </p>
                     <div class="flex gap-2">
                         <button class="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500 hover:bg-blue-50 hover:text-blue-500 transition-colors">
@@ -193,9 +193,9 @@
             <!-- Tentang Perusahaan -->
             <div class="bg-green-50 rounded-xl border border-green-200 p-6">
                 <h3 class="font-bold text-green-900 mb-2">About Company</h3>
-                <p class="text-sm text-green-800 leading-relaxed">PT Ecogreen Oleochemicals adalah salah satu produsen alkohol lemak alami terkemuka di dunia yang berkomitmen pada keberlanjutan dan kualitas tinggi.</p>
+                <p class="text-sm text-green-800 leading-relaxed">PT Ecogreen Oleochemicals is one of the world's leading natural fatty alcohol producers committed to sustainability and high quality.</p>
                 <a href="#" class="text-sm font-semibold text-green-700 hover:text-green-600 flex items-center gap-1 mt-3 transition-colors">
-                    Lihat Profil Perusahaan
+                    View Company Profile
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </a>
             </div>

@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Daftar')
+@section('title', 'Register')
 
 @section('nav-right')
     <span class="text-green-400 mx-1">|</span>
@@ -26,19 +26,19 @@
         </div>
 
         <!-- Title -->
-        <h1 class="text-2xl font-bold text-center text-green-950 mb-2">Daftar Akun Pelamar</h1>
-        <p class="text-center text-gray-500 text-sm mb-8">Mulai perjalanan karir Anda bersama PT Ecogreen Oleochemicals.</p>
+        <h1 class="text-2xl font-bold text-center text-green-950 mb-2">Create Applicant Account</h1>
+        <p class="text-center text-gray-500 text-sm mb-8">Start your career journey with PT Ecogreen Oleochemicals.</p>
 
         <!-- Form -->
         <div class="space-y-5">
             <!-- Nama Lengkap -->
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
                 <div class="relative">
                     <input
                         type="text"
                         id="nama"
-                        placeholder="Masukkan nama sesuai KTP"
+                        placeholder="Enter your full name as per ID card"
                         class="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent transition-all"
                     >
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -54,7 +54,7 @@
 
             <!-- Alamat Email -->
             <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat Email</label>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
                 <div class="relative">
                     <input
                         type="email"
@@ -69,14 +69,14 @@
                         </svg>
                     </div>
                 </div>
-                <p class="text-xs text-gray-400 mt-1.5">Kami akan mengirimkan verifikasi ke email ini.</p>
+                <p class="text-xs text-gray-400 mt-1.5">We will send a verification link to this email.</p>
             </div>
 
             <!-- Password Row -->
             <div class="grid grid-cols-2 gap-4">
                 <!-- Kata Sandi -->
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Kata Sandi</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
                     <div class="relative">
                         <input
                             type="password"
@@ -95,7 +95,7 @@
 
                 <!-- Konfirmasi Sandi -->
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Sandi</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
                     <div class="relative">
                         <input
                             type="password"
@@ -131,7 +131,7 @@
                 id="btn-register"
                 class="w-full bg-green-950 hover:bg-green-900 text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center gap-2"
             >
-                Daftar
+                Register
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M5 12h14"/>
                     <path d="m12 5 7 7-7 7"/>
@@ -142,13 +142,13 @@
         <!-- Divider -->
         <div class="my-6 flex items-center gap-4">
             <div class="flex-1 border-t border-gray-200"></div>
-            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Atau</span>
+            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Or</span>
             <div class="flex-1 border-t border-gray-200"></div>
         </div>
 
         <!-- Login Link -->
         <p class="text-center text-sm text-gray-600">
-            Sudah punya akun?
+            Already have an account?
             <a href="/login" class="font-bold text-green-900 hover:text-green-700 transition-colors">Login</a>
         </p>
     </div>

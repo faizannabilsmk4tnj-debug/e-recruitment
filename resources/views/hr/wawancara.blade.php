@@ -1,7 +1,7 @@
 @extends('layouts.hr')
 
-@section('title', 'Jadwal Wawancara')
-@section('page-title', 'Kalender Wawancara')
+@section('title', 'Interview Schedule')
+@section('page-title', 'Interview Calendar')
 @section('nav-wawancara', 'text-green-800 border-green-700 font-semibold')
 
 @section('css')
@@ -22,7 +22,7 @@
     <div class="flex items-start justify-between mb-8">
         <div>
             <h1 class="text-3xl font-extrabold text-green-900">Interview Schedule</h1>
-            <p class="text-sm text-gray-500 mt-1">Pantau dan kelola seluruh jadwal wawancara kandidat dalam tampilan kalender.</p>
+            <p class="text-sm text-gray-500 mt-1">Monitor and manage all candidate interview schedules in calendar view.</p>
         </div>
         <div class="flex items-center gap-3">
             <!-- Filter Dropdown -->
@@ -32,7 +32,7 @@
                     Filter
                 </button>
                 <div id="dropdown-filter" class="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-100 rounded-xl shadow-lg hidden z-50 p-3">
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Tipe Wawancara</p>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Interview Type</p>
                     <label class="flex items-center gap-2 p-1.5 hover:bg-gray-50 rounded cursor-pointer">
                         <input type="checkbox" checked class="rounded text-green-600 focus:ring-green-500">
                         <span class="text-sm text-gray-700">Technical Interview</span>
@@ -51,13 +51,13 @@
             <!-- Bulan Dropdown -->
             <div class="relative">
                 <button id="btn-bulan" class="bg-white border border-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors shadow-sm flex items-center gap-2">
-                    <span id="label-bulan-btn">Bulan Ini</span>
+                    <span id="label-bulan-btn">This Month</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
                 </button>
                 <div id="dropdown-bulan" class="absolute right-0 top-full mt-2 w-40 bg-white border border-gray-100 rounded-xl shadow-lg hidden z-50 py-1">
-                    <button class="dropdown-item-bulan w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors" data-val="Bulan Lalu">Bulan Lalu</button>
-                    <button class="dropdown-item-bulan w-full text-left px-4 py-2 text-sm font-bold text-green-800 bg-green-50 transition-colors" data-val="Bulan Ini">Bulan Ini</button>
-                    <button class="dropdown-item-bulan w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors" data-val="Bulan Depan">Bulan Depan</button>
+                    <button class="dropdown-item-bulan w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors" data-val="Last Month">Last Month</button>
+                    <button class="dropdown-item-bulan w-full text-left px-4 py-2 text-sm font-bold text-green-800 bg-green-50 transition-colors" data-val="This Month">This Month</button>
+                    <button class="dropdown-item-bulan w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors" data-val="Next Month">Next Month</button>
                 </div>
             </div>
         </div>
@@ -89,7 +89,7 @@
 
             <!-- Legends -->
             <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Tipe Wawancara</h3>
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Interview Type</h3>
                 <ul class="space-y-3">
                     <li class="flex items-center gap-3">
                         <div class="w-3 h-3 rounded-full bg-blue-500 shadow-sm border border-white"></div>
@@ -108,12 +108,12 @@
 
             <!-- Upcoming Events List -->
             <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Segera Datang</h3>
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Coming Up</h3>
                 <div class="space-y-4">
                     <div class="flex gap-3">
                         <div class="w-1.5 bg-amber-500 rounded-full shrink-0"></div>
                         <div>
-                            <div class="text-xs text-gray-500 font-bold mb-0.5">Hari ini, 10:00 - 11:00</div>
+                            <div class="text-xs text-gray-500 font-bold mb-0.5">Today, 10:00 - 11:00</div>
                             <div class="text-sm font-bold text-gray-900">Budi Santoso, S.T.</div>
                             <div class="text-[11px] text-gray-500 mt-1">User Interview • Via Google Meet</div>
                         </div>
@@ -121,7 +121,7 @@
                     <div class="flex gap-3">
                         <div class="w-1.5 bg-blue-500 rounded-full shrink-0"></div>
                         <div>
-                            <div class="text-xs text-gray-500 font-bold mb-0.5">Besok, 14:00 - 15:00</div>
+                            <div class="text-xs text-gray-500 font-bold mb-0.5">Tomorrow, 14:00 - 15:00</div>
                             <div class="text-sm font-bold text-gray-900">Dewi Kartika</div>
                             <div class="text-[11px] text-gray-500 mt-1">Technical Interview • Via Zoom</div>
                         </div>
@@ -144,14 +144,14 @@
                     </button>
                 </div>
                 <div class="flex items-center bg-gray-200/60 rounded-lg p-1">
-                    <button id="tab-minggu" class="px-4 py-1.5 text-xs font-bold text-gray-500 rounded-md hover:text-gray-900 transition-colors">Minggu</button>
-                    <button id="tab-bulan" class="px-4 py-1.5 text-xs font-bold text-green-900 bg-white shadow-sm rounded-md transition-colors">Bulan</button>
+                    <button id="tab-minggu" class="px-4 py-1.5 text-xs font-bold text-gray-500 rounded-md hover:text-gray-900 transition-colors">Week</button>
+                    <button id="tab-bulan" class="px-4 py-1.5 text-xs font-bold text-green-900 bg-white shadow-sm rounded-md transition-colors">Month</button>
                 </div>
             </div>
 
             <!-- Days of Week -->
             <div class="grid grid-cols-7 border-b border-gray-100 bg-white">
-                @foreach(['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'] as $day)
+                @foreach(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as $day)
                 <div class="py-3 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">{{ $day }}</div>
                 @endforeach
             </div>
@@ -259,12 +259,12 @@
                 closeAllDropdowns();
 
                 // Mock changing month based on selection
-                if(this.dataset.val === 'Bulan Lalu') {
+                if(this.dataset.val === 'Last Month') {
                     currentMonthIndex = 8; // September
-                } else if(this.dataset.val === 'Bulan Depan') {
+                } else if(this.dataset.val === 'Next Month') {
                     currentMonthIndex = 10; // November
                 } else {
-                    currentMonthIndex = 9; // Oktober
+                    currentMonthIndex = 9; // October
                 }
                 updateMonthDisplay();
             });
@@ -286,8 +286,8 @@
         });
 
         // Month Navigation
-        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-        let currentMonthIndex = 9; // Oktober
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        let currentMonthIndex = 9; // October
         let currentYear = 2024;
         
         const monthTitles = document.querySelectorAll('.calendar-month-title');

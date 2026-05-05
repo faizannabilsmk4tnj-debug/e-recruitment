@@ -1,7 +1,7 @@
 @extends('layouts.hr')
 
-@section('title', 'Daftar Wawancara')
-@section('page-title', 'Daftar Wawancara')
+@section('title', 'Interview List')
+@section('page-title', 'Interview List')
 @section('nav-wawancara', 'text-green-800 border-green-700 font-semibold')
 
 @section('content')
@@ -9,7 +9,7 @@
     <!-- Top Header -->
     <div class="flex items-start justify-between mb-8">
         <div>
-            <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest mb-1">SISTEM MANAJEMEN</p>
+            <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest mb-1">MANAGEMENT SYSTEM</p>
             <h1 class="text-3xl font-extrabold text-gray-900">Interview List</h1>
         </div>
         <div class="flex items-center gap-4">
@@ -40,7 +40,7 @@
         </div>
 
         <div>
-            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">RENTANG TANGGAL</label>
+            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">DATE RANGE</label>
             <div class="relative">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                 <input type="text" id="filter-date" value="Oct 20, 2023 - Oct 27, 2023" class="pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none w-[240px]">
@@ -48,10 +48,10 @@
         </div>
 
         <div>
-            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">TIPE</label>
+            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">TYPE</label>
             <div class="relative">
                 <select class="pl-4 pr-10 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none w-[180px] appearance-none">
-                    <option>All Tipe</option>
+                    <option>All Types</option>
                     <option>Technical</option>
                     <option>HR</option>
                     <option>User</option>
@@ -70,12 +70,12 @@
         <table class="w-full">
             <thead>
                 <tr class="border-b border-gray-100">
-                    <th class="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest px-6 py-4">NAMA KANDIDAT</th>
-                    <th class="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest px-6 py-4">POSISI</th>
-                    <th class="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest px-6 py-4">TANGGAL & JAM</th>
-                    <th class="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest px-6 py-4">TIPE</th>
+                    <th class="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest px-6 py-4">CANDIDATE NAME</th>
+                    <th class="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest px-6 py-4">POSITION</th>
+                    <th class="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest px-6 py-4">DATE & TIME</th>
+                    <th class="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest px-6 py-4">TYPE</th>
                     <th class="text-left text-[10px] font-bold text-gray-400 uppercase tracking-widest px-6 py-4">STATUS</th>
-                    <th class="text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest px-6 py-4">AKSI</th>
+                    <th class="text-right text-[10px] font-bold text-gray-400 uppercase tracking-widest px-6 py-4">ACTIONS</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50">
@@ -231,7 +231,7 @@
 
         <!-- Pagination Footer -->
         <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
-            <span class="text-xs text-gray-500">Showing <strong>4</strong> dari <strong>24</strong> sesi wawancara</span>
+            <span class="text-xs text-gray-500">Showing <strong>4</strong> of <strong>24</strong> interview sessions</span>
             <div class="flex items-center gap-1">
                 <button class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
@@ -256,9 +256,9 @@
                 <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
                 </div>
-                <h3 class="text-sm font-semibold text-green-100 mb-1">Total Terjadwal</h3>
+                <h3 class="text-sm font-semibold text-green-100 mb-1">Total Scheduled</h3>
                 <div class="text-4xl font-extrabold mb-1">12</div>
-                <p class="text-[10px] font-medium text-green-300">Minggu ini</p>
+                <p class="text-[10px] font-medium text-green-300">This week</p>
             </div>
         </div>
 
@@ -266,11 +266,11 @@
             <div class="w-10 h-10 bg-green-200/50 rounded-lg flex items-center justify-center mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
-            <h3 class="text-sm font-semibold text-green-800 mb-1">Tingkat Kehadiran</h3>
+            <h3 class="text-sm font-semibold text-green-800 mb-1">Attendance Rate</h3>
             <div class="text-4xl font-extrabold mb-1">94%</div>
             <p class="text-[10px] font-bold text-green-700 flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
-                +2% dari bulan lalu
+                +2% from last month
             </p>
         </div>
 
@@ -278,9 +278,9 @@
             <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 21-6-6m6 6v-4.8m0 4.8h-4.8"/><path d="M3 16.2V21m0 0h4.8M3 21l6-6"/><path d="M21 7.8V3m0 0h-4.8M21 3l-6 6"/><path d="M3 7.8V3m0 0h4.8M3 3l6 6"/></svg>
             </div>
-            <h3 class="text-sm font-semibold text-gray-600 mb-1">Rata-rata Durasi</h3>
+            <h3 class="text-sm font-semibold text-gray-600 mb-1">Average Duration</h3>
             <div class="text-4xl font-extrabold mb-1">45m</div>
-            <p class="text-[10px] font-medium text-gray-500">Standar HR Oleochemicals</p>
+            <p class="text-[10px] font-medium text-gray-500">HR Oleochemicals Standard</p>
         </div>
     </div>
 </div>

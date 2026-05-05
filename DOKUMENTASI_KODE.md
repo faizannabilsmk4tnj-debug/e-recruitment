@@ -17,7 +17,7 @@ Laravel memiliki struktur folder standar. Berikut adalah penjelasan logis untuk 
 3. **`config/`**
    *   **Fungsi:** Pusat pengaturan (*settings*). Semua konfigurasi krusial seperti koneksi database (`database.php`), pengaturan sesi login user (`session.php`), dan zona waktu ada di sini.
 4. **`database/`**
-   *   **Fungsi:** <!--TODO:Tempat menyimpan rancangan cetak biru database (Migrations), data percobaan (Factories & Seeders), serta file database SQLite yang sedang kita gunakan (`database.sqlite`). -->
+   *   **Fungsi:** Tempat mengelola database. Berisi rancangan pembuatan tabel tanpa phpMyAdmin (Migrations), pembuat data palsu (Factories), dan eksekutor penyebar data palsu ke database (Seeders).
 5. **`node_modules/`**
    *   **Fungsi:** Gudang penyimpanan semua *library* Javascript yang didownload secara otomatis oleh perintah `npm install`. <!--TODO: Kompilator TailwindCSS dan Vite bersemayam di sini.-->
    *   **Tujuan:** Folder ini sangat besar dan berfungsi untuk menerjemahkan kodingan class Tailwind Anda (`bg-green-500`) menjadi CSS sungguhan saat perintah `npm run dev` berjalan.

@@ -1,21 +1,21 @@
 @extends('layouts.pelamar')
 
-@section('title', 'Lampiran & Dokumen')
+@section('title', 'Attachments & Documents')
 @section('nav-lampiran', 'active')
 
 @section('content')
 
 <!-- Header -->
 <div class="bg-white rounded-xl border border-gray-200 p-8 mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Lampiran & Dokumen</h1>
-    <p class="text-gray-500 mt-1">Unggah dan kelola sertifikat atau file portofolio Anda di sini.</p>
+    <h1 class="text-2xl font-bold text-gray-900">Attachments & Documents</h1>
+    <p class="text-gray-500 mt-1">Upload and manage your certificates or portfolio files here.</p>
 </div>
 
 <!-- Tabs -->
 <div class="bg-white rounded-xl border border-gray-200">
     <div class="flex border-b border-gray-200 px-6">
-        <button class="tab-btn px-5 py-3.5 text-sm font-semibold border-b-2 text-green-700 border-green-700" data-tab="sertifikat">Sertifikat</button>
-        <button class="tab-btn px-5 py-3.5 text-sm font-semibold border-b-2 text-gray-400 border-transparent hover:text-gray-600" data-tab="portofolio">Portofolio</button>
+        <button class="tab-btn px-5 py-3.5 text-sm font-semibold border-b-2 text-green-700 border-green-700" data-tab="sertifikat">Certificates</button>
+        <button class="tab-btn px-5 py-3.5 text-sm font-semibold border-b-2 text-gray-400 border-transparent hover:text-gray-600" data-tab="portofolio">Portfolio</button>
     </div>
 
     <!-- ===== TAB: SERTIFIKAT ===== -->
@@ -33,11 +33,11 @@
                     <div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
                         <button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors" title="Lihat">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
-                            Lihat
+                            View
                         </button>
                         <button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors" title="Download">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                            Unduh
+                            Download
                         </button>
                         <button class="btn-hapus-file flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors" data-id="s1" title="Delete">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
@@ -58,11 +58,11 @@
                     <div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
                         <button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
-                            Lihat
+                            View
                         </button>
                         <button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                            Unduh
+                            Download
                         </button>
                         <button class="btn-hapus-file flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors" data-id="s2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
@@ -98,7 +98,7 @@
                     </button>
                 </div>
                 <h3 class="font-semibold text-sm text-gray-900">E-Commerce Platform</h3>
-                <p class="text-xs text-gray-500 mt-1">Full-stack web app dengan Laravel + React</p>
+                <p class="text-xs text-gray-500 mt-1">Full-stack web app with Laravel + React</p>
                 <a href="#" class="flex items-center gap-1.5 text-xs text-green-700 font-medium mt-3 hover:text-green-600 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
                     github.com/user/project
@@ -113,7 +113,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                     </button>
                 </div>
-                <h3 class="font-semibold text-sm text-gray-900">Desain UI Mobile App</h3>
+                <h3 class="font-semibold text-sm text-gray-900">Mobile App UI Design</h3>
                 <p class="text-xs text-gray-500 mt-1">Redesign mobile banking UX</p>
                 <p class="text-xs text-gray-400 mt-3">PDF • 5.2 MB</p>
             </div>
@@ -135,18 +135,18 @@
         <button class="modal-close-porto absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
-        <h2 class="text-lg font-bold text-gray-900 mb-6">Tambah Portofolio</h2>
+        <h2 class="text-lg font-bold text-gray-900 mb-6">Add Portfolio</h2>
         <div class="space-y-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Judul <span class="text-red-500">*</span></label>
-                <input type="text" id="porto-judul" placeholder="Nama project atau karya" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Title <span class="text-red-500">*</span></label>
+                <input type="text" id="porto-judul" placeholder="Project or work name" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Singkat</label>
-                <input type="text" id="porto-desc" placeholder="Penjelasan singkat" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+                <input type="text" id="porto-desc" placeholder="Brief explanation" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Tipe</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
                 <div class="grid grid-cols-2 gap-3">
                     <label class="flex items-center gap-2 px-4 py-3 border border-gray-300 rounded-lg cursor-pointer hover:border-green-500 has-[:checked]:border-green-600 has-[:checked]:bg-green-50">
                         <input type="radio" name="porto-type" value="link" checked class="accent-green-700">
@@ -192,15 +192,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // Upload sertifikat
     document.getElementById('upload-sertifikat').addEventListener('change', function (e) {
         Array.from(e.target.files).forEach(file => {
-            if (file.size > 5 * 1024 * 1024) { alert(file.name + ' melebihi 5MB.'); return; }
+            if (file.size > 5 * 1024 * 1024) { alert(file.name + ' exceeds 5MB.'); return; }
             const ext = file.name.split('.').pop().toUpperCase();
             const size = (file.size / (1024 * 1024)).toFixed(1);
-            const date = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            const date = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
             const id = 's' + Date.now();
             const card = document.createElement('div');
             card.className = 'rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-all';
             card.dataset.id = id;
-            card.innerHTML = `<div class="h-40 bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="p-4"><p class="font-semibold text-sm text-gray-900 truncate">${file.name.replace(/\.[^/.]+$/, '')}</p><p class="text-xs text-gray-400 mt-0.5">${ext} • ${size} MB • ${date}</p><div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100"><button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50">Lihat</button><button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50">Unduh</button><button class="btn-hapus-file flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-red-50 hover:text-red-600" data-id="${id}">Delete</button></div></div>`;
+            card.innerHTML = `<div class="h-40 bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="p-4"><p class="font-semibold text-sm text-gray-900 truncate">${file.name.replace(/\.[^/.]+$/, '')}</p><p class="text-xs text-gray-400 mt-0.5">${ext} • ${size} MB • ${date}</p><div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100"><button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50">View</button><button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-gray-50">Download</button><button class="btn-hapus-file flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs text-gray-500 hover:bg-red-50 hover:text-red-600" data-id="${id}">Delete</button></div></div>`;
             document.querySelector('#sertifikat-grid label').parentNode.insertBefore(card, document.querySelector('#sertifikat-grid label'));
         });
         this.value = '';
@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Hapus file
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('.btn-hapus-file');
-        if (btn && confirm('Hapus file ini?')) {
+        if (btn && confirm('Delete this file?')) {
             const card = btn.closest('[data-id]');
             card.style.transition = 'opacity 0.3s'; card.style.opacity = '0';
             setTimeout(() => card.remove(), 300);
@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('btn-porto-simpan').addEventListener('click', function () {
         const judul = document.getElementById('porto-judul').value.trim();
-        if (!judul) { alert('Judul wajib diisi.'); return; }
+        if (!judul) { alert('Title is required.'); return; }
         const desc = document.getElementById('porto-desc').value.trim();
         const type = document.querySelector('input[name="porto-type"]:checked').value;
         const url = document.getElementById('porto-url').value.trim();

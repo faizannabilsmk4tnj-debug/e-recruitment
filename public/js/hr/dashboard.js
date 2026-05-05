@@ -12,12 +12,12 @@ document.addEventListener('DOMContentLoaded', function () {
             activeIndex: 5
         },
         weekly: {
-            labels: ['SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB'],
+            labels: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
             values: [40, 60, 85, 55, 70, 45],
             activeIndex: 2
         },
         month_weeks: {
-            labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4', '', ''],
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', '', ''],
             values: [0, 0, 0, 0, 0, 0],
             activeIndex: -1
         }
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
         bar.addEventListener('mouseenter', () => {
             const d = chartData[currentMode];
             if (!d.labels[i]) return;
-            tooltip.textContent = d.labels[i] + ': ' + d.values[i] + ' pelamar';
+            tooltip.textContent = d.labels[i] + ': ' + d.values[i] + ' applicants';
             tooltip.classList.remove('hidden');
         });
         bar.addEventListener('mousemove', e => {
@@ -146,16 +146,16 @@ document.addEventListener('DOMContentLoaded', function () {
                             <span class="text-lg font-bold text-green-700">${total} Orang</span>
                         </div>
                         <div class="space-y-2.5 border-t border-gray-200 pt-4 mt-1">
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Senin</span><span class="font-semibold text-gray-800">${v1}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Selasa</span><span class="font-semibold text-gray-800">${v2}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Rabu</span><span class="font-semibold text-gray-800">${v3}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Kamis</span><span class="font-semibold text-gray-800">${v4}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Jumat</span><span class="font-semibold text-gray-800">${v5}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Sabtu</span><span class="font-semibold text-gray-800">${v6}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Minggu</span><span class="font-semibold text-gray-800">${v7}</span></div>
+                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Monday</span><span class="font-semibold text-gray-800">${v1}</span></div>
+                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Tuesday</span><span class="font-semibold text-gray-800">${v2}</span></div>
+                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Wednesday</span><span class="font-semibold text-gray-800">${v3}</span></div>
+                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Thursday</span><span class="font-semibold text-gray-800">${v4}</span></div>
+                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Friday</span><span class="font-semibold text-gray-800">${v5}</span></div>
+                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Saturday</span><span class="font-semibold text-gray-800">${v6}</span></div>
+                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Sunday</span><span class="font-semibold text-gray-800">${v7}</span></div>
                         </div>
                     `;
-                    document.getElementById('chart-modal-desc').textContent = "Berikut adalah rincian data harian pelamar pada periode minggu ini.";
+                    document.getElementById('chart-modal-desc').textContent = "Here is the daily applicant breakdown for this week.";
                     document.getElementById('chart-modal-content').innerHTML = dailyHtml;
                     chartModal.classList.remove('hidden');
                 }
@@ -163,31 +163,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!d.labels[i] || d.values[i] === 0) return;
                 
                 if (chartModalTitle) {
-                    chartModalTitle.textContent = "Hari " + d.labels[i];
+                    chartModalTitle.textContent = "Day " + d.labels[i];
                     
                     const total = d.values[i];
                     
                     const dailyHtml = `
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Pelamar Masuk</span>
-                            <span class="text-lg font-bold text-green-700">${total} Orang</span>
+                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Incoming Applicants</span>
+                            <span class="text-lg font-bold text-green-700">${total} People</span>
                         </div>
                         <div class="space-y-2.5 border-t border-gray-200 pt-4 mt-1">
                             <div class="flex justify-between items-center text-sm text-gray-600">
-                                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div><span>Lolos Seleksi Berkas</span></div>
+                                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div><span>Document Screening Passed</span></div>
                                 <span class="font-semibold text-gray-800">${Math.round(total * 0.45)}</span>
                             </div>
                             <div class="flex justify-between items-center text-sm text-gray-600">
-                                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-purple-500"></div><span>Dalam Proses Wawancara</span></div>
+                                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-purple-500"></div><span>In Interview Process</span></div>
                                 <span class="font-semibold text-gray-800">${Math.round(total * 0.30)}</span>
                             </div>
                             <div class="flex justify-between items-center text-sm text-gray-600">
-                                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div><span>Ditolak / Gagal</span></div>
+                                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div><span>Rejected / Failed</span></div>
                                 <span class="font-semibold text-gray-800">${Math.round(total * 0.25)}</span>
                             </div>
                         </div>
                     `;
-                    document.getElementById('chart-modal-desc').textContent = "Berikut adalah rincian status pelamar pada hari tersebut.";
+                    document.getElementById('chart-modal-desc').textContent = "Here is the applicant status breakdown for that day.";
                     document.getElementById('chart-modal-content').innerHTML = dailyHtml;
                     chartModal.classList.remove('hidden');
                 }
@@ -203,11 +203,11 @@ document.addEventListener('DOMContentLoaded', function () {
     lowonganDropdown.innerHTML = `
         <button class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-            Lihat Detail
+            View Details
         </button>
         <button class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-            Edit Lowongan
+            Edit Vacancy
         </button>`;
 
     document.querySelectorAll('tbody button').forEach(btn => {
@@ -261,12 +261,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (data.length === 0) {
             wawancaraList.classList.add('hidden');
             wawancaraEmpty.classList.remove('hidden');
-            wawancaraCount.textContent = '0 Sesi';
+            wawancaraCount.textContent = '0 Sessions';
             wawancaraCount.className = 'text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-full';
         } else {
             wawancaraList.classList.remove('hidden');
             wawancaraEmpty.classList.add('hidden');
-            wawancaraCount.textContent = data.length + ' Sesi';
+            wawancaraCount.textContent = data.length + ' Sessions';
             wawancaraCount.className = 'text-xs font-bold text-green-700 bg-green-50 px-2 py-1 rounded-full';
             
             const visibleData = data.slice(0, 3);
@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const btnAll = document.createElement('a');
             btnAll.href = '/hr/wawancara/daftar?date=' + dateKey;
             btnAll.className = 'block w-full text-center text-sm font-semibold text-green-700 hover:text-green-800 bg-green-50 hover:bg-green-100 py-2.5 rounded-xl transition-colors mt-2';
-            btnAll.textContent = data.length > 3 ? `Lihat Semua (${data.length} Jadwal)` : 'Kelola Seluruh Jadwal';
+            btnAll.textContent = data.length > 3 ? `View All (${data.length} Sessions)` : 'Manage All Schedules';
             wawancaraList.appendChild(btnAll);
         }
     }

@@ -1,7 +1,7 @@
 @extends('layouts.hr')
 
-@section('title', 'Pengaturan')
-@section('page-title', 'Pengaturan')
+@section('title', 'Settings')
+@section('page-title', 'Settings')
 @section('nav-setting', 'text-green-800 border-green-700 font-semibold')
 
 @section('content')
@@ -167,7 +167,7 @@
                             <div class="h-1 flex-1 rounded bg-gray-200" id="bar3"></div>
                             <div class="h-1 flex-1 rounded bg-gray-200" id="bar4"></div>
                         </div>
-                        <p class="text-[10px] text-gray-400 mt-1" id="strength-label">Minimal 8 karakter, kombinasi huruf dan angka.</p>
+                        <p class="text-[10px] text-gray-400 mt-1" id="strength-label">Min. 8 characters, combination of letters and numbers.</p>
                     </div>
                     <div>
                         <label class="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Confirm New Password</label>
@@ -192,7 +192,7 @@
                             </div>
                             <div>
                                 <div class="text-xs font-medium text-gray-800">Windows — Chrome 120</div>
-                                <div class="text-[10px] text-gray-400">Batam, Indonesia · Sekarang</div>
+                                <div class="text-[10px] text-gray-400">Batam, Indonesia · Now</div>
                             </div>
                         </div>
                         <span class="text-[10px] font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Current</span>
@@ -204,7 +204,7 @@
                             </div>
                             <div>
                                 <div class="text-xs font-medium text-gray-800">iPhone — Safari</div>
-                                <div class="text-[10px] text-gray-400">Batam, Indonesia · 2 jam lalu</div>
+                                <div class="text-[10px] text-gray-400">Batam, Indonesia · 2 hours ago</div>
                             </div>
                         </div>
                         <button class="btn-logout-device text-xs text-red-400 hover:text-red-600 transition-colors font-medium" data-device="iPhone — Safari" data-session="session-iphone">Logout</button>
@@ -213,7 +213,7 @@
 
                 <!-- Empty sessions state -->
                 <div id="no-sessions" class="hidden py-6 text-center">
-                    <p class="text-xs text-gray-400">Tidak ada sesi aktif lain.</p>
+                    <p class="text-xs text-gray-400">No other active sessions.</p>
                 </div>
             </div>
 
@@ -226,11 +226,11 @@
                     <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
                     </div>
-                    <h3 class="text-lg font-bold text-gray-900 text-center mb-1">Logout Perangkat?</h3>
-                    <p class="text-sm text-gray-500 text-center mb-1">Perangkat berikut akan dikeluarkan:</p>
+                    <h3 class="text-lg font-bold text-gray-900 text-center mb-1">Logout Device?</h3>
+                    <p class="text-sm text-gray-500 text-center mb-1">The following device will be signed out:</p>
                     <p class="text-sm font-semibold text-gray-800 text-center mb-5" id="modal-device-name"></p>
                     <div class="space-y-2.5">
-                        <button id="btn-confirm-session-logout" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Ya, Logout Perangkat Ini</button>
+                        <button id="btn-confirm-session-logout" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Yes, Logout This Device</button>
                         <button id="btn-cancel-session-modal" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</button>
                     </div>
                 </div>
@@ -245,10 +245,10 @@
                     <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
                     </div>
-                    <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Logout All Perangkat?</h3>
-                    <p class="text-sm text-gray-500 text-center mb-5">All sesi aktif selain perangkat ini akan dikeluarkan secara permanen.</p>
+                    <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Logout All Devices?</h3>
+                    <p class="text-sm text-gray-500 text-center mb-5">All active sessions other than this device will be permanently signed out.</p>
                     <div class="space-y-2.5">
-                        <button id="btn-confirm-all-logout" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Ya, Logout All</button>
+                        <button id="btn-confirm-all-logout" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Yes, Logout All</button>
                         <button id="btn-cancel-all-modal" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</button>
                     </div>
                 </div>
@@ -264,10 +264,10 @@
             <div class="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
                 @php
                 $notifItems = [
-                    ['title' => 'Pelamar Baru', 'desc' => 'Notifikasi saat ada applicants baru mendaftar', 'default' => true],
-                    ['title' => 'Jadwal Wawancara', 'desc' => 'Pengingat jadwal wawancara yang akan datang', 'default' => true],
-                    ['title' => 'Kapasitas Loker Terpenuhi', 'desc' => 'Notifikasi saat lowongan sudah memenuhi kapasitas namun belum ditutup secara otomatis', 'default' => true],
-                    ['title' => 'Batas Waktu Loker Berakhir', 'desc' => 'Notifikasi saat lowongan melewati batas waktu pendaftaran namun belum ditutup secara otomatis', 'default' => true],
+                    ['title' => 'New Applicant', 'desc' => 'Notification when a new applicant registers', 'default' => true],
+                    ['title' => 'Interview Schedule', 'desc' => 'Reminder for upcoming interview sessions', 'default' => true],
+                    ['title' => 'Vacancy Capacity Reached', 'desc' => 'Notification when a vacancy meets its capacity but has not been closed automatically', 'default' => true],
+                    ['title' => 'Vacancy Deadline Passed', 'desc' => 'Notification when a vacancy exceeds its registration deadline but has not been closed automatically', 'default' => true],
                 ];
                 @endphp
                 @foreach($notifItems as $item)

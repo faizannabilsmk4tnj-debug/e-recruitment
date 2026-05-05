@@ -1,6 +1,6 @@
 @extends('layouts.pelamar')
 
-@section('title', 'CV Saya')
+@section('title', 'My CV')
 @section('nav-cv', 'active')
 
 @section('css')
@@ -61,11 +61,11 @@
             </div>
         </div>
         <div class="p-5">
-            <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest mb-1">Paling Populer</p>
+            <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest mb-1">Most Popular</p>
             <h3 class="font-bold text-gray-900 text-lg">Modern Executive 2024</h3>
-            <p class="text-sm text-gray-500 mt-2 leading-relaxed">Desain tegas dengan struktur modular, ideal bagi manajer dan pemimpin proyek senior dengan tata letak kontemporer.</p>
+            <p class="text-sm text-gray-500 mt-2 leading-relaxed">A bold design with a modular structure, ideal for managers and senior project leads with a contemporary layout.</p>
             <button class="select-btn w-full mt-4 bg-green-800 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors flex items-center justify-center gap-2 hover:bg-green-700">
-                Pilih Template
+                Select Template
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </button>
         </div>
@@ -88,11 +88,11 @@
             </div>
         </div>
         <div class="p-5">
-            <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">Struktur Formal</p>
+            <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">Formal Structure</p>
             <h3 class="font-bold text-gray-900 text-lg">Academic Specialist</h3>
-            <p class="text-sm text-gray-500 mt-2 leading-relaxed">Gaya CV akademis dengan kolom ganda dan tipografi serif yang terorganisir untuk informasi padat.</p>
+            <p class="text-sm text-gray-500 mt-2 leading-relaxed">An academic CV style with double columns and organized serif typography for information-dense layouts.</p>
             <button class="select-btn w-full mt-4 bg-green-800 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors flex items-center justify-center gap-2 hover:bg-green-700">
-                Pilih Template
+                Select Template
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </button>
         </div>
@@ -114,11 +114,11 @@
             </div>
         </div>
         <div class="p-5">
-            <p class="text-[10px] font-bold text-red-600 uppercase tracking-widest mb-1">Desain Berani</p>
+            <p class="text-[10px] font-bold text-red-600 uppercase tracking-widest mb-1">Bold Design</p>
             <h3 class="font-bold text-gray-900 text-lg">Creative Industrial</h3>
-            <p class="text-sm text-gray-500 mt-2 leading-relaxed">Template CV yang kreatif dan berani dengan elemen arsitektural dan aksen tema gelap yang modern.</p>
+            <p class="text-sm text-gray-500 mt-2 leading-relaxed">A creative and bold CV template with architectural elements and a modern dark-theme accent.</p>
             <button class="select-btn w-full mt-4 bg-green-800 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors flex items-center justify-center gap-2 hover:bg-green-700">
-                Pilih Template
+                Select Template
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </button>
         </div>
@@ -131,7 +131,7 @@
         <h2 class="text-lg font-bold text-gray-900">Preview CV — <span id="preview-template-name">Modern Executive 2024</span></h2>
         <button onclick="document.getElementById('cv-preview-section').classList.add('hidden'); document.querySelectorAll('.cv-preview-panel').forEach(p=>p.classList.add('hidden'))" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            Tutup Preview
+            Close Preview
         </button>
     </div>
 
@@ -149,7 +149,7 @@
                         <p class="text-green-300 text-xs mt-1">Process Engineer</p>
                     </div>
                     <div>
-                        <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Kontak</h4>
+                        <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Contact</h4>
                         <div class="space-y-2 text-xs text-green-100">
                             <p>ahmad.rizky@email.com</p>
                             <p>+62 812 3456 7890</p>
@@ -158,7 +158,7 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Keahlian Teknis</h4>
+                        <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Technical Skills</h4>
                         <div class="space-y-2.5">
                             <div><p class="text-xs text-green-100 mb-1">Process Optimization</p><div class="w-full bg-green-800 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width:92%"></div></div></div>
                             <div><p class="text-xs text-green-100 mb-1">Chemical Analysis</p><div class="w-full bg-green-800 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width:88%"></div></div></div>
@@ -172,43 +172,43 @@
                         <div class="space-y-1 text-xs text-green-100"><p>Indonesia — Native</p><p>English — Professional</p></div>
                     </div>
                     <div>
-                        <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Sertifikasi</h4>
+                        <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Certifications</h4>
                         <div class="space-y-1 text-xs text-green-100"><p>• Lean Six Sigma Green Belt</p><p>• K3 Umum (Kemnaker RI)</p><p>• ISO 9001:2015 Lead Auditor</p></div>
                     </div>
                 </div>
                 <!-- Konten Utama -->
                 <div class="col-span-7 p-8 space-y-6">
                     <div>
-                        <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-2 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Profil Profesional</h3>
-                        <p class="text-sm text-gray-600 leading-relaxed">Process Engineer dengan pengalaman 5+ tahun di industri oleokimia. Terampil dalam optimalisasi proses produksi fatty alcohol, pengendalian mutu, dan implementasi sistem manajemen K3 & lingkungan. Berkomitmen pada prinsip sustainable manufacturing.</p>
+                        <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-2 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Professional Profile</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">Process Engineer with 5+ years of experience in the oleochemical industry. Skilled in fatty alcohol production optimization, quality control, and HSE management system implementation. Committed to sustainable manufacturing principles.</p>
                     </div>
                     <div>
                         <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-3 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Work Experience</h3>
                         <div class="space-y-5">
                             <div class="border-l-2 border-green-200 pl-4">
-                                <div class="flex justify-between items-start"><p class="font-bold text-sm text-gray-900">Senior Process Engineer</p><span class="text-xs text-green-700 bg-green-50 px-2 py-0.5 rounded font-semibold">2021 — Sekarang</span></div>
+                                <div class="flex justify-between items-start"><p class="font-bold text-sm text-gray-900">Senior Process Engineer</p><span class="text-xs text-green-700 bg-green-50 px-2 py-0.5 rounded font-semibold">2021 — Present</span></div>
                                 <p class="text-sm text-gray-500">PT Ecogreen Oleochemicals — Batam</p>
-                                <ul class="mt-2 text-xs text-gray-600 space-y-1"><li>• Mengoptimalkan proses distilasi fatty alcohol, meningkatkan yield 12%</li><li>• Memimpin tim 15 operator di plant fractionation</li><li>• Implementasi SOP baru sesuai standar ISO 14001</li><li>• Menurunkan waste production sebesar 18% melalui lean manufacturing</li></ul>
+                                <ul class="mt-2 text-xs text-gray-600 space-y-1"><li>• Optimized fatty alcohol distillation process, increasing yield by 12%</li><li>• Led a team of 15 operators at the fractionation plant</li><li>• Implemented new SOPs aligned with ISO 14001 standards</li><li>• Reduced waste production by 18% through lean manufacturing</li></ul>
                             </div>
                             <div class="border-l-2 border-gray-200 pl-4">
                                 <div class="flex justify-between items-start"><p class="font-bold text-sm text-gray-900">Junior Process Engineer</p><span class="text-xs text-gray-400">2019 — 2021</span></div>
                                 <p class="text-sm text-gray-500">PT Musim Mas — Medan</p>
-                                <ul class="mt-2 text-xs text-gray-600 space-y-1"><li>• Monitoring parameter proses produksi CPO dan turunannya</li><li>• Analisis data produksi dan penyusunan laporan bulanan</li><li>• Koordinasi dengan tim QC untuk pemenuhan standar RSPO</li></ul>
+                                <ul class="mt-2 text-xs text-gray-600 space-y-1"><li>• Monitored CPO production process parameters and derivatives</li><li>• Analyzed production data and prepared monthly reports</li><li>• Coordinated with QC team for RSPO standards compliance</li></ul>
                             </div>
                             <div class="border-l-2 border-gray-200 pl-4">
-                                <div class="flex justify-between items-start"><p class="font-bold text-sm text-gray-900">Internship — Production Dept.</p><span class="text-xs text-gray-400">2018 (6 bulan)</span></div>
+                                <div class="flex justify-between items-start"><p class="font-bold text-sm text-gray-900">Internship — Production Dept.</p><span class="text-xs text-gray-400">2018 (6 months)</span></div>
                                 <p class="text-sm text-gray-500">PT Wilmar Nabati Indonesia — Gresik</p>
-                                <ul class="mt-2 text-xs text-gray-600 space-y-1"><li>• Asisten analisis laboratorium untuk quality assurance</li></ul>
+                                <ul class="mt-2 text-xs text-gray-600 space-y-1"><li>• Laboratory analysis assistant for quality assurance</li></ul>
                             </div>
                         </div>
                     </div>
                     <div>
                         <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-3 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Education</h3>
                         <div class="border-l-2 border-green-200 pl-4">
-                            <p class="font-bold text-sm text-gray-900">S1 Teknik Kimia</p>
+                            <p class="font-bold text-sm text-gray-900">B.Eng. Chemical Engineering</p>
                             <p class="text-sm text-gray-500">Institut Teknologi Sepuluh Nopember (ITS) — Surabaya</p>
-                            <p class="text-xs text-gray-400 mt-0.5">2015 — 2019 • IPK 3.68 / 4.00 • Cum Laude</p>
-                            <p class="text-xs text-gray-500 mt-1 italic">Skripsi: "Optimasi Proses Hidrogenasi Minyak Kelapa Sawit Menggunakan Katalis Nikel"</p>
+                            <p class="text-xs text-gray-400 mt-0.5">2015 — 2019 • GPA 3.68 / 4.00 • Cum Laude</p>
+                            <p class="text-xs text-gray-500 mt-1 italic">Thesis: "Optimization of Palm Oil Hydrogenation Process Using Nickel Catalyst"</p>
                         </div>
                     </div>
                 </div>
@@ -387,10 +387,10 @@
 <div class="bg-gradient-to-br from-green-50 to-gray-50 rounded-xl border border-gray-200 p-8 mb-8">
     <div class="flex items-start gap-8">
         <div class="flex-1">
-            <h2 class="text-xl font-bold text-gray-900 italic mb-4">Tips Profesional</h2>
-            <p class="text-sm text-gray-600 leading-relaxed mb-4">Pilih template yang memiliki rasio teks dan ruang kosong seimbang. Untuk posisi teknis, gunakan <strong>Modern Executive 2024</strong>. Untuk posisi marketing atau desain, <strong>Creative Industrial</strong> adalah pilihan terbaik.</p>
+            <h2 class="text-xl font-bold text-gray-900 italic mb-4">Pro Tips</h2>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4">Choose a template with a balanced text-to-whitespace ratio. For technical roles, use <strong>Modern Executive 2024</strong>. For marketing or design positions, <strong>Creative Industrial</strong> is the best choice.</p>
             <a href="#" class="text-sm font-semibold text-green-700 hover:text-green-600 flex items-center gap-1 transition-colors">
-                Baca Panduan Karir Lengkap
+                Read Full Career Guide
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
             </a>
         </div>
@@ -400,14 +400,14 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                 </div>
                 <p class="font-bold text-sm text-gray-900">ATS Friendly</p>
-                <p class="text-xs text-gray-500 mt-1">Lolos seleksi bot perusahaan</p>
+                <p class="text-xs text-gray-500 mt-1">Passes company ATS screening bots</p>
             </div>
             <div class="bg-white rounded-xl border border-gray-200 p-5 w-40">
                 <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
                 </div>
                 <p class="font-bold text-sm text-gray-900">Auto-Save</p>
-                <p class="text-xs text-gray-500 mt-1">Tersimpan aman di cloud</p>
+                <p class="text-xs text-gray-500 mt-1">Safely stored in the cloud</p>
             </div>
         </div>
     </div>
@@ -472,7 +472,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Download PDF (demo)
     document.getElementById('btn-download').addEventListener('click', function () {
-        alert('CV berhasil diunduh! (demo — nanti terhubung ke dompdf)');
+        alert('CV downloaded successfully! (demo — will connect to dompdf)');
     });
 });
 </script>

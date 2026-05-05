@@ -1,6 +1,6 @@
 @extends('layouts.pelamar')
 
-@section('title', 'Status Lamaran')
+@section('title', 'Application Status')
 @section('nav-status', 'active')
 
 @section('content')
@@ -49,7 +49,7 @@
                             <p class="font-semibold text-sm text-green-800">Process Engineer</p>
                             <p class="text-xs text-gray-400">Operation Dept.</p>
                         </td>
-                        <td class="px-5 py-4 text-sm text-gray-600">12 Okt 2023</td>
+                        <td class="px-5 py-4 text-sm text-gray-600">12 Oct 2023</td>
                         <td class="px-5 py-4">
                             <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700">INTERVIEW</span>
                         </td>
@@ -62,7 +62,7 @@
                             <p class="font-semibold text-sm text-gray-900">QA Technician</p>
                             <p class="text-xs text-gray-400">Quality Dept.</p>
                         </td>
-                        <td class="px-5 py-4 text-sm text-gray-600">05 Okt 2023</td>
+                        <td class="px-5 py-4 text-sm text-gray-600">05 Oct 2023</td>
                         <td class="px-5 py-4">
                             <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">DOCUMENT REVIEW</span>
                         </td>
@@ -111,8 +111,8 @@
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
                     <p class="font-semibold text-sm text-gray-900">Application Submitted</p>
-                    <p class="text-xs text-gray-400 mt-0.5">12 Okt 2023, 10:45 WIB</p>
-                    <p class="text-xs text-gray-500 mt-1">Dokumen berhasil diunggah dan diverifikasi sistem.</p>
+                    <p class="text-xs text-gray-400 mt-0.5">12 Oct 2023, 10:45 WIB</p>
+                    <p class="text-xs text-gray-500 mt-1">Documents successfully uploaded and verified by the system.</p>
                 </div>
 
                 <!-- Step 2: Seleksi ✓ -->
@@ -127,13 +127,13 @@
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white ring-4 ring-blue-100"></div>
                     <p class="font-semibold text-sm text-blue-700">Interview HR & User</p>
-                    <p class="text-xs text-gray-400 mt-0.5">18 Okt 2023, 09:00 WIB</p>
+                    <p class="text-xs text-gray-400 mt-0.5">18 Oct 2023, 09:00 WIB</p>
 
                     <!-- Interview Detail Card -->
                     <div class="mt-3 bg-gray-50 rounded-lg p-4 space-y-2.5">
                         <div class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                            <span class="text-sm font-medium text-gray-700">20 Okt 2023 • 13:00 WIB</span>
+                            <span class="text-sm font-medium text-gray-700">20 Oct 2023 • 13:00 WIB</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -177,7 +177,7 @@
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
                     <p class="font-semibold text-sm text-gray-900">Application Submitted</p>
-                    <p class="text-xs text-gray-400 mt-0.5">05 Okt 2023, 14:30 WIB</p>
+                    <p class="text-xs text-gray-400 mt-0.5">05 Oct 2023, 14:30 WIB</p>
                 </div>
                 <div class="relative">
                     <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-amber-500 rounded-full border-2 border-white ring-4 ring-amber-100"></div>
@@ -195,8 +195,8 @@
                 </div>
             </div>
             <div class="mt-8">
-                <button class="btn-tarik w-full border border-red-300 text-red-600 font-semibold py-2.5 rounded-lg text-sm hover:bg-red-50 transition-colors">Tarik Lamaran</button>
-                <p class="text-xs text-gray-400 text-center mt-2">Penarikan lamaran bersifat permanen.</p>
+                <button class="btn-tarik w-full border border-red-300 text-red-600 font-semibold py-2.5 rounded-lg text-sm hover:bg-red-50 transition-colors">Withdraw Application</button>
+                <p class="text-xs text-gray-400 text-center mt-2">Withdrawal of application is permanent.</p>
             </div>
         </div>
 
@@ -228,8 +228,8 @@
                 </div>
             </div>
             <div class="mt-8">
-                <button class="btn-tarik w-full border border-red-300 text-red-600 font-semibold py-2.5 rounded-lg text-sm hover:bg-red-50 transition-colors">Tarik Lamaran</button>
-                <p class="text-xs text-gray-400 text-center mt-2">Penarikan lamaran bersifat permanen.</p>
+                <button class="btn-tarik w-full border border-red-300 text-red-600 font-semibold py-2.5 rounded-lg text-sm hover:bg-red-50 transition-colors">Withdraw Application</button>
+                <p class="text-xs text-gray-400 text-center mt-2">Withdrawal of application is permanent.</p>
             </div>
         </div>
     </div>
@@ -285,7 +285,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                     <div>
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Date & Time</p>
-                        <p class="text-sm font-semibold text-gray-900">20 Oktober 2023 • 13:00 WIB</p>
+                        <p class="text-sm font-semibold text-gray-900">20 October 2023 • 13:00 WIB</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">

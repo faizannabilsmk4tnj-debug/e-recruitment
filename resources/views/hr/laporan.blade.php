@@ -1,7 +1,7 @@
 @extends('layouts.hr')
 
-@section('title', 'Laporan Perekrutan')
-@section('page-title', 'Laporan Perekrutan')
+@section('title', 'Recruitment Reports')
+@section('page-title', 'Recruitment Reports')
 @section('nav-laporan', 'text-green-800 border-green-800')
 
 @section('content')
@@ -81,7 +81,7 @@
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <h3 class="text-lg font-bold text-[#0f3c20]">Monthly Application Trends</h3>
-                    <p class="text-xs text-gray-400 mt-1">Klik batang bulan untuk melihat detail</p>
+                    <p class="text-xs text-gray-400 mt-1">Click on a month bar to see details</p>
                 </div>
                 <div class="flex items-center gap-4 text-xs font-bold text-gray-500">
                     <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full" style="background:#0f3c20;"></div>External</div>
@@ -138,7 +138,7 @@
         <div class="w-full lg:w-1/3 bg-gray-50 rounded-xl p-6 sm:p-8 border border-gray-100 flex flex-col">
             <div class="mb-6">
                 <h3 class="text-lg font-bold text-[#0f3c20]">Hiring Funnel</h3>
-                <p class="text-xs text-gray-400 mt-1">Klik setiap tahap untuk detail</p>
+                <p class="text-xs text-gray-400 mt-1">Click on each stage for details</p>
             </div>
             <div style="display:flex;flex-direction:column;gap:12px;flex:1;justify-content:center;">
                 <div data-funnel="sourced" style="display:flex;align-items:center;transition:opacity 0.2s;">
@@ -182,7 +182,7 @@
         <div class="w-full lg:w-1/2 bg-white rounded-xl p-6 sm:p-8 border border-gray-100 shadow-sm flex flex-col">
             <div class="mb-6">
                 <h3 class="text-lg font-bold text-[#0f3c20]">Applicant Sources</h3>
-                <p class="text-xs text-gray-400 mt-1">Klik sumber untuk melihat detail</p>
+                <p class="text-xs text-gray-400 mt-1">Click on a source to see details</p>
             </div>
             <div style="display:flex;align-items:center;gap:32px;">
                 <div style="width:160px;height:160px;background:#eaf6ef;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;">
@@ -219,7 +219,7 @@
         <div class="w-full lg:w-1/2 bg-white rounded-xl p-6 sm:p-8 border border-gray-100 shadow-sm flex flex-col">
             <div class="mb-6">
                 <h3 class="text-lg font-bold text-[#0f3c20]">Departmental Efficiency</h3>
-                <p class="text-xs text-gray-400 mt-1">Klik baris departemen untuk detail</p>
+                <p class="text-xs text-gray-400 mt-1">Click on a department row for details</p>
             </div>
             <table style="width:100%;border-collapse:collapse;">
                 <thead>

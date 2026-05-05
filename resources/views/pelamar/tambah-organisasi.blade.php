@@ -1,6 +1,6 @@
 @extends('layouts.pelamar')
 
-@section('title', 'Tambah Pengalaman Organisasi')
+@section('title', 'Add Organization Experience')
 @section('nav-organisasi', 'active')
 
 @section('content')
@@ -14,25 +14,25 @@
 
 <div class="mb-6">
     <h1 class="text-2xl font-bold text-gray-900">Add Organization Experience</h1>
-    <p class="text-gray-500 mt-1">Lengkapi detail keterlibatan organisasi atau kepanitiaan Anda.</p>
+    <p class="text-gray-500 mt-1">Fill in your organization or committee involvement details.</p>
 </div>
 
 <div class="bg-white rounded-xl border border-gray-200 p-8">
     <div class="space-y-6">
         <div class="grid grid-cols-2 gap-6">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Jabatan / Posisi <span class="text-red-500">*</span></label>
-                <input type="text" id="jabatan" placeholder="Contoh: Ketua Himpunan" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Position / Title <span class="text-red-500">*</span></label>
+                <input type="text" id="jabatan" placeholder="Example: Student Association President" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Organisasi <span class="text-red-500">*</span></label>
-                <input type="text" id="organisasi" placeholder="Contoh: BEM Fakultas" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Organization Name <span class="text-red-500">*</span></label>
+                <input type="text" id="organisasi" placeholder="Example: Faculty Student Executive Board" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-6">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Mulai</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Start</label>
                 <input type="month" id="mulai" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
             <div>
@@ -42,9 +42,9 @@
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Deskripsi Kegiatan</label>
-            <textarea id="deskripsi" rows="5" placeholder="Jelaskan tanggung jawab, pencapaian, dan kontribusi Anda dalam organisasi ini..." class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"></textarea>
-            <p class="text-xs text-gray-400 mt-1.5 italic">Tips: Sertakan angka atau hasil konkret untuk memperkuat deskripsi.</p>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Activity Description</label>
+            <textarea id="deskripsi" rows="5" placeholder="Describe your responsibilities, achievements, and contributions within this organization..." class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"></textarea>
+            <p class="text-xs text-gray-400 mt-1.5 italic">Tip: Include specific numbers or concrete results to strengthen your description.</p>
         </div>
 
         <div class="flex gap-4 pt-4 justify-end">
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('btn-simpan').addEventListener('click', function () {
         const jabatan = document.getElementById('jabatan').value.trim();
         const organisasi = document.getElementById('organisasi').value.trim();
-        if (!jabatan || !organisasi) { alert('Jabatan dan Nama Organisasi wajib diisi.'); return; }
+        if (!jabatan || !organisasi) { alert('Position and Organization Name are required.'); return; }
         alert('Organization experience saved successfully! (demo)');
         window.location.href = '/pelamar/organisasi';
     });
