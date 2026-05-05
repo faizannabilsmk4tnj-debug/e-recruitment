@@ -102,6 +102,7 @@
                       @yield('nav-wawancara', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
                 Wawancara
             </a>
+
             <a href="/hr/laporan"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-laporan', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">

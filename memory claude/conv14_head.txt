@@ -1,0 +1,500 @@
+﻿============================================
+INDEX: 14
+JUDUL: Aplikasi e-recruitment berbasis JobStreet
+TANGGAL: 2026-03-13T18:15:32.931066Z
+TOTAL PESAN: 585
+--------------------------------------------
+
+[human]:
+baiklah mungkin ini akan menjadi project besar saya untuk tugas kuliah, bisa tolong anda ingat ingat dan pahami semua materi dan gambar yang sudah saya berikan ini, singkatnya adalah saya ingin membuat aplikasi lowongan pekerjaan yang merefrensikan website bernama joobstreet, dan aplikasinya akan saya namai dengan e-recurtment
+---MSG_END---
+
+[assistant]:
+ Saya sudah membaca dan memahami semua materi yang Anda berikan. Berikut ringkasan pemahaman saya:
+
+---
+
+## 🎯 Project: E-Recruitment PT Eco Green Oleochemicals
+**Mata Kuliah:** PBL TRPL-212
+
+---
+
+### 👥 Tim Pengembang
+| Nama | NIM |
+|------|-----|
+| Khayra Sakilla Ramona | 4342501073 |
+| Faizal Kahfi Lubis | 4342501077 |
+| Faiz Annabil | 4342501071 |
+| Mufti | 4342501084 |
+| Rasya' Defiya Putri Salsabila | 4342501062 |
+
+---
+
+### 🧩 Deskripsi Sistem
+Portal rekrutmen internal eksklusif untuk **PT Eco Green Oleochemicals**, mirip Jobstreet namun dikelola secara mandiri oleh tim HR perusahaan.
+
+---
+
+### 👤 Dua Aktor Utama (Use Case Diagram)
+
+**HR (Internal):**
+- Login / Logout
+- Tambah & edit lowongan pekerjaan
+- Melihat lowongan
+- Melihat daftar pelamar & data kandidat
+- Mengubah status lamaran
+- Penjadwalan wawancara pelamar
+- Melihat status lamaran & wawancara
+
+**Pelamar (Eksternal):**
+- Registrasi akun
+- Login / Logout
+- Membuat CV dari template sistem
+- Mengelola profil
+- Lamar pekerjaan dari lowongan
+- Melihat status lamaran & wawancara
+
+---
+
+### 🏗️ Arsitektur Teknis (3 Lapis)
+| Layer | Teknologi |
+|-------|-----------|
+| **Frontend (Clean View)** | HTML5, CSS3, JavaScript murni |
+| **Transport** | AJAX / JSON |
+| **Backend** | PHP (Laravel) + MySQL |
+
+> ⚠️ **Aturan kritis:** Tidak boleh ada kode PHP di dalam view — arsitektur Clean HTML wajib diterapkan.
+
+---
+
+### 📋 Fitur Unggulan
+- Manajemen lowongan fleksibel: otomatis tutup berdasarkan **deadline** atau **kuota pelamar**, bisa juga tutup manual oleh HR
+- Pembuatan CV dari template sistem
+- Penjadwalan wawancara
+- Tracking status lamaran real-time
+
+---
+
+### 🗺️ Roadmap (Target UTS)
+1. Perancangan Dokumen Formal (SKPPL Bab 1-3)
+2. Rekayasa Desain Visual (UI/UX Wireframe)
+3. Pengembangan Front-End & Jembatan AJAX
+4. **Presentasi Prototype Minimum UI** ← target UTS
+
+---
+
+Saya siap membantu Anda mengerjakan project ini! Apa yang ingin dikerjakan pertama?
+```
+This block is not supported on your current device yet.
+```
+
+Silakan pilih salah satu di atas, dan kita langsung mulai! 🚀
+---MSG_END---
+
+[human]:
+[User denied question request]
+---MSG_END---
+
+[assistant]:
+ Oke, tidak masalah! 😊
+
+Saya sudah memahami penuh project **E-Recruitment PT Eco Green Oleochemicals** Anda. Kapanpun Anda siap, langsung saja beritahu saya apa yang ingin dikerjakan, misalnya:
+
+- **"Buatkan dokumen SKPPL"**
+- **"Buatkan halaman login"**
+- **"Buatkan use case diagram yang lebih rapi"**
+- **"Bantu desain database"**
+- dll.
+
+Saya siap membantu! 🚀
+---MSG_END---
+
+[human]:
+baiklah ini yang saya inginkan untuk pertama kalinya, saya ingin sebuah database yang sangat aman dan lengkap untuk memenuhi semua kebutuhan aplikasi saya, jadi saya ingin anda buatkan saya konsepnya saja dulu, yang super rapi,lengkap,dan sangat jelas
+---MSG_END---
+
+[assistant]:
+ Baik! Mari saya rancang konsep database yang komprehensif untuk sistem E-Recruitment ini.
+```
+This block is not supported on your current device yet.
+```
+
+Berikut konsep database lengkap untuk sistem E-Recruitment Anda:
+```
+This block is not supported on your current device yet.
+```
+
+Berikut penjelasan lengkap setiap tabel beserta alasan desainnya:
+
+---
+
+### Grup 1 — Manajemen Pengguna
+
+**`users`** adalah tabel inti untuk semua akun. Kolom `role` berisi enum `hr` atau `applicant`, sehingga satu tabel cukup untuk kedua aktor. Password disimpan sebagai `password_hash` (bcrypt) — tidak pernah plain text. Kolom `is_active` untuk suspend akun tanpa hapus data.
+
+**`user_profiles`** dipisah dari `users` agar tabel utama tetap ramping dan query autentikasi cepat. Berisi data personal seperti bio, alamat, tanggal lahir, dan link LinkedIn/portfolio.
+
+**`password_reset_tokens`** menyimpan token reset password dengan kolom `expires_at` dan `is_used` untuk keamanan — token hanya bisa dipakai sekali dan kadaluarsa otomatis.
+
+---
+
+### Grup 2 — CV & Template
+
+**`cv_templates`** menyimpan master template CV yang disediakan sistem. HR bisa aktifkan/nonaktifkan template via `is_active`.
+
+**`applicant_cvs`** menyimpan CV yang dibuat pelamar dari template. Kolom `cv_data` bertipe JSON untuk fleksibilitas isian, dan `pdf_url` menyimpan hasil generate PDF. Kolom `is_primary` menandai CV utama yang digunakan saat melamar.
+
+---
+
+### Grup 3 — Lowongan Pekerjaan
+
+**`job_categories`** adalah master kategori pekerjaan (IT, Keuangan, Operasional, dll).
+
+**`job_postings`** adalah tabel terpenting di sisi HR. Kolom `quota` dan `applicant_count` mendukung fitur tutup otomatis saat kuota terpenuhi. Kolom `deadline` untuk tutup otomatis berdasarkan tanggal. Enum `status` berisi `draft`, `open`, `closed`, `expired`. Kolom `closed_at` mencatat kapan lowongan ditutup dan oleh mekanisme apa.
+
+---
+
+### Grup 4 — Lamaran & Pelacakan Status
+
+**`applications`** mencatat setiap lamaran. Relasi ke `applicant_cvs` memastikan CV yang dilampirkan tersimpan permanen meski pelamar ubah CV-nya nanti. Enum `status` berisi `applied`, `reviewed`, `shortlisted`, `interview`, `offered`, `rejected`, `withdrawn`.
+
+**`application_status_logs`** adalah tabel audit trail yang sangat penting. Setiap perubahan status lamaran direkam lengkap dengan `old_status`, `new_status`, siapa yang mengubah, dan alasannya. Ini memenuhi kebutuhan transparansi dan tidak bisa dimanipulasi.
+
+---
+
+### Grup 5 — Wawancara
+
+**`interviews`** menyimpan jadwal wawancara yang dibuat HR. Enum `interview_type` berisi `online`, `offline`, `phone`. Kolom `status` berisi `scheduled`, `completed`, `cancelled`, `rescheduled`.
+
+**`interview_results`** dipisah dari `interviews` agar hasil penilaian bisa diisi belakangan oleh HR setelah wawancara selesai. Berisi `score`, `feedback` naratif, dan `recommendation` (lanjut/tidak).
+
+---
+
+### Grup 6 — Notifikasi
+
+**`notifications`** menyimpan semua notifikasi in-app (status lamaran berubah, jadwal 
+---MSG_END---
+
+[human]:
+baiklah dari konsep yang sudah anda buat, tolong rangkum kan apa saja fitur yang seharusnya ada, jadi, dan sesuai dengan konsep db yang sudah anda buat
+---MSG_END---
+
+[assistant]:
+ Berikut rangkuman fitur lengkap berdasarkan konsep database yang sudah dirancang:
+```
+This block is not supported on your current device yet.
+```
+
+
+```
+This block is not supported on your current device yet.
+```
+
+Itulah rangkuman lengkap **49 fitur** yang sepenuhnya didukung oleh struktur database yang sudah dirancang sebelumnya — tidak ada fitur yang "menggantung" tanpa tabel pendukungnya.
+
+Beberapa hal penting yang perlu dicatat:
+
+Status lamaran mengikuti alur `applied → reviewed → shortlisted → interview → offered → rejected / withdrawn`, dan setiap perpindahan status selalu dicatat di tabel `application_status_logs` sehingga riwayatnya tidak bisa dihapus atau dimanipulasi.
+
+Fitur tutup otomatis lowongan sepenuhnya didukung oleh kolom `quota`, `applicant_count`, `deadline`, dan `closed_at` di tabel `job_postings` — sistem tinggal menjalankan pengecekan berkala (cron job Laravel).
+
+Satu hal yang belum ada di database tapi mungkin ingin Anda tambahkan nanti adalah fitur **pencarian lowongan dengan keyword** (full-text search) dan **bookmark/simpan lowongan** favorit. Bisa ditambahkan sebagai pengembangan berikutnya jika diperlukan.
+
+Langkah selanjutnya, apakah ingin saya langsung buatkan **SQL migration Laravel** untuk semua tabel ini, atau ingin ke **desain UI** dulu?
+---MSG_END---
+
+[human]:
+mungkin untuk fitur full text searchnya bisa di tambahkan juga
+---MSG_END---
+
+[assistant]:
+ Baik, berikut tambahan yang diperlukan untuk mendukung fitur full-text search:
+
+---
+
+### Tambahan pada tabel `job_postings`
+
+Di MySQL, full-text search didukung natively dengan `FULLTEXT INDEX`. Kolom yang perlu diindeks adalah `title`, `description`, `requirements`, dan `benefits` — karena itulah kolom yang paling relevan saat kandidat mengetik keyword seperti "software engineer", "remote", atau "minimal S1".
+
+Tidak perlu tabel baru. Cukup tambahkan **FULLTEXT index** pada tabel `job_postings` yang sudah ada:
+
+```sql
+ALTER TABLE job_postings 
+ADD FULLTEXT INDEX ft_job_search (title, description, requirements, benefits);
+```
+
+Lalu di Laravel, query-nya menggunakan `MATCH ... AGAINST`:
+
+```php
+$results = JobPosting::whereRaw(
+    "MATCH(title, description, requirements, benefits) AGAINST(? IN BOOLEAN MODE)",
+    [$keyword]
+)->where('status', 'open')->get();
+```
+
+---
+
+### Tambahan tabel `saved_jobs` (bookmark lowongan)
+
+Sekaligus saya tambahkan tabel bookmark yang tadi saya sebut, karena keduanya sering berjalan bersama di platform rekrutmen seperti Jobstreet:
+
+```sql
+CREATE TABLE saved_jobs (
+    id          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id     BIGINT NOT NULL,
+    job_id      BIGINT NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_saved (user_id, job_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (job_id)  REFERENCES job_postings(id) ON DELETE CASCADE
+);
+```
+
+Tabel ini sangat ringan — hanya 4 kolom. `UNIQUE KEY` pada `(user_id, job_id)` memastikan satu pelamar tidak bisa menyimpan lowongan yang sama dua kali.
+
+---
+
+### Tambahan tabel `job_search_logs` (opsional tapi sangat berguna)
+
+Ini tabel opsional untuk mencatat riwayat pencarian pelamar. Berguna untuk fitur "pencarian terakhir" dan bisa dipakai HR untuk melihat keyword apa yang paling banyak dicari:
+
+```sql
+CREATE TABLE job_search_logs (
+    id          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id     BIGINT NULL,
+    keyword     VARCHAR(255) NOT NULL,
+    results_count INT DEFAULT 0,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+```
+
+`user_id` boleh `NULL` karena pencarian bisa dilakukan tanpa login.
+
+---
+
+Jadi total database sekarang menjadi **15 tabel** (13 sebelumnya + `saved_jobs` + `job_search_logs`), dan fitur pelamar bertambah 2 menjadi **22 fitur** — yaitu pencarian dengan keyword dan simpan lowongan favorit.
+
+Apakah ingin lanjut ke pembuatan **SQL migration Laravel** untuk semua 15 tabel ini sekaligus?
+---MSG_END---
+
+[human]:
+oh tidak begitu, maksud saya adalah anda menambahkan itu kedalam konsep db nya saja dulu, lalu saya ingin anda buat ringkasan, mulai dari menampilkan terlebih dahulu design konsep db nya, lalu fungsinya, relasinya, dan saya ingin anda ringkas juga fitur fitur yang harusnya ada dan di dukung dari db yang telah anda buat
+---MSG_END---
+
+[assistant]:
+ Siap! Saya akan buat semuanya secara lengkap dan rapi dalam satu tampilan.
+```
+This block is not supported on your current device yet.
+```
+
+Ringkasan lengkap sudah tersaji dalam satu widget dengan 4 tab yang bisa diklik:
+
+**Desain DB** — ERD lengkap 15 tabel termasuk `saved_jobs` dan `job_search_logs` yang baru ditambahkan, plus FULLTEXT index pada `job_postings`.
+
+**Fungsi Tabel** — penjelasan fungsi dan kolom penting setiap tabel, dikelompokkan dalam 6 grup logis.
+
+**Relasi** — 16 relasi antar tabel lengkap dengan tipe relasinya (1:1 / 1:N) dan penjelasan singkat.
+
+**Fitur** — 51 fitur total yang sepenuhnya didukung database: 22 untuk pelamar, 23 untuk HR, dan 6 otomatis oleh sistem.
+
+Langkah selanjutnya apakah ingin lanjut ke **SQL migration Laravel** atau ke **desain UI/wireframe** aplikasi?
+---MSG_END---
+
+[assistant]:
+ Siap! Saya akan buat semuanya lengkap dan rapi dalam satu tampilan.
+```
+This block is not supported on your current device yet.
+```
+
+Ini adalah ringkasan final lengkap dari konsep database E-Recruitment. Beberapa catatan penting:
+
+Setiap nama tabel bisa **diklik** untuk melihat kolom detailnya langsung di sana. Tabel yang bertanda **"baru"** adalah `saved_jobs` dan `job_search_logs` yang baru ditambahkan untuk mendukung fitur full-text search dan bookmark.
+
+Total sekarang menjadi **15 tabel**, **51 fitur**, dengan FULLTEXT index sudah ditanamkan langsung di tabel `job_postings` pada kolom `title`, `description`, `requirements`, dan `benefits` — sehingga pencarian keyword bisa berjalan cepat tanpa tabel tambahan.
+
+Langkah selanjutnya apakah ingin saya buatkan **SQL migration Laravel** untuk semua 15 tabel ini sekaligus?
+---MSG_END---
+
+[human]:
+nah dari semua fitur yang sudah anda berikan, ini diluat dari databasenya, kira kira fitur apa lagi yang perlu di tambahkan untuk menunjang kebutuhan dari aplikasi e-recruitment
+---MSG_END---
+
+[assistant]:
+ Pertanyaan bagus! Mari saya analisis dari sudut pandang aplikasi rekrutmen profesional seperti Jobstreet.
+```
+This block is not supported on your current device yet.
+```
+
+Ada **36 fitur tambahan** yang direkomendasikan, dan ini penjelasan singkat per kelompok prioritasnya:
+
+**Yang wajib ada sebelum launch (17 fitur)** mencakup hal-hal fundamental seperti halaman beranda publik, detail lowongan, notifikasi email, dashboard HR, rate limiting, validasi input, dan semua hal terkait UX dasar seperti loading state, empty state, dan responsif mobile. Tanpa ini aplikasi terasa belum siap.
+
+**Yang penting tapi bisa menyusul (14 fitur)** seperti riwayat pengalaman kerja & pendidikan pelamar, preferensi kerja, export data ke Excel, manajemen template CV dari sisi HR, dan filter pencarian pelamar. Ini membuat aplikasi terasa profesional.
+
+**Yang opsional (5 fitur)** seperti login via Google/LinkedIn dan import profil dari LinkedIn — bagus jika ada waktu, tapi tidak blocking.
+
+**5 tabel DB baru** yang perlu ditambahkan jika fitur-fitur ini diimplementasikan: `social_accounts`, `work_experiences`, `educations`, `skills`, `job_preferences`, dan `login_attempts`.
+
+Apakah ingin saya update konsep database dengan menambahkan 5 tabel baru tersebut, lalu kita buat **versi final database lengkap** sebelum masuk ke tahap migration?
+---MSG_END---
+
+[human]:
+nah baiklah sekarang karena anda bilang untuk menambahkan lagi fitur fitur baru yang sudah anda berikan, kita membutuhkan 5 table baru di db, berarti saya mau anda buat ringkasan baru, ini mungkin final untuk sementara, pertama revisi konsep db nya, buat lagi ulang desgin db nya lengkap dengan table baru yang perlu di tambahkan, kedua buat ringkasan ulang tentang fiturnya dan mungkin kali ini saya ingin anda memfokuskan untuk menamb ahkan fitur dibagian ui/ux nya, jabarkan apa saja fitur tampilan yang di perlukan baik itu dari sisi role pelamar ataupun hr
+---MSG_END---
+
+[human]:
+baiklah buat ringkasan baru, di ringkasan itu pertama anda ubah lagi konsep db nya, di design db tambahkan 5 table yang di perlukan, jelaskan semua table yang ada, fungsi, tujuan, dan relasinya, lalu ringkaskan fitur fitur yang ada, pisahkan antara fitur untuk pelamar dan hr, termasuk dalam ux nya, tolong perbanyak dan perlengkap fitur ux nya, kalau boleh tambahkan juga fitur untuk ui, jelaskan semua tampilan yang di perlukan dari semua fitur untuk pelamar dan hr yang ada, lalu diringkasan bagian ui/ux pisahkan mana yang untuk pelamar dan mana yang untuk hr
+---MSG_END---
+
+[assistant]:
+ Baik, saya akan buat ringkasan final yang sangat lengkap. Ini akan memakan waktu sebentar karena cukup komprehensif.
+```
+This block is not supported on your current device yet.
+```
+
+
+```
+This block is not supported on your current device yet.
+```
+
+Baik, saya akan buat dokumen Word yang sangat lengkap dan profesional untuk ringkasan final ini.
+```
+This block is not supported on your current device yet.
+```
+
+Jaringan tidak tersedia. Saya akan buat ringkasan lengkap sebagai widget interaktif yang bisa dilihat langsung.
+```
+This block is not supported on your current device yet.
+```
+
+Ini adalah ringkasan final paling lengkap dari seluruh konsep proyek E-Recruitment. Cara menggunakannya cukup klik tab di bagian atas untuk berpindah antara 6 bagian, dan klik nama tabel mana saja di halaman Database untuk melihat kolom detailnya.
+
+Ringkasan isi setiap tab: **Database** memuat 20 tabel lengkap yang sudah termasuk 3 tabel baru (`work_experiences`, `educations`, `applicant_skills`). **Relasi** menjelaskan 18 hubungan antar tabel secara naratif. **Fitur Pelamar** dan **Fitur HR** masing-masing merangkum semua fungsi beserta penjelasannya. **UI/UX Pelamar** mendetailkan 7 halaman utama dari landing page sampai CV builder. **UI/UX HR** mendetailkan 6 halaman panel admin termasuk elemen UX global seperti toast, loading state, dan responsif mobile.
+
+Langkah selanjutnya apakah ingin saya langsung buatkan **migration Laravel** untuk semua 20 tabel ini?
+---MSG_END---
+
+[human]:
+untuk ringkasan ini, bagian tablenya, bisa buatkan design table table yang ada didalam dbnya? agar lebih mudah saya membuatnya
+---MSG_END---
+
+[assistant]:
+ 
+```
+This block is not supported on your current device yet.
+```
+
+Siap! Saya akan buat desain visual setiap tabel database — lengkap dengan kolom, tipe data, constraint, dan relasinya — menggunakan mermaid ERD yang bisa diklik per grup tabel.
+```
+This block is not supported on your current device yet.
+```
+
+Desain tabel sudah ditampilkan lengkap! Cara pakainya:
+
+Klik tab di atas untuk berpindah antar grup tabel. Setiap grup menampilkan struktur tabel lengkap dengan semua kolom, tipe data, dan constraint (PK/FK/UK/FT), plus garis relasi antar tabel dalam grup tersebut. Tab **ERD Lengkap** menampilkan semua 20 tabel sekaligus dengan seluruh relasinya dalam satu diagram.
+
+Pengelompokan tabnya: **Grup A** untuk pengguna & keamanan, **Grup B** untuk CV & template, **Grup C** untuk profil profesional pelamar (pengalaman, pendidikan, skill), **Grup D** untuk lowongan, **Grup E** untuk lamaran & log, **Grup F** untuk wawancara, dan **Grup G** untuk sistem (notifikasi, search log, login attempts).
+
+Siap lanjut ke **migration Laravel** untuk semua tabel ini?
+---MSG_END---
+
+[human]:
+nah sekarang bisa anda bantu, buatkan step dari awal sekali saya harus mulai buat dari yang mana, sampai table terakhir, dan akhirnya akan jadi keseluruhan table yang ada dalam design db yang anda buat, dan satu lagi, selagi anda membuat step nya, bantu jelaskan kesaya hal yang perlu saya tau, seperti fungsi fungsinya dan alasan itu ada, atau mungkin hal hal yang perlu di perhatikan/digaris bawahi baik itu dari segi keseluruhan db nya ataupun ketika sedang mengerjakan db nya
+---MSG_END---
+
+[assistant]:
+ Siap! Ini akan jadi panduan lengkap dari nol sampai database selesai.
+```
+This block is not supported on your current device yet.
+```
+
+Panduan ini terbagi menjadi **8 tab** yang bisa dikerjakan satu per satu:
+
+**Gambaran Umum** menjelaskan mengapa urutan tabel itu penting dan menampilkan daftar lengkap urutan 1–18 beserta alasannya. **Fase 1–6** masing-masing berisi step detail setiap tabel lengkap dengan struktur kolom, tipe data, constraint, dan yang paling penting — penjelasan *kenapa* setiap keputusan desain dibuat seperti itu. **Checklist Final** berisi 16 poin yang bisa dicentang satu per satu sebelum menjalankan `php artisan migrate`.
+
+Beberapa hal yang paling kritis untuk diingat: tabel `users` adalah fondasi segalanya dan harus pertama kali dibuat, `password_hash` wajib bcrypt bukan plain text, `FULLTEXT INDEX` di `job_postings` adalah kunci fitur search, `application_status_logs` tidak boleh bisa diedit atau dihapus, dan `hr_notes` di `applications` harus disembunyikan dari response API pelamar.
+
+Setelah semua migration selesai dibuat, langkah berikutnya adalah membuat **Seeder** untuk data dummy. Mau saya bantu juga dengan itu?
+---MSG_END---
+
+[human]:
+`1234567890-
+---MSG_END---
+
+[assistant]:
+ Sepertinya pesan Anda tidak terkirim dengan sempurna — sepertinya hanya berisi karakter acak. 😊
+
+Ada yang ingin Anda tanyakan atau lanjutkan dari project E-Recruitment ini
+---MSG_END---
+
+[human]:
+saya akan memulai progres pembuatannya, dari fase 1, jadi nanti anda ikuti perkembangan projectnya, dan terus awasi, anda bisa atau dapat mebgetahui perkembangannya dari pertanyaan dan perkembangan dan permasalahan yang terjadi dari project, jadi anda bisa menganalisis sampai mana project berjalan dan anda dapat memantau, jadi akan memudahkan saya jika terjadi masalah pada project karena anda tau progresnya sudah ditahap yang mana
+---MSG_END---
+
+[assistant]:
+ Siap! Saya akan ikuti dan pantau progress project Anda dari awal sampai selesai.
+
+Berikut yang akan saya lakukan setiap kali Anda update:
+
+**Saya akan selalu ingat konteks:**
+- Kita sedang bangun E-Recruitment untuk PT Eco Green Oleochemicals
+- Stack: Laravel + MySQL + HTML/CSS/JS (Clean HTML, AJAX)
+- Database: 18 tabel, 6 fase pengerjaan
+- Anda sedang mulai dari **Fase 1 — Fondasi**
+
+**Cara kerja pemantauan:**
+Cukup ceritakan apa yang sedang dikerjakan, tempel kode yang bermasalah, atau screenshot error — saya langsung tahu konteksnya dan bisa bantu tanpa perlu dijelaskan dari awal lagi.
+
+**Tracker progress saat ini:**
+
+| Fase | Tabel | Status |
+|------|-------|--------|
+| Fase 1 | users | ⬜ Belum |
+| Fase 1 | user_profiles | ⬜ Belum |
+| Fase 1 | password_reset_tokens | ⬜ Belum |
+| Fase 1 | login_attempts | ⬜ Belum |
+| Fase 2 | cv_templates | ⬜ Belum |
+| Fase 2 | applicant_cvs | ⬜ Belum |
+| Fase 2 | work_experiences | ⬜ Belum |
+| Fase 2 | educations | ⬜ Belum |
+| Fase 2 | applicant_skills | ⬜ Belum |
+| Fase 3 | job_categories | ⬜ Belum |
+| Fase 3 | job_postings | ⬜ Belum |
+| Fase 3 | saved_jobs | ⬜ Belum |
+| Fase 4 | applications | ⬜ Belum |
+| Fase 4 | application_status_logs | ⬜ Belum |
+| Fase 4 | job_search_logs | ⬜ Belum |
+| Fase 5 | interviews | ⬜ Belum |
+| Fase 5 | interview_results | ⬜ Belum |
+| Fase 6 | notifications | ⬜ Belum |
+
+Silakan mulai Fase 1 — kalau ada yang ingin ditanyakan sebelum mulai, atau langsung tempel kode migration pertamanya, saya siap! 🚀
+---MSG_END---
+
+[human]:
+nah  sekarang saya punya pertanyaan, ini lebih ke pertanyaan dasar tapi menyeluruh, nah karena prjectnya berbasis laravel, dan di laravel sendri dapat membuat db tanpa saya perlu membuatnya manual di mysql, bisakah anda bantu saya berikan prompt untuk membuat template db yang biasanya dapat di lakukan pada laravel? dan tolong terapkan atau lebih tepatnya tolong buatkan prompt prompt pembuatan dari setiap table yang akan kita buat, buat prompt untuk membuat db yang akan dijalankan pada laravel itu, dan itu masukkan juga dalam fase perkembangan pembuatan db nya
+---MSG_END---
+
+[assistant]:
+ Pertanyaan yang bagus dan sangat tepat! Di Laravel, pembuatan database dilakukan lewat **Migration** — jadi Anda tidak perlu buka phpMyAdmin atau MySQL manual sama sekali.
+
+Berikut semua perintah dan kode migration lengkap per fase:
+
+---
+
+## Persiapan awal — jalankan sekali saja
+
+```bash
+# 1. Buat project Laravel baru (jika belum)
+composer create-project laravel/laravel e-recruitment
+
+# 2. Masuk ke folder project
+cd e-recruitment
+
+# 3. Setting koneksi database di file .env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=e_recruitment
+DB_USERNAME=root

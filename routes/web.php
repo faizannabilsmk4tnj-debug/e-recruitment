@@ -104,3 +104,14 @@ Route::get('/pelamar/status-lamaran', function () {
 Route::get('/hr/login', function () { return view('hr.login'); });
 Route::get('/hr/setting', function () { return view('hr.setting'); });
 Route::get('/hr/tim', function () { return view('hr.tim'); });
+Route::get('/hr/lowongan', function () { return view('hr.lowongan'); });
+Route::get('/hr/lowongan/buat', function () { return view('hr.lowongan-buat'); });
+Route::get('/hr/lowongan/{id}', function ($id) { return view('hr.lowongan-detail'); })->where('id', '[0-9]+');
+Route::get('/hr/pelamar', function () { return view('hr.pelamar'); });
+Route::get('/hr/pelamar/{id}', function ($id) { return view('hr.pelamar-detail'); })->where('id', '[0-9]+');
+Route::get('/hr/wawancara', function () { return view('hr.wawancara'); });
+Route::get('/hr/wawancara/daftar', function () { return view('hr.wawancara-daftar'); });
+Route::get('/hr/laporan', function () { return view('hr.laporan'); });
+Route::get('/hr/template-cv', function () { return view('hr.template-cv'); });
+Route::get('/hr/template-cv/editor', function () { return view('hr.template-cv-editor'); });
+Route::get('/hr/template-cv/editor/{id}', function ($id) { return view('hr.template-cv-editor'); });

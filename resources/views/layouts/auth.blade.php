@@ -47,7 +47,6 @@
             <!-- Logo + Company Name -->
             <a href="/" class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">
-                <span class="text-white font-semibold text-sm hidden sm:inline">PT Ecogreen Oleochemicals</span>
             </a>
         </div>
         <div class="flex items-center gap-3">
