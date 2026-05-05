@@ -7,7 +7,7 @@
 
 <!-- Breadcrumb -->
 <div class="flex items-center gap-2 text-sm text-gray-400 mb-4">
-    <a href="/pelamar/organisasi" class="hover:text-green-700 transition-colors">Pengalaman Organisasi</a>
+    <a href="/pelamar/organisasi" class="hover:text-green-700 transition-colors">Organization Experience</a>
     <span>›</span>
     <span class="text-gray-700 font-medium">Tambah Baru</span>
 </div>
@@ -36,7 +36,7 @@
                 <input type="month" id="mulai" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Selesai</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Finish</label>
                 <input type="month" id="selesai" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
         </div>
@@ -48,7 +48,7 @@
         </div>
 
         <div class="flex gap-4 pt-4 justify-end">
-            <a href="/pelamar/organisasi" class="border border-gray-300 text-gray-700 font-semibold px-8 py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</a>
+            <a href="/pelamar/organisasi" class="border border-gray-300 text-gray-700 font-semibold px-8 py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</a>
             <button type="button" id="btn-simpan" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-8 py-2.5 rounded-lg text-sm transition-colors">Simpan Pengalaman</button>
         </div>
     </div>

@@ -7,9 +7,9 @@
 <!-- Breadcrumb -->
 <div class="px-16 py-4 bg-white border-b border-gray-100">
     <div class="flex items-center gap-2 text-sm text-gray-400">
-        <a href="/pelamar/dashboard" class="hover:text-green-700 transition-colors">Beranda</a>
+        <a href="/pelamar/dashboard" class="hover:text-green-700 transition-colors">Home</a>
         <span>›</span>
-        <a href="/pelamar/lowongan" class="hover:text-green-700 transition-colors">Lowongan</a>
+        <a href="/pelamar/lowongan" class="hover:text-green-700 transition-colors">Vacancies</a>
         <span>›</span>
         <span class="text-green-700 font-medium">Review Lamaran</span>
     </div>
@@ -115,7 +115,7 @@
                     <div class="flex items-start gap-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                         <div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Lokasi</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Location</p>
                             <p class="text-sm font-semibold text-gray-900 mt-0.5">Batam, Kepulauan Riau</p>
                         </div>
                     </div>

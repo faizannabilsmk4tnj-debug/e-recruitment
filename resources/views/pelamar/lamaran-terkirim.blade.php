@@ -1,6 +1,6 @@
 @extends('layouts.pelamar-public')
 
-@section('title', 'Lamaran Terkirim')
+@section('title', 'Lamaran Submitted')
 
 @section('content')
 
@@ -17,7 +17,7 @@
         </div>
 
         <!-- Title -->
-        <h1 class="text-3xl font-extrabold text-gray-900 mb-4">Lamaran Terkirim!</h1>
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-4">Lamaran Submitted!</h1>
 
         <!-- Description -->
         <p class="text-gray-500 leading-relaxed mb-6">Terima kasih telah melamar di PT Ecogreen Oleochemicals. Kami akan meninjau kualifikasi Anda dan segera memberikan kabar terbaru melalui email atau portal ini.</p>

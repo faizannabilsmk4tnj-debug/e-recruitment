@@ -168,7 +168,7 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Bahasa</h4>
+                        <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Languages</h4>
                         <div class="space-y-1 text-xs text-green-100"><p>Indonesia — Native</p><p>English — Professional</p></div>
                     </div>
                     <div>
@@ -183,7 +183,7 @@
                         <p class="text-sm text-gray-600 leading-relaxed">Process Engineer dengan pengalaman 5+ tahun di industri oleokimia. Terampil dalam optimalisasi proses produksi fatty alcohol, pengendalian mutu, dan implementasi sistem manajemen K3 & lingkungan. Berkomitmen pada prinsip sustainable manufacturing.</p>
                     </div>
                     <div>
-                        <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-3 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Pengalaman Kerja</h3>
+                        <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-3 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Work Experience</h3>
                         <div class="space-y-5">
                             <div class="border-l-2 border-green-200 pl-4">
                                 <div class="flex justify-between items-start"><p class="font-bold text-sm text-gray-900">Senior Process Engineer</p><span class="text-xs text-green-700 bg-green-50 px-2 py-0.5 rounded font-semibold">2021 — Sekarang</span></div>
@@ -203,7 +203,7 @@
                         </div>
                     </div>
                     <div>
-                        <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-3 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Pendidikan</h3>
+                        <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-3 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Education</h3>
                         <div class="border-l-2 border-green-200 pl-4">
                             <p class="font-bold text-sm text-gray-900">S1 Teknik Kimia</p>
                             <p class="text-sm text-gray-500">Institut Teknologi Sepuluh Nopember (ITS) — Surabaya</p>
@@ -258,7 +258,7 @@
                 </div>
                 <div class="space-y-5">
                     <div>
-                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Pendidikan</h3>
+                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Education</h3>
                         <div>
                             <p class="font-bold text-sm text-gray-900">Sarjana Teknik Kimia (S.T.)</p>
                             <p class="text-xs text-gray-500 italic">Institut Teknologi Sepuluh Nopember — 2015 s.d. 2019</p>
@@ -275,7 +275,7 @@
                         <div class="text-xs text-gray-600 space-y-1"><p>• Lean Six Sigma Green Belt — 2022</p><p>• Ahli K3 Umum — Kemnaker RI, 2021</p><p>• ISO 9001:2015 Internal Auditor — 2021</p><p>• RSPO Supply Chain Certification — 2020</p></div>
                     </div>
                     <div>
-                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Bahasa</h3>
+                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Languages</h3>
                         <div class="text-xs text-gray-600 space-y-1"><p>Bahasa Indonesia — Penutur Asli</p><p>English — Professional Working (TOEFL ITP: 563)</p></div>
                     </div>
                     <div>
@@ -310,11 +310,11 @@
                 <!-- Main Content -->
                 <div class="col-span-7 p-8 space-y-6 border-r border-slate-800">
                     <div>
-                        <h3 class="text-amber-400 text-[10px] font-bold uppercase tracking-[3px] mb-2 flex items-center gap-2"><span class="w-6 h-0.5 bg-amber-500"></span>Profil</h3>
+                        <h3 class="text-amber-400 text-[10px] font-bold uppercase tracking-[3px] mb-2 flex items-center gap-2"><span class="w-6 h-0.5 bg-amber-500"></span>Profile</h3>
                         <p class="text-sm text-slate-300 leading-relaxed">Engineer berpengalaman di industri oleokimia dengan spesialisasi dalam optimasi proses produksi fatty alcohol dan fatty acid. Menguasai penerapan lean manufacturing dan continuous improvement di lingkungan plant berskala besar.</p>
                     </div>
                     <div>
-                        <h3 class="text-amber-400 text-[10px] font-bold uppercase tracking-[3px] mb-4 flex items-center gap-2"><span class="w-6 h-0.5 bg-amber-500"></span>Pengalaman</h3>
+                        <h3 class="text-amber-400 text-[10px] font-bold uppercase tracking-[3px] mb-4 flex items-center gap-2"><span class="w-6 h-0.5 bg-amber-500"></span>Experience</h3>
                         <div class="space-y-5">
                             <div class="relative pl-5 border-l-2 border-amber-500/40">
                                 <div class="absolute -left-[5px] top-1 w-2 h-2 bg-amber-500 rounded-full"></div>
@@ -331,7 +331,7 @@
                         </div>
                     </div>
                     <div>
-                        <h3 class="text-amber-400 text-[10px] font-bold uppercase tracking-[3px] mb-2 flex items-center gap-2"><span class="w-6 h-0.5 bg-amber-500"></span>Pendidikan</h3>
+                        <h3 class="text-amber-400 text-[10px] font-bold uppercase tracking-[3px] mb-2 flex items-center gap-2"><span class="w-6 h-0.5 bg-amber-500"></span>Education</h3>
                         <div class="bg-slate-800 rounded-lg p-4">
                             <p class="font-bold text-sm text-white">S1 Teknik Kimia — Institut Teknologi Sepuluh Nopember</p>
                             <p class="text-xs text-slate-400 mt-1">2015 — 2019 • Cum Laude • IPK 3.68</p>
@@ -371,7 +371,7 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="text-amber-400 text-[10px] font-bold uppercase tracking-[2px] mb-2">Bahasa</h4>
+                        <h4 class="text-amber-400 text-[10px] font-bold uppercase tracking-[2px] mb-2">Languages</h4>
                         <div class="space-y-1.5 text-xs text-slate-300">
                             <div class="flex justify-between"><span>Indonesia</span><span class="text-amber-400 tracking-wider">●●●●●</span></div>
                             <div class="flex justify-between"><span>English</span><span><span class="text-amber-400 tracking-wider">●●●●</span><span class="text-slate-600 tracking-wider">●</span></span></div>

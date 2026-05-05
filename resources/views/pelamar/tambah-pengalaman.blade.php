@@ -7,7 +7,7 @@
 
 <!-- Breadcrumb -->
 <div class="flex items-center gap-2 text-sm text-gray-400 mb-4">
-    <a href="/pelamar/pengalaman-kerja" class="hover:text-green-700 transition-colors">Pengalaman Kerja</a>
+    <a href="/pelamar/pengalaman-kerja" class="hover:text-green-700 transition-colors">Work Experience</a>
     <span>›</span>
     <span class="text-gray-700 font-medium">Tambah Baru</span>
 </div>
@@ -45,7 +45,7 @@
                     <option value="kimia">Kimia & Oleochemical</option>
                     <option value="keuangan">Keuangan & Perbankan</option>
                     <option value="kesehatan">Kesehatan</option>
-                    <option value="pendidikan">Pendidikan</option>
+                    <option value="pendidikan">Education</option>
                     <option value="energi">Energi & Pertambangan</option>
                     <option value="lainnya">Lainnya</option>
                 </select>

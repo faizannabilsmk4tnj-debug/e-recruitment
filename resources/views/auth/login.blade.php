@@ -17,7 +17,7 @@
         </div>
 
         <!-- Title -->
-        <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">Masuk ke Akun Anda</h1>
+        <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">Login to Your Account</h1>
         <p class="text-center text-gray-500 text-sm mb-8">Selamat datang kembali! Silakan masuk untuk mengelola aplikasi Anda.</p>
 
         <!-- Error Alert (hidden by default, shown via JS) -->
@@ -64,7 +64,7 @@
             <div>
                 <div class="flex items-center justify-between mb-2">
                     <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider">Password</label>
-                    <a href="#" class="text-xs font-semibold text-green-800 hover:text-green-600 underline transition-colors">Lupa Kata Sandi?</a>
+                    <a href="#" class="text-xs font-semibold text-green-800 hover:text-green-600 underline transition-colors">Forgot Password?</a>
                 </div>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -116,7 +116,7 @@
         <!-- Register Link -->
         <p class="text-center text-sm text-gray-600">
             Belum punya akun?
-            <a href="/register" class="font-bold text-green-900 hover:text-green-700 transition-colors">Daftar Sekarang</a>
+            <a href="/register" class="font-bold text-green-900 hover:text-green-700 transition-colors">Register Now</a>
         </p>
     </div>
 

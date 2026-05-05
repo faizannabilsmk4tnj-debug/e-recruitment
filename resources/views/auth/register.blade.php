@@ -121,7 +121,7 @@
                     class="mt-1 h-4 w-4 rounded border-gray-300 text-green-700 focus:ring-green-600 accent-green-800 cursor-pointer"
                 >
                 <label for="terms" class="text-sm text-gray-600 cursor-pointer">
-                    Saya menyetujui <a href="#" class="font-semibold text-green-800 underline hover:text-green-600">Syarat & Ketentuan</a> serta <a href="#" class="font-semibold text-green-800 underline hover:text-green-600">Kebijakan Privasi</a> yang berlaku.
+                    Saya menyetujui <a href="#" class="font-semibold text-green-800 underline hover:text-green-600">Terms & Conditions</a> serta <a href="#" class="font-semibold text-green-800 underline hover:text-green-600">Privacy Policy</a> yang berlaku.
                 </label>
             </div>
 
@@ -149,7 +149,7 @@
         <!-- Login Link -->
         <p class="text-center text-sm text-gray-600">
             Sudah punya akun?
-            <a href="/login" class="font-bold text-green-900 hover:text-green-700 transition-colors">Masuk</a>
+            <a href="/login" class="font-bold text-green-900 hover:text-green-700 transition-colors">Login</a>
         </p>
     </div>
 

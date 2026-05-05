@@ -10,8 +10,8 @@
     <!-- Header -->
     <div class="flex items-start justify-between mb-6">
         <div>
-            <h1 class="text-3xl font-extrabold text-green-900">Daftar Pelamar</h1>
-            <p class="text-sm text-gray-500 mt-1">Kelola dan tinjau semua aplikasi yang masuk untuk posisi aktif di PT Ecogreen Oleochemicals.</p>
+            <h1 class="text-3xl font-extrabold text-green-900">Applicant List</h1>
+            <p class="text-sm text-gray-500 mt-1">Manage and review all incoming applications for active positions at PT Ecogreen Oleochemicals.</p>
         </div>
         <button id="btn-export" class="flex items-center gap-2 border border-gray-300 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
@@ -22,11 +22,11 @@
     <!-- 5 Summary Stat Cards -->
     <div class="grid grid-cols-5 gap-4 mb-6">
         <div class="bg-white rounded-xl border border-gray-100 p-4">
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Pelamar</p>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Applicants</p>
             <p class="text-2xl font-extrabold text-gray-900 mt-1">128</p>
         </div>
         <div class="bg-white rounded-xl border-l-4 border-gray-300 border-y border-r border-r-gray-100 border-y-gray-100 p-4">
-            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Terkirim</p>
+            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Submitted</p>
             <p class="text-2xl font-extrabold text-gray-900 mt-1">42</p>
         </div>
         <div class="bg-white rounded-xl border-l-4 border-amber-400 border-y border-r border-r-gray-100 border-y-gray-100 p-4">
@@ -38,7 +38,7 @@
             <p class="text-2xl font-extrabold text-gray-900 mt-1">18</p>
         </div>
         <div class="bg-white rounded-xl border-l-4 border-green-600 border-y border-r border-r-gray-100 border-y-gray-100 p-4">
-            <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest">Diterima</p>
+            <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest">Accepted</p>
             <p class="text-2xl font-extrabold text-gray-900 mt-1">6</p>
         </div>
     </div>
@@ -46,19 +46,19 @@
     <!-- Quick Filter Pills (Global Status Filter) -->
     <div class="bg-white rounded-xl border border-gray-100 p-4 mb-4">
         <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mr-2">Fokus Pekerjaan:</span>
-            <button class="quick-filter active-quick bg-green-800 text-white font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="all">Semua</button>
+            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mr-2">Job Focus:</span>
+            <button class="quick-filter active-quick bg-green-800 text-white font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="all">All</button>
             <button class="quick-filter bg-gray-50 border border-gray-200 text-gray-600 hover:border-amber-300 hover:text-amber-700 font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="review">
                 <span class="inline-block w-1.5 h-1.5 bg-amber-400 rounded-full mr-1"></span>
-                Perlu Review <span class="text-gray-400 ml-0.5">(80)</span>
+                Needs Review <span class="text-gray-400 ml-0.5">(80)</span>
             </button>
             <button class="quick-filter bg-gray-50 border border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-700 font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="interview">
                 <span class="inline-block w-1.5 h-1.5 bg-blue-500 rounded-full mr-1"></span>
-                Sedang Interview <span class="text-gray-400 ml-0.5">(18)</span>
+                In Interview <span class="text-gray-400 ml-0.5">(18)</span>
             </button>
             <button class="quick-filter bg-gray-50 border border-gray-200 text-gray-600 hover:border-purple-300 hover:text-purple-700 font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="decision">
                 <span class="inline-block w-1.5 h-1.5 bg-purple-500 rounded-full mr-1"></span>
-                Butuh Keputusan <span class="text-gray-400 ml-0.5">(29)</span>
+                Needs Decision <span class="text-gray-400 ml-0.5">(29)</span>
             </button>
         </div>
     </div>
@@ -69,13 +69,13 @@
             <!-- Smart search -->
             <div class="relative flex-1 min-w-[280px]">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <input type="text" id="global-search" placeholder="Cari nama pelamar, email, atau nama posisi..." class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <input type="text" id="global-search" placeholder="Search applicant name, email, or position..." class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
                 <span id="search-hint" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-400"></span>
             </div>
 
             <!-- Departemen Filter -->
             <select id="filter-dept" class="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-700 min-w-[160px]">
-                <option value="">Semua Departemen</option>
+                <option value="">All Departments</option>
                 <option value="Production">Production</option>
                 <option value="Operations">Operations</option>
                 <option value="R&D Lab">R&D Lab</option>
@@ -85,31 +85,31 @@
 
             <!-- Sort lowongan -->
             <select id="sort-lowongan" class="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-700 min-w-[180px]">
-                <option value="pelamar-desc">Urut: Pelamar Terbanyak</option>
-                <option value="urgency">Urut: Paling Urgent</option>
-                <option value="newest">Urut: Paling Baru</option>
-                <option value="alpha">Urut: A-Z</option>
+                <option value="pelamar-desc">Sort: Most Applicants</option>
+                <option value="urgency">Sort: Most Urgent</option>
+                <option value="newest">Sort: Newest</option>
+                <option value="alpha">Sort: A-Z</option>
             </select>
 
             <!-- Expand/Collapse all -->
             <div class="flex bg-gray-100 rounded-lg p-0.5 gap-0.5">
-                <button id="btn-expand-all" class="px-3 py-1.5 text-xs font-semibold rounded-md text-gray-600 hover:text-gray-800 transition-colors">Buka Semua</button>
-                <button id="btn-collapse-all" class="px-3 py-1.5 text-xs font-semibold rounded-md text-gray-600 hover:text-gray-800 transition-colors">Tutup Semua</button>
+                <button id="btn-expand-all" class="px-3 py-1.5 text-xs font-semibold rounded-md text-gray-600 hover:text-gray-800 transition-colors">Expand All</button>
+                <button id="btn-collapse-all" class="px-3 py-1.5 text-xs font-semibold rounded-md text-gray-600 hover:text-gray-800 transition-colors">Collapse All</button>
             </div>
         </div>
 
         <!-- Active filter indicator -->
         <div id="active-filter-bar" class="hidden mt-3 pt-3 border-t border-gray-100 flex items-center gap-2 flex-wrap">
-            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Filter Aktif:</span>
+            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Active Filters:</span>
             <div id="active-filter-pills" class="flex items-center gap-2 flex-wrap"></div>
-            <button id="btn-clear-filters" class="ml-auto text-xs font-semibold text-red-600 hover:text-red-700 transition-colors">Hapus Semua Filter</button>
+            <button id="btn-clear-filters" class="ml-auto text-xs font-semibold text-red-600 hover:text-red-700 transition-colors">Clear All Filters</button>
         </div>
     </div>
 
     <!-- Result summary -->
     <div class="mb-3 flex items-center justify-between text-xs text-gray-500">
-        <p>Menampilkan <span id="visible-lowongan-count" class="font-bold text-gray-700">3</span> lowongan dengan <span id="visible-applicant-count" class="font-bold text-gray-700">10</span> pelamar</p>
-        <p>Total: <span class="font-bold text-gray-700">128 pelamar</span> di 3 lowongan aktif</p>
+        <p>Showing <span id="visible-lowongan-count" class="font-bold text-gray-700">3</span> vacancies with <span id="visible-applicant-count" class="font-bold text-gray-700">10</span> applicants</p>
+        <p>Total: <span class="font-bold text-gray-700">128 applicants</span> in 3 active vacancies</p>
     </div>
 
     <!-- Lowongan Cards -->
@@ -201,32 +201,32 @@
                         @if($low['deadline_days'] <= 7)
                         <span class="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6"/><path d="M12 16h.01"/></svg>
-                            Deadline {{ $low['deadline_days'] }} hari
+                            Deadline {{ $low['deadline_days'] }} days
                         </span>
                         @endif
 
                         @if($unreviewed >= 50)
                         <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-                            {{ $unreviewed }} belum direview
+                            {{ $unreviewed }} unreviewed
                         </span>
                         @endif
 
                         @if($low['days_since'] <= 3)
-                        <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">BARU</span>
+                        <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">NEW</span>
                         @endif
                     </div>
                     <p class="text-xs text-gray-400 mt-0.5">
-                        <span class="font-semibold text-gray-700">{{ $low['total'] }}</span> pelamar total
+                        <span class="font-semibold text-gray-700">{{ $low['total'] }}</span> applicants total
                         <span class="mx-1">·</span>
-                        Dibuka {{ $low['posted'] }}
+                        Posted {{ $low['posted'] }}
                     </p>
                 </div>
 
                 <!-- Status breakdown pills -->
                 <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
                     @if($low['counts']['terkirim'] > 0)
-                    <span class="text-[10px] font-bold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-1 rounded">{{ $low['counts']['terkirim'] }} Terkirim</span>
+                    <span class="text-[10px] font-bold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-1 rounded">{{ $low['counts']['terkirim'] }} Submitted</span>
                     @endif
                     @if($low['counts']['shortlisted'] > 0)
                     <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded">{{ $low['counts']['shortlisted'] }} Shortlisted</span>
@@ -248,9 +248,9 @@
 
                 <!-- Status Tabs -->
                 <div class="flex items-center gap-1 px-6 pt-4 border-b border-gray-100 flex-wrap">
-                    <button class="status-tab active-tab px-3 py-2 text-xs font-semibold text-green-800 border-b-2 border-green-700 transition-colors" data-status="all">Semua <span class="text-gray-400 ml-1">({{ $low['total'] }})</span></button>
+                    <button class="status-tab active-tab px-3 py-2 text-xs font-semibold text-green-800 border-b-2 border-green-700 transition-colors" data-status="all">All <span class="text-gray-400 ml-1">({{ $low['total'] }})</span></button>
                     @if($low['counts']['terkirim'] > 0)
-                    <button class="status-tab px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors" data-status="terkirim">Terkirim <span class="text-gray-400 ml-1">({{ $low['counts']['terkirim'] }})</span></button>
+                    <button class="status-tab px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors" data-status="terkirim">Submitted <span class="text-gray-400 ml-1">({{ $low['counts']['terkirim'] }})</span></button>
                     @endif
                     @if($low['counts']['shortlisted'] > 0)
                     <button class="status-tab px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors" data-status="shortlisted">Shortlisted <span class="text-gray-400 ml-1">({{ $low['counts']['shortlisted'] }})</span></button>
@@ -266,12 +266,12 @@
                     @endif
 
                     <div class="ml-auto flex items-center gap-2">
-                        <span class="text-[10px] text-gray-400">Urutkan:</span>
+                        <span class="text-[10px] text-gray-400">Sort By:</span>
                         <select class="sort-select text-xs border border-gray-200 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
-                            <option value="recent">Terbaru</option>
-                            <option value="score-desc">Skor tertinggi</option>
-                            <option value="score-asc">Skor terendah</option>
-                            <option value="name">Nama A-Z</option>
+                            <option value="recent">Recent</option>
+                            <option value="score-desc">Highest Score</option>
+                            <option value="score-asc">Lowest Score</option>
+                            <option value="name">Name A-Z</option>
                         </select>
                     </div>
                 </div>
@@ -280,11 +280,11 @@
                 <table class="w-full">
                     <thead>
                         <tr class="bg-gray-50">
-                            <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-6 py-3">Pelamar</th>
-                            <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-6 py-3">Tanggal</th>
+                            <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-6 py-3">Applicants</th>
+                            <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-6 py-3">Date</th>
                             <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-6 py-3">Status</th>
-                            <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-6 py-3">Skor</th>
-                            <th class="text-right text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-6 py-3">Aksi</th>
+                            <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-6 py-3">Score</th>
+                            <th class="text-right text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-6 py-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="applicant-tbody">
@@ -308,7 +308,7 @@
                             <td class="px-6 py-4">
                                 @switch($p['status'])
                                     @case('terkirim')
-                                        <span class="text-[10px] font-bold text-gray-600 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full uppercase">Terkirim</span>
+                                        <span class="text-[10px] font-bold text-gray-600 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full uppercase">Submitted</span>
                                         @break
                                     @case('shortlisted')
                                         <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full uppercase">Shortlisted</span>
@@ -343,7 +343,7 @@
 
                         <tr class="applicant-empty hidden">
                             <td colspan="5" class="px-6 py-12 text-center">
-                                <p class="text-sm text-gray-400">Tidak ada pelamar dengan filter ini.</p>
+                                <p class="text-sm text-gray-400">No applicants with this filter.</p>
                             </td>
                         </tr>
                     </tbody>
@@ -351,7 +351,7 @@
 
                 <!-- Footer -->
                 <div class="px-6 py-3 border-t border-gray-100">
-                    <p class="text-xs text-gray-400">Menampilkan <span class="filter-count">{{ count($low['pelamar']) }}</span> dari {{ $low['total'] }} pelamar</p>
+                    <p class="text-xs text-gray-400">Showing <span class="filter-count">{{ count($low['pelamar']) }}</span> of {{ $low['total'] }} applicants</p>
                 </div>
             </div>
         </div>
@@ -360,8 +360,8 @@
         <!-- Empty result -->
         <div id="empty-result" class="hidden bg-white rounded-2xl border border-gray-100 p-12 text-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-300 mx-auto mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <p class="text-sm font-semibold text-gray-700">Tidak ada hasil ditemukan</p>
-            <p class="text-xs text-gray-400 mt-1">Coba kata kunci lain atau ubah filter.</p>
+            <p class="text-sm font-semibold text-gray-700">No results found</p>
+            <p class="text-xs text-gray-400 mt-1">Try other keywords or change filters.</p>
         </div>
     </div>
 </div>

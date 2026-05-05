@@ -10,7 +10,7 @@
     <div class="flex items-start justify-between mb-8">
         <div>
             <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest mb-1">SISTEM MANAJEMEN</p>
-            <h1 class="text-3xl font-extrabold text-gray-900">Daftar Wawancara</h1>
+            <h1 class="text-3xl font-extrabold text-gray-900">Interview List</h1>
         </div>
         <div class="flex items-center gap-4">
             <div class="relative">
@@ -43,7 +43,7 @@
             <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">RENTANG TANGGAL</label>
             <div class="relative">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                <input type="text" value="Oct 20, 2023 - Oct 27, 2023" class="pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none w-[240px]">
+                <input type="text" id="filter-date" value="Oct 20, 2023 - Oct 27, 2023" class="pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none w-[240px]">
             </div>
         </div>
 
@@ -51,7 +51,7 @@
             <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">TIPE</label>
             <div class="relative">
                 <select class="pl-4 pr-10 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 font-medium focus:outline-none w-[180px] appearance-none">
-                    <option>Semua Tipe</option>
+                    <option>All Tipe</option>
                     <option>Technical</option>
                     <option>HR</option>
                     <option>User</option>
@@ -231,7 +231,7 @@
 
         <!-- Pagination Footer -->
         <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
-            <span class="text-xs text-gray-500">Menampilkan <strong>4</strong> dari <strong>24</strong> sesi wawancara</span>
+            <span class="text-xs text-gray-500">Showing <strong>4</strong> dari <strong>24</strong> sesi wawancara</span>
             <div class="flex items-center gap-1">
                 <button class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
@@ -284,4 +284,23 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('js')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateParam = urlParams.get('date');
+    
+    if (dateParam) {
+        const dateObj = new Date(dateParam);
+        if (!isNaN(dateObj)) {
+            // Format to match the default input style, e.g. "May 12, 2026"
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+            const formatted = dateObj.toLocaleDateString('en-US', options);
+            document.getElementById('filter-date').value = formatted;
+        }
+    }
+});
+</script>
 @endsection

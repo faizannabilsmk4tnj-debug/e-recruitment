@@ -144,7 +144,7 @@
             <div class="flex items-start justify-between mb-6">
                 <div>
                     <h2 class="font-bold text-gray-900 text-lg">Application Trends</h2>
-                    <p class="text-xs text-gray-400 mt-0.5" id="chart-subtitle">Jumlah pelamar harian dalam 7 hari terakhir</p>
+                    <p class="text-xs text-gray-400 mt-0.5" id="chart-subtitle">Jumlah applicants daysan dalam 7 days terakhir</p>
                 </div>
                 <div class="flex bg-gray-100 rounded-lg p-0.5 gap-0.5">
                     <button id="btn-daily" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-white text-gray-800 shadow-sm transition-all">Daily</button>

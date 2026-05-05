@@ -9,9 +9,9 @@
 
     {{-- Breadcrumb (Optional, based on standard patterns) --}}
     <div class="mb-6 flex items-center text-sm text-gray-500 gap-2">
-        <a href="/hr/pelamar" class="hover:text-green-800 transition-colors">Pelamar</a>
+        <a href="/hr/pelamar" class="hover:text-green-800 transition-colors">Applicants</a>
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        <span class="text-gray-900 font-medium">Detail Pelamar</span>
+        <span class="text-gray-900 font-medium">Applicant Detail</span>
     </div>
 
     {{-- Header Card --}}
@@ -78,7 +78,7 @@
             <section>
                 <div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-3">
                     <svg class="w-5 h-5 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                    <h3 class="text-lg font-bold text-gray-900">Informasi Pribadi</h3>
+                    <h3 class="text-lg font-bold text-gray-900">Personal Information</h3>
                 </div>
                 <div class="grid grid-cols-2 gap-x-8 gap-y-6">
                     <div>
@@ -91,7 +91,7 @@
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">JENIS KELAMIN</div>
-                        <div class="text-sm font-semibold text-gray-900">Laki-laki</div>
+                        <div class="text-sm font-semibold text-gray-900">Male</div>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">NOMOR TELEPON</div>
@@ -120,7 +120,7 @@
             <section>
                 <div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-3">
                     <svg class="w-5 h-5 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>
-                    <h3 class="text-lg font-bold text-gray-900">Pendidikan</h3>
+                    <h3 class="text-lg font-bold text-gray-900">Education</h3>
                 </div>
                 <div class="grid grid-cols-2 gap-x-8 gap-y-6">
                     <div>
@@ -273,7 +273,7 @@
                                 </div>
                                 
                                 <div>
-                                    <h3 class="text-[11px] sm:text-xs font-black text-gray-900 border-b-2 border-gray-900 pb-1.5 mb-3 uppercase tracking-widest">Bahasa</h3>
+                                    <h3 class="text-[11px] sm:text-xs font-black text-gray-900 border-b-2 border-gray-900 pb-1.5 mb-3 uppercase tracking-widest">Languages</h3>
                                     <ul class="space-y-2 text-[10px] sm:text-[11px] text-gray-600 font-medium">
                                         <li class="flex justify-between"><span>Indonesia</span> <span class="font-bold text-gray-900">Native</span></li>
                                         <li class="flex justify-between"><span>Inggris</span> <span class="font-bold text-gray-900">Fluent</span></li>
@@ -291,7 +291,7 @@
                                 </div>
                                 
                                 <div>
-                                    <h3 class="text-[11px] sm:text-xs font-black text-green-950 border-b-2 border-gray-200 pb-1.5 mb-3 uppercase tracking-widest">Pengalaman Kerja</h3>
+                                    <h3 class="text-[11px] sm:text-xs font-black text-green-950 border-b-2 border-gray-200 pb-1.5 mb-3 uppercase tracking-widest">Work Experience</h3>
                                     
                                     <div class="mb-5 relative pl-4 border-l-2 border-green-200">
                                         <div class="absolute w-2 h-2 bg-green-600 rounded-full -left-[5px] top-1.5"></div>
@@ -323,7 +323,7 @@
                                 </div>
                                 
                                 <div>
-                                    <h3 class="text-[11px] sm:text-xs font-black text-green-950 border-b-2 border-gray-200 pb-1.5 mb-3 uppercase tracking-widest">Pendidikan</h3>
+                                    <h3 class="text-[11px] sm:text-xs font-black text-green-950 border-b-2 border-gray-200 pb-1.5 mb-3 uppercase tracking-widest">Education</h3>
                                     <div class="relative pl-4 border-l-2 border-gray-200">
                                         <div class="absolute w-2 h-2 bg-gray-300 rounded-full -left-[5px] top-1.5"></div>
                                         <div class="flex justify-between items-baseline mb-0.5">
@@ -695,7 +695,7 @@
             } else {
                 // Let the form submit normally if not an interview
                 e.preventDefault();
-                showToast('Status pelamar berhasil diubah menjadi ' + selectedStatus, 'success');
+                showToast('Status applicants berhasil diubah menjadi ' + selectedStatus, 'success');
             }
         });
 

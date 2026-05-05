@@ -18,8 +18,8 @@
             </a>
         </div>
         <div class="flex items-center gap-6">
-            <a href="/pelamar/lowongan" class="text-white font-semibold text-sm">Lowongan</a>
-            <a href="/pelamar/profil" class="text-green-300 hover:text-white text-sm transition-colors">Profil Saya</a>
+            <a href="/pelamar/lowongan" class="text-white font-semibold text-sm">Vacancies</a>
+            <a href="/pelamar/profil" class="text-green-300 hover:text-white text-sm transition-colors">My Profile</a>
             <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-green-900 font-bold text-sm ring-2 ring-green-300 overflow-hidden">
                 <img src="{{ asset('images/avatar.png') }}" alt="Avatar" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.textContent='A';">
             </div>

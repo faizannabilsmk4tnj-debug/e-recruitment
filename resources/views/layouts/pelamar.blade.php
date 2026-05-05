@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title') — Portal Pelamar</title>
+    <title>@yield('title') — Applicant Portal</title>
     @vite(['resources/css/app.css'])
     <style>
         .sidebar-link.active {
@@ -41,8 +41,8 @@
 
         <!-- Nav Links -->
         <div class="flex items-center gap-6">
-            <a href="/pelamar/lowongan" class="text-green-300 hover:text-white text-sm transition-colors">Lowongan</a>
-            <a href="/pelamar/profil" class="text-green-300 hover:text-white text-sm transition-colors">Profil Saya</a>
+            <a href="/pelamar/lowongan" class="text-green-300 hover:text-white text-sm transition-colors">Vacancies</a>
+            <a href="/pelamar/profil" class="text-green-300 hover:text-white text-sm transition-colors">My Profile</a>
 
             <!-- Avatar -->
             <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-green-900 font-bold text-sm ring-2 ring-green-300 overflow-hidden" id="user-avatar">
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Help / Tutorial -->
-            <button id="btn-help" onclick="sessionStorage.removeItem('tour-done'); window.location.href='/pelamar/dashboard';" class="w-8 h-8 bg-green-800 hover:bg-green-700 rounded-full flex items-center justify-center text-white transition-colors" title="Panduan Penggunaan">
+            <button id="btn-help" onclick="sessionStorage.removeItem('tour-done'); window.location.href='/pelamar/dashboard';" class="w-8 h-8 bg-green-800 hover:bg-green-700 rounded-full flex items-center justify-center text-white transition-colors" title="User Guide">
                 <span class="text-sm font-bold">?</span>
             </button>
         </div>
@@ -65,13 +65,13 @@
             <!-- Profile Progress -->
             <div class="px-6 py-4 border-b border-gray-100">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Profil Anda</span>
+                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Your Profile</span>
                     <span class="text-xs font-bold text-green-700" id="profile-percent">85%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-1.5">
                     <div class="bg-green-600 h-1.5 rounded-full" style="width: 85%" id="profile-bar"></div>
                 </div>
-                <p class="text-xs text-gray-400 mt-2">Lengkapi pendidikan untuk mencapai 100%</p>
+                <p class="text-xs text-gray-400 mt-2">Complete education to reach 100%</p>
             </div>
 
             <!-- Navigation -->
@@ -86,43 +86,43 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                     </svg>
-                    Profil
+                    Profile
                 </a>
                 <a href="/pelamar/pengalaman-kerja" id="sidebar-pengalaman" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700 transition-colors @yield('nav-pengalaman')">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
                     </svg>
-                    Pengalaman Kerja
+                    Work Experience
                 </a>
                 <a href="/pelamar/pendidikan" id="sidebar-pendidikan" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700 transition-colors @yield('nav-pendidikan')">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
                     </svg>
-                    Pendidikan
+                    Education
                 </a>
                 <a href="/pelamar/organisasi" id="sidebar-organisasi" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700 transition-colors @yield('nav-organisasi')">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
-                    Pengalaman Organisasi
+                    Organization Experience
                 </a>
                 <a href="/pelamar/lampiran" id="sidebar-lampiran" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700 transition-colors @yield('nav-lampiran')">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.58 8.58a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
                     </svg>
-                    Lampiran
+                    Attachments
                 </a>
                 <a href="/pelamar/cv" id="sidebar-cv" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700 transition-colors @yield('nav-cv')">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/>
                     </svg>
-                    CV Saya
+                    My CV
                 </a>
                 <a href="/pelamar/status-lamaran" id="sidebar-status" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-700 transition-colors @yield('nav-status')">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/>
                     </svg>
-                    Status Lamaran
+                    Application Status
                 </a>
             </nav>
 
@@ -132,7 +132,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
                     </svg>
-                    Keluar
+                    Logout
                 </a>
             </div>
         </aside>
@@ -152,14 +152,14 @@
                         <div class="flex items-center gap-2 mb-1">
                             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-5 w-auto">
                         </div>
-                        <p class="text-green-400 text-xs">© 2023 Human Resources Department. Seluruh Hak Cipta Dilindungi.</p>
+                        <p class="text-green-400 text-xs">© 2023 Human Resources Department. All Rights Reserved.</p>
                     </div>
                     <div class="flex flex-wrap gap-6 text-xs text-green-300">
-                        <a href="/" class="hover:text-white transition-colors">Portal Karir</a>
-                        <a href="/" class="hover:text-white transition-colors">Tentang Kami</a>
-                        <a href="/" class="hover:text-white transition-colors">Pusat Bantuan</a>
-                        <a href="/" class="hover:text-white transition-colors">Privasi</a>
-                        <a href="/" class="hover:text-white transition-colors">Ketentuan</a>
+                        <a href="/" class="hover:text-white transition-colors">Career Portal</a>
+                        <a href="/" class="hover:text-white transition-colors">About Us</a>
+                        <a href="/" class="hover:text-white transition-colors">Help Center</a>
+                        <a href="/" class="hover:text-white transition-colors">Privacy</a>
+                        <a href="/" class="hover:text-white transition-colors">Terms</a>
                     </div>
                 </div>
             </footer>

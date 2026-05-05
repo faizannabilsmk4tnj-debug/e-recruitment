@@ -1,6 +1,6 @@
 @extends('layouts.landing')
 
-@section('title', 'Karir - PT Ecogreen Oleochemicals')
+@section('title', 'Careers - PT Ecogreen Oleochemicals')
 @section('nav-beranda', 'text-white font-semibold')
 
 @section('css')
@@ -56,8 +56,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>
             </div>
             <div class="flex-1">
-                <p class="font-bold text-gray-900 group-hover:text-green-800 transition-colors">Kategori Populer</p>
-                <p class="text-sm text-gray-500">Eksplorasi divisi R&D, Operasi, dan Keberlanjutan.</p>
+                <p class="font-bold text-gray-900 group-hover:text-green-800 transition-colors">Popular Categories</p>
+                <p class="text-sm text-gray-500">Explore R&D, Operations, and Sustainability divisions.</p>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700 shrink-0 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </button>
@@ -67,8 +67,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
             </div>
             <div class="flex-1">
-                <p class="font-bold text-gray-900 group-hover:text-green-800 transition-colors">Lowongan Terbaru</p>
-                <p class="text-sm text-gray-500">Update harian posisi teknis dan manajerial.</p>
+                <p class="font-bold text-gray-900 group-hover:text-green-800 transition-colors">Latest Vacancies</p>
+                <p class="text-sm text-gray-500">Daily updates on technical and managerial positions.</p>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700 shrink-0 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </button>
@@ -135,8 +135,8 @@
     <div class="modal-box bg-white rounded-2xl w-full max-w-3xl mx-4 p-8">
         <div class="flex items-start justify-between mb-2">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">Kategori Populer</h2>
-                <p class="text-sm text-gray-500 mt-1">Temukan peluang karir yang sesuai dengan keahlian Anda di sektor industri hijau dan keberlanjutan.</p>
+                <h2 class="text-2xl font-bold text-gray-900">Popular Categories</h2>
+                <p class="text-sm text-gray-500 mt-1">Find career opportunities that match your expertise in the green and sustainability industry sector.</p>
             </div>
             <button class="modal-close text-gray-400 hover:text-gray-700 transition-colors p-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -149,56 +149,56 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
                 <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Engineering</p>
-                <p class="text-xs text-gray-400 mt-1">124 Lowongan</p>
+                <p class="text-xs text-gray-400 mt-1">124 Vacancies</p>
             </div>
             <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
                 <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
                 </div>
                 <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Finance</p>
-                <p class="text-xs text-gray-400 mt-1">85 Lowongan</p>
+                <p class="text-xs text-gray-400 mt-1">85 Vacancies</p>
             </div>
             <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
                 <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
                 </div>
                 <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Marketing</p>
-                <p class="text-xs text-gray-400 mt-1">92 Lowongan</p>
+                <p class="text-xs text-gray-400 mt-1">92 Vacancies</p>
             </div>
             <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
                 <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
                 </div>
                 <p class="text-xs font-bold text-green-900 uppercase tracking-wider">IT & Digital</p>
-                <p class="text-xs text-gray-400 mt-1">156 Lowongan</p>
+                <p class="text-xs text-gray-400 mt-1">156 Vacancies</p>
             </div>
             <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
                 <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/></svg>
                 </div>
                 <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Research</p>
-                <p class="text-xs text-gray-400 mt-1">43 Lowongan</p>
+                <p class="text-xs text-gray-400 mt-1">43 Vacancies</p>
             </div>
             <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
                 <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                 </div>
                 <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Operations</p>
-                <p class="text-xs text-gray-400 mt-1">210 Lowongan</p>
+                <p class="text-xs text-gray-400 mt-1">210 Vacancies</p>
             </div>
             <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
                 <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
                 <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Sustainability</p>
-                <p class="text-xs text-gray-400 mt-1">67 Lowongan</p>
+                <p class="text-xs text-gray-400 mt-1">67 Vacancies</p>
             </div>
             <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
                 <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                 </div>
                 <p class="text-xs font-bold text-green-900 uppercase tracking-wider">HR & People</p>
-                <p class="text-xs text-gray-400 mt-1">31 Lowongan</p>
+                <p class="text-xs text-gray-400 mt-1">31 Vacancies</p>
             </div>
         </div>
 
@@ -208,8 +208,8 @@
                 <span class="text-xs text-gray-400 uppercase tracking-wider font-medium">Security Pulse: Encrypted Session</span>
             </div>
             <div class="flex items-center gap-4">
-                <a href="#" class="text-sm font-semibold text-green-800 hover:text-green-600 transition-colors">Lihat Semua Kategori</a>
-                <button class="bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors">Cari Pekerjaan</button>
+                <a href="#" class="text-sm font-semibold text-green-800 hover:text-green-600 transition-colors">View All Categories</a>
+                <button class="bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors">Search Jobs</button>
             </div>
         </div>
     </div>
@@ -224,8 +224,8 @@
                     <div class="w-6 h-1 bg-green-800 rounded-full"></div>
                     <span class="text-xs font-bold text-green-800 uppercase tracking-widest">Ecogreen Opportunities</span>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-900">Lowongan Terbaru</h2>
-                <p class="text-sm text-gray-500 mt-1">Temukan karir impian Anda di industri oleokimia berkelanjutan.</p>
+                <h2 class="text-2xl font-bold text-gray-900">Latest Vacancies</h2>
+                <p class="text-sm text-gray-500 mt-1">Find your dream career in the sustainable oleochemical industry.</p>
             </div>
             <button class="modal-close text-gray-400 hover:text-gray-700 transition-colors p-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -243,7 +243,7 @@
                         </span>
                         <span class="text-xs text-gray-400 flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            2 jam yang lalu
+                            2 hours ago
                         </span>
                     </div>
                 </div>
@@ -261,7 +261,7 @@
                         </span>
                         <span class="text-xs text-gray-400 flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            5 jam yang lalu
+                            5 hours ago
                         </span>
                     </div>
                 </div>
@@ -277,7 +277,7 @@
                         </span>
                         <span class="text-xs text-gray-400 flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            Hari ini
+                            Today
                         </span>
                     </div>
                 </div>
@@ -293,7 +293,7 @@
                         </span>
                         <span class="text-xs text-gray-400 flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            Kemarin
+                            Yesterday
                         </span>
                     </div>
                 </div>
@@ -309,7 +309,7 @@
                         </span>
                         <span class="text-xs text-gray-400 flex items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            Kemarin
+                            Yesterday
                         </span>
                     </div>
                 </div>
@@ -319,7 +319,7 @@
 
         <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
             <button id="btn-lihat-kategori" class="text-sm font-semibold text-gray-700 hover:text-green-700 flex items-center gap-1 transition-colors">
-                Lihat Semua Lowongan
+                View All Vacancies
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </button>
             <div class="flex items-center gap-2">
@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Lihat Semua Lowongan -> open Kategori modal
+    // Lihat All Lowongan -> open Kategori modal
     document.getElementById('btn-lihat-kategori').addEventListener('click', function () {
         closeModal('modal-lowongan');
         setTimeout(() => openModal('modal-kategori'), 200);

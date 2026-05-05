@@ -22,11 +22,11 @@
     <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 mb-8 flex flex-col sm:flex-row gap-3 items-center">
         <div class="relative flex-1 w-full">
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" id="search-template" placeholder="Cari berdasarkan nama template..." class="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400">
+            <input type="text" id="search-template" placeholder="Search berdasarkan nama template..." class="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400">
         </div>
         <div class="flex items-center gap-2 flex-shrink-0">
             <div class="flex rounded-lg border border-gray-200 overflow-hidden text-sm font-semibold">
-                <button data-filter="semua" class="filter-btn px-4 py-2 bg-[#0f3c20] text-white transition-colors">Semua</button>
+                <button data-filter="semua" class="filter-btn px-4 py-2 bg-[#0f3c20] text-white transition-colors">All</button>
                 <button data-filter="published" class="filter-btn px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors">Published</button>
                 <button data-filter="draft" class="filter-btn px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors">Draft</button>
             </div>
@@ -229,7 +229,7 @@
                 <input id="input-nama-template" type="text" placeholder="Contoh: Modern Executive 2025" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400">
             </div>
             <div>
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Deskripsi</label>
+                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Description</label>
                 <textarea rows="3" placeholder="Deskripsi singkat template ini..." class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400 resize-none"></textarea>
             </div>
             <div>
@@ -240,7 +240,7 @@
                 </select>
             </div>
             <div class="flex gap-3 pt-2">
-                <button id="modal-tambah-cancel" class="flex-1 border border-gray-200 text-gray-700 font-semibold text-sm py-2.5 rounded-lg hover:bg-gray-50 transition-colors">Batal</button>
+                <button id="modal-tambah-cancel" class="flex-1 border border-gray-200 text-gray-700 font-semibold text-sm py-2.5 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
                 <button id="btn-buat-template" class="flex-1 bg-[#0f3c20] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#1b5e32] transition-colors">Buat Template →</button>
             </div>
         </div>

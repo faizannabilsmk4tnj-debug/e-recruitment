@@ -10,7 +10,7 @@
     <!-- Header -->
     <div class="flex items-start justify-between mb-8">
         <div>
-            <h1 class="text-3xl font-extrabold text-green-900">Tim HR</h1>
+            <h1 class="text-3xl font-extrabold text-green-900">HR Team</h1>
             <p class="text-gray-500 mt-1">Kelola akses dan peran anggota tim manajemen SDM Anda.</p>
         </div>
         <button id="btn-tambah-anggota" class="flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors">
@@ -41,7 +41,7 @@
             <h2 class="font-bold text-green-900">Daftar Anggota</h2>
             <div class="relative">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <input type="text" id="search-member" placeholder="Cari nama atau email..." class="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent w-64">
+                <input type="text" id="search-member" placeholder="Search nama atau email..." class="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent w-64">
             </div>
         </div>
 
@@ -51,7 +51,7 @@
                     <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Anggota</th>
                     <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Peran</th>
                     <th class="text-left text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Status</th>
-                    <th class="text-right text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Aksi</th>
+                    <th class="text-right text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Actions</th>
                 </tr>
             </thead>
             <tbody id="member-table">
@@ -187,7 +187,7 @@
         <div class="flex items-center justify-between px-6 py-4 border-t border-gray-100">
             <p class="text-xs text-gray-500">Menampilkan 4 dari 4 anggota</p>
             <div class="flex items-center gap-1">
-                <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-400 cursor-not-allowed">Sebelumnya</button>
+                <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-400 cursor-not-allowed">Previous</button>
                 <button class="px-3 py-1.5 bg-green-800 text-white rounded-lg text-xs font-semibold">1</button>
                 <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-400 cursor-not-allowed">Berikutnya</button>
             </div>
@@ -241,7 +241,7 @@
             </div>
         </div>
         <div class="px-6 pb-6 flex gap-3">
-            <button id="btn-cancel-tambah" class="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</button>
+            <button id="btn-cancel-tambah" class="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</button>
             <button id="btn-save-tambah" class="flex-1 bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Tambah Anggota</button>
         </div>
     </div>
@@ -278,8 +278,8 @@
             </div>
         </div>
         <div class="px-6 pb-6 flex gap-3">
-            <button id="btn-cancel-edit" class="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</button>
-            <button id="btn-save-edit" class="flex-1 bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Simpan Perubahan</button>
+            <button id="btn-cancel-edit" class="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</button>
+            <button id="btn-save-edit" class="flex-1 bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Save Changes</button>
         </div>
     </div>
 </div>
@@ -298,7 +298,7 @@
         <p class="text-sm font-semibold text-gray-900 mb-5" id="hapus-name"></p>
         <div class="space-y-2.5">
             <button id="btn-confirm-hapus" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Ya, Hapus Anggota</button>
-            <button id="btn-cancel-hapus" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</button>
+            <button id="btn-cancel-hapus" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</button>
         </div>
     </div>
 </div>

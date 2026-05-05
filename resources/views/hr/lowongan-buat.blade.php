@@ -227,7 +227,7 @@
         <div class="bg-white px-6 py-4 border-b border-gray-200 flex items-center justify-between shrink-0">
             <div>
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Preview Lowongan</p>
-                <p class="text-xs text-gray-500 mt-0.5">Tampilan di halaman publik / portal pelamar</p>
+                <p class="text-xs text-gray-500 mt-0.5">Tampilan di halaman publik / portal applicants</p>
             </div>
             <button id="btn-close-preview" class="text-gray-400 hover:text-gray-700 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -310,7 +310,7 @@
         </button>
         <h3 class="font-bold text-gray-900 mb-4">Tambah Benefit</h3>
         <input type="text" id="benefit-input" placeholder="e.g. BPJS Kesehatan" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mb-4">
-        <button id="btn-confirm-benefit" class="w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Tambah</button>
+        <button id="btn-confirm-benefit" class="w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Add</button>
     </div>
 </div>
 

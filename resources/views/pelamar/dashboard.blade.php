@@ -32,12 +32,12 @@
     <!-- Content -->
     <div class="relative z-10 p-6 flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold" id="greeting-text">Halo, <span id="user-name">Ahmad</span>!</h1>
-            <p class="mt-1 text-sm" id="greeting-sub">Selamat datang kembali. Berikut adalah ringkasan aktivitas lamaran Anda.</p>
+            <h1 class="text-2xl font-bold" id="greeting-text">Hello, <span id="user-name">Ahmad</span>!</h1>
+            <p class="mt-1 text-sm" id="greeting-sub">Welcome back. Here is a summary of your application activities.</p>
         </div>
         <div class="text-right flex items-center gap-4">
             <div>
-                <p class="text-xs uppercase tracking-wider font-medium" id="progress-label">Profil Lengkap</p>
+                <p class="text-xs uppercase tracking-wider font-medium" id="progress-label">Complete Profile</p>
                 <p class="text-3xl font-bold mt-0.5" id="progress-number">85%</p>
             </div>
             <div class="w-10 h-10 rounded-full border-2 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" id="progress-arrow">
@@ -53,7 +53,7 @@
     <div class="stat-card green animate-card bg-white rounded-xl border border-gray-200 p-5 cursor-pointer hover:shadow-lg hover:border-green-200 transition-all">
         <div class="flex items-start justify-between">
             <div>
-                <p class="text-sm text-gray-500 mb-1">Total Lamaran</p>
+                <p class="text-sm text-gray-500 mb-1">Total Applications</p>
                 <p class="text-3xl font-bold text-gray-900" id="stat-total">12</p>
             </div>
             <div class="w-11 h-11 bg-gradient-to-br from-green-50 to-green-100 rounded-xl flex items-center justify-center">
@@ -64,7 +64,7 @@
         </div>
         <div class="flex items-center gap-1.5 mt-3 bg-green-50 rounded-md px-2 py-1 w-fit">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-            <span class="text-xs font-semibold text-green-700">+2 bulan ini</span>
+            <span class="text-xs font-semibold text-green-700">+2 this month</span>
         </div>
     </div>
 
@@ -72,42 +72,42 @@
     <div class="stat-card emerald animate-card bg-white rounded-xl border border-gray-200 p-5 cursor-pointer hover:shadow-lg hover:border-green-200 transition-all">
         <div class="flex items-start justify-between">
             <div>
-                <p class="text-sm text-gray-500 mb-1">Aktif</p>
+                <p class="text-sm text-gray-500 mb-1">Active</p>
                 <p class="text-3xl font-bold text-emerald-700" id="stat-aktif">4</p>
             </div>
             <div class="w-11 h-11 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
         </div>
-        <p class="text-xs text-gray-400 mt-3">Dalam proses review</p>
+        <p class="text-xs text-gray-400 mt-3">In review process</p>
     </div>
 
     <!-- Ditolak -->
     <div class="stat-card red animate-card bg-white rounded-xl border border-gray-200 p-5 cursor-pointer hover:shadow-lg hover:border-red-200 transition-all">
         <div class="flex items-start justify-between">
             <div>
-                <p class="text-sm text-gray-500 mb-1">Ditolak</p>
+                <p class="text-sm text-gray-500 mb-1">Rejected</p>
                 <p class="text-3xl font-bold text-red-600" id="stat-ditolak">2</p>
             </div>
             <div class="w-11 h-11 bg-gradient-to-br from-red-50 to-red-100 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
             </div>
         </div>
-        <p class="text-xs text-gray-400 mt-3">Tetap semangat!</p>
+        <p class="text-xs text-gray-400 mt-3">Keep it up!</p>
     </div>
 
     <!-- Wawancara -->
     <div class="stat-card blue animate-card bg-white rounded-xl border border-gray-200 p-5 cursor-pointer hover:shadow-lg hover:border-blue-200 transition-all">
         <div class="flex items-start justify-between">
             <div>
-                <p class="text-sm text-gray-500 mb-1">Wawancara</p>
+                <p class="text-sm text-gray-500 mb-1">Interviews</p>
                 <p class="text-3xl font-bold text-blue-600" id="stat-wawancara">3</p>
             </div>
             <div class="w-11 h-11 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
         </div>
-        <p class="text-xs text-gray-400 mt-3">Persiapkan diri Anda</p>
+        <p class="text-xs text-gray-400 mt-3">Prepare yourself</p>
     </div>
 </div>
 
@@ -120,10 +120,10 @@
             <div class="px-6 py-4 flex items-center justify-between border-b border-gray-100">
                 <div class="flex items-center gap-2">
                     <div class="w-1.5 h-5 bg-green-700 rounded-full"></div>
-                    <h2 class="text-lg font-bold text-gray-900">Daftar Lamaran Terbaru</h2>
+                    <h2 class="text-lg font-bold text-gray-900">Latest Applications</h2>
                 </div>
                 <a href="/pelamar/status-lamaran" class="text-sm font-semibold text-green-700 hover:text-green-600 flex items-center gap-1 transition-colors">
-                    Lihat Semua
+                    See All
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </a>
             </div>
@@ -131,8 +131,8 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-gray-50/80">
-                        <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Posisi</th>
-                        <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Tanggal</th>
+                        <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Position</th>
+                        <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Date</th>
                         <th class="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider px-6 py-3">Status</th>
                     </tr>
                 </thead>
@@ -190,9 +190,9 @@
             <div class="px-5 py-4 flex items-center justify-between border-b border-gray-100">
                 <div class="flex items-center gap-2">
                     <div class="w-1.5 h-5 bg-blue-500 rounded-full"></div>
-                    <h3 class="font-bold text-gray-900 text-sm">Lowongan Tersimpan</h3>
+                    <h3 class="font-bold text-gray-900 text-sm">Saved Vacancies</h3>
                 </div>
-                <a href="/#lowongan" class="text-xs font-semibold text-green-700 hover:text-green-600 transition-colors">Lihat Semua</a>
+                <a href="/#lowongan" class="text-xs font-semibold text-green-700 hover:text-green-600 transition-colors">See All</a>
             </div>
             <div class="divide-y divide-gray-50" id="saved-jobs">
                 <div class="saved-job flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors cursor-pointer">
@@ -201,7 +201,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="saved-job-title font-semibold text-sm text-gray-900 truncate transition-colors">Maintenance Supervisor</p>
-                        <p class="text-xs text-gray-400">Batam • 5 hari lalu</p>
+                        <p class="text-xs text-gray-400">Batam • 5 days lalu</p>
                     </div>
                     <button class="text-gray-300 hover:text-yellow-500 transition-colors shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
@@ -213,7 +213,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="saved-job-title font-semibold text-sm text-gray-900 truncate transition-colors">Chemical Lab Tech</p>
-                        <p class="text-xs text-gray-400">Medan • 2 hari lalu</p>
+                        <p class="text-xs text-gray-400">Medan • 2 days lalu</p>
                     </div>
                     <button class="text-gray-300 hover:text-yellow-500 transition-colors shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
@@ -239,39 +239,39 @@
             <div class="px-5 py-4 flex items-center justify-between border-b border-gray-100">
                 <div class="flex items-center gap-2">
                     <div class="w-1.5 h-5 bg-amber-500 rounded-full"></div>
-                    <h3 class="font-bold text-gray-900 text-sm">Notifikasi</h3>
+                    <h3 class="font-bold text-gray-900 text-sm">Notifications</h3>
                 </div>
-                <span class="text-xs font-bold text-white bg-green-600 px-2.5 py-0.5 rounded-full animate-pulse">3 Baru</span>
+                <span class="text-xs font-bold text-white bg-green-600 px-2.5 py-0.5 rounded-full animate-pulse">3 New</span>
             </div>
             <div class="divide-y divide-gray-50" id="notifications">
                 <div class="flex items-start gap-3 px-5 py-4 hover:bg-blue-50/30 transition-colors cursor-pointer">
                     <div class="w-2.5 h-2.5 bg-blue-500 rounded-full mt-1.5 shrink-0 ring-2 ring-blue-200"></div>
                     <div>
-                        <p class="font-semibold text-sm text-gray-900">Jadwal Wawancara Dikonfirmasi</p>
-                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Undangan wawancara teknis untuk Process Engineer telah dikirim ke email Anda.</p>
-                        <p class="text-xs text-gray-400 mt-1.5 font-medium">1 jam yang lalu</p>
+                        <p class="font-semibold text-sm text-gray-900">Interview Schedule Confirmed</p>
+                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Technical interview invitation for Process Engineer has been sent to your email.</p>
+                        <p class="text-xs text-gray-400 mt-1.5 font-medium">1 hour ago</p>
                     </div>
                 </div>
                 <div class="flex items-start gap-3 px-5 py-4 hover:bg-blue-50/30 transition-colors cursor-pointer">
                     <div class="w-2.5 h-2.5 bg-blue-500 rounded-full mt-1.5 shrink-0 ring-2 ring-blue-200"></div>
                     <div>
-                        <p class="font-semibold text-sm text-gray-900">Update Status Lamaran</p>
-                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Lamaran Anda untuk posisi QA Specialist telah diperbarui ke 'Shortlisted'.</p>
-                        <p class="text-xs text-gray-400 mt-1.5 font-medium">Kemarin, 14:20</p>
+                        <p class="font-semibold text-sm text-gray-900">Application Status Update</p>
+                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Your application for the QA Specialist position has been updated to 'Shortlisted'.</p>
+                        <p class="text-xs text-gray-400 mt-1.5 font-medium">Yesterday, 14:20</p>
                     </div>
                 </div>
                 <div class="flex items-start gap-3 px-5 py-4 hover:bg-blue-50/30 transition-colors cursor-pointer">
                     <div class="w-2.5 h-2.5 bg-blue-500 rounded-full mt-1.5 shrink-0 ring-2 ring-blue-200"></div>
                     <div>
-                        <p class="font-semibold text-sm text-gray-900">Lengkapi Profil Anda</p>
-                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Sertifikat TOEFL Anda akan segera kadaluarsa. Harap perbarui dokumen pendukung.</p>
-                        <p class="text-xs text-gray-400 mt-1.5 font-medium">2 hari yang lalu</p>
+                        <p class="font-semibold text-sm text-gray-900">Complete Your Profile</p>
+                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Your TOEFL certificate is expiring soon. Please update your supporting documents.</p>
+                        <p class="text-xs text-gray-400 mt-1.5 font-medium">2 days ago</p>
                     </div>
                 </div>
             </div>
             <div class="px-5 py-3 border-t border-gray-100 bg-gray-50/50">
                 <a href="#" class="text-sm font-semibold text-green-700 hover:text-green-600 transition-colors flex items-center justify-center gap-1">
-                    Lihat Semua Notifikasi
+                    See All Notifications
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </a>
             </div>
@@ -297,7 +297,7 @@
         <!-- Progress -->
         <div class="flex items-center justify-between mb-3">
             <span id="tour-step-label" class="text-[10px] font-bold text-green-700 uppercase tracking-widest"></span>
-            <button id="tour-skip" class="text-[10px] text-gray-400 hover:text-gray-600 transition-colors uppercase tracking-wider font-medium">Lewati</button>
+            <button id="tour-skip" class="text-[10px] text-gray-400 hover:text-gray-600 transition-colors uppercase tracking-wider font-medium">Skip</button>
         </div>
         <div class="h-1 bg-gray-100 rounded-full mb-4">
             <div id="tour-progress" class="h-1 bg-green-600 rounded-full transition-all duration-500"></div>
@@ -308,11 +308,11 @@
         <div class="flex items-center justify-between mt-5">
             <button id="tour-prev" class="text-sm text-gray-400 hover:text-gray-700 transition-colors flex items-center gap-1 hidden">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-                Kembali
+                Back
             </button>
             <div></div>
             <button id="tour-next" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-colors flex items-center gap-1">
-                Lanjut
+                Next
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
             </button>
         </div>
