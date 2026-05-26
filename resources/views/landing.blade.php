@@ -86,8 +86,8 @@
             <h1 class="text-5xl font-extrabold text-gray-900 leading-tight mb-6">Cultivate Your<br>Sustainable Career.</h1>
             <p class="text-gray-600 text-base leading-relaxed mb-8">Join PT Ecogreen Oleochemicals and lead the transformation towards a greener future. We empower talent to innovate for a cleaner tomorrow.</p>
             <div class="relative max-w-md">
-                <input type="text" placeholder="Search roles, skills, or departments..." class="w-full pl-5 pr-12 py-3.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                <button class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-green-700 transition-colors">
+                <input id="hero-search" type="text" placeholder="Search roles, skills, or departments..." class="w-full pl-5 pr-12 py-3.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <button id="btn-hero-search" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-green-700 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 </button>
             </div>
@@ -208,8 +208,7 @@
                 <span class="text-xs text-gray-400 uppercase tracking-wider font-medium">Security Pulse: Encrypted Session</span>
             </div>
             <div class="flex items-center gap-4">
-                <a href="#" class="text-sm font-semibold text-green-800 hover:text-green-600 transition-colors">View All Categories</a>
-                <button class="bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors">Search Jobs</button>
+                <a href="/lowongan" class="text-sm font-semibold text-green-800 hover:text-green-600 transition-colors">View All Categories</a>
             </div>
         </div>
     </div>
@@ -377,10 +376,29 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => openModal('modal-kategori'), 200);
     });
 
-    // Kategori cards -> redirect to login
+    // Kategori cards -> redirect to lowongan
     document.querySelectorAll('.kategori-card').forEach(card => {
         card.addEventListener('click', function () {
             window.location.href = '/lowongan';
+        });
+    });
+
+    // ===== HERO SEARCH (functional) =====
+    function doHeroSearch() {
+        const q = document.getElementById('hero-search').value.trim();
+        if (q) window.location.href = '/lowongan?q=' + encodeURIComponent(q);
+        else window.location.href = '/lowongan';
+    }
+
+    document.getElementById('btn-hero-search').addEventListener('click', doHeroSearch);
+    document.getElementById('hero-search').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') doHeroSearch();
+    });
+
+    // Close modals on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function (e) {
+            if (e.target === this) this.classList.add('hidden');
         });
     });
 });

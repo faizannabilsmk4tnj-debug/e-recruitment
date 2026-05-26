@@ -21,9 +21,14 @@
             <a href="/" class="text-sm transition-colors @yield('nav-beranda', 'text-green-300 hover:text-white')">Home</a>
             <a href="/lowongan" class="text-sm transition-colors @yield('nav-lowongan', 'text-green-300 hover:text-white')">Vacancies</a>
             <a href="/tentang-kami" class="text-sm transition-colors text-green-300 hover:text-white">About Us</a>
-            <a href="/register" class="border border-white text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-white hover:text-green-900 transition-colors">
-                Register
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="/login" class="border border-white bg-white text-green-900 text-sm font-semibold px-5 py-2 rounded-lg hover:bg-green-50 transition-colors">
+                    Login
+                </a>
+                <a href="/register" class="border border-white text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-white hover:text-green-900 transition-colors">
+                    Register
+                </a>
+            </div>
         </div>
     </nav>
 

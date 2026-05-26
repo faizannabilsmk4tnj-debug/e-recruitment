@@ -63,6 +63,7 @@
                 <option value="ACTIVE">Active</option>
                 <option value="DRAFT">Draft</option>
                 <option value="CLOSED">Closed</option>
+                <option value="FILLED">Filled</option>
             </select>
             <select id="filter-category" class="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-600">
                 <option value="">Category: All</option>
@@ -135,6 +136,8 @@
                             <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full">ACTIVE</span>
                         @elseif($v['status'] === 'DRAFT')
                             <span class="text-xs font-bold text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">DRAFT</span>
+                        @elseif($v['status'] === 'FILLED')
+                            <span class="text-xs font-bold text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">FILLED</span>
                         @else
                             <span class="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">CLOSED</span>
                         @endif
@@ -207,6 +210,10 @@
     <button class="vd-edit w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
         Edit Vacancy
+    </button>
+    <button class="vd-fill w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-blue-600 hover:bg-blue-50 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Mark as Filled
     </button>
     <div class="my-1 border-t border-gray-100"></div>
     <button class="vd-close w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors">
