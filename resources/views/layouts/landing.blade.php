@@ -8,24 +8,24 @@
     @vite(['resources/css/app.css'])
     @yield('css')
 </head>
-<body class="min-h-screen flex flex-col bg-white">
+<body class="min-h-screen flex flex-col bg-gray-200">
 
     <!-- Navbar -->
-    <nav class="bg-green-900 px-16 py-3 flex items-center justify-between relative z-50">
+    <nav class="bg-[#15803d] px-16 py-3 flex items-center justify-between relative z-50 shadow-sm border-b border-[#166534]">
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-3">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-12 w-auto">
             </a>
         </div>
         <div class="flex items-center gap-6">
-            <a href="/" class="text-sm transition-colors @yield('nav-beranda', 'text-green-300 hover:text-white')">Home</a>
-            <a href="/lowongan" class="text-sm transition-colors @yield('nav-lowongan', 'text-green-300 hover:text-white')">Vacancies</a>
-            <a href="/tentang-kami" class="text-sm transition-colors text-green-300 hover:text-white">About Us</a>
+            <a href="/" class="text-sm transition-colors font-medium @yield('nav-beranda', 'text-green-50 hover:text-white')">Home</a>
+            <a href="/lowongan" class="text-sm transition-colors font-medium @yield('nav-lowongan', 'text-green-50 hover:text-white')">Vacancies</a>
+            <a href="/tentang-kami" class="text-sm transition-colors font-medium text-green-50 hover:text-white">About Us</a>
             <div class="flex items-center gap-2">
-                <a href="/login" class="border border-white bg-white text-green-900 text-sm font-semibold px-5 py-2 rounded-lg hover:bg-green-50 transition-colors">
-                    Login
+                <a href="/login" class="border border-white bg-white text-[#15803d] text-sm font-semibold px-5 py-2 rounded-lg hover:bg-green-50 transition-colors">
+                    Sign In
                 </a>
-                <a href="/register" class="border border-white text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-white hover:text-green-900 transition-colors">
+                <a href="/register" class="border border-white text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-white hover:text-[#15803d] transition-colors">
                     Register
                 </a>
             </div>
@@ -38,9 +38,10 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-green-950 text-white px-16 py-8">
+    <footer class="bg-[#15803d] text-white px-16 py-8">
         <div class="flex items-start justify-between">
             <div>
+                <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-10 w-auto mb-2">
                 <h3 class="font-bold text-base">Ecogreen Careers</h3>
                 <p class="text-green-400 text-sm mt-1">© 2024 PT Ecogreen Oleochemicals. Sustainable Excellence.</p>
             </div>
@@ -74,7 +75,7 @@
             <!-- Buttons -->
             <div class="space-y-3">
                 <a href="/login" class="block w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors">
-                    Login
+                    Sign In
                 </a>
                 <a href="/register" class="block w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg text-sm hover:bg-gray-50 transition-colors">
                     Register

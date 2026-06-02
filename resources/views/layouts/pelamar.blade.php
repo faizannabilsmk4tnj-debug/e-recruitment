@@ -20,47 +20,47 @@
             background-image:
                 radial-gradient(ellipse at 0% 0%, rgba(34, 197, 94, 0.12) 0%, transparent 50%),
                 radial-gradient(ellipse at 100% 100%, rgba(34, 197, 94, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 60% 30%, rgba(187, 247, 208, 0.15) 0%, transparent 40%),
-                linear-gradient(rgba(0, 80, 40, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 80, 40, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+                radial-gradient(ellipse at 60% 30%, rgba(187, 247, 208, 0.15) 0%, transparent 40%);
+            background-size: 100% 100%, 100% 100%, 100% 100%;
         }
     </style>
     @yield('css')
 </head>
-<body class="min-h-screen bg-gray-50 flex flex-col">
+<body class="h-screen bg-gray-200 flex flex-col overflow-hidden">
 
     <!-- ========== NAVBAR (full-width, top) ========== -->
-    <nav class="bg-green-900 px-8 py-3 flex items-center justify-between sticky top-0 z-50">
+    <nav class="bg-[#15803d] px-8 py-3 flex items-center justify-between z-50 shadow-sm border-b border-[#166534] shrink-0">
         <!-- Left: Logo + Company Name -->
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-3">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-9 w-auto">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-auto">
             </a>
         </div>
 
         <!-- Nav Links -->
         <div class="flex items-center gap-6">
-            <a href="/pelamar/lowongan" class="text-green-300 hover:text-white text-sm transition-colors">Vacancies</a>
-            <a href="/pelamar/profil" class="text-green-300 hover:text-white text-sm transition-colors">My Profile</a>
+            <button type="button" onclick="openModal('/', 'Home')" class="text-green-50 hover:text-white text-sm transition-colors font-medium">Home</button>
+            <button type="button" onclick="openModal('/pelamar/lowongan', 'Vacancies')" class="text-green-50 hover:text-white text-sm transition-colors font-medium">Vacancies</button>
+            <button type="button" onclick="openModal('/tentang-kami', 'About Us')" class="text-green-50 hover:text-white text-sm transition-colors font-medium">About Us</button>
+            <a href="/pelamar/profil" class="text-green-50 hover:text-white text-sm transition-colors font-medium">My Profile</a>
 
             <!-- Avatar -->
-            <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-green-900 font-bold text-sm ring-2 ring-green-300 overflow-hidden" id="user-avatar">
+            <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#15803d] font-bold text-sm ring-2 ring-[#89B184] overflow-hidden" id="user-avatar">
                 <img src="{{ asset('images/avatar.png') }}" alt="Avatar" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.textContent='A';">
             </div>
 
             <!-- Help / Tutorial -->
-            <button id="btn-help" onclick="sessionStorage.removeItem('tour-done'); window.location.href='/pelamar/dashboard';" class="w-8 h-8 bg-green-800 hover:bg-green-700 rounded-full flex items-center justify-center text-white transition-colors" title="User Guide">
+            <button id="btn-help" onclick="sessionStorage.removeItem('tour-done'); window.location.href='/pelamar/dashboard';" class="w-8 h-8 bg-[#166534] hover:bg-[#14532d] rounded-full flex items-center justify-center text-white transition-colors" title="User Guide">
                 <span class="text-sm font-bold">?</span>
             </button>
         </div>
     </nav>
 
     <!-- ========== BODY: Sidebar + Content ========== -->
-    <div class="flex flex-1">
+    <div class="flex flex-1 overflow-hidden">
 
         <!-- ========== SIDEBAR ========== -->
-        <aside class="w-60 bg-white border-r border-gray-200 flex flex-col sticky top-[52px] h-[calc(100vh-52px)]">
+        <aside class="w-60 bg-white border-r border-gray-200 flex flex-col overflow-y-auto shrink-0">
 
             <!-- Profile Progress -->
             <div class="px-6 py-4 border-b border-gray-100">
@@ -138,36 +138,122 @@
         </aside>
 
         <!-- ========== MAIN CONTENT ========== -->
-        <div class="flex-1 flex flex-col min-h-[calc(100vh-52px)]">
-
-            <!-- Page Content -->
-            <main class="flex-1 p-8 content-bg">
-                @yield('content')
-            </main>
-
-            <!-- Footer -->
-            <footer class="bg-green-950 text-white px-8 py-6">
-                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-5 w-auto">
-                        </div>
-                        <p class="text-green-400 text-xs">© 2023 Human Resources Department. All Rights Reserved.</p>
-                    </div>
-                    <div class="flex flex-wrap gap-6 text-xs text-green-300">
-                        <a href="/" class="hover:text-white transition-colors">Career Portal</a>
-                        <a href="/" class="hover:text-white transition-colors">About Us</a>
-                        <a href="/" class="hover:text-white transition-colors">Help Center</a>
-                        <a href="/" class="hover:text-white transition-colors">Privacy</a>
-                        <a href="/" class="hover:text-white transition-colors">Terms</a>
-                    </div>
-                </div>
-            </footer>
-        </div>
+        <main class="flex-1 p-8 content-bg overflow-y-auto">
+            @yield('content')
+        </main>
 
     </div>
 
+    <!-- Footer -->
+    <footer class="bg-[#15803d] text-white px-8 py-3 shrink-0 relative z-50 border-t border-[#166534]">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+            <div class="flex items-center gap-4">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-6 w-auto">
+                <p class="text-green-400 text-[11px] border-l border-green-700 pl-4">© 2023 PT Ecogreen Oleochemicals</p>
+            </div>
+            <div class="flex flex-wrap gap-5 text-[11px] text-green-300">
+                <a href="/" class="hover:text-white transition-colors">Career Portal</a>
+                <a href="/" class="hover:text-white transition-colors">Help Center</a>
+                <a href="/" class="hover:text-white transition-colors">Terms & Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Centered Modal -->
+    <div id="content-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-black/50 transition-opacity opacity-0" id="modal-backdrop" onclick="closeModal()"></div>
+        <div class="relative w-full max-w-5xl h-[85vh] bg-white rounded-xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300 flex flex-col overflow-hidden" id="modal-panel">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white z-10 shrink-0">
+                <h2 id="modal-title" class="text-xl font-bold text-gray-800">Content</h2>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="flex-1 relative bg-gray-50">
+                <!-- Loader -->
+                <div id="modal-loader" class="absolute inset-0 flex items-center justify-center bg-white z-10">
+                    <div class="animate-spin rounded-full h-10 w-10 border-4 border-green-200 border-t-green-700"></div>
+                </div>
+                <!-- Iframe -->
+                <iframe id="modal-iframe" class="w-full h-full border-0 opacity-0 transition-opacity duration-300 rounded-b-xl"></iframe>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        function openModal(url, title) {
+            const modal = document.getElementById('content-modal');
+            const backdrop = document.getElementById('modal-backdrop');
+            const panel = document.getElementById('modal-panel');
+            const iframe = document.getElementById('modal-iframe');
+            const titleEl = document.getElementById('modal-title');
+            const loader = document.getElementById('modal-loader');
+            
+            titleEl.innerText = title;
+            
+            // Show modal container
+            modal.classList.remove('hidden');
+            
+            // Trigger reflow for transitions
+            void modal.offsetWidth;
+            
+            backdrop.classList.remove('opacity-0');
+            backdrop.classList.add('opacity-100');
+            
+            panel.classList.remove('scale-95', 'opacity-0');
+            panel.classList.add('scale-100', 'opacity-100');
+            
+            // Reset iframe state
+            iframe.classList.add('opacity-0');
+            iframe.classList.remove('opacity-100');
+            loader.classList.remove('hidden');
+            
+            iframe.src = url;
+            
+            iframe.onload = function() {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    // Attempt to hide navbar and footer in the loaded page to keep the modal clean
+                    const nav = iframeDoc.querySelector('nav');
+                    const footer = iframeDoc.querySelector('footer');
+                    if(nav) nav.style.display = 'none';
+                    if(footer) footer.style.display = 'none';
+                    
+                    // Some pages might have a main wrapper with padding top because of fixed navs
+                    const main = iframeDoc.querySelector('main');
+                    if(main) {
+                        main.style.paddingTop = '0';
+                        main.style.minHeight = 'auto';
+                    }
+                } catch(e) {
+                    console.error('Could not modify iframe content:', e);
+                }
+                
+                loader.classList.add('hidden');
+                iframe.classList.remove('opacity-0');
+                iframe.classList.add('opacity-100');
+            };
+        }
+        
+        function closeModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const panel = document.getElementById('modal-panel');
+            const iframe = document.getElementById('modal-iframe');
+            
+            backdrop.classList.remove('opacity-100');
+            backdrop.classList.add('opacity-0');
+            
+            panel.classList.remove('scale-100', 'opacity-100');
+            panel.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                document.getElementById('content-modal').classList.add('hidden');
+                iframe.src = '';
+            }, 300); // Wait for transition
+        }
+    </script>
     @yield('scripts')
 </body>
 </html>
