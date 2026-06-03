@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('applicant_skills', function (Blueprint $table) {
+        Schema::create('portofolio', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
-            $table->string('skill_name', 100);
-            $table->enum('category', ['technical', 'soft', 'language']);
-            $table->enum('level', ['beginner', 'intermediate', 'expert']);
-            $table->string('cert_name', 200)->nullable();
-            $table->string('cert_url', 500)->nullable();
+            $table->string('title', 200);
+            $table->text('description')->nullable();
+            $table->string('type', 50); // contoh: 'link', 'file', 'github', 'youtube', dll
+            $table->string('link_url', 500)->nullable();
+            $table->string('file_url', 500)->nullable();
+            $table->bigInteger('file_size')->unsigned()->nullable(); // ukuran file dalam bytes
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('applicant_skills');
+        Schema::dropIfExists('portofolio');
     }
 };

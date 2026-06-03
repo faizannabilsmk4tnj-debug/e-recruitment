@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100);
             $table->string('email', 150)->unique();
-            $table->string('password_hash', 255);
+            $table->string('password', 255);
             $table->enum('role', ['hr', 'applicant'])->default('applicant');
             $table->string('phone', 20)->nullable();
             $table->boolean('is_active')->default(true);

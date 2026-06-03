@@ -39,6 +39,18 @@
             <p class="text-amber-700 text-sm font-medium" id="alert-warning-text">Account temporarily locked due to multiple failed login attempts. Please try again in 30 minutes.</p>
         </div>
 
+        <!-- Success Alert — muncul setelah register berhasil -->
+        <div id="alert-success" class="hidden mb-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3 flex items-start gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="m9 12 2 2 4-4"/>
+            </svg>
+            <div>
+                <p class="text-green-800 text-sm font-semibold">Akun berhasil dibuat!</p>
+                <p class="text-green-700 text-xs mt-0.5">Silakan masuk menggunakan email dan password yang baru saja kamu daftarkan.</p>
+            </div>
+        </div>
+
         <!-- Form -->
         <div class="space-y-5">
             <!-- Email -->
@@ -64,7 +76,7 @@
             <div>
                 <div class="flex items-center justify-between mb-2">
                     <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider">Password</label>
-                    <a href="#" class="text-xs font-semibold text-green-800 hover:text-green-600 underline transition-colors">Forgot Password?</a>
+                <a href="/forgot-password" class="text-xs font-semibold text-green-800 hover:text-green-600 underline transition-colors">Forgot Password?</a>
                 </div>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -130,4 +142,20 @@
 
 @section('scripts')
 <script src="{{ asset('js/auth/login.js') }}"></script>
-@endsection
+<script>
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get('registered') === '1') {
+        document.getElementById('alert-success').classList.remove('hidden');
+        window.history.replaceState({}, '', '/login');
+    }
+
+    if (params.get('password_reset') === '1') {
+        const el = document.getElementById('alert-success');
+        el.querySelector('p.text-green-800').textContent = 'Password berhasil diperbarui!';
+        el.querySelector('p.text-green-700').textContent = 'Silakan masuk menggunakan password baru Anda.';
+        el.classList.remove('hidden');
+        window.history.replaceState({}, '', '/login');
+    }
+</script>
+@endsection
