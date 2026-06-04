@@ -27,7 +27,8 @@ public function login(Request $request)
         ]);
     }
 
-    Auth::login($user);
+     Auth::login($user);
+    $request->session()->regenerate();
 
     return response()->json([
         'success' => true,
@@ -48,5 +49,12 @@ public function register(Request $request)
             'message' => 'Register berhasil'
         ]);
     }
-}
 
+public function logout(Request $request)
+{
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/login');
+}
+}

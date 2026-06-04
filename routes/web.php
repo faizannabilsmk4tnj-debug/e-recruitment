@@ -22,24 +22,9 @@ Route::get('/lowongan', function () {
     return view('lowongan');
 });
 
-Route::get('/pelamar/lowongan', function () {
-    return view('lowongan', ['layout' => 'layouts.pelamar-public']);
-});
 
 Route::get('/lowongan/{id}', function ($id) {
     return view('detail-lowongan');
-});
-
-Route::get('/pelamar/lowongan/{id}', function ($id) {
-    return view('detail-lowongan', ['layout' => 'layouts.pelamar-public']);
-});
-
-Route::get('/pelamar/review-lamaran/{id}', function ($id) {
-    return view('pelamar.review-lamaran');
-});
-
-Route::get('/pelamar/lamaran-terkirim', function () {
-    return view('pelamar.lamaran-terkirim');
 });
 
 // ===== AUTH =====
@@ -91,3 +76,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/hr/template-cv/editor', fn() => view('hr.template-cv-editor'));
     Route::get('/hr/template-cv/editor/{id}', fn($id) => view('hr.template-cv-editor'));
 });
+
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');

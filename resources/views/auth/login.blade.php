@@ -8,7 +8,7 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 px-8 py-10">
         <!-- Icon -->
         <div class="flex justify-center mb-5">
-            <div class="w-14 h-14 bg-green-950 rounded-xl flex items-center justify-center">
+            <div class="w-14 h-14 bg-[#15803d] rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     <path d="m9 12 2 2 4-4"/>
@@ -104,7 +104,7 @@
             <button
                 type="button"
                 id="btn-login"
-                class="w-full bg-green-950 hover:bg-green-900 text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 text-sm"
+                class="w-full bg-[#15803d] hover:bg-[#166534] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 text-sm"
             >
                 Sign In
             </button>

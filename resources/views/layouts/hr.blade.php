@@ -8,23 +8,27 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @yield('css')
 </head>
-<body class="bg-gray-50 min-h-screen font-sans">
+<body class="bg-gray-200 min-h-screen font-sans">
 
     {{-- ============ TOP NAVBAR ============ --}}
-    <header class="bg-green-900 text-white h-14 flex items-center px-5 gap-4 fixed top-0 left-0 right-0 z-50 shadow-lg">
+    <header class="bg-[#15803d] text-white h-14 flex items-center px-5 gap-4 fixed top-0 left-0 right-0 z-50 shadow-lg">
 
         {{-- Logo --}}
         <div class="flex items-center gap-2">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 w-auto">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-auto">
         </div>
 
         {{-- Page Title --}}
-        <div class="flex-1">
+        <div class="font-semibold text-lg ml-2 hidden md:block border-l border-green-700 pl-4">
             <h1 class="text-base font-semibold text-white">@yield('page-title', 'Dashboard')</h1>
         </div>
 
+<div class="hidden md:flex items-center gap-6 mr-4">            <a href="/" class="text-green-50 hover:text-white text-sm transition-colors font-medium">Home</a>
+            <a href="/tentang-kami" class="text-green-50 hover:text-white text-sm transition-colors font-medium">About Us</a>
+        </div>
+
         {{-- Right side --}}
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 ml-auto">
             <a href="/hr/tim" class="text-sm text-green-200 hover:text-white font-medium transition-colors">HR Team</a>
 
             {{-- Notification --}}
@@ -34,7 +38,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                     </svg>
-                    <span id="notif-badge" class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-[9px] flex items-center justify-center font-bold">4</span>
+                    <span id="notif-badge" class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-[9px] flex items-center justify-center font-bold text-white">4</span>
                 </button>
 
                 {{-- Dropdown Notif --}}
@@ -65,43 +69,43 @@
                                     <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-800 font-medium">Interview Schedule Reminder</p>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Interview with <span class="font-semibold text-gray-700">Siska Wijaya</span> will start at 11:30 AM.</p>
-                                    <p class="text-[9px] text-gray-400 mt-1">Just now</p>
+                                    <p class="text-xs text-gray-800 font-medium">Interview Schedule</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">Budi Santoso is ready for HR interview at 14:00.</p>
+                                    <p class="text-[9px] text-gray-400 mt-1">1 hour ago</p>
                                 </div>
                             </div>
                         </a>
 
-                        <!-- Notif Kapasitas Loker Terpenuhi -->
-                        <a href="/hr/lowongan" class="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50">
+                        <!-- Notif Penilaian -->
+                        <a href="/hr/penilaian" class="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50">
                             <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-800 font-medium">Vacancy Capacity Reached</p>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Vacancy <span class="font-semibold text-gray-700">Senior Chemical Engineer</span> has reached the applicant limit but is not closed yet.</p>
+                                    <p class="text-xs text-gray-800 font-medium">Assessment Completed</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">Siti Aminah has finished technical test with score 85.</p>
                                     <p class="text-[9px] text-gray-400 mt-1">2 hours ago</p>
                                 </div>
                             </div>
                         </a>
 
-                        <!-- Notif Batas Waktu Loker Berakhir -->
+                        <!-- Notif Lowongan -->
                         <a href="/hr/lowongan" class="block px-4 py-3 hover:bg-gray-50 transition-colors">
                             <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-800 font-medium">Vacancy Deadline Reached</p>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Vacancy <span class="font-semibold text-gray-700">Sustainability Officer</span> has passed the closing deadline but is not closed yet.</p>
-                                    <p class="text-[9px] text-gray-400 mt-1">Yesterday</p>
+                                    <p class="text-xs text-gray-800 font-medium">Vacancy Closing Soon</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">IT Support vacancy will expire in 2 days.</p>
+                                    <p class="text-[9px] text-gray-400 mt-1">1 day ago</p>
                                 </div>
                             </div>
                         </a>
                     </div>
                     <div class="px-4 py-2 border-t border-gray-100 text-center">
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('notif-badge').classList.add('hidden'); document.getElementById('notif-header-count').innerText = '0 New';" class="text-xs font-semibold text-green-700 hover:text-green-900 transition-colors">Mark all as read</a>
+                        <a href="/hr/notifikasi" class="text-xs font-semibold text-green-700 hover:text-green-800">View All Notifications</a>
                     </div>
                 </div>
             </div>
@@ -130,11 +134,15 @@
             <div class="relative">
                 <div class="flex items-center gap-2 cursor-pointer group" onclick="document.getElementById('logout-dropdown').classList.toggle('hidden')">
                     <div class="text-right">
-                        <div class="text-xs font-semibold text-white leading-none">Gilbert Blythe</div>
+                        <div class="text-xs font-semibold text-white leading-none">{{ Auth::user()->name ?? 'Gilbert Blythe' }}</div>
                         <div class="text-[10px] text-green-300 leading-none mt-0.5">HR Senior Manager</div>
                     </div>
                     <div class="w-8 h-8 rounded-full bg-green-600 border-2 border-green-400 overflow-hidden flex items-center justify-center">
-                        <span class="text-xs font-bold text-white">GB</span>
+                        @if(Auth::check() && Auth::user()->avatar)
+                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
+                        @else
+                            <span class="text-xs font-bold text-white">{{ substr(Auth::user()->name ?? 'GB', 0, 2) }}</span>
+                        @endif
                     </div>
                 </div>
 
@@ -142,15 +150,12 @@
                 <div id="logout-dropdown" class="hidden absolute right-0 mt-3 w-40 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
                     <div class="px-4 py-2 border-b border-gray-100 mb-1">
                         <p class="text-xs text-gray-500">Signed in as</p>
-                        <p class="text-sm font-semibold text-gray-800 truncate">Gilbert Blythe</p>
+                        <p class="text-sm font-semibold text-gray-800 truncate">{{ Auth::user()->name ?? 'Gilbert Blythe' }}</p>
                     </div>
-                    <form method="POST" action="/logout">
-                        @csrf
-                        <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                            Logout
-                        </button>
-                    </form>
+                    <a href="/hr/login" class="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                        Logout
+                    </a>
                 </div>
             </div>
         </div>
@@ -200,9 +205,10 @@
     </main>
 
     {{-- ============ FOOTER ============ --}}
-    <footer class="bg-green-950 text-white mt-16">
+    <footer class="bg-[#15803d] text-white mt-16">
         <div class="px-8 py-10 grid grid-cols-3 gap-8">
             <div>
+                <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-10 w-auto mb-3">
                 <div class="text-sm font-bold text-white uppercase tracking-wider mb-3">Ecogreen Oleochemicals</div>
                 <p class="text-xs text-green-300 leading-relaxed">
                     Leading global producer of naturally derived oleochemicals. Dedicated to sustainability, innovation, and excellence in HR management systems.

@@ -413,16 +413,14 @@
     </div>
 </div>
 
-<!-- Fixed Download Button -->
-<div class="fixed bottom-0 left-60 bg-white border-t border-gray-200 p-4 z-40" style="width: calc(100% - 15rem);">
-    <button id="btn-download" class="flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg text-sm transition-colors">
+<!-- Download Button Section (Integrated with page) -->
+<div class="bg-white border-t border-gray-200 p-6 -mx-8 -mb-8 mt-4 flex items-center justify-between">
+    <p class="text-sm text-gray-500">Make sure you have saved all changes before downloading.</p>
+    <button id="btn-download" class="flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg text-sm transition-colors shadow-sm">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
         Download PDF
     </button>
 </div>
-
-<!-- Spacer for fixed button -->
-<div class="h-20"></div>
 
 @endsection
 

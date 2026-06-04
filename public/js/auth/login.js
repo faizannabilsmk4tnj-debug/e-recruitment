@@ -53,12 +53,12 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch('/login', {
     method: 'POST',
     headers: {
-        'Content-Type': 'application/json',
         'X-CSRF-TOKEN': document
             .querySelector('meta[name="csrf-token"]')
             .getAttribute('content')
+        // HAPUS 'Content-Type: application/json'
     },
-    body: JSON.stringify({
+    body: new URLSearchParams({  // ← ganti jadi ini
         email: email,
         password: password
     })

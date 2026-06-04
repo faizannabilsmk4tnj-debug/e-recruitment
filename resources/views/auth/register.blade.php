@@ -15,7 +15,7 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 px-8 py-10">
         <!-- Icon -->
         <div class="flex justify-center mb-5">
-            <div class="w-14 h-14 bg-green-950 rounded-xl flex items-center justify-center">
+            <div class="w-14 h-14 bg-[#15803d] rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
                     <circle cx="9" cy="7" r="4"/>
@@ -129,7 +129,7 @@
             <button
                 type="button"
                 id="btn-register"
-                class="w-full bg-green-950 hover:bg-green-900 text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center gap-2"
+                class="w-full bg-[#15803d] hover:bg-[#166534] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center gap-2"
             >
                 Register
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
