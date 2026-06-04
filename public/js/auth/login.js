@@ -50,10 +50,42 @@ document.addEventListener('DOMContentLoaded', function () {
             btnLogin.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
 
             // Simulasi delay login (seolah proses ke server)
-            setTimeout(() => {
-                // Simulasi: email apapun = pelamar, nanti ganti API real
-                window.location.href = '/pelamar/dashboard';
-            }, 1200);
+            fetch('/login', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute('content')
+    },
+    body: JSON.stringify({
+        email: email,
+        password: password
+    })
+})
+.then(response => response.json())
+.then(data => {
+
+    if (!data.success) {
+        alertErrorText.textContent = data.message;
+        alertError.classList.remove('hidden');
+
+        btnLogin.disabled = false;
+        btnLogin.innerHTML = 'Sign In';
+        return;
+    }
+
+    if (data.role === 'hr') {
+        window.location.href = '/hr/dashboard';
+        return;
+    }
+
+    window.location.href = '/pelamar/dashboard';
+})
+
+.catch(error => {
+    console.error(error);
+});
         });
 
         // Enter key trigger login
@@ -63,8 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
-
     function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
-});
+})

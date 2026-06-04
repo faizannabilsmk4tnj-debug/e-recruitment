@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const termsCheckbox = document.getElementById('terms');
 
     if (btnRegister) {
-        btnRegister.addEventListener('click', function () {
+        btnRegister.addEventListener('click', async function () {
             // Clear previous error styles
             clearErrors();
 
@@ -86,15 +86,36 @@ document.addEventListener('DOMContentLoaded', function () {
             // });
 
             console.log('Register attempt:', { nama, email, password });
-            
+
             // Simulasi loading
             btnRegister.disabled = true;
             btnRegister.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
-            
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 1200);
+
+           const response = await fetch('/register', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document
+            .querySelector('meta[name="csrf-token"]')
+            .content
+    },
+    body: JSON.stringify({
+        nama,
+        email,
+        password,
+        password_confirmation: confirmation
+    })
         });
+        const data = await response.text();
+if (data.success) {
+    window.location.href = '/login';
+} else {
+    alert(data.message || 'Register gagal');
+}
+
+btnRegister.disabled = false;
+btnRegister.innerHTML = 'Register';
+});
     }
 
     // === Helpers ===
