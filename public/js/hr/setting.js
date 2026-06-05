@@ -185,9 +185,9 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('modal-logout-all')?.addEventListener('click', function (e) { if (e.target === this) this.classList.add('hidden'); });
     const btnLogout = document.getElementById('btn-logout');
     if (btnLogout) {
-        btnLogout.addEventListener('click', function () {
-            if (confirm('Yakin ingin keluar dari HR Panel?')) {
-                window.location.href = '/hr/login';
+        btnLogout.addEventListener('click', function (e) {
+            if (!confirm('Yakin ingin keluar dari HR Panel?')) {
+                e.preventDefault();
             }
         });
     }

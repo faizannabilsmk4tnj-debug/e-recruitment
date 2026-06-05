@@ -42,7 +42,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // ===== PELAMAR (perlu login + role pelamar) =====
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:applicant'])->group(function () {
     Route::get('/pelamar/dashboard', fn() => view('pelamar.dashboard'));
     Route::get('/pelamar/profil', fn() => view('pelamar.profil'));
     Route::get('/pelamar/lowongan', fn() => view('lowongan', ['layout' => 'layouts.pelamar-public']));
@@ -61,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // ===== HR ROUTES =====
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:hr'])->group(function () {
     Route::get('/hr/dashboard', fn() => view('hr.dashboard'));
     Route::get('/hr/setting', fn() => view('hr.setting'));
     Route::get('/hr/tim', fn() => view('hr.tim'));
