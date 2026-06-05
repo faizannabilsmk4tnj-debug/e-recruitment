@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 
 /*
@@ -22,7 +23,6 @@ Route::get('/lowongan', function () {
     return view('lowongan');
 });
 
-
 Route::get('/lowongan/{id}', function ($id) {
     return view('detail-lowongan');
 });
@@ -33,12 +33,13 @@ Route::get('/login', fn() => view('auth.login'))->name('login');
 Route::get('/register', function () {
     return view('auth.register');
 });
+
 Route::get('/hr/login', fn() => view('hr.login'));
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
-// ===== HR (perlu login + role hr) =====
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // ===== PELAMAR (perlu login + role pelamar) =====
 Route::middleware(['auth'])->group(function () {
@@ -76,5 +77,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/hr/template-cv/editor', fn() => view('hr.template-cv-editor'));
     Route::get('/hr/template-cv/editor/{id}', fn($id) => view('hr.template-cv-editor'));
 });
-
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');

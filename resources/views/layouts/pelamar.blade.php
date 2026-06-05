@@ -29,7 +29,7 @@
 <body class="h-screen bg-gray-200 flex flex-col overflow-hidden">
 
     <!-- ========== NAVBAR (full-width, top) ========== -->
-    <nav class="bg-[#15803d] px-8 py-3 flex items-center justify-between z-50 shadow-sm border-b border-[#166534] shrink-0">
+    <nav class="bg-[#15803d] px-16 py-3 flex items-center justify-between z-50 shadow-sm border-b border-[#166534] shrink-0">
         <!-- Left: Logo + Company Name -->
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-3">
@@ -128,15 +128,12 @@
 
             <!-- Logout -->
             <div class="px-4 py-4 border-t border-gray-100">
-                <form method="POST" action="/logout">
-                    @csrf
-                    <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
-                        </svg>
-                        Logout
-                    </button>
-                </form>
+                <a href="/login" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
+                    </svg>
+                    Logout
+                </a>
             </div>
         </aside>
 
@@ -148,7 +145,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-[#15803d] text-white px-8 py-3 shrink-0 relative z-50 border-t border-[#166534]">
+    <footer class="bg-[#15803d] text-white px-16 py-3 shrink-0 relative z-50 border-t border-[#166534]">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div class="flex items-center gap-4">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-6 w-auto">

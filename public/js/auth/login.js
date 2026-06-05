@@ -1,6 +1,6 @@
 /**
  * Login Page JS
- * Features: toggle password, validation, simulated login redirect
+ * Features: toggle password, validation, login via fetch API
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -45,47 +45,46 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // Simulasi loading
+            // Loading state
             btnLogin.disabled = true;
             btnLogin.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
 
-            // Simulasi delay login (seolah proses ke server)
             fetch('/login', {
-    method: 'POST',
-    headers: {
-        'X-CSRF-TOKEN': document
-            .querySelector('meta[name="csrf-token"]')
-            .getAttribute('content')
-        // HAPUS 'Content-Type: application/json'
-    },
-    body: new URLSearchParams({  // ← ganti jadi ini
-        email: email,
-        password: password
-    })
-})
-.then(response => response.json())
-.then(data => {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content')
+                },
+                body: new URLSearchParams({
+                    email: email,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alertErrorText.textContent = data.message;
+                    alertError.classList.remove('hidden');
+                    btnLogin.disabled = false;
+                    btnLogin.innerHTML = 'Sign In';
+                    return;
+                }
 
-    if (!data.success) {
-        alertErrorText.textContent = data.message;
-        alertError.classList.remove('hidden');
+                if (data.role === 'hr') {
+                    window.location.href = '/hr/dashboard';
+                    return;
+                }
 
-        btnLogin.disabled = false;
-        btnLogin.innerHTML = 'Sign In';
-        return;
-    }
-
-    if (data.role === 'hr') {
-        window.location.href = '/hr/dashboard';
-        return;
-    }
-
-    window.location.href = '/pelamar/dashboard';
-})
-
-.catch(error => {
-    console.error(error);
-});
+                window.location.href = '/pelamar/dashboard';
+            })
+            .catch(error => {
+                console.error(error);
+                alertErrorText.textContent = 'Terjadi kesalahan. Coba lagi.';
+                alertError.classList.remove('hidden');
+                btnLogin.disabled = false;
+                btnLogin.innerHTML = 'Sign In';
+            });
         });
 
         // Enter key trigger login
@@ -95,7 +94,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
     function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
-})
+});

@@ -59,63 +59,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (hasError) return;
 
-            // TODO: AJAX register ke API
-            // fetch('/api/register', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            //     },
-            //     body: JSON.stringify({
-            //         nama: nama,
-            //         email: email,
-            //         password: password,
-            //         password_confirmation: confirmation
-            //     })
-            // })
-            // .then(res => res.json())
-            // .then(data => {
-            //     if (data.success) {
-            //         window.location.href = '/login?registered=1';
-            //     } else {
-            //         // Show validation errors from API
-            //     }
-            // })
-            // .catch(err => {
-            //     alert('Terjadi kesalahan. Coba lagi nanti.');
-            // });
-
-            console.log('Register attempt:', { nama, email, password });
-
             // Simulasi loading
             btnRegister.disabled = true;
             btnRegister.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
 
-           const response = await fetch('/register', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document
-            .querySelector('meta[name="csrf-token"]')
-            .content
-    },
-    body: JSON.stringify({
-        nama,
-        email,
-        password,
-        password_confirmation: confirmation
-    })
-        });
-        const data = await response.text();
-if (data.success) {
-    window.location.href = '/login';
-} else {
-    alert(data.message || 'Register gagal');
-}
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document
+                            .querySelector('meta[name="csrf-token"]')
+                            .content
+                    },
+                    body: JSON.stringify({
+                        nama,
+                        email,
+                        password,
+                        password_confirmation: confirmation
+                    })
+                });
 
-btnRegister.disabled = false;
-btnRegister.innerHTML = 'Register';
-});
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = '/login';
+                } else {
+                    alert(data.message || 'Register gagal');
+                    btnRegister.disabled = false;
+                    btnRegister.innerHTML = 'Register';
+                }
+            } catch (err) {
+                alert('Terjadi kesalahan. Coba lagi nanti.');
+                btnRegister.disabled = false;
+                btnRegister.innerHTML = 'Register';
+            }
+        });
     }
 
     // === Helpers ===

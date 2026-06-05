@@ -20,14 +20,14 @@ public function login(Request $request)
         ]);
     }
 
-    if (!Hash::check($request->password, $user->password_hash)) {
+    if (!Hash::check($request->password, $user->password)) {
         return response()->json([
             'success' => false,
             'message' => 'Password salah'
         ]);
     }
 
-     Auth::login($user);
+    Auth::login($user);
     $request->session()->regenerate();
 
     return response()->json([
@@ -38,10 +38,10 @@ public function login(Request $request)
 public function register(Request $request)
     {
         User::create([
-            'name'          => $request->nama, // ← sesuaikan dengan nama field di form
-            'email'         => $request->email,
-            'password_hash' => Hash::make($request->password),
-            'role'          => 'applicant'
+            'name'     => $request->nama,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'role'     => 'applicant'
         ]);
 
         return response()->json([
