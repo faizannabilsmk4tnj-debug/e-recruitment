@@ -34,13 +34,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const password = passwordInput.value.trim();
 
             if (!email || !password) {
-                alertErrorText.textContent = 'Harap isi email dan kata sandi.';
+                alertErrorText.textContent = 'Please enter your email and password.';
                 alertError.classList.remove('hidden');
                 return;
             }
 
             if (!isValidEmail(email)) {
-                alertErrorText.textContent = 'Format email tidak valid.';
+                alertErrorText.textContent = 'Invalid email format.';
                 alertError.classList.remove('hidden');
                 return;
             }

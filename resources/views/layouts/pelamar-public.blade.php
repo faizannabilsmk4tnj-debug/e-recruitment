@@ -8,19 +8,21 @@
     @vite(['resources/css/app.css'])
     @yield('css')
 </head>
-<body class="min-h-screen bg-white flex flex-col">
+<body class="min-h-screen bg-gray-200 flex flex-col">
 
     <!-- Navbar Pelamar (tanpa sidebar) -->
-    <nav class="bg-green-900 px-16 py-3 flex items-center justify-between sticky top-0 z-50">
+    <nav class="bg-[#15803d] px-16 py-3 flex items-center justify-between sticky top-0 z-50 shadow-sm border-b border-[#166534]">
         <div class="flex items-center gap-3">
             <a href="/pelamar/dashboard" class="flex items-center gap-3">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-9 w-auto">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-auto">
             </a>
         </div>
         <div class="flex items-center gap-6">
-            <a href="/pelamar/lowongan" class="text-white font-semibold text-sm">Vacancies</a>
-            <a href="/pelamar/profil" class="text-green-300 hover:text-white text-sm transition-colors">My Profile</a>
-            <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-green-900 font-bold text-sm ring-2 ring-green-300 overflow-hidden">
+            <a href="/" class="text-green-50 hover:text-white text-sm transition-colors font-medium">Home</a>
+            <a href="/pelamar/lowongan" class="text-white font-semibold text-sm hover:text-green-200 transition-colors">Vacancies</a>
+            <a href="/tentang-kami" class="text-green-50 hover:text-white text-sm transition-colors font-medium">About Us</a>
+            <a href="/pelamar/profil" class="text-green-50 hover:text-white text-sm transition-colors font-medium">My Profile</a>
+            <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#15803d] font-bold text-sm ring-2 ring-[#89B184] overflow-hidden">
                 <img src="{{ asset('images/avatar.png') }}" alt="Avatar" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.textContent='A';">
             </div>
         </div>
@@ -31,9 +33,10 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-green-950 text-white px-16 py-8">
+    <footer class="bg-[#15803d] text-white px-16 py-8">
         <div class="flex items-start justify-between">
             <div>
+                <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-10 w-auto mb-2">
                 <h3 class="font-bold text-base">Ecogreen Careers</h3>
                 <p class="text-green-400 text-sm mt-1">© 2024 PT Ecogreen Oleochemicals. Sustainable Excellence.</p>
             </div>

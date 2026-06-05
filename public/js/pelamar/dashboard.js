@@ -23,9 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const fill = document.getElementById('progress-fill');
     const greetText = document.getElementById('greeting-text');
     const greetSub = document.getElementById('greeting-sub');
-    const progressLabel = document.getElementById('progress-label');
-    const progressNumber = document.getElementById('progress-number');
-    const progressArrow = document.getElementById('progress-arrow');
+
 
     // Colors: left text changes early (it's on left), right text changes late (it's on right)
     function updateTextColors(percent) {
@@ -42,22 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
             greetSub.classList.add('text-gray-500');
         }
 
-        // RIGHT side (percentage) — positioned at far right edge
-        if (percent >= 95) {
-            progressLabel.classList.add('text-green-200');
-            progressLabel.classList.remove('text-green-800');
-            progressNumber.classList.add('text-white');
-            progressNumber.classList.remove('text-green-800');
-            progressArrow.classList.add('border-white/50', 'text-white');
-            progressArrow.classList.remove('border-green-300', 'text-green-700');
-        } else {
-            progressLabel.classList.remove('text-green-200');
-            progressLabel.classList.add('text-green-800');
-            progressNumber.classList.remove('text-white');
-            progressNumber.classList.add('text-green-800');
-            progressArrow.classList.remove('border-white/50', 'text-white');
-            progressArrow.classList.add('border-green-300', 'text-green-700');
-        }
+
     }
 
     // Set initial state

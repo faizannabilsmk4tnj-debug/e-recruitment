@@ -38,13 +38,13 @@ document.addEventListener('DOMContentLoaded', function () {
         alertEl.classList.add('hidden');
 
         if (!email || !pass) {
-            alertText.textContent = 'Email dan password wajib diisi.';
+            alertText.textContent = 'Email and password are required.';
             alertEl.classList.remove('hidden');
             return;
         }
 
         btnLogin.disabled = true;
-        btnLogin.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg><span>Memverifikasi...</span>';
+        btnLogin.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg><span>Verifying...</span>';
 
         setTimeout(() => {
             window.location.href = '/hr/dashboard';
@@ -58,12 +58,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btnSendReset.addEventListener('click', function () {
         const email = document.getElementById('forgot-email').value.trim();
-        if (!email) { alert('Masukkan email terlebih dahulu.'); return; }
-        this.textContent = 'Mengirim...';
+        if (!email) { alert('Please enter your email first.'); return; }
+        this.textContent = 'Sending...';
         this.disabled = true;
         setTimeout(() => {
-            this.textContent = '✓ Link dikirim ke ' + email;
-            setTimeout(() => modalForgot.classList.add('hidden'), 2000);
+            this.textContent = '✓ Link sent to ' + email;
+            setTimeout(() => {
+                modalForgot.classList.add('hidden');
+                this.textContent = 'Send Reset Link';
+                this.disabled = false;
+                document.getElementById('forgot-email').value = '';
+            }, 2000);
         }, 1500);
     });
 });
