@@ -32,7 +32,7 @@
     <!-- Content -->
     <div class="relative z-10 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold" id="greeting-text">Hello, <span id="user-name">Ahmad</span>!</h1>
+            <h1 class="text-2xl font-bold" id="greeting-text">Hello, <span id="user-name">{{ Auth::user()->name }}</span>!</h1>
             <p class="mt-1 text-sm" id="greeting-sub">Welcome back. Here is a summary of your application activities.</p>
         </div>
         <div class="shrink-0 flex items-center">

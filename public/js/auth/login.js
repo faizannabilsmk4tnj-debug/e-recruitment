@@ -1,6 +1,6 @@
 /**
  * Login Page JS
- * Features: toggle password, validation, simulated login redirect
+ * Features: toggle password, validation, login via fetch API
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -34,26 +34,57 @@ document.addEventListener('DOMContentLoaded', function () {
             const password = passwordInput.value.trim();
 
             if (!email || !password) {
-                alertErrorText.textContent = 'Please enter your email and password.';
+                alertErrorText.textContent = 'Harap isi email dan kata sandi.';
                 alertError.classList.remove('hidden');
                 return;
             }
 
             if (!isValidEmail(email)) {
-                alertErrorText.textContent = 'Invalid email format.';
+                alertErrorText.textContent = 'Format email tidak valid.';
                 alertError.classList.remove('hidden');
                 return;
             }
 
-            // Simulasi loading
+            // Loading state
             btnLogin.disabled = true;
             btnLogin.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
 
-            // Simulasi delay login (seolah proses ke server)
-            setTimeout(() => {
-                // Simulasi: email apapun = pelamar, nanti ganti API real
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content')
+                },
+                body: new URLSearchParams({
+                    email: email,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alertErrorText.textContent = data.message;
+                    alertError.classList.remove('hidden');
+                    btnLogin.disabled = false;
+                    btnLogin.innerHTML = 'Sign In';
+                    return;
+                }
+
+                if (data.role === 'hr') {
+                    window.location.href = '/hr/dashboard';
+                    return;
+                }
+
                 window.location.href = '/pelamar/dashboard';
-            }, 1200);
+            })
+            .catch(error => {
+                console.error(error);
+                alertErrorText.textContent = 'Terjadi kesalahan. Coba lagi.';
+                alertError.classList.remove('hidden');
+                btnLogin.disabled = false;
+                btnLogin.innerHTML = 'Sign In';
+            });
         });
 
         // Enter key trigger login

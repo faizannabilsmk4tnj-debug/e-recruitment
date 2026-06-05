@@ -16,8 +16,9 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (hour < 15) greeting = 'Selamat Siang';
         else if (hour < 18) greeting = 'Selamat Sore';
         else greeting = 'Selamat Malam';
-        greetingText.innerHTML = greeting + ', <span id="user-name">Ahmad</span>!';
-    }
+        const userName = document.getElementById('user-name')?.textContent || 'User';
+    greetingText.innerHTML = greeting + ', <span id="user-name">' + userName + '</span>!';
+}
 
     // ===== PROGRESS FILL ANIMATION =====
     const fill = document.getElementById('progress-fill');
