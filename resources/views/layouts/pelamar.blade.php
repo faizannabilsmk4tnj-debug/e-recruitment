@@ -29,7 +29,7 @@
 <body class="h-screen bg-gray-200 flex flex-col overflow-hidden">
 
     <!-- ========== NAVBAR (full-width, top) ========== -->
-    <nav class="bg-[#15803d] px-8 py-3 flex items-center justify-between z-50 shadow-sm border-b border-[#166534] shrink-0">
+    <nav class="bg-[#15803d] px-16 py-3 flex items-center justify-between z-50 shadow-sm border-b border-[#166534] shrink-0">
         <!-- Left: Logo + Company Name -->
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-3">
@@ -145,7 +145,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-[#15803d] text-white px-8 py-3 shrink-0 relative z-50 border-t border-[#166534]">
+    <footer class="bg-[#15803d] text-white px-16 py-3 shrink-0 relative z-50 border-t border-[#166534]">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div class="flex items-center gap-4">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-6 w-auto">

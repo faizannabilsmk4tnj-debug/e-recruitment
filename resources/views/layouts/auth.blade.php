@@ -8,7 +8,7 @@
     @vite(['resources/css/app.css'])
     <style>
         .bg-gradient-eco {
-            background: linear-gradient(135deg, #f0fdf4 0%, #f9fafb 40%, #f9fafb 60%, #ecfdf5 100%);
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
         }
         .green-blob-left {
             position: absolute;

@@ -11,26 +11,22 @@
 <body class="bg-gray-200 min-h-screen font-sans">
 
     {{-- ============ TOP NAVBAR ============ --}}
-    <header class="bg-[#15803d] text-white h-14 flex items-center px-5 gap-4 fixed top-0 left-0 right-0 z-50 shadow-lg">
+    <header class="bg-[#15803d] text-white px-16 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50 shadow-sm border-b border-[#166534]">
 
-        {{-- Logo --}}
-        <div class="flex items-center gap-2">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-auto">
+        {{-- Kiri: Logo --}}
+        <div class="flex items-center gap-3">
+            <a href="/hr/dashboard" class="flex items-center gap-3">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-auto">
+            </a>
         </div>
 
-        {{-- Page Title --}}
-        <div class="font-semibold text-lg ml-2 hidden md:block border-l border-green-700 pl-4">
-            <h1 class="text-base font-semibold text-white">@yield('page-title', 'Dashboard')</h1>
-        </div>
+        {{-- Kanan: Nav Links + Icons + Avatar --}}
+        <div class="flex items-center gap-6">
 
-        <div class="flex items-center gap-6 mr-4 hidden md:flex">
-            <a href="/" class="text-green-50 hover:text-white text-sm transition-colors font-medium">Home</a>
-            <a href="/tentang-kami" class="text-green-50 hover:text-white text-sm transition-colors font-medium">About Us</a>
-        </div>
-
-        {{-- Right side --}}
-        <div class="flex items-center gap-4">
-            <a href="/hr/tim" class="text-sm text-green-200 hover:text-white font-medium transition-colors">HR Team</a>
+            {{-- Nav Links --}}
+            <a href="/" class="text-green-200 hover:text-white text-sm transition-colors font-medium hidden md:block">Home</a>
+            <a href="/tentang-kami" class="text-green-200 hover:text-white text-sm transition-colors font-medium hidden md:block">About Us</a>
+            <a href="/hr/tim" class="text-green-200 hover:text-white text-sm transition-colors font-medium hidden md:block">HR Team</a>
 
             {{-- Notification --}}
             <div class="relative">
@@ -120,29 +116,19 @@
                 </svg>
             </a>
 
-            {{-- Help --}}
-            <button class="text-green-200 hover:text-white transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
+            {{-- Help / Guided Tour --}}
+            <button id="btn-help-tour" onclick="sessionStorage.removeItem('hr-tour-done'); startHrTour();" class="w-8 h-8 bg-[#166534] hover:bg-[#14532d] rounded-full flex items-center justify-center text-white transition-colors" title="User Guide">
+                <span class="text-sm font-bold">?</span>
             </button>
-
-            {{-- Divider --}}
-            <div class="w-px h-6 bg-green-700"></div>
 
             {{-- Avatar --}}
             <div class="relative">
                 <div class="flex items-center gap-2 cursor-pointer group" onclick="document.getElementById('logout-dropdown').classList.toggle('hidden')">
-                    <div class="text-right">
-                        <div class="text-xs font-semibold text-white leading-none">{{ Auth::user()->name ?? 'Gilbert Blythe' }}</div>
-                        <div class="text-[10px] text-green-300 leading-none mt-0.5">HR Senior Manager</div>
-                    </div>
-                    <div class="w-8 h-8 rounded-full bg-green-600 border-2 border-green-400 overflow-hidden flex items-center justify-center">
+                    <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#15803d] font-bold text-sm ring-2 ring-[#89B184] overflow-hidden">
                         @if(Auth::check() && Auth::user()->avatar)
                             <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
                         @else
-                            <span class="text-xs font-bold text-white">{{ substr(Auth::user()->name ?? 'GB', 0, 2) }}</span>
+                            <span class="text-sm font-bold">{{ substr(Auth::user()->name ?? 'GB', 0, 1) }}</span>
                         @endif
                     </div>
                 </div>
@@ -166,35 +152,35 @@
     </header>
 
     {{-- ============ TAB NAVIGASI ============ --}}
-    <nav class="bg-white border-b border-gray-200 fixed top-14 left-0 right-0 z-40 shadow-sm">
-        <div class="flex items-center px-5 gap-1">
-            <a href="/hr/dashboard"
+    <nav class="bg-white border-b border-gray-200 fixed top-[72px] left-0 right-0 z-40 shadow-sm">
+        <div class="flex items-center px-16 gap-1">
+            <a href="/hr/dashboard" id="tab-dashboard"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-dashboard', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
                 Dashboard
             </a>
-            <a href="/hr/lowongan"
+            <a href="/hr/lowongan" id="tab-lowongan"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-lowongan', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
                 Vacancies
             </a>
-            <a href="/hr/pelamar"
+            <a href="/hr/pelamar" id="tab-pelamar"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-pelamar', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
                 Applicants
             </a>
-            <a href="/hr/wawancara"
+            <a href="/hr/wawancara" id="tab-wawancara"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-wawancara', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
                 Interviews
             </a>
 
-            <a href="/hr/laporan"
+            <a href="/hr/laporan" id="tab-laporan"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-laporan', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
                 Reports
             </a>
-            <a href="/hr/template-cv"
+            <a href="/hr/template-cv" id="tab-template"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-template', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
                 CV Templates
@@ -204,13 +190,13 @@
     </nav>
 
     {{-- ============ MAIN CONTENT ============ --}}
-    <main class="pt-28 min-h-screen">
+    <main class="pt-32 min-h-screen">
         @yield('content')
     </main>
 
     {{-- ============ FOOTER ============ --}}
     <footer class="bg-[#15803d] text-white mt-16">
-        <div class="px-8 py-10 grid grid-cols-3 gap-8">
+        <div class="px-16 py-10 grid grid-cols-3 gap-8">
             <div>
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-10 w-auto mb-3">
                 <div class="text-sm font-bold text-white uppercase tracking-wider mb-3">Ecogreen Oleochemicals</div>
@@ -245,7 +231,7 @@
                 </ul>
             </div>
         </div>
-        <div class="border-t border-green-800 px-8 py-3 flex items-center justify-between">
+        <div class="border-t border-green-800 px-16 py-3 flex items-center justify-between">
             <span class="text-xs text-green-500">© 2024 PT Ecogreen Oleochemicals. All rights reserved.</span>
             <div class="flex gap-4">
                 <a href="#" class="text-xs text-green-500 hover:text-green-300 transition-colors">Privacy Policy</a>
@@ -255,8 +241,195 @@
         </div>
     </footer>
 
+    {{-- ============ GUIDED TOUR OVERLAY ============ --}}
+    <div id="hr-tour-overlay" class="fixed inset-0 z-[70] hidden" style="pointer-events:none;">
+        <!-- Dark backdrop with hole -->
+        <svg id="hr-tour-backdrop" class="absolute inset-0 w-full h-full" style="pointer-events:all;">
+            <defs>
+                <mask id="hr-tour-mask">
+                    <rect width="100%" height="100%" fill="white"/>
+                    <rect id="hr-tour-hole" rx="12" fill="black"/>
+                </mask>
+            </defs>
+            <rect width="100%" height="100%" fill="rgba(0,0,0,0.6)" mask="url(#hr-tour-mask)"/>
+        </svg>
+
+        <!-- Tooltip card -->
+        <div id="hr-tour-tooltip" class="absolute bg-white rounded-xl shadow-2xl border border-gray-200 w-80 p-5 transition-all duration-300" style="pointer-events:all;">
+            <!-- Progress -->
+            <div class="flex items-center justify-between mb-3">
+                <span id="hr-tour-step-label" class="text-[10px] font-bold text-green-700 uppercase tracking-widest"></span>
+                <button id="hr-tour-skip" class="text-[10px] text-gray-400 hover:text-gray-600 transition-colors uppercase tracking-wider font-medium">Skip</button>
+            </div>
+            <div class="h-1 bg-gray-100 rounded-full mb-4">
+                <div id="hr-tour-progress" class="h-1 bg-green-600 rounded-full transition-all duration-500"></div>
+            </div>
+            <h3 id="hr-tour-title" class="font-bold text-gray-900 mb-1.5"></h3>
+            <p id="hr-tour-desc" class="text-sm text-gray-500 leading-relaxed"></p>
+            <!-- Nav -->
+            <div class="flex items-center justify-between mt-5">
+                <button id="hr-tour-prev" class="text-sm text-gray-400 hover:text-gray-700 transition-colors flex items-center gap-1 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+                    Back
+                </button>
+                <div></div>
+                <button id="hr-tour-next" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-colors flex items-center gap-1">
+                    Next
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
     @yield('js')
     <script>
+        // ===== GUIDED TOUR =====
+        const hrTourSteps = [
+            {
+                target: '#tab-dashboard',
+                title: 'Welcome to the HR Panel!',
+                desc: 'This is your Dashboard — the command center. View real-time recruitment statistics: active vacancies, today\'s applicants, and upcoming interviews at a glance.',
+                pos: 'bottom'
+            },
+            {
+                target: '#tab-lowongan',
+                title: '1. Manage Vacancies',
+                desc: 'Create, edit, and close job vacancies. Fill in the position title, department, location, requirements, and deadline. Publish when ready or save as Draft.',
+                pos: 'bottom'
+            },
+            {
+                target: '#tab-pelamar',
+                title: '2. Review Applicants',
+                desc: 'View all applicant data in one place. Search by name or position, filter by status, review CVs and documents, and update the recruitment stage (e.g. Review → Interview → Hired).',
+                pos: 'bottom'
+            },
+            {
+                target: '#tab-wawancara',
+                title: '3. Schedule Interviews',
+                desc: 'Set up interview sessions for shortlisted candidates. Choose Online or Offline, assign interviewers, and add meeting links. Candidates receive email notifications automatically.',
+                pos: 'bottom'
+            },
+            {
+                target: '#tab-laporan',
+                title: '4. Reports & Analytics',
+                desc: 'Export recruitment data to Excel/CSV. Analyze key metrics: Time-to-Hire, Source of Hire, and applicant conversion funnel for management reports.',
+                pos: 'bottom'
+            },
+            {
+                target: '#tab-template',
+                title: '5. CV Templates',
+                desc: 'Customize the generated CV layout for applicants. Adjust the letterhead design, section order (e.g. Experience before Education), and add the company logo to exported PDFs.',
+                pos: 'bottom'
+            },
+            {
+                target: '#btn-help-tour',
+                title: '6. Replay This Guide',
+                desc: 'Click the "?" button anytime to replay this guided tour. You can always come back to learn how each feature works.',
+                pos: 'bottom-left'
+            }
+        ];
+
+        let hrTourCurrent = 0;
+        const hrTourPad = 8;
+
+        function startHrTour() {
+            hrTourCurrent = 0;
+            const overlay = document.getElementById('hr-tour-overlay');
+            overlay.classList.remove('hidden');
+            showHrTourStep(0);
+        }
+
+        function showHrTourStep(i) {
+            const step = hrTourSteps[i];
+            const el = document.querySelector(step.target);
+            if (!el) return;
+
+            const overlay = document.getElementById('hr-tour-overlay');
+            const hole = document.getElementById('hr-tour-hole');
+            const tooltip = document.getElementById('hr-tour-tooltip');
+            const titleEl = document.getElementById('hr-tour-title');
+            const descEl = document.getElementById('hr-tour-desc');
+            const labelEl = document.getElementById('hr-tour-step-label');
+            const progressEl = document.getElementById('hr-tour-progress');
+            const btnNext = document.getElementById('hr-tour-next');
+            const btnPrev = document.getElementById('hr-tour-prev');
+
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            setTimeout(() => {
+                const rect = el.getBoundingClientRect();
+
+                // Spotlight hole
+                hole.setAttribute('x', rect.left - hrTourPad);
+                hole.setAttribute('y', rect.top - hrTourPad);
+                hole.setAttribute('width', rect.width + hrTourPad * 2);
+                hole.setAttribute('height', rect.height + hrTourPad * 2);
+
+                // Highlight target
+                el.style.position = 'relative';
+                el.style.zIndex = '71';
+                el.style.pointerEvents = 'none';
+
+                // Position tooltip
+                const tooltipWidth = 320;
+                if (step.pos === 'bottom') {
+                    tooltip.style.left = Math.max(8, Math.min(rect.left, window.innerWidth - tooltipWidth - 16)) + 'px';
+                    tooltip.style.top = (rect.bottom + 16) + 'px';
+                } else if (step.pos === 'bottom-left') {
+                    tooltip.style.left = Math.max(8, rect.right - tooltipWidth) + 'px';
+                    tooltip.style.top = (rect.bottom + 16) + 'px';
+                } else if (step.pos === 'right') {
+                    tooltip.style.left = (rect.right + 16) + 'px';
+                    tooltip.style.top = Math.max(8, rect.top - 10) + 'px';
+                }
+
+                // Content
+                titleEl.textContent = step.title;
+                descEl.textContent = step.desc;
+                labelEl.textContent = 'Step ' + (i + 1) + ' of ' + hrTourSteps.length;
+                progressEl.style.width = ((i + 1) / hrTourSteps.length * 100) + '%';
+
+                btnPrev.classList.toggle('hidden', i === 0);
+                if (i === hrTourSteps.length - 1) {
+                    btnNext.innerHTML = 'Get Started! <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+                } else {
+                    btnNext.innerHTML = 'Next <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>';
+                }
+            }, 300);
+        }
+
+        function clearHrTourHighlights() {
+            hrTourSteps.forEach(s => {
+                const el = document.querySelector(s.target);
+                if (el) { el.style.position = ''; el.style.zIndex = ''; el.style.pointerEvents = ''; }
+            });
+        }
+
+        function closeHrTour() {
+            clearHrTourHighlights();
+            document.getElementById('hr-tour-overlay').classList.add('hidden');
+            sessionStorage.setItem('hr-tour-done', '1');
+        }
+
+        document.getElementById('hr-tour-next').addEventListener('click', () => {
+            clearHrTourHighlights();
+            if (hrTourCurrent < hrTourSteps.length - 1) { hrTourCurrent++; showHrTourStep(hrTourCurrent); }
+            else closeHrTour();
+        });
+
+        document.getElementById('hr-tour-prev').addEventListener('click', () => {
+            if (hrTourCurrent > 0) { clearHrTourHighlights(); hrTourCurrent--; showHrTourStep(hrTourCurrent); }
+        });
+
+        document.getElementById('hr-tour-skip').addEventListener('click', closeHrTour);
+
+        // Auto-start tour on first visit
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!sessionStorage.getItem('hr-tour-done')) {
+                setTimeout(() => startHrTour(), 800);
+            }
+        });
+
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const logoutDropdown = document.getElementById('logout-dropdown');
@@ -267,7 +440,7 @@
 
             const notifDropdown = document.getElementById('notif-dropdown');
             const notifBtn = document.getElementById('btn-notif');
-            if (!notifBtn.contains(event.target) && !notifDropdown.contains(event.target)) {
+            if (notifBtn && !notifBtn.contains(event.target) && !notifDropdown.contains(event.target)) {
                 notifDropdown.classList.add('hidden');
             }
         });
