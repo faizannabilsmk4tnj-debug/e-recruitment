@@ -13,14 +13,13 @@ return new class extends Migration
     {
         Schema::create('applicant_skills', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_user');
-            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('skill_name', 100);
             $table->enum('category', ['technical', 'soft', 'language']);
             $table->enum('level', ['beginner', 'intermediate', 'expert']);
             $table->string('cert_name', 200)->nullable();
             $table->string('cert_url', 500)->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

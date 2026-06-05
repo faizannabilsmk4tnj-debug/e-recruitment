@@ -37,21 +37,6 @@
             background: radial-gradient(ellipse, rgba(220, 252, 231, 0.5) 0%, transparent 70%);
             pointer-events: none;
         }
-
-        /* Animasi shake saat login gagal */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            15%       { transform: translateX(-6px); }
-            30%       { transform: translateX(6px); }
-            45%       { transform: translateX(-5px); }
-            60%       { transform: translateX(5px); }
-            75%       { transform: translateX(-3px); }
-            90%       { transform: translateX(3px); }
-        }
-        .shake-error {
-            animation: shake 0.6s ease-in-out;
-            border-color: #ef4444 !important;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col bg-gray-50">

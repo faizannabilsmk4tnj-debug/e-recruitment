@@ -1,6 +1,5 @@
 /**
  * HR Login JS
- * Mengirim kredensial ke POST /hr/login dan menampilkan error jika gagal.
  */
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -12,12 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const toggleBtn   = document.getElementById('toggle-password');
     const eyeIcon     = document.getElementById('eye-icon');
     const eyeOffIcon  = document.getElementById('eye-off-icon');
-    const btnForgot      = document.getElementById('btn-forgot');
-    const modalForgot    = document.getElementById('modal-forgot');
+    const btnForgot   = document.getElementById('btn-forgot');
+    const modalForgot = document.getElementById('modal-forgot');
     const btnCloseForgot = document.getElementById('btn-close-forgot');
     const btnSendReset   = document.getElementById('btn-send-reset');
 
-    // === Toggle Password ===
+    // Toggle password
     toggleBtn.addEventListener('click', function () {
         const isPass = passInput.type === 'password';
         passInput.type = isPass ? 'text' : 'password';
@@ -25,67 +24,37 @@ document.addEventListener('DOMContentLoaded', function () {
         eyeOffIcon.classList.toggle('hidden', !isPass);
     });
 
-    // === Enter key ===
+    // Enter key
     [emailInput, passInput].forEach(el => {
         el.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
     });
 
-    // === Login ===
+    // Login
     btnLogin.addEventListener('click', doLogin);
 
     function doLogin() {
         const email = emailInput.value.trim();
-        const pass  = passInput.value;
+        const pass  = passInput.value.trim();
         alertEl.classList.add('hidden');
 
         if (!email || !pass) {
-            showError('Email dan password wajib diisi.');
+            alertText.textContent = 'Email dan password wajib diisi.';
+            alertEl.classList.remove('hidden');
             return;
         }
 
-        // Loading state
         btnLogin.disabled = true;
         btnLogin.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg><span>Memverifikasi...</span>';
 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
-        fetch('/hr/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({ email, password: pass }),
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                window.location.href = data.redirect_url;
-            } else {
-                showError(data.message || 'Login gagal. Coba lagi.');
-                btnLogin.disabled = false;
-                btnLogin.textContent = 'Masuk ke HR Panel';
-            }
-        })
-        .catch(() => {
-            showError('Terjadi kesalahan koneksi. Coba lagi nanti.');
-            btnLogin.disabled = false;
-            btnLogin.textContent = 'Masuk ke HR Panel';
-        });
+        setTimeout(() => {
+            window.location.href = '/hr/dashboard';
+        }, 1200);
     }
 
-    function showError(message) {
-        alertText.textContent = message;
-        alertEl.classList.remove('hidden');
-    }
-
-    // === Forgot Password Modal ===
+    // Forgot password modal
     btnForgot.addEventListener('click', () => modalForgot.classList.remove('hidden'));
     btnCloseForgot.addEventListener('click', () => modalForgot.classList.add('hidden'));
-    modalForgot.addEventListener('click', e => {
-        if (e.target === modalForgot) modalForgot.classList.add('hidden');
-    });
+    modalForgot.addEventListener('click', e => { if (e.target === modalForgot) modalForgot.classList.add('hidden'); });
 
     btnSendReset.addEventListener('click', function () {
         const email = document.getElementById('forgot-email').value.trim();
