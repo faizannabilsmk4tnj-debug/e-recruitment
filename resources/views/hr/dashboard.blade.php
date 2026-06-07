@@ -220,15 +220,7 @@
                 </div>
             </div>
 
-            <!-- Quick Action -->
-            <div class="bg-green-900 rounded-2xl p-6 text-center">
-                <p class="text-xs font-bold text-green-400 uppercase tracking-widest mb-2">Quick Action</p>
-                <p class="text-white font-bold text-base mb-4">Need New Recruitment?</p>
-                <a href="/hr/lowongan" class="flex items-center justify-center gap-2 w-full bg-green-700 hover:bg-green-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
-                    Create Vacancy
-                </a>
-            </div>
+
         </div>
     </div>
 </div>
