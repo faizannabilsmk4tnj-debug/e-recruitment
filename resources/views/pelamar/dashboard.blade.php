@@ -35,12 +35,12 @@
             <h1 class="text-2xl font-bold" id="greeting-text">Hello, <span id="user-name">Ahmad</span>!</h1>
             <p class="mt-1 text-sm" id="greeting-sub">Welcome back. Here is a summary of your application activities.</p>
         </div>
-        <div class="text-right flex items-center gap-4">
-            <div>
-                <p class="text-xs uppercase tracking-wider font-medium" id="progress-label">Complete Profile</p>
-                <p class="text-3xl font-bold mt-0.5" id="progress-number">85%</p>
+        <div class="flex items-center gap-4 bg-white/95 backdrop-blur-sm px-6 py-3.5 rounded-2xl shadow-sm border border-green-50 z-20 group-hover:shadow-md group-hover:border-green-100 transition-all">
+            <div class="text-right">
+                <p class="text-[10px] text-green-800 uppercase tracking-widest font-bold mb-0.5" id="progress-label">Complete Profile</p>
+                <p class="text-3xl font-extrabold text-green-700 leading-none" id="progress-number">85%</p>
             </div>
-            <div class="w-10 h-10 rounded-full border-2 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" id="progress-arrow">
+            <div class="w-11 h-11 rounded-full bg-green-50 text-green-700 flex items-center justify-center group-hover:bg-green-700 group-hover:text-white transition-all shadow-sm" id="progress-arrow">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </div>
         </div>

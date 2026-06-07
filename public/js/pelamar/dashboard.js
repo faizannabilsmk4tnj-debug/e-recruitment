@@ -42,22 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
             greetSub.classList.add('text-gray-500');
         }
 
-        // RIGHT side (percentage) — positioned at far right edge
-        if (percent >= 95) {
-            progressLabel.classList.add('text-green-200');
-            progressLabel.classList.remove('text-green-800');
-            progressNumber.classList.add('text-white');
-            progressNumber.classList.remove('text-green-800');
-            progressArrow.classList.add('border-white/50', 'text-white');
-            progressArrow.classList.remove('border-green-300', 'text-green-700');
-        } else {
-            progressLabel.classList.remove('text-green-200');
-            progressLabel.classList.add('text-green-800');
-            progressNumber.classList.remove('text-white');
-            progressNumber.classList.add('text-green-800');
-            progressArrow.classList.remove('border-white/50', 'text-white');
-            progressArrow.classList.add('border-green-300', 'text-green-700');
-        }
+        // RIGHT side is now in a solid white container, so its colors are fixed.
     }
 
     // Set initial state
