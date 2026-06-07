@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
@@ -42,5 +43,9 @@ class User extends Authenticatable
             'password'          => 'hashed',  // ← inilah yang melakukan hashing
             'is_active'         => 'boolean',
         ];
+    }
+    public function profile(): HasOne
+    {
+        return $this->hasOne(UserProfile::class);
     }
 }
