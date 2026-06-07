@@ -149,7 +149,7 @@
         <!-- Login Link -->
         <p class="text-center text-sm text-gray-600">
             Already have an account?
-            <a href="/login" class="font-bold text-green-900 hover:text-green-700 transition-colors">Login</a>
+            <a href="/login" class="font-bold text-green-900 hover:text-green-700 transition-colors">SignIn</a>
         </p>
     </div>
 

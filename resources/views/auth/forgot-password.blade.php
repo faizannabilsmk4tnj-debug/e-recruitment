@@ -73,7 +73,7 @@
 
         <p class="text-center text-sm text-gray-600">
             Remember your password?
-            <a href="/login" class="font-bold text-green-900 hover:text-green-700 transition-colors">Back to Login</a>
+            <a href="/login" class="font-bold text-green-900 hover:text-green-700 transition-colors">Back to SignIn</a>
         </p>
     </div>
 </div>

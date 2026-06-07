@@ -23,7 +23,7 @@
             <a href="/tentang-kami" class="text-sm transition-colors text-green-300 hover:text-white">About Us</a>
             <div class="flex items-center gap-2">
                 <a href="/login" class="border border-white bg-white text-green-900 text-sm font-semibold px-5 py-2 rounded-lg hover:bg-green-50 transition-colors">
-                    Login
+                    SignIn
                 </a>
                 <a href="/register" class="border border-white text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-white hover:text-green-900 transition-colors">
                     Register
@@ -74,7 +74,7 @@
             <!-- Buttons -->
             <div class="space-y-3">
                 <a href="/login" class="block w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors">
-                    Login
+                    SignIn
                 </a>
                 <a href="/register" class="block w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg text-sm hover:bg-gray-50 transition-colors">
                     Register

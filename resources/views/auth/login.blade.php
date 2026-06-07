@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Login')
+@section('title', 'SignIn')
 
 @section('content')
 <div class="w-full max-w-md">
@@ -17,7 +17,7 @@
         </div>
 
         <!-- Title -->
-        <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">Login to Your Account</h1>
+        <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">SignIn to Your Account</h1>
         <p class="text-center text-gray-500 text-sm mb-8">Welcome back! Please sign in to manage your account.</p>
 
         <!-- Error Alert (hidden by default, shown via JS) -->

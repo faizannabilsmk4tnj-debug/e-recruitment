@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR Login — Ecogreen Oleochemicals</title>
+    <title>HR SignIn — Ecogreen Oleochemicals</title>
     @vite(['resources/css/app.css'])
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -32,7 +32,7 @@
                             </svg>
                         </div>
                         <div>
-                            <h1 class="text-lg font-bold text-white leading-none">HR Staff Login</h1>
+                            <h1 class="text-lg font-bold text-white leading-none">HR Staff SignIn</h1>
                             <p class="text-xs text-green-300 mt-0.5">Akses khusus tim HR & Rekrutmen</p>
                         </div>
                     </div>
@@ -95,7 +95,7 @@
                     <div class="mt-6 pt-5 border-t border-gray-100">
                         <p class="text-center text-xs text-gray-400">
                             Bukan tim HR?
-                            <a href="/login" class="text-green-700 font-semibold hover:text-green-900 transition-colors">Login sebagai Pelamar</a>
+                            <a href="/login" class="text-green-700 font-semibold hover:text-green-900 transition-colors">SignIn sebagai Pelamar</a>
                         </p>
                     </div>
                 </div>
