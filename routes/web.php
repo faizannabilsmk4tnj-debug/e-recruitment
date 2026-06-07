@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApplicantProfileController;
+use App\Http\Controllers\ApplicantEducationController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,8 +56,12 @@ Route::middleware('role:applicant')->group(function () {
     Route::delete('/pelamar/profil/avatar',    [ApplicantProfileController::class, 'destroyAvatar'])->name('pelamar.profil.avatar.destroy');
     Route::get('/pelamar/pengalaman-kerja',    fn() => view('pelamar.pengalaman-kerja'));
     Route::get('/pelamar/pengalaman-kerja/tambah', fn() => view('pelamar.tambah-pengalaman'));
-    Route::get('/pelamar/pendidikan',          fn() => view('pelamar.pendidikan'));
-    Route::get('/pelamar/pendidikan/tambah',   fn() => view('pelamar.tambah-pendidikan'));
+    Route::get('/pelamar/pendidikan',          [ApplicantEducationController::class, 'index'])->name('pelamar.pendidikan.index');
+    Route::get('/pelamar/pendidikan/tambah',   [ApplicantEducationController::class, 'create'])->name('pelamar.pendidikan.create');
+    Route::post('/pelamar/pendidikan',         [ApplicantEducationController::class, 'store'])->name('pelamar.pendidikan.store');
+    Route::get('/pelamar/pendidikan/{education}/edit', [ApplicantEducationController::class, 'edit'])->name('pelamar.pendidikan.edit');
+    Route::put('/pelamar/pendidikan/{education}', [ApplicantEducationController::class, 'update'])->name('pelamar.pendidikan.update');
+    Route::delete('/pelamar/pendidikan/{education}', [ApplicantEducationController::class, 'destroy'])->name('pelamar.pendidikan.destroy');
     Route::get('/pelamar/organisasi',          fn() => view('pelamar.organisasi'));
     Route::get('/pelamar/organisasi/tambah',   fn() => view('pelamar.tambah-organisasi'));
     Route::get('/pelamar/lampiran',            fn() => view('pelamar.lampiran'));

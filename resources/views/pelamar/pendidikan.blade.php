@@ -11,11 +11,17 @@
         <h1 class="text-2xl font-bold text-gray-900">Education</h1>
         <p class="text-gray-500 mt-1">Manage your formal education history to complete your professional profile.<br>Make sure the data entered matches your original certificates.</p>
     </div>
-    <a href="/pelamar/pendidikan/tambah" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm flex items-center gap-2 shrink-0">
+    <a href="{{ route('pelamar.pendidikan.create') }}" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm flex items-center gap-2 shrink-0">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
         Add Education
     </a>
 </div>
+
+@if (session('success'))
+    <div class="mb-5 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800">
+        {{ session('success') }}
+    </div>
+@endif
 
 <!-- Education Table -->
 <div class="bg-white rounded-xl border border-gray-200 overflow-hidden" id="education-list">
