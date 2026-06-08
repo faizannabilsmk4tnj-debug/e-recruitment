@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicantOrganizationExperienceController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,8 +54,12 @@ Route::middleware('role:applicant')->group(function () {
     Route::get('/pelamar/pengalaman-kerja/tambah', fn() => view('pelamar.tambah-pengalaman'));
     Route::get('/pelamar/pendidikan',          fn() => view('pelamar.pendidikan'));
     Route::get('/pelamar/pendidikan/tambah',   fn() => view('pelamar.tambah-pendidikan'));
-    Route::get('/pelamar/organisasi',          fn() => view('pelamar.organisasi'));
-    Route::get('/pelamar/organisasi/tambah',   fn() => view('pelamar.tambah-organisasi'));
+    Route::get('/pelamar/organisasi', [ApplicantOrganizationExperienceController::class, 'index'])->name('pelamar.organisasi.index');
+    Route::get('/pelamar/organisasi/tambah', [ApplicantOrganizationExperienceController::class, 'create'])->name('pelamar.organisasi.create');
+    Route::post('/pelamar/organisasi', [ApplicantOrganizationExperienceController::class, 'store'])->name('pelamar.organisasi.store');
+    Route::get('/pelamar/organisasi/{organizationExperience}/edit', [ApplicantOrganizationExperienceController::class, 'edit'])->name('pelamar.organisasi.edit');
+    Route::put('/pelamar/organisasi/{organizationExperience}', [ApplicantOrganizationExperienceController::class, 'update'])->name('pelamar.organisasi.update');
+    Route::delete('/pelamar/organisasi/{organizationExperience}', [ApplicantOrganizationExperienceController::class, 'destroy'])->name('pelamar.organisasi.destroy');
     Route::get('/pelamar/lampiran',            fn() => view('pelamar.lampiran'));
     Route::get('/pelamar/cv',                  fn() => view('pelamar.cv'));
     Route::get('/pelamar/status-lamaran',      fn() => view('pelamar.status-lamaran'));

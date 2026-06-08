@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -42,5 +43,9 @@ class User extends Authenticatable
             'password'          => 'hashed',  // ← inilah yang melakukan hashing
             'is_active'         => 'boolean',
         ];
+    }
+    public function organizationExperiences(): HasMany
+    {
+        return $this->hasMany(OrganizationExperience::class);
     }
 }
