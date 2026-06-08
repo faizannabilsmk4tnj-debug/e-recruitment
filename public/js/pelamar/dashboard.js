@@ -16,7 +16,11 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (hour < 15) greeting = 'Selamat Siang';
         else if (hour < 18) greeting = 'Selamat Sore';
         else greeting = 'Selamat Malam';
-        greetingText.innerHTML = greeting + ', <span id="user-name">Ahmad</span>!';
+
+        // Baca nama dari elemen yang sudah diisi oleh Blade (auth()->user()->name)
+        const userNameEl = document.getElementById('user-name');
+        const userName = userNameEl ? userNameEl.textContent.trim() : '';
+        greetingText.innerHTML = greeting + ', <span id="user-name">' + userName + '</span>!';
     }
 
     // ===== PROGRESS FILL ANIMATION =====
