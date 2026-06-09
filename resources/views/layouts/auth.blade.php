@@ -77,16 +77,16 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#15803d] text-white py-4 px-8 relative z-50">
+    <footer class="bg-[#15803d] text-white py-4 px-8 relative z-50 shadow-sm border-t border-[#166534]">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">
                 <div>
-                    <h3 class="font-semibold text-sm">@yield('footer-title', 'PT Ecogreen Oleochemicals')</h3>
-                    <p class="text-green-300 text-xs mt-0.5">© 2024 PT Ecogreen Oleochemicals. All rights reserved.</p>
+                    <h3 class="font-semibold text-sm text-white">@yield('footer-title', 'PT Ecogreen Oleochemicals')</h3>
+                    <p class="text-green-50 text-xs mt-0.5">© 2024 PT Ecogreen Oleochemicals. All rights reserved.</p>
                 </div>
             </div>
-            <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-green-200">
+            <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-green-50">
                 <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
                 <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
                 <a href="#" class="hover:text-white transition-colors">Sustainability Report</a>

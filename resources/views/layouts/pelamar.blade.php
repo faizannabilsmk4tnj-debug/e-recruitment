@@ -148,13 +148,13 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-[#15803d] text-white px-16 py-3 shrink-0 relative z-50 border-t border-[#166534]">
+    <footer class="bg-[#15803d] text-white px-16 py-3 shrink-0 relative z-50 shadow-sm border-t border-[#166534]">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div class="flex items-center gap-4">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-6 w-auto">
-                <p class="text-green-400 text-[11px] border-l border-green-700 pl-4">© 2023 PT Ecogreen Oleochemicals</p>
+                <p class="text-green-50 text-[11px] border-l border-[#166534] pl-4">© 2023 PT Ecogreen Oleochemicals</p>
             </div>
-            <div class="flex flex-wrap gap-5 text-[11px] text-green-300">
+            <div class="flex flex-wrap gap-5 text-[11px] text-green-50">
                 <a href="/" class="hover:text-white transition-colors">Career Portal</a>
                 <a href="/" class="hover:text-white transition-colors">Help Center</a>
                 <a href="/" class="hover:text-white transition-colors">Terms & Privacy</a>

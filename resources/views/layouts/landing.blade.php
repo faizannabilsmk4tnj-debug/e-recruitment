@@ -38,16 +38,16 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#15803d] text-white px-16 py-5">
+    <footer class="bg-[#15803d] text-white px-16 py-5 shadow-sm border-t border-[#166534]">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">
                 <div>
                     <p class="text-sm font-semibold text-white">Ecogreen Oleochemicals</p>
-                    <p class="text-green-300 text-xs mt-0.5">© 2024 PT Ecogreen Oleochemicals. Sustainable Excellence.</p>
+                    <p class="text-green-50 text-xs mt-0.5">© 2024 PT Ecogreen Oleochemicals. Sustainable Excellence.</p>
                 </div>
             </div>
-            <div class="flex gap-6 text-sm text-green-300">
+            <div class="flex gap-6 text-sm text-green-50">
                 <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
                 <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
                 <a href="#" class="hover:text-white transition-colors">Cookie Settings</a>
