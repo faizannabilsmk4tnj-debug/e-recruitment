@@ -32,7 +32,11 @@
     <!-- Content -->
     <div class="relative z-10 p-6 flex items-center justify-between">
         <div>
+<<<<<<< Updated upstream
             <h1 class="text-2xl font-bold" id="greeting-text">Hello, <span id="user-name">Ahmad</span>!</h1>
+=======
+            <h1 class="text-2xl font-bold" id="greeting-text"><span id="user-name" class="hidden">{{ auth()->user()->name }}</span></h1>
+>>>>>>> Stashed changes
             <p class="mt-1 text-sm" id="greeting-sub">Welcome back. Here is a summary of your application activities.</p>
         </div>
         <div class="text-right flex items-center gap-4">

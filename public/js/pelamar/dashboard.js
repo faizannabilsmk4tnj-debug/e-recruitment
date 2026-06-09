@@ -8,16 +8,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const PROFILE_PERCENT = 85;
 
     // ===== GREETING BY TIME =====
-    const greetingText = document.getElementById('greeting-text');
-    if (greetingText) {
+    function getGreeting() {
         const hour = new Date().getHours();
+<<<<<<< Updated upstream
         let greeting = 'Halo';
         if (hour < 12) greeting = 'Selamat Pagi';
         else if (hour < 15) greeting = 'Selamat Siang';
         else if (hour < 18) greeting = 'Selamat Sore';
         else greeting = 'Selamat Malam';
         greetingText.innerHTML = greeting + ', <span id="user-name">Ahmad</span>!';
+=======
+        if (hour >= 5 && hour < 12)  return { salam: 'Selamat Pagi',   sub: 'Semoga harimu menyenangkan dan produktif! 🌤️' };
+        if (hour >= 12 && hour < 15) return { salam: 'Selamat Siang',  sub: 'Jangan lupa istirahat sejenak di tengah aktivitasmu. ☀️' };
+        if (hour >= 15 && hour < 18) return { salam: 'Selamat Sore',   sub: 'Semangat! Masih ada waktu untuk produktif hari ini. 🌇' };
+        return                               { salam: 'Selamat Malam',  sub: 'Selamat beristirahat dan persiapkan hari esok. 🌙' };
+>>>>>>> Stashed changes
     }
+
+    const greetingText = document.getElementById('greeting-text');
+    const greetingSub  = document.getElementById('greeting-sub');
+    if (greetingText) {
+        const userNameEl = document.getElementById('user-name');
+        const userName   = userNameEl ? userNameEl.textContent.trim() : '';
+        const { salam, sub } = getGreeting();
+
+        greetingText.innerHTML = salam + ', <span id="user-name">' + userName + '</span>!';
+        if (greetingSub) greetingSub.textContent = sub;
+    }
+
 
     // ===== PROGRESS FILL ANIMATION =====
     const fill = document.getElementById('progress-fill');
