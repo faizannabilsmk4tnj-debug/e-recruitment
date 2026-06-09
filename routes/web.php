@@ -1,6 +1,8 @@
 <?php
 
+
 use App\Http\Controllers\ApplicantEducationController;
+use App\Http\Controllers\ApplicantLampiranController;
 use App\Http\Controllers\ApplicantOrganizationExperienceController;
 use App\Http\Controllers\ApplicantProfileController;
 use App\Http\Controllers\ApplicantWorkExperienceController;
@@ -74,7 +76,16 @@ Route::middleware('role:applicant')->group(function () {
     Route::get('/pelamar/organisasi/{organizationExperience}/edit', [ApplicantOrganizationExperienceController::class, 'edit'])->name('pelamar.organisasi.edit');
     Route::put('/pelamar/organisasi/{organizationExperience}', [ApplicantOrganizationExperienceController::class, 'update'])->name('pelamar.organisasi.update');
     Route::delete('/pelamar/organisasi/{organizationExperience}', [ApplicantOrganizationExperienceController::class, 'destroy'])->name('pelamar.organisasi.destroy');
-    Route::get('/pelamar/lampiran',            fn() => view('pelamar.lampiran'));
+    // Lampiran (Skills & Portfolio)
+    Route::get('/pelamar/lampiran',                          [ApplicantLampiranController::class, 'index'])->name('pelamar.lampiran');
+    // Skills (applicant_skills)
+    Route::post('/pelamar/lampiran/skill',                   [ApplicantLampiranController::class, 'skillStore'])->name('pelamar.skill.store');
+    Route::patch('/pelamar/lampiran/skill/{skill}',          [ApplicantLampiranController::class, 'skillUpdate'])->name('pelamar.skill.update');
+    Route::delete('/pelamar/lampiran/skill/{skill}',         [ApplicantLampiranController::class, 'skillDestroy'])->name('pelamar.skill.destroy');
+    // Portofolio
+    Route::post('/pelamar/lampiran/portofolio',              [ApplicantLampiranController::class, 'portofolioStore'])->name('pelamar.portofolio.store');
+    Route::patch('/pelamar/lampiran/portofolio/{portofolio}',[ApplicantLampiranController::class, 'portofolioUpdate'])->name('pelamar.portofolio.update');
+    Route::delete('/pelamar/lampiran/portofolio/{portofolio}',[ApplicantLampiranController::class, 'portofolioDestroy'])->name('pelamar.portofolio.destroy');
     Route::get('/pelamar/cv',                  fn() => view('pelamar.cv'));
     Route::get('/pelamar/status-lamaran',      fn() => view('pelamar.status-lamaran'));
     Route::get('/pelamar/lowongan',            fn() => view('lowongan', ['layout' => 'layouts.pelamar-public']));
