@@ -1,13 +1,11 @@
 <?php
 
-<<<<<<< Updated upstream
-=======
+
 use App\Http\Controllers\ApplicantEducationController;
 use App\Http\Controllers\ApplicantLampiranController;
 use App\Http\Controllers\ApplicantOrganizationExperienceController;
 use App\Http\Controllers\ApplicantProfileController;
 use App\Http\Controllers\ApplicantWorkExperienceController;
->>>>>>> Stashed changes
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -56,16 +54,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 Route::middleware('role:applicant')->group(function () {
 
     Route::get('/pelamar/dashboard',           fn() => view('pelamar.dashboard'));
-<<<<<<< Updated upstream
-    Route::get('/pelamar/profil',              fn() => view('pelamar.profil'));
-    Route::get('/pelamar/pengalaman-kerja',    fn() => view('pelamar.pengalaman-kerja'));
-    Route::get('/pelamar/pengalaman-kerja/tambah', fn() => view('pelamar.tambah-pengalaman'));
-    Route::get('/pelamar/pendidikan',          fn() => view('pelamar.pendidikan'));
-    Route::get('/pelamar/pendidikan/tambah',   fn() => view('pelamar.tambah-pendidikan'));
-    Route::get('/pelamar/organisasi',          fn() => view('pelamar.organisasi'));
-    Route::get('/pelamar/organisasi/tambah',   fn() => view('pelamar.tambah-organisasi'));
-    Route::get('/pelamar/lampiran',            fn() => view('pelamar.lampiran'));
-=======
     Route::get('/pelamar/profil',              [ApplicantProfileController::class, 'edit'])->name('pelamar.profil.edit');
     Route::put('/pelamar/profil',              [ApplicantProfileController::class, 'update'])->name('pelamar.profil.update');
     Route::delete('/pelamar/profil',           [ApplicantProfileController::class, 'destroy'])->name('pelamar.profil.destroy');
@@ -98,7 +86,6 @@ Route::middleware('role:applicant')->group(function () {
     Route::post('/pelamar/lampiran/portofolio',              [ApplicantLampiranController::class, 'portofolioStore'])->name('pelamar.portofolio.store');
     Route::patch('/pelamar/lampiran/portofolio/{portofolio}',[ApplicantLampiranController::class, 'portofolioUpdate'])->name('pelamar.portofolio.update');
     Route::delete('/pelamar/lampiran/portofolio/{portofolio}',[ApplicantLampiranController::class, 'portofolioDestroy'])->name('pelamar.portofolio.destroy');
->>>>>>> Stashed changes
     Route::get('/pelamar/cv',                  fn() => view('pelamar.cv'));
     Route::get('/pelamar/status-lamaran',      fn() => view('pelamar.status-lamaran'));
     Route::get('/pelamar/lowongan',            fn() => view('lowongan', ['layout' => 'layouts.pelamar-public']));
