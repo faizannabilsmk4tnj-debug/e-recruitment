@@ -16,7 +16,7 @@
 @section('content')
 
 {{-- ===== HERO HEADER ===== --}}
-<section class="bg-green-900 px-16 py-12 relative overflow-hidden">
+<section class="bg-[#15803d] px-16 py-12 relative overflow-hidden">
     <div class="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-end pr-16">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-64 h-64 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
     </div>
@@ -212,7 +212,7 @@
                     @endif
                 </div>
                 @if($isActive)
-                <a href="{{ $url }}" class="bg-green-900 hover:bg-green-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
+                <a href="{{ $url }}" class="bg-[#15803d] hover:bg-[#166534] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
                     View Details
                 </a>
                 @elseif($isClosed)
