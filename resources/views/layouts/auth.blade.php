@@ -38,11 +38,24 @@
             pointer-events: none;
         }
     </style>
+    <style>
+        body > nav, body > footer, body > footer * { background: #15803d !important; background-image: none !important; }
+        button[class*="bg-green-600"], button[class*="bg-green-700"], button[class*="bg-green-800"], button[class*="bg-green-900"], button[class*="bg-[#0f3c20]"], button[class*="bg-[#166534]"],
+        a[class*="bg-green-600"], a[class*="bg-green-700"], a[class*="bg-green-800"], a[class*="bg-green-900"], a[class*="bg-[#0f3c20]"], a[class*="bg-[#166534]"] {
+            background-color: #15803d !important;
+            border-color: #15803d !important;
+        }
+        button[class*="bg-green-600"]:hover, button[class*="bg-green-700"]:hover, button[class*="bg-green-800"]:hover, button[class*="bg-green-900"]:hover, button[class*="bg-[#0f3c20]"]:hover, button[class*="bg-[#166534]"]:hover,
+        a[class*="bg-green-600"]:hover, a[class*="bg-green-700"]:hover, a[class*="bg-green-800"]:hover, a[class*="bg-green-900"]:hover, a[class*="bg-[#0f3c20]"]:hover, a[class*="bg-[#166534]"]:hover {
+            background-color: #166534 !important;
+            border-color: #166534 !important;
+        }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col bg-gray-200">
 
     <!-- Navbar -->
-    <nav style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="px-10 py-3 flex items-center justify-between relative z-50">
+    <nav style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="px-10 py-3 flex items-center justify-between relative z-50">
         <div class="flex items-center gap-3">
             <!-- Logo + Company Name -->
             <a href="/" class="flex items-center gap-3">
@@ -77,7 +90,7 @@
     </main>
 
     <!-- Footer -->
-    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white py-4 px-8 relative z-50">
+    <footer style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="text-white py-4 px-8 relative z-50">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">
@@ -96,5 +109,25 @@
     </footer>
 
     @yield('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nav = document.querySelector('body > nav');
+            const footer = document.querySelector('body > footer');
+            if (nav && footer) {
+                const navBg = getComputedStyle(nav).backgroundColor;
+                footer.style.setProperty('background', navBg, 'important');
+                footer.style.setProperty('background-color', navBg, 'important');
+                footer.style.setProperty('background-image', 'none', 'important');
+                footer.querySelectorAll('*').forEach(function(el) {
+                    const elBg = getComputedStyle(el).backgroundColor;
+                    if (elBg !== 'rgba(0, 0, 0, 0)' && elBg !== 'transparent' && elBg !== navBg) {
+                        el.style.setProperty('background', navBg, 'important');
+                        el.style.setProperty('background-color', navBg, 'important');
+                        el.style.setProperty('background-image', 'none', 'important');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

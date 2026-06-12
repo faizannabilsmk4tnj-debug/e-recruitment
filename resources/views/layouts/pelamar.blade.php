@@ -25,11 +25,24 @@
         }
     </style>
     @yield('css')
+    <style>
+        body > nav, body > footer, body > footer * { background: #15803d !important; background-image: none !important; }
+        button[class*="bg-green-600"], button[class*="bg-green-700"], button[class*="bg-green-800"], button[class*="bg-green-900"], button[class*="bg-[#0f3c20]"], button[class*="bg-[#166534]"],
+        a[class*="bg-green-600"], a[class*="bg-green-700"], a[class*="bg-green-800"], a[class*="bg-green-900"], a[class*="bg-[#0f3c20]"], a[class*="bg-[#166534]"] {
+            background-color: #15803d !important;
+            border-color: #15803d !important;
+        }
+        button[class*="bg-green-600"]:hover, button[class*="bg-green-700"]:hover, button[class*="bg-green-800"]:hover, button[class*="bg-green-900"]:hover, button[class*="bg-[#0f3c20]"]:hover, button[class*="bg-[#166534]"]:hover,
+        a[class*="bg-green-600"]:hover, a[class*="bg-green-700"]:hover, a[class*="bg-green-800"]:hover, a[class*="bg-green-900"]:hover, a[class*="bg-[#0f3c20]"]:hover, a[class*="bg-[#166534]"]:hover {
+            background-color: #166534 !important;
+            border-color: #166534 !important;
+        }
+    </style>
 </head>
 <body class="h-screen bg-gray-200 flex flex-col overflow-hidden">
 
     <!-- ========== NAVBAR (full-width, top) ========== -->
-    <nav style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="px-16 py-3 flex items-center justify-between z-50 shrink-0">
+    <nav style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="px-16 py-3 flex items-center justify-between z-50 shrink-0">
         <!-- Left: Logo + Company Name -->
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-3">
@@ -50,7 +63,7 @@
             </div>
 
             <!-- Help / Tutorial -->
-            <button id="btn-help" onclick="sessionStorage.removeItem('tour-done'); window.location.href='/pelamar/dashboard';" class="w-8 h-8 bg-[#166534] hover:bg-[#14532d] rounded-full flex items-center justify-center text-white transition-colors" title="User Guide">
+            <button id="btn-help" onclick="sessionStorage.removeItem('tour-done'); window.location.href='/pelamar/dashboard';" class="w-8 h-8 bg-[#15803d] hover:bg-[#166534] rounded-full flex items-center justify-center text-white transition-colors" title="User Guide">
                 <span class="text-sm font-bold">?</span>
             </button>
         </div>
@@ -148,7 +161,7 @@
     </div>
 
     <!-- Footer -->
-    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white px-16 py-3 shrink-0 relative z-50">
+    <footer style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="text-white px-16 py-3 shrink-0 relative z-50">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div class="flex items-center gap-4">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-6 w-auto">
@@ -258,5 +271,25 @@
         }
     </script>
     @yield('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nav = document.querySelector('body > nav');
+            const footer = document.querySelector('body > footer');
+            if (nav && footer) {
+                const navBg = getComputedStyle(nav).backgroundColor;
+                footer.style.setProperty('background', navBg, 'important');
+                footer.style.setProperty('background-color', navBg, 'important');
+                footer.style.setProperty('background-image', 'none', 'important');
+                footer.querySelectorAll('*').forEach(function(el) {
+                    const elBg = getComputedStyle(el).backgroundColor;
+                    if (elBg !== 'rgba(0, 0, 0, 0)' && elBg !== 'transparent' && elBg !== navBg) {
+                        el.style.setProperty('background', navBg, 'important');
+                        el.style.setProperty('background-color', navBg, 'important');
+                        el.style.setProperty('background-image', 'none', 'important');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

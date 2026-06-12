@@ -7,11 +7,24 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @yield('css')
+    <style>
+        header, footer, footer * { background: #15803d !important; background-image: none !important; }
+        button[class*="bg-green-600"], button[class*="bg-green-700"], button[class*="bg-green-800"], button[class*="bg-green-900"], button[class*="bg-[#0f3c20]"], button[class*="bg-[#166534]"],
+        a[class*="bg-green-600"], a[class*="bg-green-700"], a[class*="bg-green-800"], a[class*="bg-green-900"], a[class*="bg-[#0f3c20]"], a[class*="bg-[#166534]"] {
+            background-color: #15803d !important;
+            border-color: #15803d !important;
+        }
+        button[class*="bg-green-600"]:hover, button[class*="bg-green-700"]:hover, button[class*="bg-green-800"]:hover, button[class*="bg-green-900"]:hover, button[class*="bg-[#0f3c20]"]:hover, button[class*="bg-[#166534]"]:hover,
+        a[class*="bg-green-600"]:hover, a[class*="bg-green-700"]:hover, a[class*="bg-green-800"]:hover, a[class*="bg-green-900"]:hover, a[class*="bg-[#0f3c20]"]:hover, a[class*="bg-[#166534]"]:hover {
+            background-color: #166534 !important;
+            border-color: #166534 !important;
+        }
+    </style>
 </head>
 <body class="bg-gray-200 min-h-screen font-sans">
 
     {{-- ============ TOP NAVBAR ============ --}}
-    <header style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white px-16 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50">
+    <header style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="text-white px-16 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50">
 
         {{-- Kiri: Logo --}}
         <div class="flex items-center gap-3">
@@ -117,7 +130,7 @@
             </a>
 
             {{-- Help / Guided Tour --}}
-            <button id="btn-help-tour" onclick="sessionStorage.removeItem('hr-tour-done'); startHrTour();" class="w-8 h-8 bg-[#166534] hover:bg-[#14532d] rounded-full flex items-center justify-center text-white transition-colors" title="User Guide">
+            <button id="btn-help-tour" onclick="sessionStorage.removeItem('hr-tour-done'); startHrTour();" class="w-8 h-8 bg-[#15803d] hover:bg-[#166534] rounded-full flex items-center justify-center text-white transition-colors" title="User Guide">
                 <span class="text-sm font-bold">?</span>
             </button>
 
@@ -195,7 +208,7 @@
     </main>
 
     {{-- ============ FOOTER ============ --}}
-    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white mt-16">
+    <footer style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="text-white mt-16">
         <div class="px-16 py-10 grid grid-cols-3 gap-8">
             <div>
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-10 w-auto mb-3">
@@ -442,6 +455,27 @@
             const notifBtn = document.getElementById('btn-notif');
             if (notifBtn && !notifBtn.contains(event.target) && !notifDropdown.contains(event.target)) {
                 notifDropdown.classList.add('hidden');
+            }
+        });
+    </script>
+    <script>
+        // Force footer background to match header exactly
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('header');
+            const footer = document.querySelector('footer');
+            if (header && footer) {
+                const headerBg = getComputedStyle(header).backgroundColor;
+                footer.style.setProperty('background', headerBg, 'important');
+                footer.style.setProperty('background-color', headerBg, 'important');
+                footer.style.setProperty('background-image', 'none', 'important');
+                footer.querySelectorAll('*').forEach(function(el) {
+                    const elBg = getComputedStyle(el).backgroundColor;
+                    if (elBg !== 'rgba(0, 0, 0, 0)' && elBg !== 'transparent' && elBg !== headerBg) {
+                        el.style.setProperty('background', headerBg, 'important');
+                        el.style.setProperty('background-color', headerBg, 'important');
+                        el.style.setProperty('background-image', 'none', 'important');
+                    }
+                });
             }
         });
     </script>

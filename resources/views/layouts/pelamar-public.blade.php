@@ -7,11 +7,24 @@
     <title>@yield('title') — Portal Pelamar</title>
     @vite(['resources/css/app.css'])
     @yield('css')
+    <style>
+        body > nav, body > footer, body > footer * { background: #15803d !important; background-image: none !important; }
+        button[class*="bg-green-600"], button[class*="bg-green-700"], button[class*="bg-green-800"], button[class*="bg-green-900"], button[class*="bg-[#0f3c20]"], button[class*="bg-[#166534]"],
+        a[class*="bg-green-600"], a[class*="bg-green-700"], a[class*="bg-green-800"], a[class*="bg-green-900"], a[class*="bg-[#0f3c20]"], a[class*="bg-[#166534]"] {
+            background-color: #15803d !important;
+            border-color: #15803d !important;
+        }
+        button[class*="bg-green-600"]:hover, button[class*="bg-green-700"]:hover, button[class*="bg-green-800"]:hover, button[class*="bg-green-900"]:hover, button[class*="bg-[#0f3c20]"]:hover, button[class*="bg-[#166534]"]:hover,
+        a[class*="bg-green-600"]:hover, a[class*="bg-green-700"]:hover, a[class*="bg-green-800"]:hover, a[class*="bg-green-900"]:hover, a[class*="bg-[#0f3c20]"]:hover, a[class*="bg-[#166534]"]:hover {
+            background-color: #166534 !important;
+            border-color: #166534 !important;
+        }
+    </style>
 </head>
 <body class="min-h-screen bg-gray-200 flex flex-col">
 
     <!-- Navbar Pelamar (tanpa sidebar) -->
-    <nav style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="px-16 py-3 flex items-center justify-between sticky top-0 z-50">
+    <nav style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="px-16 py-3 flex items-center justify-between sticky top-0 z-50">
         <div class="flex items-center gap-3">
             <a href="/pelamar/dashboard" class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-auto">
@@ -33,7 +46,7 @@
     </main>
 
     <!-- Footer -->
-    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white px-16 py-8">
+    <footer style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="text-white px-16 py-8">
         <div class="flex items-start justify-between">
             <div>
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-10 w-auto mb-2">
@@ -49,5 +62,25 @@
 
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nav = document.querySelector('body > nav');
+            const footer = document.querySelector('body > footer');
+            if (nav && footer) {
+                const navBg = getComputedStyle(nav).backgroundColor;
+                footer.style.setProperty('background', navBg, 'important');
+                footer.style.setProperty('background-color', navBg, 'important');
+                footer.style.setProperty('background-image', 'none', 'important');
+                footer.querySelectorAll('*').forEach(function(el) {
+                    const elBg = getComputedStyle(el).backgroundColor;
+                    if (elBg !== 'rgba(0, 0, 0, 0)' && elBg !== 'transparent' && elBg !== navBg) {
+                        el.style.setProperty('background', navBg, 'important');
+                        el.style.setProperty('background-color', navBg, 'important');
+                        el.style.setProperty('background-image', 'none', 'important');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
