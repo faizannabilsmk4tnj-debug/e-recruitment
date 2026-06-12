@@ -116,27 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnSaveNotif = document.getElementById('btn-save-notif');
     if (btnSaveNotif) btnSaveNotif.addEventListener('click', () => showSaving(btnSaveNotif, 'Save Preferences'));
 
-    // Save Language
-    const btnSaveLang = document.getElementById('btn-save-lang');
-    if (btnSaveLang) btnSaveLang.addEventListener('click', () => showSaving(btnSaveLang, 'Save Language'));
 
-    // ===== LANGUAGE SELECTOR =====
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            document.querySelectorAll('.lang-btn').forEach(b => {
-                b.classList.remove('border-green-700', 'bg-green-50', 'active-lang');
-                b.classList.add('border-gray-200');
-                const txt = b.querySelector('span.text-sm');
-                if (txt) txt.className = 'text-sm font-medium text-gray-600';
-                const check = b.querySelector('svg');
-                if (check && !b.querySelector('.text-xl + svg')) check.remove();
-            });
-            this.classList.add('border-green-700', 'bg-green-50', 'active-lang');
-            this.classList.remove('border-gray-200');
-            const txt = this.querySelector('span.text-sm');
-            if (txt) txt.className = 'text-sm font-medium text-green-800';
-        });
-    });
 
     // ===== SESSION LOGOUT =====
     let targetSession = null;
