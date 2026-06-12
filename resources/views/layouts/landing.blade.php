@@ -11,7 +11,7 @@
 <body class="min-h-screen flex flex-col bg-gray-200">
 
     <!-- Navbar -->
-    <nav class="bg-[#15803d] px-16 py-3 flex items-center justify-between relative z-50 shadow-sm border-b border-[#166534]">
+    <nav style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="px-16 py-3 flex items-center justify-between relative z-50 border-b">
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-12 w-auto">
@@ -38,7 +38,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#15803d] text-white px-16 py-5 shadow-sm border-t border-[#166534]">
+    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white px-16 py-5 border-t">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">

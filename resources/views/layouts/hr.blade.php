@@ -11,7 +11,7 @@
 <body class="bg-gray-200 min-h-screen font-sans">
 
     {{-- ============ TOP NAVBAR ============ --}}
-    <header class="bg-[#15803d] text-white px-16 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50 shadow-sm border-b border-[#166534]">
+    <header style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white px-16 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50 border-b">
 
         {{-- Kiri: Logo --}}
         <div class="flex items-center gap-3">
@@ -195,7 +195,7 @@
     </main>
 
     {{-- ============ FOOTER ============ --}}
-    <footer class="bg-[#15803d] text-white mt-16 shadow-sm border-t border-[#166534]">
+    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white mt-16 border-t">
         <div class="px-16 py-10 grid grid-cols-3 gap-8">
             <div>
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-10 w-auto mb-3">

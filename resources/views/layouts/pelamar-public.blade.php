@@ -11,7 +11,7 @@
 <body class="min-h-screen bg-gray-200 flex flex-col">
 
     <!-- Navbar Pelamar (tanpa sidebar) -->
-    <nav class="bg-[#15803d] px-16 py-3 flex items-center justify-between sticky top-0 z-50 shadow-sm border-b border-[#166534]">
+    <nav style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="px-16 py-3 flex items-center justify-between sticky top-0 z-50 border-b">
         <div class="flex items-center gap-3">
             <a href="/pelamar/dashboard" class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-auto">
@@ -33,7 +33,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#15803d] text-white px-16 py-8 shadow-sm border-t border-[#166534]">
+    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white px-16 py-8 border-t">
         <div class="flex items-start justify-between">
             <div>
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-10 w-auto mb-2">
