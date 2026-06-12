@@ -1,3 +1,9 @@
+@php
+  $isEditing = filled($template);
+  $templateName = old('name', $template?->name ?? request('name', 'Template Baru'));
+  $templateDescription = old('description', $template?->description ?? '');
+  $templateStatus = old('status', $template?->status ?? 'draft');
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -30,12 +36,22 @@
 </style>
 </head>
 <body>
+<form id="template-form" method="POST" action="{{ $isEditing ? route('hr.template-cv.update', $template) : route('hr.template-cv.store') }}" style="display:none">
+  @csrf
+  @if($isEditing)
+    @method('PATCH')
+  @endif
+  <input type="hidden" name="name" id="form-name" value="{{ $templateName }}">
+  <input type="hidden" name="description" id="form-description" value="{{ $templateDescription }}">
+  <input type="hidden" name="status" id="form-status" value="{{ $templateStatus }}">
+  <textarea name="content_html" id="form-content"></textarea>
+</form>
 <div id="bar">
   <a href="/hr/template-cv" style="color:#86efac;font-size:12px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px">
     <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>Kembali
   </a>
   <div style="flex:1"></div>
-  <div contenteditable="true" id="tname" style="color:#fff;font-weight:700;font-size:14px;outline:none;min-width:120px;text-align:center">Template Baru</div>
+  <div contenteditable="true" id="tname" style="color:#fff;font-weight:700;font-size:14px;outline:none;min-width:120px;text-align:center">{{ $templateName }}</div>
   <div style="flex:1"></div>
   <label class="tb" style="display:flex;align-items:center;gap:5px;cursor:pointer">
     <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>Import
@@ -74,6 +90,20 @@
   <span style="font-size:10px;color:#9ca3af;padding-right:8px">Ctrl+B Bold &middot; Ctrl+I Italic &middot; Ctrl+U Underline</span>
 </div>
 <div id="sb">
+  @if (session('success'))
+    <div style="background:#dcfce7;color:#166534;border:1px solid #bbf7d0;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:700;margin-bottom:10px">{{ session('success') }}</div>
+  @endif
+  @if ($errors->any())
+    <div style="background:#fee2e2;color:#991b1b;border:1px solid #fecaca;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:700;margin-bottom:10px">{{ $errors->first() }}</div>
+  @endif
+  <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:#6b7280;letter-spacing:.06em;margin-bottom:8px">Metadata</div>
+  <label style="display:block;font-size:11px;font-weight:700;color:#374151;margin-bottom:5px">Description</label>
+  <textarea id="tdesc" rows="4" maxlength="1000" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px;font-size:12px;margin-bottom:10px;resize:vertical">{{ $templateDescription }}</textarea>
+  <label style="display:block;font-size:11px;font-weight:700;color:#374151;margin-bottom:5px">Status</label>
+  <select id="tstatus" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:8px;font-size:12px;margin-bottom:14px">
+    <option value="draft" @selected($templateStatus === 'draft')>Draft</option>
+    <option value="published" @selected($templateStatus === 'published')>Published</option>
+  </select>
   <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:#6b7280;letter-spacing:.06em;margin-bottom:8px">Tambah Seksi</div>
   <button class="ab" onclick="addBlk('header')">&#128100; Profil / Header</button>
   <button class="ab" onclick="addBlk('exp')">&#128188; Pengalaman Kerja</button>
@@ -84,10 +114,15 @@
   <button class="ab" onclick="addBlk('div')">&#8213; Pemisah</button>
 </div>
 <div id="canvas">
-  <div class="page" id="p1"></div>
+  @if($template?->content_html)
+    {!! $template->content_html !!}
+  @else
+    <div class="page" id="p1"></div>
+  @endif
 </div>
 <script>
-var pages=[document.getElementById('p1')], pgN=1, blkN=0;
+var pages=Array.from(document.querySelectorAll('.page')), pgN=pages.length || 1, blkN=document.querySelectorAll('.blk').length;
+if(!pages.length){document.getElementById('canvas').innerHTML='<div class="page" id="p1"></div>';pages=[document.getElementById('p1')];}
 var hist=[], hIdx=-1, mut=false;
 function curPage(){return pages[pages.length-1]}
 function save(){if(mut)return;hist.splice(hIdx+1);hist.push(document.getElementById('canvas').innerHTML);if(hist.length>50)hist.shift();hIdx=hist.length-1;updUD()}
@@ -120,9 +155,18 @@ function selBlk(el){document.querySelectorAll('.blk').forEach(function(b){b.clas
 function mvUp(id){var el=document.getElementById(id),p=el.previousElementSibling;if(p&&p.classList.contains('blk')){el.parentNode.insertBefore(el,p);}}
 function mvDn(id){var el=document.getElementById(id),n=el.nextElementSibling;if(n&&n.classList.contains('blk')){el.parentNode.insertBefore(n,el);}}
 function delBlk(id){if(confirm('Hapus seksi ini?')){document.getElementById(id).remove();}}
-function saveDraft(){toast('Draft tersimpan!','#0f3c20')}
+function prepareSubmit(status){
+  var name=document.getElementById('tname').textContent.trim();
+  if(!name){toast('Nama template wajib diisi.','#dc2626');return false;}
+  document.getElementById('form-name').value=name;
+  document.getElementById('form-description').value=document.getElementById('tdesc').value.trim();
+  document.getElementById('form-status').value=status || document.getElementById('tstatus').value;
+  document.getElementById('form-content').value=document.getElementById('canvas').innerHTML;
+  return true;
+}
+function saveDraft(){if(prepareSubmit())document.getElementById('template-form').submit()}
 function doPreview(){var w=window.open('','_blank');var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Preview CV</title><style>body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:center;padding:24px;font-family:\'Segoe UI\',sans-serif}.page{width:595px;background:#fff;min-height:842px;overflow:visible;box-shadow:0 2px 16px rgba(0,0,0,.15);margin-bottom:24px}[contenteditable]{outline:none}.bh{display:none}.blk{border:none!important}</style></head><body>'+document.getElementById('canvas').innerHTML+'</body></html>';w.document.write(html);w.document.close()}
-function doPublish(){toast('Template dipublikasikan!','#166534');setTimeout(function(){window.location.href='/hr/template-cv'},1500)}
+function doPublish(){if(prepareSubmit('published'))document.getElementById('template-form').submit()}
 function toast(m,bg){var t=document.createElement('div');t.style.cssText='position:fixed;bottom:20px;right:20px;z-index:999;background:'+bg+';color:#fff;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.2)';t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2200)}
 var iHTML='';
 function doImport(inp){var f=inp.files[0];if(!f)return;var ext=f.name.split('.').pop().toLowerCase();if(ext==='docx'){var rd=new FileReader();rd.onload=function(e){mammoth.convertToHtml({arrayBuffer:e.target.result}).then(function(r){iHTML=cleanHTML(r.value);applyImport()}).catch(function(e){toast('Gagal: '+e.message,'#dc2626')})}; rd.readAsArrayBuffer(f)}else if(ext==='html'||ext==='htm'){var rd=new FileReader();rd.onload=function(e){var doc=new DOMParser().parseFromString(e.target.result,'text/html');iHTML=cleanHTML(doc.body?doc.body.innerHTML:e.target.result);applyImport()};rd.readAsText(f)}else{toast('Gunakan .docx atau .html','#dc2626')}inp.value=''}
@@ -164,9 +208,8 @@ function applyImport(){
 }
 
 var p=new URLSearchParams(location.search);if(p.get('name'))document.getElementById('tname').textContent=decodeURIComponent(p.get('name'));
-['header','contact','summary','exp','edu','skills'].forEach(addBlk);
+if(document.querySelectorAll('.blk').length===0){['header','contact','summary','exp','edu','skills'].forEach(addBlk);}
 save();
 </script>
 </body>
 </html>
-

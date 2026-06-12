@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HrCvTemplateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -79,8 +80,13 @@ Route::middleware('role:hr')->group(function () {
     Route::get('/hr/wawancara',                  fn() => view('hr.wawancara'));
     Route::get('/hr/wawancara/daftar',           fn() => view('hr.wawancara-daftar'));
     Route::get('/hr/laporan',                    fn() => view('hr.laporan'));
-    Route::get('/hr/template-cv',               fn() => view('hr.template-cv'));
-    Route::get('/hr/template-cv/editor',        fn() => view('hr.template-cv-editor'));
-    Route::get('/hr/template-cv/editor/{id}',   fn($id) => view('hr.template-cv-editor'));
+    Route::get('/hr/template-cv',               [HrCvTemplateController::class, 'index'])->name('hr.template-cv.index');
+    Route::post('/hr/template-cv',              [HrCvTemplateController::class, 'store'])->name('hr.template-cv.store');
+    Route::get('/hr/template-cv/editor',        [HrCvTemplateController::class, 'create'])->name('hr.template-cv.create');
+    Route::get('/hr/template-cv/editor/{template}', [HrCvTemplateController::class, 'edit'])->name('hr.template-cv.editor');
+    Route::patch('/hr/template-cv/{template}',  [HrCvTemplateController::class, 'update'])->name('hr.template-cv.update');
+    Route::patch('/hr/template-cv/{template}/publish', [HrCvTemplateController::class, 'publish'])->name('hr.template-cv.publish');
+    Route::patch('/hr/template-cv/{template}/default', [HrCvTemplateController::class, 'setDefault'])->name('hr.template-cv.default');
+    Route::delete('/hr/template-cv/{template}', [HrCvTemplateController::class, 'destroy'])->name('hr.template-cv.destroy');
 
 });
