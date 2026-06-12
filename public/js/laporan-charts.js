@@ -17,15 +17,15 @@ const funnelData = {
 };
 
 const sourceData = {
-  linkedin: { label: 'LinkedIn', count: 706, pct: '55%', color: '#0f3c20', detail: 'Mayoritas pelamar senior dan profesional berasal dari LinkedIn. Konversi rata-rata 8%.' },
-  jobportal: { label: 'Job Portal', count: 321, pct: '25%', color: '#1b5e32', detail: 'Dari platform Jobstreet, Indeed, dan Kalibrr. Konversi rata-rata 5%.' },
+  linkedin: { label: 'LinkedIn', count: 706, pct: '55%', color: '#15803d', detail: 'Mayoritas pelamar senior dan profesional berasal dari LinkedIn. Konversi rata-rata 8%.' },
+  jobportal: { label: 'Job Portal', count: 321, pct: '25%', color: '#166534', detail: 'Dari platform Jobstreet, Indeed, dan Kalibrr. Konversi rata-rata 5%.' },
   website: { label: 'Website', count: 257, pct: '20%', color: '#bfe3d0', detail: 'Pelamar langsung dari portal karir ecogreen.co.id. Konversi rata-rata 6%.' },
 };
 
 const deptData = {
-  manufacturing: { name: 'Manufacturing', roles: 12, days: 22, status: 'OPTIMAL', color: '#0f3c20', bg: '#d1f4e0', detail: 'Departemen dengan performa rekrutmen terbaik. Proses seleksi efisien dan tepat waktu.' },
+  manufacturing: { name: 'Manufacturing', roles: 12, days: 22, status: 'OPTIMAL', color: '#15803d', bg: '#d1f4e0', detail: 'Departemen dengan performa rekrutmen terbaik. Proses seleksi efisien dan tepat waktu.' },
   engineering: { name: 'Engineering', roles: 8, days: 45, status: 'CRITICAL', color: '#9b1c1c', bg: '#fce8e8', detail: 'Kekurangan kandidat yang memenuhi kualifikasi teknis. Perlu strategi sourcing yang lebih aktif.' },
-  supplychain: { name: 'Supply Chain', roles: 15, days: 14, status: 'HIGH', color: '#0f3c20', bg: '#d1f4e0', detail: 'Waktu rekrutmen sangat cepat. Proses onboarding perlu dioptimalkan agar kualitas terjaga.' },
+  supplychain: { name: 'Supply Chain', roles: 15, days: 14, status: 'HIGH', color: '#15803d', bg: '#d1f4e0', detail: 'Waktu rekrutmen sangat cepat. Proses onboarding perlu dioptimalkan agar kualitas terjaga.' },
   rdlabor: { name: 'R&D Labor', roles: 4, days: 31, status: 'AVERAGE', color: '#374151', bg: '#f3f4f6', detail: 'Performa standar. Rekrutmen spesialis R&D memerlukan evaluasi kompetensi yang lebih mendalam.' },
 };
 
@@ -91,7 +91,7 @@ function initBars() {
       const d = monthlyData[m];
       const convRate = ((d.hired / d.total) * 100).toFixed(1);
       openModal(
-        'linear-gradient(135deg, #0f3c20, #1b5e32)',
+        'linear-gradient(135deg, #15803d, #166534)',
         'Monthly Breakdown',
         `${m} 2024 — ${d.total} Pelamar`,
         `<p class="text-gray-500 text-sm mb-6">Detail lengkap aktivitas rekrutmen pada bulan ${m} 2024.</p>
@@ -124,7 +124,7 @@ function initFunnel() {
       const label = this.querySelector('[data-funnel-label]')?.textContent || key;
       const dropoff = key !== 'sourced' ? ` (${d.pct} dari total sourced)` : '';
       openModal(
-        'linear-gradient(135deg, #0f3c20, #166534)',
+        'linear-gradient(135deg, #15803d, #166534)',
         'Hiring Funnel Detail',
         label,
         `<p class="text-gray-500 text-sm mb-6">${d.desc}</p>
@@ -178,7 +178,7 @@ function initDepts() {
       const key = this.dataset.dept;
       const d = deptData[key];
       openModal(
-        `linear-gradient(135deg, ${d.color === '#9b1c1c' ? '#9b1c1c, #7f1d1d' : '#0f3c20, #1b5e32'})`,
+        `linear-gradient(135deg, ${d.color === '#9b1c1c' ? '#9b1c1c, #7f1d1d' : '#15803d, #166534'})`,
         'Departmental Efficiency',
         d.name,
         `<p class="text-gray-500 text-sm mb-6">${d.detail}</p>
