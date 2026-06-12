@@ -11,7 +11,7 @@
 <body class="bg-gray-200 min-h-screen font-sans">
 
     {{-- ============ TOP NAVBAR ============ --}}
-    <header style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white px-16 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50 border-b">
+    <header style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white px-16 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50">
 
         {{-- Kiri: Logo --}}
         <div class="flex items-center gap-3">
@@ -195,7 +195,7 @@
     </main>
 
     {{-- ============ FOOTER ============ --}}
-    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white mt-16 border-t">
+    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white mt-16">
         <div class="px-16 py-10 grid grid-cols-3 gap-8">
             <div>
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-10 w-auto mb-3">
@@ -231,7 +231,7 @@
                 </ul>
             </div>
         </div>
-        <div class="border-t border-[#166534] px-16 py-3 flex items-center justify-between">
+        <div class="border-t border-green-700/30 px-16 py-3 flex items-center justify-between">
             <span class="text-xs text-green-50">© 2024 PT Ecogreen Oleochemicals. All rights reserved.</span>
             <div class="flex gap-4">
                 <a href="#" class="text-xs text-green-50 hover:text-white transition-colors">Privacy Policy</a>

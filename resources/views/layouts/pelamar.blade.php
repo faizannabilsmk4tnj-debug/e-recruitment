@@ -29,7 +29,7 @@
 <body class="h-screen bg-gray-200 flex flex-col overflow-hidden">
 
     <!-- ========== NAVBAR (full-width, top) ========== -->
-    <nav style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="px-16 py-3 flex items-center justify-between z-50 border-b shrink-0">
+    <nav style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="px-16 py-3 flex items-center justify-between z-50 shrink-0">
         <!-- Left: Logo + Company Name -->
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-3">
@@ -148,11 +148,11 @@
     </div>
 
     <!-- Footer -->
-    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white px-16 py-3 shrink-0 relative z-50 border-t">
+    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white px-16 py-3 shrink-0 relative z-50">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
             <div class="flex items-center gap-4">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-6 w-auto">
-                <p class="text-green-50 text-[11px] border-l border-[#166534] pl-4">© 2023 PT Ecogreen Oleochemicals</p>
+                <p class="text-green-50 text-[11px] border-l border-green-700/30 pl-4">© 2023 PT Ecogreen Oleochemicals</p>
             </div>
             <div class="flex flex-wrap gap-5 text-[11px] text-green-50">
                 <a href="#" class="cursor-pointer hover:text-white hover:underline transition-colors relative z-50">Career Portal</a>

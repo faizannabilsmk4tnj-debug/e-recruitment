@@ -42,7 +42,7 @@
 <body class="min-h-screen flex flex-col bg-gray-200">
 
     <!-- Navbar -->
-    <nav style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="px-10 py-3 flex items-center justify-between relative z-50 border-b">
+    <nav style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="px-10 py-3 flex items-center justify-between relative z-50">
         <div class="flex items-center gap-3">
             <!-- Logo + Company Name -->
             <a href="/" class="flex items-center gap-3">
@@ -77,7 +77,7 @@
     </main>
 
     <!-- Footer -->
-    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white py-4 px-8 relative z-50 border-t">
+    <footer style="background-color: #15803d !important; border-color: #15803d !important; box-shadow: none !important;" class="text-white py-4 px-8 relative z-50">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">
