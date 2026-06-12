@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HR\SettingController;
+use App\Http\Middleware\SetUserLocale;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,10 +68,17 @@ Route::middleware('role:applicant')->group(function () {
 });
 
 // ===== HR — harus login dan role=hr =====
-Route::middleware('role:hr')->group(function () {
+Route::middleware(['role:hr', SetUserLocale::class])->group(function () {
 
     Route::get('/hr/dashboard',                  fn() => view('hr.dashboard'));
-    Route::get('/hr/setting',                    fn() => view('hr.setting'));
+    Route::get('/hr/setting',                    [SettingController::class, 'index'])->name('hr.setting');
+    Route::post('/hr/setting/profile',           [SettingController::class, 'updateProfile'])->name('hr.setting.profile');
+    Route::post('/hr/setting/avatar/remove',     [SettingController::class, 'removeAvatar'])->name('hr.setting.avatar.remove');
+    Route::post('/hr/setting/password',          [SettingController::class, 'updatePassword'])->name('hr.setting.password');
+    Route::post('/hr/setting/notifications',     [SettingController::class, 'updateNotifications'])->name('hr.setting.notifications');
+    Route::post('/hr/setting/language',          [SettingController::class, 'updateLanguage'])->name('hr.setting.language');
+    Route::delete('/hr/setting/session/{id}',    [SettingController::class, 'logoutDevice'])->name('hr.setting.session.destroy');
+    Route::delete('/hr/setting/sessions',        [SettingController::class, 'logoutAllDevices'])->name('hr.setting.sessions.destroy');
     Route::get('/hr/tim',                        fn() => view('hr.tim'));
     Route::get('/hr/lowongan',                   fn() => view('hr.lowongan'));
     Route::get('/hr/lowongan/buat',              fn() => view('hr.lowongan-buat'));

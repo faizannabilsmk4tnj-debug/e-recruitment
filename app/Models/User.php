@@ -20,6 +20,8 @@ class User extends Authenticatable
         'password',
         'role',
         'phone',
+        'job_title',
+        'language',
         'is_active',
     ];
 
@@ -42,5 +44,21 @@ class User extends Authenticatable
             'password'          => 'hashed',  // ← inilah yang melakukan hashing
             'is_active'         => 'boolean',
         ];
+    }
+
+    /**
+     * Relasi ke UserProfile.
+     */
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
+    /**
+     * Relasi ke NotificationPreference.
+     */
+    public function notificationPreference()
+    {
+        return $this->hasOne(NotificationPreference::class);
     }
 }
