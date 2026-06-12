@@ -55,7 +55,7 @@
 <body class="min-h-screen flex flex-col bg-gray-200">
 
     <!-- Navbar -->
-    <nav style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="px-10 py-3 flex items-center justify-between relative z-50">
+    <nav style="background: #15803d !important; border-bottom: 2px solid #14532d !important; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08) !important;" class="px-10 py-3 flex items-center justify-between relative z-50">
         <div class="flex items-center gap-3">
             <!-- Logo + Company Name -->
             <a href="/" class="flex items-center gap-3">

@@ -24,7 +24,7 @@
 <body class="bg-gray-200 min-h-screen font-sans">
 
     {{-- ============ TOP NAVBAR ============ --}}
-    <header style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="text-white px-16 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50">
+    <header style="background: #15803d !important; border-bottom: 2px solid #14532d !important; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08) !important;" class="text-white px-16 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50">
 
         {{-- Kiri: Logo --}}
         <div class="flex items-center gap-3">

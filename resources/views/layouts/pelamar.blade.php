@@ -42,7 +42,7 @@
 <body class="h-screen bg-gray-200 flex flex-col overflow-hidden">
 
     <!-- ========== NAVBAR (full-width, top) ========== -->
-    <nav style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="px-16 py-3 flex items-center justify-between z-50 shrink-0">
+    <nav style="background: #15803d !important; border-bottom: 2px solid #14532d !important; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08) !important;" class="px-16 py-3 flex items-center justify-between z-50 shrink-0">
         <!-- Left: Logo + Company Name -->
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-3">
