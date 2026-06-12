@@ -139,78 +139,114 @@
     <div id="tpl-modern" class="cv-preview-panel max-w-3xl mx-auto animate-preview">
         <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
             <div class="grid grid-cols-10 min-h-[700px]">
-                <!-- Sidebar Kiri -->
+                {{-- Sidebar --}}
                 <div class="col-span-3 bg-green-900 text-white p-6 space-y-6">
                     <div class="text-center pb-5 border-b border-green-700">
+                        @if($profile && $profile->avatar_url)
+                        <img src="{{ Storage::url($profile->avatar_url) }}" class="w-20 h-20 rounded-full mx-auto mb-3 object-cover border-2 border-green-500">
+                        @else
                         <div class="w-20 h-20 bg-green-800 rounded-full mx-auto mb-3 flex items-center justify-center border-2 border-green-500">
-                            <span class="text-2xl font-bold text-green-300">AR</span>
+                            <span class="text-2xl font-bold text-green-300">{{ $initials }}</span>
                         </div>
-                        <h2 class="font-bold text-base">Ahmad Rizky Pratama</h2>
-                        <p class="text-green-300 text-xs mt-1">Process Engineer</p>
+                        @endif
+                        <h2 class="font-bold text-base">{{ $user->name }}</h2>
+                        @if($profile && $profile->city)<p class="text-green-300 text-xs mt-1">{{ $profile->city }}</p>@endif
                     </div>
                     <div>
                         <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Contact</h4>
-                        <div class="space-y-2 text-xs text-green-100">
-                            <p>ahmad.rizky@email.com</p>
-                            <p>+62 812 3456 7890</p>
-                            <p>Batam, Kepulauan Riau</p>
-                            <p>linkedin.com/in/ahmadrizky</p>
+                        <div class="space-y-1 text-xs text-green-100">
+                            <p>{{ $user->email }}</p>
+                            @if($profile && $profile->city)<p>{{ $profile->city }}{{ $profile->province ? ', '.$profile->province : '' }}</p>@endif
+                            @if($profile && $profile->linkedin_url)<p>{{ $profile->linkedin_url }}</p>@endif
                         </div>
                     </div>
+                    @if($skills->count())
                     <div>
-                        <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Technical Skills</h4>
-                        <div class="space-y-2.5">
-                            <div><p class="text-xs text-green-100 mb-1">Process Optimization</p><div class="w-full bg-green-800 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width:92%"></div></div></div>
-                            <div><p class="text-xs text-green-100 mb-1">Chemical Analysis</p><div class="w-full bg-green-800 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width:88%"></div></div></div>
-                            <div><p class="text-xs text-green-100 mb-1">Quality Control (ISO)</p><div class="w-full bg-green-800 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width:85%"></div></div></div>
-                            <div><p class="text-xs text-green-100 mb-1">SAP ERP</p><div class="w-full bg-green-800 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width:78%"></div></div></div>
-                            <div><p class="text-xs text-green-100 mb-1">Lean Manufacturing</p><div class="w-full bg-green-800 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width:82%"></div></div></div>
+                        <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Skills</h4>
+                        <div class="space-y-2">
+                            @foreach($skills->take(5) as $skill)
+                            <div><p class="text-xs text-green-100 mb-1">{{ $skill->skill_name }}</p>
+                            <div class="w-full bg-green-800 rounded-full h-1.5"><div class="bg-green-400 h-1.5 rounded-full" style="width:{{ $skill->level === 'expert' ? '90' : ($skill->level === 'intermediate' ? '65' : '40') }}%"></div></div></div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
+                    @if($skills->where('category','language')->count())
                     <div>
                         <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Languages</h4>
-                        <div class="space-y-1 text-xs text-green-100"><p>Indonesia — Native</p><p>English — Professional</p></div>
+                        <div class="space-y-1 text-xs text-green-100">
+                            @foreach($skills->where('category','language') as $lang)
+                            <p>{{ $lang->skill_name }} — {{ ucfirst($lang->level) }}</p>
+                            @endforeach
+                        </div>
                     </div>
+                    @endif
+                    @if($skills->whereNotNull('cert_name')->count())
                     <div>
                         <h4 class="text-[10px] font-bold uppercase tracking-[2px] text-green-400 mb-2">Certifications</h4>
-                        <div class="space-y-1 text-xs text-green-100"><p>• Lean Six Sigma Green Belt</p><p>• K3 Umum (Kemnaker RI)</p><p>• ISO 9001:2015 Lead Auditor</p></div>
+                        <div class="space-y-1 text-xs text-green-100">
+                            @foreach($skills->whereNotNull('cert_name') as $cert)
+                            <p>• {{ $cert->cert_name }}</p>
+                            @endforeach
+                        </div>
                     </div>
+                    @endif
                 </div>
-                <!-- Konten Utama -->
+                {{-- Main Content --}}
                 <div class="col-span-7 p-8 space-y-6">
+                    @if($profile && $profile->bio)
                     <div>
                         <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-2 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Professional Profile</h3>
-                        <p class="text-sm text-gray-600 leading-relaxed">Process Engineer with 5+ years of experience in the oleochemical industry. Skilled in fatty alcohol production optimization, quality control, and HSE management system implementation. Committed to sustainable manufacturing principles.</p>
+                        <p class="text-sm text-gray-600 leading-relaxed">{{ $profile->bio }}</p>
                     </div>
+                    @endif
+                    @if($works->count())
                     <div>
                         <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-3 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Work Experience</h3>
-                        <div class="space-y-5">
-                            <div class="border-l-2 border-green-200 pl-4">
-                                <div class="flex justify-between items-start"><p class="font-bold text-sm text-gray-900">Senior Process Engineer</p><span class="text-xs text-green-700 bg-green-50 px-2 py-0.5 rounded font-semibold">2021 — Present</span></div>
-                                <p class="text-sm text-gray-500">PT Ecogreen Oleochemicals — Batam</p>
-                                <ul class="mt-2 text-xs text-gray-600 space-y-1"><li>• Optimized fatty alcohol distillation process, increasing yield by 12%</li><li>• Led a team of 15 operators at the fractionation plant</li><li>• Implemented new SOPs aligned with ISO 14001 standards</li><li>• Reduced waste production by 18% through lean manufacturing</li></ul>
+                        <div class="space-y-4">
+                            @foreach($works as $i => $w)
+                            <div class="border-l-2 {{ $i===0 ? 'border-green-200' : 'border-gray-200' }} pl-4">
+                                <div class="flex justify-between items-start">
+                                    <p class="font-bold text-sm text-gray-900">{{ $w->position }}</p>
+                                    <span class="text-xs {{ $i===0 ? 'text-green-700 bg-green-50' : 'text-gray-400' }} px-2 py-0.5 rounded font-semibold">
+                                        {{ $w->start_date->format('Y') }} — {{ $w->is_current ? 'Present' : ($w->end_date ? $w->end_date->format('Y') : '') }}
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-500">{{ $w->company_name }}</p>
+                                @if($w->description)<p class="mt-1 text-xs text-gray-600">{{ $w->description }}</p>@endif
                             </div>
-                            <div class="border-l-2 border-gray-200 pl-4">
-                                <div class="flex justify-between items-start"><p class="font-bold text-sm text-gray-900">Junior Process Engineer</p><span class="text-xs text-gray-400">2019 — 2021</span></div>
-                                <p class="text-sm text-gray-500">PT Musim Mas — Medan</p>
-                                <ul class="mt-2 text-xs text-gray-600 space-y-1"><li>• Monitored CPO production process parameters and derivatives</li><li>• Analyzed production data and prepared monthly reports</li><li>• Coordinated with QC team for RSPO standards compliance</li></ul>
-                            </div>
-                            <div class="border-l-2 border-gray-200 pl-4">
-                                <div class="flex justify-between items-start"><p class="font-bold text-sm text-gray-900">Internship — Production Dept.</p><span class="text-xs text-gray-400">2018 (6 months)</span></div>
-                                <p class="text-sm text-gray-500">PT Wilmar Nabati Indonesia — Gresik</p>
-                                <ul class="mt-2 text-xs text-gray-600 space-y-1"><li>• Laboratory analysis assistant for quality assurance</li></ul>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
+                    @if($educations->count())
                     <div>
                         <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-3 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Education</h3>
-                        <div class="border-l-2 border-green-200 pl-4">
-                            <p class="font-bold text-sm text-gray-900">B.Eng. Chemical Engineering</p>
-                            <p class="text-sm text-gray-500">Institut Teknologi Sepuluh Nopember (ITS) — Surabaya</p>
-                            <p class="text-xs text-gray-400 mt-0.5">2015 — 2019 • GPA 3.68 / 4.00 • Cum Laude</p>
-                            <p class="text-xs text-gray-500 mt-1 italic">Thesis: "Optimization of Palm Oil Hydrogenation Process Using Nickel Catalyst"</p>
+                        <div class="space-y-3">
+                            @foreach($educations as $edu)
+                            <div class="border-l-2 border-green-200 pl-4">
+                                <p class="font-bold text-sm text-gray-900">{{ $edu->degree }} — {{ $edu->major }}</p>
+                                <p class="text-sm text-gray-500">{{ $edu->institution }}</p>
+                                <p class="text-xs text-gray-400 mt-0.5">{{ $edu->start_year }} — {{ $edu->end_year }}{{ $edu->gpa ? ' • GPA '.$edu->gpa : '' }}</p>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
+                    @if($organizations->count())
+                    <div>
+                        <h3 class="text-xs font-bold text-green-800 uppercase tracking-[3px] mb-3 flex items-center gap-2"><span class="w-5 h-0.5 bg-green-700"></span>Organization</h3>
+                        <div class="space-y-3">
+                            @foreach($organizations as $org)
+                            <div class="border-l-2 border-gray-200 pl-4">
+                                <p class="font-bold text-sm text-gray-900">{{ $org->position }}</p>
+                                <p class="text-sm text-gray-500">{{ $org->organization_name }}</p>
+                                <p class="text-xs text-gray-400">{{ $org->start_date->format('Y') }} — {{ $org->end_date ? $org->end_date->format('Y') : 'Present' }}</p>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -221,67 +257,89 @@
         <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm p-10" style="font-family: 'Georgia', serif;">
             <!-- Header -->
             <div class="text-center pb-5 mb-6 border-b-2 border-gray-800">
-                <h1 class="text-2xl font-bold text-gray-900 tracking-wide" style="font-family: 'Georgia', serif;">AHMAD RIZKY PRATAMA, S.T.</h1>
-                <p class="text-sm text-gray-600 mt-1.5 tracking-wide">Process Engineer — Oleochemical Manufacturing</p>
-                <p class="text-xs text-gray-400 mt-2">Batam, Kepulauan Riau • ahmad.rizky@email.com • +62 812 3456 7890 • linkedin.com/in/ahmadrizky</p>
+                <h1 class="text-2xl font-bold text-gray-900 tracking-wide" style="font-family: 'Georgia', serif;">{{ strtoupper($user->name) }}</h1>
+                @if($profile && $profile->city)<p class="text-sm text-gray-600 mt-1.5 tracking-wide">{{ $profile->city }}{{ $profile->province ? ', '.$profile->province : '' }}</p>@endif
+                <p class="text-xs text-gray-400 mt-2">{{ $user->email }}@if($profile && $profile->linkedin_url) • {{ $profile->linkedin_url }}@endif</p>
             </div>
-            <!-- Summary -->
+            @if($profile && $profile->bio)
             <div class="mb-6">
                 <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-2">Ringkasan Profesional</h3>
-                <p class="text-sm text-gray-600 leading-relaxed" style="text-align:justify;">Lulusan Teknik Kimia dengan pengalaman 5 tahun di industri oleokimia dan turunan kelapa sawit. Kompetensi utama meliputi perancangan proses, pengendalian mutu berbasis ISO, dan penerapan prinsip green chemistry dalam skala produksi massal. Berpengalaman dalam lingkungan multinasional dengan standar operasional tinggi.</p>
+                <p class="text-sm text-gray-600 leading-relaxed" style="text-align:justify;">{{ $profile->bio }}</p>
             </div>
-            <!-- Two columns -->
+            @endif
             <div class="grid grid-cols-2 gap-8">
                 <div class="space-y-5">
+                    @if($works->count())
                     <div>
                         <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Pengalaman Profesional</h3>
                         <div class="space-y-4">
+                            @foreach($works as $w)
                             <div>
-                                <p class="font-bold text-sm text-gray-900">Senior Process Engineer</p>
-                                <p class="text-xs text-gray-500 italic">PT Ecogreen Oleochemicals, Batam — 2021 s.d. Sekarang</p>
-                                <ul class="mt-1.5 text-xs text-gray-600 space-y-1 leading-relaxed"><li>– Optimasi proses distilasi fatty alcohol dengan peningkatan yield 12%</li><li>– Memimpin inisiatif lean manufacturing di area fractionation</li><li>– Audit internal ISO 9001, ISO 14001, dan OHSAS 18001</li></ul>
+                                <p class="font-bold text-sm text-gray-900">{{ $w->position }}</p>
+                                <p class="text-xs text-gray-500 italic">{{ $w->company_name }} — {{ $w->start_date->format('Y') }} s.d. {{ $w->is_current ? 'Sekarang' : ($w->end_date ? $w->end_date->format('Y') : '') }}</p>
+                                @if($w->description)<ul class="mt-1.5 text-xs text-gray-600 space-y-1 leading-relaxed"><li>– {{ $w->description }}</li></ul>@endif
                             </div>
-                            <div>
-                                <p class="font-bold text-sm text-gray-900">Junior Process Engineer</p>
-                                <p class="text-xs text-gray-500 italic">PT Musim Mas, Medan — 2019 s.d. 2021</p>
-                                <ul class="mt-1.5 text-xs text-gray-600 space-y-1 leading-relaxed"><li>– Monitoring dan analisis parameter proses produksi CPO</li><li>– Penyusunan laporan produksi bulanan dan analisis tren</li><li>– Koordinasi pemenuhan standar sertifikasi RSPO</li></ul>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
+                    @if($organizations->count())
                     <div>
-                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Publikasi & Karya Ilmiah</h3>
-                        <div class="text-xs text-gray-600 space-y-2 leading-relaxed">
-                            <p>Pratama, A.R. (2023). <em>"Sustainable Fatty Alcohol Production: Process Optimization Review."</em> Jurnal Teknik Kimia Indonesia, Vol. 12(2), pp. 45-58.</p>
-                            <p>Pratama, A.R., et al. (2019). <em>"Katalisis Nikel pada Hidrogenasi Minyak Sawit."</em> Prosiding Seminar Nasional Teknik Kimia ITS.</p>
+                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Organisasi</h3>
+                        <div class="space-y-3">
+                            @foreach($organizations as $org)
+                            <div>
+                                <p class="font-bold text-sm text-gray-900">{{ $org->position }}</p>
+                                <p class="text-xs text-gray-500 italic">{{ $org->organization_name }} — {{ $org->start_date->format('Y') }} s.d. {{ $org->end_date ? $org->end_date->format('Y') : 'Sekarang' }}</p>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
                 </div>
                 <div class="space-y-5">
+                    @if($educations->count())
                     <div>
-                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Education</h3>
-                        <div>
-                            <p class="font-bold text-sm text-gray-900">Sarjana Teknik Kimia (S.T.)</p>
-                            <p class="text-xs text-gray-500 italic">Institut Teknologi Sepuluh Nopember — 2015 s.d. 2019</p>
-                            <p class="text-xs text-gray-400 mt-1">Predikat Cum Laude • IPK 3.68 / 4.00</p>
-                            <p class="text-xs text-gray-500 mt-1">Skripsi: "Optimasi Proses Hidrogenasi Minyak Kelapa Sawit Menggunakan Katalis Nikel"</p>
+                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Pendidikan</h3>
+                        @foreach($educations as $edu)
+                        <div class="mb-3">
+                            <p class="font-bold text-sm text-gray-900">{{ $edu->degree }} — {{ $edu->major }}</p>
+                            <p class="text-xs text-gray-500 italic">{{ $edu->institution }} — {{ $edu->start_year }} s.d. {{ $edu->end_year }}</p>
+                            @if($edu->gpa)<p class="text-xs text-gray-400 mt-1">GPA: {{ $edu->gpa }} / 4.00</p>@endif
                         </div>
+                        @endforeach
                     </div>
+                    @endif
+                    @if($skills->whereNotIn('category',['language'])->count())
                     <div>
                         <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Kompetensi Teknis</h3>
-                        <div class="text-xs text-gray-600 space-y-1"><p>• Process Design & Simulation (Aspen Plus, HYSYS)</p><p>• Quality Management System (ISO 9001, 14001)</p><p>• Lean Manufacturing & Six Sigma</p><p>• Statistical Process Control (SPC)</p><p>• SAP ERP — Modul PP & QM</p><p>• Laboratorium: HPLC, GC, Titrasi</p></div>
+                        <div class="text-xs text-gray-600 space-y-1">
+                            @foreach($skills->whereNotIn('category',['language'])->take(6) as $skill)
+                            <p>• {{ $skill->skill_name }}@if($skill->level) ({{ ucfirst($skill->level) }})@endif</p>
+                            @endforeach
+                        </div>
                     </div>
+                    @endif
+                    @if($skills->whereNotNull('cert_name')->count())
                     <div>
                         <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Sertifikasi</h3>
-                        <div class="text-xs text-gray-600 space-y-1"><p>• Lean Six Sigma Green Belt — 2022</p><p>• Ahli K3 Umum — Kemnaker RI, 2021</p><p>• ISO 9001:2015 Internal Auditor — 2021</p><p>• RSPO Supply Chain Certification — 2020</p></div>
+                        <div class="text-xs text-gray-600 space-y-1">
+                            @foreach($skills->whereNotNull('cert_name') as $cert)
+                            <p>• {{ $cert->cert_name }}</p>
+                            @endforeach
+                        </div>
                     </div>
+                    @endif
+                    @if($skills->where('category','language')->count())
                     <div>
-                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Languages</h3>
-                        <div class="text-xs text-gray-600 space-y-1"><p>Bahasa Indonesia — Penutur Asli</p><p>English — Professional Working (TOEFL ITP: 563)</p></div>
+                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Bahasa</h3>
+                        <div class="text-xs text-gray-600 space-y-1">
+                            @foreach($skills->where('category','language') as $lang)
+                            <p>{{ $lang->skill_name }} — {{ ucfirst($lang->level) }}</p>
+                            @endforeach
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider border-b border-gray-300 pb-1 mb-3">Penghargaan</h3>
-                        <div class="text-xs text-gray-600 space-y-1"><p>• Best Improvement Project — Ecogreen, 2023</p><p>• Employee of The Quarter Q2 — Musim Mas, 2020</p></div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -293,14 +351,19 @@
             <!-- Top Banner -->
             <div class="bg-gradient-to-r from-slate-800 to-slate-900 px-8 py-6 border-b border-slate-700">
                 <div class="flex items-center gap-6">
+                    @if($profile && $profile->avatar_url)
+                    <img src="{{ Storage::url($profile->avatar_url) }}" class="w-20 h-20 rounded-xl object-cover border-2 border-amber-500 shrink-0">
+                    @else
                     <div class="w-20 h-20 bg-slate-700 rounded-xl flex items-center justify-center border-2 border-amber-500 shrink-0">
-                        <span class="text-2xl font-extrabold text-amber-400">AR</span>
+                        <span class="text-2xl font-extrabold text-amber-400">{{ $initials }}</span>
                     </div>
+                    @endif
                     <div>
-                        <h1 class="text-xl font-extrabold text-white tracking-wide">AHMAD RIZKY PRATAMA</h1>
-                        <p class="text-amber-400 font-semibold text-sm mt-0.5">PROCESS ENGINEER — OLEOCHEMICAL INDUSTRY</p>
+                        <h1 class="text-xl font-extrabold text-white tracking-wide">{{ strtoupper($user->name) }}</h1>
+                        @if($works->count())<p class="text-amber-400 font-semibold text-sm mt-0.5">{{ strtoupper($works->first()->position) }}</p>@endif
                         <div class="flex gap-4 mt-2 text-xs text-slate-400">
-                            <span>Batam, Indonesia</span><span>•</span><span>ahmad.rizky@email.com</span><span>•</span><span>+62 812 3456 7890</span>
+                            @if($profile && $profile->city)<span>{{ $profile->city }}</span><span>•</span>@endif
+                            <span>{{ $user->email }}</span>
                         </div>
                     </div>
                 </div>
@@ -309,74 +372,106 @@
             <div class="grid grid-cols-10 min-h-[500px]">
                 <!-- Main Content -->
                 <div class="col-span-7 p-8 space-y-6 border-r border-slate-800">
+                    @if($profile && $profile->bio)
                     <div>
                         <h3 class="text-amber-400 text-[10px] font-bold uppercase tracking-[3px] mb-2 flex items-center gap-2"><span class="w-6 h-0.5 bg-amber-500"></span>Profile</h3>
-                        <p class="text-sm text-slate-300 leading-relaxed">Engineer berpengalaman di industri oleokimia dengan spesialisasi dalam optimasi proses produksi fatty alcohol dan fatty acid. Menguasai penerapan lean manufacturing dan continuous improvement di lingkungan plant berskala besar.</p>
+                        <p class="text-sm text-slate-300 leading-relaxed">{{ $profile->bio }}</p>
                     </div>
+                    @endif
+                    @if($works->count())
                     <div>
                         <h3 class="text-amber-400 text-[10px] font-bold uppercase tracking-[3px] mb-4 flex items-center gap-2"><span class="w-6 h-0.5 bg-amber-500"></span>Experience</h3>
                         <div class="space-y-5">
-                            <div class="relative pl-5 border-l-2 border-amber-500/40">
-                                <div class="absolute -left-[5px] top-1 w-2 h-2 bg-amber-500 rounded-full"></div>
-                                <div class="flex justify-between items-start"><p class="font-bold text-sm text-white">Senior Process Engineer</p><span class="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded font-semibold">2021 — SEKARANG</span></div>
-                                <p class="text-xs text-slate-400 mt-0.5">PT Ecogreen Oleochemicals — Batam Plant</p>
-                                <ul class="mt-2 text-xs text-slate-300 space-y-1"><li>→ Peningkatan yield distilasi fatty alcohol sebesar 12%</li><li>→ Lead engineer untuk commissioning unit fractionation baru</li><li>→ Implementasi program lean manufacturing, waste turun 18%</li><li>→ Supervisi tim 15 operator produksi shift rotating</li></ul>
+                            @foreach($works as $i => $w)
+                            <div class="relative pl-5 border-l-2 {{ $i===0 ? 'border-amber-500/40' : 'border-slate-700' }}">
+                                <div class="absolute -left-[5px] top-1 w-2 h-2 {{ $i===0 ? 'bg-amber-500' : 'bg-slate-600' }} rounded-full"></div>
+                                <div class="flex justify-between items-start">
+                                    <p class="font-bold text-sm text-white">{{ $w->position }}</p>
+                                    <span class="text-[10px] {{ $i===0 ? 'text-amber-400 bg-amber-500/10' : 'text-slate-500' }} px-2 py-0.5 rounded font-semibold">
+                                        {{ $w->start_date->format('Y') }} — {{ $w->is_current ? 'SEKARANG' : ($w->end_date ? $w->end_date->format('Y') : '') }}
+                                    </span>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-0.5">{{ $w->company_name }}</p>
+                                @if($w->description)<ul class="mt-2 text-xs text-slate-300 space-y-1"><li>→ {{ $w->description }}</li></ul>@endif
                             </div>
-                            <div class="relative pl-5 border-l-2 border-slate-700">
-                                <div class="absolute -left-[5px] top-1 w-2 h-2 bg-slate-600 rounded-full"></div>
-                                <div class="flex justify-between items-start"><p class="font-bold text-sm text-white">Junior Process Engineer</p><span class="text-[10px] text-slate-500">2019 — 2021</span></div>
-                                <p class="text-xs text-slate-400 mt-0.5">PT Musim Mas — Medan Refinery</p>
-                                <ul class="mt-2 text-xs text-slate-300 space-y-1"><li>→ Monitoring proses refining dan fractionation CPO</li><li>→ Analisis data produksi untuk continuous improvement</li><li>→ Support audit sertifikasi RSPO dan ISCC</li></ul>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
+                    @if($educations->count())
                     <div>
                         <h3 class="text-amber-400 text-[10px] font-bold uppercase tracking-[3px] mb-2 flex items-center gap-2"><span class="w-6 h-0.5 bg-amber-500"></span>Education</h3>
-                        <div class="bg-slate-800 rounded-lg p-4">
-                            <p class="font-bold text-sm text-white">S1 Teknik Kimia — Institut Teknologi Sepuluh Nopember</p>
-                            <p class="text-xs text-slate-400 mt-1">2015 — 2019 • Cum Laude • IPK 3.68</p>
-                            <p class="text-xs text-slate-500 mt-1 italic">Fokus: Teknologi Proses Oleokimia & Katalis Heterogen</p>
+                        @foreach($educations as $edu)
+                        <div class="bg-slate-800 rounded-lg p-4 mb-2">
+                            <p class="font-bold text-sm text-white">{{ $edu->degree }} {{ $edu->major }} — {{ $edu->institution }}</p>
+                            <p class="text-xs text-slate-400 mt-1">{{ $edu->start_year }} — {{ $edu->end_year }}{{ $edu->gpa ? ' • GPA '.$edu->gpa : '' }}</p>
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
+                    @if($organizations->count())
+                    <div>
+                        <h3 class="text-amber-400 text-[10px] font-bold uppercase tracking-[3px] mb-2 flex items-center gap-2"><span class="w-6 h-0.5 bg-amber-500"></span>Organization</h3>
+                        <div class="space-y-3">
+                            @foreach($organizations as $org)
+                            <div class="relative pl-5 border-l-2 border-slate-700">
+                                <div class="absolute -left-[5px] top-1 w-2 h-2 bg-slate-600 rounded-full"></div>
+                                <p class="font-bold text-sm text-white">{{ $org->position }}</p>
+                                <p class="text-xs text-slate-400 mt-0.5">{{ $org->organization_name }}</p>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
                 </div>
                 <!-- Sidebar -->
                 <div class="col-span-3 bg-slate-800/50 p-6 space-y-5">
+                    @if($skills->whereNotIn('category',['language'])->count())
                     <div>
                         <h4 class="text-amber-400 text-[10px] font-bold uppercase tracking-[2px] mb-3">Keahlian Inti</h4>
                         <div class="space-y-2.5">
-                            <div><div class="flex justify-between mb-1"><p class="text-xs text-slate-300">Process Optimization</p><p class="text-[10px] text-amber-400">92%</p></div><div class="w-full bg-slate-700 rounded-full h-1.5"><div class="bg-amber-500 h-1.5 rounded-full" style="width:92%"></div></div></div>
-                            <div><div class="flex justify-between mb-1"><p class="text-xs text-slate-300">Chemical Analysis</p><p class="text-[10px] text-amber-400">88%</p></div><div class="w-full bg-slate-700 rounded-full h-1.5"><div class="bg-amber-500 h-1.5 rounded-full" style="width:88%"></div></div></div>
-                            <div><div class="flex justify-between mb-1"><p class="text-xs text-slate-300">ISO Quality System</p><p class="text-[10px] text-amber-400">85%</p></div><div class="w-full bg-slate-700 rounded-full h-1.5"><div class="bg-amber-500 h-1.5 rounded-full" style="width:85%"></div></div></div>
-                            <div><div class="flex justify-between mb-1"><p class="text-xs text-slate-300">Lean Manufacturing</p><p class="text-[10px] text-amber-400">82%</p></div><div class="w-full bg-slate-700 rounded-full h-1.5"><div class="bg-amber-500 h-1.5 rounded-full" style="width:82%"></div></div></div>
-                            <div><div class="flex justify-between mb-1"><p class="text-xs text-slate-300">SAP ERP (PP/QM)</p><p class="text-[10px] text-amber-400">78%</p></div><div class="w-full bg-slate-700 rounded-full h-1.5"><div class="bg-amber-500 h-1.5 rounded-full" style="width:78%"></div></div></div>
+                            @foreach($skills->whereNotIn('category',['language'])->take(5) as $skill)
+                            @php $pct = $skill->level==='expert' ? 92 : ($skill->level==='intermediate' ? 75 : 50); @endphp
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <p class="text-xs text-slate-300">{{ $skill->skill_name }}</p>
+                                    <p class="text-[10px] text-amber-400">{{ $pct }}%</p>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-1.5">
+                                    <div class="bg-amber-500 h-1.5 rounded-full" style="width:{{ $pct }}%"></div>
+                                </div>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
-                    <div>
-                        <h4 class="text-amber-400 text-[10px] font-bold uppercase tracking-[2px] mb-2">Tools & Software</h4>
-                        <div class="flex flex-wrap gap-1.5">
-                            <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Aspen Plus</span>
-                            <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded">HYSYS</span>
-                            <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded">AutoCAD</span>
-                            <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded">MATLAB</span>
-                            <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded">SAP</span>
-                            <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded">MS Office</span>
-                        </div>
-                    </div>
+                    @endif
+                    @if($skills->whereNotNull('cert_name')->count())
                     <div>
                         <h4 class="text-amber-400 text-[10px] font-bold uppercase tracking-[2px] mb-2">Sertifikasi</h4>
                         <div class="space-y-2 text-xs text-slate-300">
-                            <div class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">▸</span><span>Lean Six Sigma Green Belt (2022)</span></div>
-                            <div class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">▸</span><span>Ahli K3 Umum — Kemnaker RI (2021)</span></div>
-                            <div class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">▸</span><span>ISO 9001 Internal Auditor (2021)</span></div>
+                            @foreach($skills->whereNotNull('cert_name') as $cert)
+                            <div class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">▸</span><span>{{ $cert->cert_name }}</span></div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
+                    @if($skills->where('category','language')->count())
                     <div>
                         <h4 class="text-amber-400 text-[10px] font-bold uppercase tracking-[2px] mb-2">Languages</h4>
                         <div class="space-y-1.5 text-xs text-slate-300">
-                            <div class="flex justify-between"><span>Indonesia</span><span class="text-amber-400 tracking-wider">●●●●●</span></div>
-                            <div class="flex justify-between"><span>English</span><span><span class="text-amber-400 tracking-wider">●●●●</span><span class="text-slate-600 tracking-wider">●</span></span></div>
+                            @foreach($skills->where('category','language') as $lang)
+                            @php
+                                $dots  = $lang->level==='expert' ? 5 : ($lang->level==='intermediate' ? 4 : 3);
+                                $empty = 5 - $dots;
+                            @endphp
+                            <div class="flex justify-between">
+                                <span>{{ $lang->skill_name }}</span>
+                                <span><span class="text-amber-400 tracking-wider">{{ str_repeat('●',$dots) }}</span><span class="text-slate-600 tracking-wider">{{ str_repeat('●',$empty) }}</span></span>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -414,11 +509,12 @@
 </div>
 
 <!-- Fixed Download Button -->
-<div class="fixed bottom-0 left-60 bg-white border-t border-gray-200 p-4 z-40" style="width: calc(100% - 15rem);">
-    <button id="btn-download" class="flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg text-sm transition-colors">
+<div class="fixed bottom-0 left-60 bg-white border-t border-gray-200 p-4 z-40 flex items-center gap-3" style="width: calc(100% - 15rem);">
+    <button id="btn-download" class="flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-        Download PDF
+        <span id="btn-download-text">Download PDF</span>
     </button>
+    <p id="download-hint" class="text-xs text-gray-400 italic">Pilih template terlebih dahulu untuk mengaktifkan download.</p>
 </div>
 
 <!-- Spacer for fixed button -->
@@ -427,53 +523,12 @@
 @endsection
 
 @section('scripts')
+{{-- Data CV dari controller (sudah disiapkan sebagai array bersih) --}}
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-
-    const cards = document.querySelectorAll('.template-card');
-    const previewSection = document.getElementById('cv-preview-section');
-    const previewName = document.getElementById('preview-template-name');
-
-    const templateNames = {
-        modern: 'Modern Executive 2024',
-        academic: 'Academic Specialist',
-        creative: 'Creative Industrial'
-    };
-
-    cards.forEach(card => {
-        // Click anywhere on card OR on button
-        const btn = card.querySelector('.select-btn');
-        if (btn) {
-            btn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                selectTemplate(card);
-            });
-        }
-        card.addEventListener('click', function () {
-            selectTemplate(this);
-        });
-    });
-
-    function selectTemplate(card) {
-        cards.forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-
-        const tmpl = card.dataset.template;
-        previewName.textContent = templateNames[tmpl] || tmpl;
-
-        // Hide all preview panels, show selected
-        document.querySelectorAll('.cv-preview-panel').forEach(p => p.classList.add('hidden'));
-        const preview = document.getElementById('tpl-' + tmpl);
-        if (preview) preview.classList.remove('hidden');
-
-        previewSection.classList.remove('hidden');
-        previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    // Download PDF (demo)
-    document.getElementById('btn-download').addEventListener('click', function () {
-        alert('CV downloaded successfully! (demo — will connect to dompdf)');
-    });
-});
+window.cvData = @json($cvJson);
 </script>
+
+{{-- jsPDF (programmatic, tanpa screenshot DOM = cepat) --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="{{ asset('js/pelamar/cv-download.js') }}"></script>
 @endsection

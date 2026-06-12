@@ -4,14 +4,17 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UsersSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     * Data pengguna awal: 2 HR dan 13 pelamar (termasuk contoh data dummy).
+     * Data pengguna awal: 3 HR dan 14 pelamar (termasuk contoh data dummy).
      * Password semua user sudah di-hash dengan bcrypt.
-     * HR Login: hr@ecogreen.com / password: password
+     * HR Login  : hr@ecogreen.com / password: password
+     * HR Nouzen : shinnouzen@gmail.com / password: 12345678
+     * Applicant  : nouzenshin@gmail.com / password: 12345678
      */
     public function run(): void
     {
@@ -210,6 +213,34 @@ class UsersSeeder extends Seeder
                 'remember_token'    => null,
                 'created_at'        => '2026-03-25 18:18:13',
                 'updated_at'        => '2026-03-25 18:18:13',
+            ],
+            // ─── Akun HR Nouzen (dibuat via seeder untuk keamanan, tanpa register) ───
+            [
+                'id'                => 16,
+                'name'              => 'Nouzen',
+                'email'             => 'shinnouzen@gmail.com',
+                'password'          => Hash::make('12345678'),
+                'role'              => 'hr',
+                'phone'             => null,
+                'is_active'         => 1,
+                'email_verified_at' => now(),
+                'remember_token'    => null,
+                'created_at'        => now(),
+                'updated_at'        => now(),
+            ],
+            // ─── Akun Pelamar Shin (dibuat via seeder untuk keamanan, tanpa register) ───
+            [
+                'id'                => 17,
+                'name'              => 'Shin',
+                'email'             => 'nouzenshin@gmail.com',
+                'password'          => Hash::make('12345678'),
+                'role'              => 'applicant',
+                'phone'             => null,
+                'is_active'         => 1,
+                'email_verified_at' => now(),
+                'remember_token'    => null,
+                'created_at'        => now(),
+                'updated_at'        => now(),
             ],
         ]);
     }

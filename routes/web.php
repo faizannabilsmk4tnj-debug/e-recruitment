@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\ApplicantCvController;
 use App\Http\Controllers\ApplicantEducationController;
 use App\Http\Controllers\ApplicantLampiranController;
 use App\Http\Controllers\ApplicantOrganizationExperienceController;
@@ -86,7 +87,7 @@ Route::middleware('role:applicant')->group(function () {
     Route::post('/pelamar/lampiran/portofolio',              [ApplicantLampiranController::class, 'portofolioStore'])->name('pelamar.portofolio.store');
     Route::patch('/pelamar/lampiran/portofolio/{portofolio}',[ApplicantLampiranController::class, 'portofolioUpdate'])->name('pelamar.portofolio.update');
     Route::delete('/pelamar/lampiran/portofolio/{portofolio}',[ApplicantLampiranController::class, 'portofolioDestroy'])->name('pelamar.portofolio.destroy');
-    Route::get('/pelamar/cv',                  fn() => view('pelamar.cv'));
+    Route::get('/pelamar/cv',                  [ApplicantCvController::class, 'index'])->name('pelamar.cv');
     Route::get('/pelamar/status-lamaran',      fn() => view('pelamar.status-lamaran'));
     Route::get('/pelamar/lowongan',            fn() => view('lowongan', ['layout' => 'layouts.pelamar-public']));
     Route::get('/pelamar/lowongan/{id}',       fn($id) => view('detail-lowongan', ['layout' => 'layouts.pelamar-public']));
