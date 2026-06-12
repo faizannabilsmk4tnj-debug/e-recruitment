@@ -5,7 +5,7 @@
 @section('css')
 <style>
     .hero-about {
-        background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), linear-gradient(135deg, #14532d 0%, #166534 30%, #15803d 60%, #22c55e 100%);
+        background: #15803d;
         min-height: 420px;
     }
     .hero-about::before {
@@ -15,7 +15,7 @@
         background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
     .about-image {
-        background: linear-gradient(135deg, #14532d, #166534);
+        background: linear-gradient(135deg, #15803d, #166534);
         position: relative;
         overflow: hidden;
     }
@@ -117,15 +117,15 @@
             <h3 class="text-2xl font-bold text-gray-900 mb-4">Our Mission</h3>
             <div class="space-y-4">
                 <div class="flex items-start gap-3">
-                    <div class="w-7 h-7 bg-green-800 rounded-lg flex items-center justify-center shrink-0 mt-0.5"><span class="text-white text-xs font-bold">1</span></div>
+                    <div class="w-7 h-7 bg-[#15803d] rounded-lg flex items-center justify-center shrink-0 mt-0.5"><span class="text-white text-xs font-bold">1</span></div>
                     <p class="text-sm text-gray-600 leading-relaxed">To produce and supply high quality products and exceed client's need</p>
                 </div>
                 <div class="flex items-start gap-3">
-                    <div class="w-7 h-7 bg-green-800 rounded-lg flex items-center justify-center shrink-0 mt-0.5"><span class="text-white text-xs font-bold">2</span></div>
+                    <div class="w-7 h-7 bg-[#15803d] rounded-lg flex items-center justify-center shrink-0 mt-0.5"><span class="text-white text-xs font-bold">2</span></div>
                     <p class="text-sm text-gray-600 leading-relaxed">To develop efficiency and attain sustainable growth for profitability</p>
                 </div>
                 <div class="flex items-start gap-3">
-                    <div class="w-7 h-7 bg-green-800 rounded-lg flex items-center justify-center shrink-0 mt-0.5"><span class="text-white text-xs font-bold">3</span></div>
+                    <div class="w-7 h-7 bg-[#15803d] rounded-lg flex items-center justify-center shrink-0 mt-0.5"><span class="text-white text-xs font-bold">3</span></div>
                     <p class="text-sm text-gray-600 leading-relaxed">To develop human resources competency through continual improvement</p>
                 </div>
             </div>
@@ -174,23 +174,23 @@
 
     <div class="grid grid-cols-4 gap-8 max-w-4xl mx-auto">
         <div class="text-center">
-            <div class="w-12 h-12 bg-green-800 rounded-xl flex items-center justify-center mx-auto mb-4"><span class="text-white font-bold">1</span></div>
+            <div class="w-12 h-12 bg-[#15803d] rounded-xl flex items-center justify-center mx-auto mb-4"><span class="text-white font-bold">1</span></div>
             <h3 class="text-xl font-extrabold text-gray-900 mb-2">1990</h3>
             <p class="text-xs text-gray-500 leading-relaxed">Founding of PT Ecogreen Oleochemicals with initial focus on fatty alcohols.</p>
         </div>
         <div class="text-center">
-            <div class="w-12 h-12 bg-green-800 rounded-xl flex items-center justify-center mx-auto mb-4"><span class="text-white font-bold">2</span></div>
+            <div class="w-12 h-12 bg-[#15803d] rounded-xl flex items-center justify-center mx-auto mb-4"><span class="text-white font-bold">2</span></div>
             <h3 class="text-xl font-extrabold text-gray-900 mb-2">2005</h3>
             <p class="text-xs text-gray-500 leading-relaxed">Major expansion of refining capacities and global distribution offices established.</p>
         </div>
         <div class="text-center">
-            <div class="w-12 h-12 bg-green-800 rounded-xl flex items-center justify-center mx-auto mb-4"><span class="text-white font-bold">3</span></div>
+            <div class="w-12 h-12 bg-[#15803d] rounded-xl flex items-center justify-center mx-auto mb-4"><span class="text-white font-bold">3</span></div>
             <h3 class="text-xl font-extrabold text-gray-900 mb-2">2015</h3>
             <p class="text-xs text-gray-500 leading-relaxed">Achievement of world-class sustainability certifications and carbon neutral goals.</p>
         </div>
         <div class="text-center">
-            <div class="w-12 h-12 bg-green-800 rounded-xl flex items-center justify-center mx-auto mb-4"><span class="text-white font-bold">4</span></div>
-            <h3 class="text-xl font-extrabold text-green-800 mb-2">Present</h3>
+            <div class="w-12 h-12 bg-[#15803d] rounded-xl flex items-center justify-center mx-auto mb-4"><span class="text-white font-bold">4</span></div>
+            <h3 class="text-xl font-extrabold text-[#15803d] mb-2">Present</h3>
             <p class="text-xs text-gray-500 leading-relaxed">Global leader in oleochemical innovation with a net-zero future vision.</p>
         </div>
     </div>
@@ -206,7 +206,7 @@
         <h2 class="text-2xl font-extrabold text-gray-900 mb-3 relative z-10">Join our sustainable mission</h2>
         <p class="text-sm text-gray-500 mb-8 relative z-10">Interested in working with us or learning more about our solutions? Connect with our global team today.</p>
         <div class="flex gap-3 justify-center relative z-10">
-            <button id="btn-hubungi-hrd" class="bg-green-800 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg text-sm transition-colors">Hubungi HRD</button>
+            <button id="btn-hubungi-hrd" class="bg-[#15803d] hover:bg-[#166534] text-white font-semibold px-6 py-3 rounded-lg text-sm transition-colors">Hubungi HRD</button>
             <a href="/lowongan" class="border border-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-lg text-sm hover:bg-gray-100 transition-colors">Career Opportunities</a>
         </div>
     </div>
