@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(OrganizationExperience::class);
     }
+
+    public function applicantCvs(): HasMany
+    {
+        return $this->hasMany(ApplicantCv::class);
+    }
 }
