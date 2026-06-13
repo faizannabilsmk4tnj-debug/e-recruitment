@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Template Editor</title>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>{{ $template ? 'Edit: '.$template->name : 'Template Editor' }}</title>
 @vite(['resources/css/app.css','resources/js/app.js'])
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <style>
@@ -120,9 +121,37 @@ function selBlk(el){document.querySelectorAll('.blk').forEach(function(b){b.clas
 function mvUp(id){var el=document.getElementById(id),p=el.previousElementSibling;if(p&&p.classList.contains('blk')){el.parentNode.insertBefore(el,p);}}
 function mvDn(id){var el=document.getElementById(id),n=el.nextElementSibling;if(n&&n.classList.contains('blk')){el.parentNode.insertBefore(n,el);}}
 function delBlk(id){if(confirm('Hapus seksi ini?')){document.getElementById(id).remove();}}
-function saveDraft(){toast('Draft tersimpan!','#0f3c20')}
-function doPreview(){var w=window.open('','_blank');var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Preview CV</title><style>body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:center;padding:24px;font-family:\'Segoe UI\',sans-serif}.page{width:595px;background:#fff;min-height:842px;overflow:visible;box-shadow:0 2px 16px rgba(0,0,0,.15);margin-bottom:24px}[contenteditable]{outline:none}.bh{display:none}.blk{border:none!important}</style></head><body>'+document.getElementById('canvas').innerHTML+'</body></html>';w.document.write(html);w.document.close()}
-function doPublish(){toast('Template dipublikasikan!','#166534');setTimeout(function(){window.location.href='/hr/template-cv'},1500)}
+function saveDraft(){
+  var name=document.getElementById('tname').textContent.trim()||'Template Baru';
+  var html=document.getElementById('canvas').innerHTML;
+  if(!TEMPLATE_ID){toast('Simpan gagal: buka template melalui halaman daftar template.','#dc2626');return;}
+  var fd=new FormData();
+  fd.append('_token',document.querySelector('meta[name="csrf-token"]').content);
+  fd.append('_method','PUT');
+  fd.append('name',name);
+  fd.append('content_html',html);
+  fd.append('description',TEMPLATE_DESCRIPTION);
+  fd.append('status',TEMPLATE_STATUS);
+  fetch(UPDATE_URL,{method:'POST',body:fd})
+    .then(function(r){toast('Tersimpan!','#0f3c20');})
+    .catch(function(){toast('Gagal menyimpan!','#dc2626');});
+}
+function doPreview(){var w=window.open('','_blank');var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Preview CV</title><style>body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:center;padding:24px;font-family:\'Segoe UI\',sans-serif}.page{width:595px;background:#fff;min-height:842px;overflow:visible;box-shadow:0 2px 16px rgba(0,0,0,.15);margin-bottom:24px}[contenteditable]{outline:none}.bh{display:none}.blk{border:none!important}</style></head><body>'+document.getElementById('canvas').innerHTML+'</body></html>';w.document.write(html);w.document.close();}
+function doPublish(){
+  var name=document.getElementById('tname').textContent.trim()||'Template Baru';
+  var html=document.getElementById('canvas').innerHTML;
+  if(!TEMPLATE_ID){toast('Publish gagal: buka template melalui halaman daftar template.','#dc2626');return;}
+  var fd=new FormData();
+  fd.append('_token',document.querySelector('meta[name="csrf-token"]').content);
+  fd.append('_method','PUT');
+  fd.append('name',name);
+  fd.append('content_html',html);
+  fd.append('description',TEMPLATE_DESCRIPTION);
+  fd.append('status','published');
+  fetch(UPDATE_URL,{method:'POST',body:fd})
+    .then(function(){toast('Dipublikasikan!','#166534');setTimeout(function(){window.location.href='/hr/template-cv';},1200);})
+    .catch(function(){toast('Gagal publish!','#dc2626');});
+}
 function toast(m,bg){var t=document.createElement('div');t.style.cssText='position:fixed;bottom:20px;right:20px;z-index:999;background:'+bg+';color:#fff;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.2)';t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2200)}
 var iHTML='';
 function doImport(inp){var f=inp.files[0];if(!f)return;var ext=f.name.split('.').pop().toLowerCase();if(ext==='docx'){var rd=new FileReader();rd.onload=function(e){mammoth.convertToHtml({arrayBuffer:e.target.result}).then(function(r){iHTML=cleanHTML(r.value);applyImport()}).catch(function(e){toast('Gagal: '+e.message,'#dc2626')})}; rd.readAsArrayBuffer(f)}else if(ext==='html'||ext==='htm'){var rd=new FileReader();rd.onload=function(e){var doc=new DOMParser().parseFromString(e.target.result,'text/html');iHTML=cleanHTML(doc.body?doc.body.innerHTML:e.target.result);applyImport()};rd.readAsText(f)}else{toast('Gunakan .docx atau .html','#dc2626')}inp.value=''}
@@ -163,8 +192,24 @@ function applyImport(){
   iHTML='';
 }
 
-var p=new URLSearchParams(location.search);if(p.get('name'))document.getElementById('tname').textContent=decodeURIComponent(p.get('name'));
-['header','contact','summary','exp','edu','skills'].forEach(addBlk);
+// ── Data template dari Laravel (diinjeksi oleh controller) ──
+var TEMPLATE_ID          = {{ $template ? $template->id : 'null' }};
+var TEMPLATE_STATUS      = @json($template ? $template->status : 'draft');
+var TEMPLATE_DESCRIPTION = @json($template ? ($template->description ?? '') : '');
+var TEMPLATE_HTML        = @json($template ? ($template->content_html ?? '') : '');
+var UPDATE_URL           = '{{ $template ? route('hr.template-cv.update', $template) : '' }}';
+
+// Tampilkan nama template
+document.getElementById('tname').textContent =
+  {{ $template ? "'".addslashes($template->name)."'" : "(new URLSearchParams(location.search).get('name') ? decodeURIComponent(new URLSearchParams(location.search).get('name')) : 'Template Baru')" }};
+
+// Load konten tersimpan dari DB, atau pakai blok default jika kosong
+if(TEMPLATE_HTML && TEMPLATE_HTML.trim()!==''){
+  document.getElementById('canvas').innerHTML = TEMPLATE_HTML;
+  syncPages();
+}else{
+  ['header','contact','summary','exp','edu','skills'].forEach(addBlk);
+}
 save();
 </script>
 </body>
