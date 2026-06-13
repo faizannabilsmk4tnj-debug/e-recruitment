@@ -32,17 +32,6 @@
         <h1 class="text-2xl font-bold text-gray-900">My CV</h1>
         <p class="text-gray-500 mt-1 text-sm">Pilih template, lalu preview CV Anda dengan data profil terkini.</p>
     </div>
-    <div class="flex gap-3">
-        <button id="btn-print" onclick="printCv()"
-            class="hidden items-center gap-2 px-4 py-2.5 bg-green-800 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 6 2 18 2 18 9"/>
-                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                <rect width="12" height="8" x="6" y="14"/>
-            </svg>
-            Download / Print PDF
-        </button>
-    </div>
 </div>
 
 {{-- Template Cards dari DB --}}
@@ -114,32 +103,59 @@
             Preview CV —
             <span id="preview-template-name" class="text-green-800">{{ optional($templates->first())->name }}</span>
         </h2>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
             <span id="preview-loading-badge" class="hidden text-xs text-gray-400 italic animate-pulse">⏳ Memuat data CV...</span>
+            
+            <!-- Download Button -->
+            <button id="btn-download" onclick="downloadCvPdf()"
+                class="hidden items-center gap-1.5 px-3 py-1.5 bg-green-800 hover:bg-green-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Download PDF
+            </button>
+            
+            <!-- Print Button -->
+            <button id="btn-print" onclick="printCv()"
+                class="hidden items-center gap-1.5 px-3 py-1.5 border border-green-800 text-green-800 hover:bg-green-50 rounded-lg text-xs font-semibold shadow-sm transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 6 2 18 2 18 9"/>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                    <rect width="12" height="8" x="6" y="14"/>
+                </svg>
+                Print CV
+            </button>
+
+            <span class="text-gray-300">|</span>
+
             <button onclick="openCvModal()"
-                    class="text-sm text-green-700 hover:text-green-900 font-semibold flex items-center gap-1 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                    class="text-xs text-green-700 hover:text-green-900 font-semibold flex items-center gap-1 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3H5a2 2 0 0 0-2-2v-3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
                 </svg>
                 Full Screen
             </button>
             <span class="text-gray-300">|</span>
             <button onclick="scrollToTemplates()"
-                    class="text-sm text-green-700 hover:text-green-900 font-semibold flex items-center gap-1 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    class="text-xs text-green-700 hover:text-green-900 font-semibold flex items-center gap-1 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
                 </svg>
-                Pilih Ulang Template
+                Pilih Ulang
             </button>
             <span class="text-gray-300">|</span>
             <button onclick="document.getElementById('cv-preview-section').classList.add('hidden');
                             document.getElementById('btn-print').classList.add('hidden');
-                            document.getElementById('btn-print').classList.remove('flex')"
-                    class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            document.getElementById('btn-print').classList.remove('flex');
+                            document.getElementById('btn-download').classList.add('hidden');
+                            document.getElementById('btn-download').classList.remove('flex')"
+                    class="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                 </svg>
-                Tutup Preview
+                Tutup
             </button>
         </div>
     </div>
@@ -147,6 +163,8 @@
     <div class="max-w-[620px] mx-auto animate-preview">
         <iframe id="cv-preview-frame" title="Preview CV"></iframe>
     </div>
+
+
 
     <div class="max-w-3xl mx-auto mt-4 bg-amber-50 border border-amber-200 rounded-lg px-5 py-3 flex items-start gap-3">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -170,16 +188,16 @@
 
         {{-- Profil --}}
         <a href="{{ route('pelamar.profil.edit') }}" class="group flex flex-col items-center p-4 rounded-xl border transition-all
-            {{ $profile && $profile->bio ? 'border-green-200 bg-green-50' : 'border-gray-200 hover:border-green-300' }}">
+            {{ $profile ? 'border-green-200 bg-green-50' : 'border-gray-200 hover:border-green-300' }}">
             <div class="w-10 h-10 rounded-full flex items-center justify-center mb-2
-                {{ $profile && $profile->bio ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
+                {{ $profile ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                 </svg>
             </div>
-            <p class="text-xs font-semibold {{ $profile && $profile->bio ? 'text-green-700' : 'text-gray-500' }}">Profil</p>
-            <p class="text-[10px] {{ $profile && $profile->bio ? 'text-green-500' : 'text-gray-400' }} mt-0.5">
-                {{ $profile && $profile->bio ? '✓ Lengkap' : 'Belum diisi' }}
+            <p class="text-xs font-semibold {{ $profile ? 'text-green-700' : 'text-gray-500' }}">Profil</p>
+            <p class="text-[10px] {{ $profile ? 'text-green-500' : 'text-gray-400' }} mt-0.5">
+                {{ $profile ? '✓ Lengkap' : 'Belum diisi' }}
             </p>
         </a>
 
@@ -204,7 +222,7 @@
             <div class="w-10 h-10 rounded-full flex items-center justify-center mb-2
                 {{ $educations->count() ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
                 </svg>
             </div>
             <p class="text-xs font-semibold {{ $educations->count() ? 'text-green-700' : 'text-gray-500' }}">Pendidikan</p>
@@ -213,18 +231,25 @@
             </p>
         </a>
 
-        {{-- Keahlian --}}
+        {{-- Lampiran & Keahlian --}}
+        @php
+            $hasAttachment = $skills->count() > 0 || $portos->count() > 0;
+        @endphp
         <a href="{{ route('pelamar.lampiran') }}" class="group flex flex-col items-center p-4 rounded-xl border transition-all
-            {{ $skills->count() ? 'border-green-200 bg-green-50' : 'border-gray-200 hover:border-green-300' }}">
+            {{ $hasAttachment ? 'border-green-200 bg-green-50' : 'border-gray-200 hover:border-green-300' }}">
             <div class="w-10 h-10 rounded-full flex items-center justify-center mb-2
-                {{ $skills->count() ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
+                {{ $hasAttachment ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/>
                 </svg>
             </div>
-            <p class="text-xs font-semibold {{ $skills->count() ? 'text-green-700' : 'text-gray-500' }}">Keahlian</p>
-            <p class="text-[10px] {{ $skills->count() ? 'text-green-500' : 'text-gray-400' }} mt-0.5">
-                {{ $skills->count() ? $skills->count().' keahlian' : 'Belum diisi' }}
+            <p class="text-xs font-semibold {{ $hasAttachment ? 'text-green-700' : 'text-gray-500' }}">Lampiran</p>
+            <p class="text-[10px] {{ $hasAttachment ? 'text-green-500' : 'text-gray-400' }} mt-0.5">
+                @if($hasAttachment)
+                    ✓ Lengkap ({{ $skills->count() }} skill, {{ $portos->count() }} porto)
+                @else
+                    Belum diisi
+                @endif
             </p>
         </a>
 
@@ -240,13 +265,23 @@
                 Full Screen Preview — <span id="modal-template-name" class="text-green-800"></span>
             </h3>
             <div class="flex items-center gap-3">
-                <button onclick="printCvFromModal()" class="flex items-center gap-1.5 px-4 py-2 bg-green-800 hover:bg-green-700 text-white rounded-lg text-xs font-semibold transition-colors">
+                <!-- Download Button -->
+                <button onclick="downloadCvPdfFromModal()" class="flex items-center gap-1.5 px-3 py-1.5 bg-green-800 hover:bg-green-700 text-white rounded-lg text-xs font-semibold transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download PDF
+                </button>
+                <!-- Print Button -->
+                <button onclick="printCvFromModal()" class="flex items-center gap-1.5 px-3 py-1.5 border border-green-800 text-green-800 hover:bg-green-50 rounded-lg text-xs font-semibold transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 6 2 18 2 18 9"/>
                         <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
                         <rect width="12" height="8" x="6" y="14"/>
                     </svg>
-                    Print / PDF
+                    Print CV
                 </button>
                 <button onclick="closeCvModal()" class="text-gray-400 hover:text-gray-600 transition-colors p-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -266,7 +301,11 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
+// Global variable to store fetched CV HTML
+window.currentCvHtml = '';
+
 function selectTemplate(card) {
     // Update selected state
     document.querySelectorAll('.template-card').forEach(function(c) {
@@ -304,13 +343,23 @@ function selectTemplate(card) {
     fetch(url, { credentials: 'same-origin' })
         .then(function(r) { return r.text(); })
         .then(function(html) {
+            window.currentCvHtml = html; // Save html for PDF downloading
             frame.srcdoc = html;
             frame.style.opacity = '1';
             badge.classList.add('hidden');
+            
             // Show print button
-            var btn = document.getElementById('btn-print');
-            btn.classList.remove('hidden');
-            btn.classList.add('flex');
+            var btnPrint = document.getElementById('btn-print');
+            if (btnPrint) {
+                btnPrint.classList.remove('hidden');
+                btnPrint.classList.add('flex');
+            }
+            // Show download button
+            var btnDownload = document.getElementById('btn-download');
+            if (btnDownload) {
+                btnDownload.classList.remove('hidden');
+                btnDownload.classList.add('flex');
+            }
         })
         .catch(function(err) {
             badge.textContent = 'Gagal memuat CV. Coba refresh halaman.';
@@ -326,6 +375,47 @@ function printCv() {
     }
     frame.contentWindow.focus();
     frame.contentWindow.print();
+}
+
+function downloadCvPdf() {
+    if (!window.currentCvHtml) {
+        alert('Preview CV belum tersedia. Pilih template terlebih dahulu.');
+        return;
+    }
+    
+    // Create temporary off-screen container in parent document to bypass iframe origin restrictions
+    var tempDiv = document.createElement('div');
+    tempDiv.style.position = 'absolute';
+    tempDiv.style.left = '-9999px';
+    tempDiv.style.top = '-9999px';
+    tempDiv.style.width = '595px'; // Standard A4 width
+    tempDiv.innerHTML = window.currentCvHtml;
+    document.body.appendChild(tempDiv);
+
+    var element = tempDiv.querySelector('.page');
+    if (!element) {
+        alert('Gagal mendownload PDF. Elemen template (.page) tidak ditemukan.');
+        document.body.removeChild(tempDiv);
+        return;
+    }
+
+    var templateName = document.getElementById('preview-template-name').textContent.trim().replace(/\s+/g, '_');
+    var fileName = 'CV_' + '{{ str_replace(" ", "_", $user->name) }}' + '_' + templateName + '.pdf';
+
+    var opt = {
+        margin:       0,
+        filename:     fileName,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2.5, useCORS: true, letterRendering: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save().then(function() {
+        document.body.removeChild(tempDiv);
+    }).catch(function(err) {
+        console.error(err);
+        document.body.removeChild(tempDiv);
+    });
 }
 
 function scrollToTemplates() {
@@ -353,6 +443,44 @@ function printCvFromModal() {
     if (!frame || !frame.contentWindow) return;
     frame.contentWindow.focus();
     frame.contentWindow.print();
+}
+
+function downloadCvPdfFromModal() {
+    if (!window.currentCvHtml) return;
+    
+    // Create temporary off-screen container in parent document to bypass iframe origin restrictions
+    var tempDiv = document.createElement('div');
+    tempDiv.style.position = 'absolute';
+    tempDiv.style.left = '-9999px';
+    tempDiv.style.top = '-9999px';
+    tempDiv.style.width = '595px'; // Standard A4 width
+    tempDiv.innerHTML = window.currentCvHtml;
+    document.body.appendChild(tempDiv);
+
+    var element = tempDiv.querySelector('.page');
+    if (!element) {
+        alert('Gagal mendownload PDF. Elemen template (.page) tidak ditemukan.');
+        document.body.removeChild(tempDiv);
+        return;
+    }
+
+    var templateName = document.getElementById('modal-template-name').textContent.trim().replace(/\s+/g, '_');
+    var fileName = 'CV_' + '{{ str_replace(" ", "_", $user->name) }}' + '_' + templateName + '.pdf';
+
+    var opt = {
+        margin:       0,
+        filename:     fileName,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2.5, useCORS: true, letterRendering: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save().then(function() {
+        document.body.removeChild(tempDiv);
+    }).catch(function(err) {
+        console.error(err);
+        document.body.removeChild(tempDiv);
+    });
 }
 
 // Auto-load template pertama saat halaman dibuka

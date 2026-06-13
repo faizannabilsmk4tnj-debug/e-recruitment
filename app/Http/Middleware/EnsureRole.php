@@ -25,12 +25,12 @@ class EnsureRole
 
         // Sudah login tapi role-nya salah
         if (Auth::user()->role !== $role) {
-            // HR yang nyasar ke halaman pelamar → arahkan ke HR dashboard
+            // Arahkan user ke dashboard yang sesuai dengan role-nya sendiri
             if (Auth::user()->role === 'hr') {
                 return redirect('/hr/dashboard');
             }
-            // Pelamar yang nyasar ke halaman HR → arahkan ke HR login
-            return redirect('/hr/login');
+            // Pelamar yang nyasar ke halaman HR → kembali ke dashboard pelamar
+            return redirect('/pelamar/dashboard');
         }
 
         return $next($request);
