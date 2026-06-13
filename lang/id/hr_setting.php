@@ -40,7 +40,7 @@ return [
         'current_password' => 'Password Saat Ini',
         'new_password' => 'Password Baru',
         'confirm_password' => 'Konfirmasi Password Baru',
-        'password_help' => 'Minimal 8 karakter, kombinasi huruf dan angka.',
+        'password_help' => 'Minimal 8 karakter.',
         'update_password' => 'Perbarui Password',
         'active_sessions' => 'Sesi Aktif',
         'logout_all' => 'Keluar dari Semua Perangkat',

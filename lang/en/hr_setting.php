@@ -40,7 +40,7 @@ return [
         'current_password' => 'Current Password',
         'new_password' => 'New Password',
         'confirm_password' => 'Confirm New Password',
-        'password_help' => 'Min. 8 characters, combination of letters and numbers.',
+        'password_help' => 'Minimum 8 characters.',
         'update_password' => 'Update Password',
         'active_sessions' => 'Active Sessions',
         'logout_all' => 'Logout All Devices',

@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (bar) bar.className = 'h-1 flex-1 rounded ' + (i <= score ? colors[score] : 'bg-gray-200');
             }
             const lbl = document.getElementById('strength-label');
-            if (lbl) lbl.textContent = val.length ? 'Kekuatan: ' + labels[score] : 'Minimal 8 karakter, kombinasi huruf dan angka.';
+            if (lbl) lbl.textContent = val.length ? 'Kekuatan: ' + labels[score] : 'Minimal 8 karakter.';
         });
     }
 
@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (bar) bar.className = 'h-1 flex-1 rounded bg-gray-200';
                     }
                     const lbl = document.getElementById('strength-label');
-                    if (lbl) lbl.textContent = 'Minimal 8 karakter, kombinasi huruf dan angka.';
+                    if (lbl) lbl.textContent = 'Minimal 8 karakter.';
                     return res;
                 });
 
