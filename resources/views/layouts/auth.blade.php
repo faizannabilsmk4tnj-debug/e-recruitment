@@ -65,13 +65,20 @@
             </a>
         </div>
         <div class="flex items-center gap-3">
-            <!-- Help Icon -->
-            <a href="#" class="text-white hover:text-green-200 transition-colors">
+            <!-- Help Icon → HR Login -->
+            <a href="/hr/login"
+               title="Masuk sebagai HR Staff"
+               class="text-white hover:text-green-200 transition-colors relative group">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"/>
                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
                     <path d="M12 17h.01"/>
                 </svg>
+                {{-- Tooltip --}}
+                <span class="absolute right-0 top-8 bg-gray-900 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg whitespace-nowrap
+                             opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 shadow-lg">
+                    Login sebagai HR
+                </span>
             </a>
             @yield('nav-right')
         </div>
