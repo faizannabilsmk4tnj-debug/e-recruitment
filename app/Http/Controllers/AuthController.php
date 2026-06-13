@@ -131,12 +131,11 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('web')->logout();          // Clear auth dari session + hapus remember cookie
+        $request->session()->invalidate();     // Hancurkan session lama, buat session ID baru
+        $request->session()->regenerateToken(); // CSRF token baru
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/login');
+        return redirect('/login?loggedout=1');
     }
 
     // =========================================================
