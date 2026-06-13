@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnLogin    = document.getElementById('btn-login');
     const emailInput  = document.getElementById('hr-email');
     const passInput   = document.getElementById('hr-password');
+    const rememberChk = document.getElementById('hr-remember');
     const alertEl     = document.getElementById('alert-error');
     const alertText   = document.getElementById('alert-error-text');
     const toggleBtn   = document.getElementById('toggle-password');
@@ -56,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({ email, password: pass }),
+            body: JSON.stringify({ email, password: pass, remember: rememberChk.checked }),
         })
         .then(res => res.json())
         .then(data => {
