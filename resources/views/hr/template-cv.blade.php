@@ -218,32 +218,36 @@
                     <div class="text-xs font-bold uppercase tracking-widest text-green-300 mb-1">CV Template Management</div>
                     <h2 class="text-xl font-black text-white">Add New Template</h2>
                 </div>
-                <button id="modal-tambah-close" class="text-white/70 hover:text-white">
+                <button type="button" id="modal-tambah-close" class="text-white/70 hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
         </div>
-        <div class="p-6 space-y-4">
+        {{-- Form POST ke HrCvTemplateController@store --}}
+        <form action="{{ route('hr.template-cv.store') }}" method="POST" class="p-6 space-y-4">
+            @csrf
             <div>
                 <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Template Name</label>
-                <input id="input-nama-template" type="text" placeholder="Example: Modern Executive 2025" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400">
+                <input id="input-nama-template" name="name" type="text" placeholder="Example: Modern Executive 2025"
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400" required>
             </div>
             <div>
                 <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Description</label>
-                <textarea rows="3" placeholder="Brief description of this template..." class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400 resize-none"></textarea>
+                <textarea name="description" rows="3" placeholder="Brief description of this template..."
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400 resize-none"></textarea>
             </div>
             <div>
                 <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1.5">Initial Status</label>
-                <select class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400">
+                <select name="status" class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400">
                     <option value="draft">Draft</option>
                     <option value="published">Published</option>
                 </select>
             </div>
             <div class="flex gap-3 pt-2">
-                <button id="modal-tambah-cancel" class="flex-1 border border-gray-200 text-gray-700 font-semibold text-sm py-2.5 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
-                <button id="btn-buat-template" class="flex-1 bg-[#0f3c20] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#1b5e32] transition-colors">Create Template →</button>
+                <button type="button" id="modal-tambah-cancel" class="flex-1 border border-gray-200 text-gray-700 font-semibold text-sm py-2.5 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
+                <button type="submit" class="flex-1 bg-[#0f3c20] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#1b5e32] transition-colors">Create Template →</button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -279,12 +283,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ---- Edit Layout: Navigate to Editor ----
+    // ---- Edit Layout: Navigate to Editor (route: hr.template-cv.editor) ----
     document.querySelectorAll('.btn-edit').forEach(btn => {
         btn.addEventListener('click', function() {
             const id = this.closest('.template-card').dataset.id || 1;
-            const name = encodeURIComponent(this.closest('.template-card').dataset.name);
-            window.location.href = `/hr/template-cv/editor/${id}?name=${name}`;
+            window.location.href = `/hr/template-cv/${id}/edit`;
         });
     });
 
@@ -345,14 +348,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('modal-tambah-cancel').addEventListener('click', closeTambahModal);
     document.getElementById('modal-tambah-backdrop').addEventListener('click', closeTambahModal);
 
-    // ---- Modal Submit: Go to Editor ----
-    document.getElementById('btn-buat-template').addEventListener('click', function() {
-        const name = document.getElementById('input-nama-template').value.trim();
-        if (!name) {
-            document.getElementById('input-nama-template').classList.add('border-red-400','ring-2','ring-red-200');
-            return;
-        }
-        window.location.href = `/hr/template-cv/editor?name=${encodeURIComponent(name)}&new=1`;
+    // ---- Validasi input nama sebelum form di-submit ----
+    document.getElementById('input-nama-template').addEventListener('input', function() {
+        this.classList.remove('border-red-400', 'ring-2', 'ring-red-200');
     });
 
     // ---- Toast ----
