@@ -192,22 +192,25 @@ function applyImport(){
   iHTML='';
 }
 
-// ── Data template dari Laravel (diinjeksi oleh controller) ──
+// ── Data template dari Laravel ──
 var TEMPLATE_ID          = {{ $template ? $template->id : 'null' }};
 var TEMPLATE_STATUS      = @json($template ? $template->status : 'draft');
 var TEMPLATE_DESCRIPTION = @json($template ? ($template->description ?? '') : '');
 var TEMPLATE_HTML        = @json($template ? ($template->content_html ?? '') : '');
-var UPDATE_URL           = '{{ $template ? route('hr.template-cv.update', $template) : '' }}';
+var TEMPLATE_NAME        = @json($template ? $template->name : null);
+var UPDATE_URL           = @json($template ? route('hr.template-cv.update', $template) : '');
 
-// Tampilkan nama template
-document.getElementById('tname').textContent =
-  {{ $template ? "'".addslashes($template->name)."'" : "(new URLSearchParams(location.search).get('name') ? decodeURIComponent(new URLSearchParams(location.search).get('name')) : 'Template Baru')" }};
+// Tampilkan nama template (pakai @json agar quote tidak di-escape Blade)
+document.getElementById('tname').textContent = TEMPLATE_NAME ||
+  (new URLSearchParams(location.search).get('name')
+    ? decodeURIComponent(new URLSearchParams(location.search).get('name'))
+    : 'Template Baru');
 
-// Load konten tersimpan dari DB, atau pakai blok default jika kosong
-if(TEMPLATE_HTML && TEMPLATE_HTML.trim()!==''){
+// Load konten dari DB jika ada, atau pakai blok default
+if(TEMPLATE_HTML && TEMPLATE_HTML.trim() !== ''){
   document.getElementById('canvas').innerHTML = TEMPLATE_HTML;
   syncPages();
-}else{
+} else {
   ['header','contact','summary','exp','edu','skills'].forEach(addBlk);
 }
 save();
