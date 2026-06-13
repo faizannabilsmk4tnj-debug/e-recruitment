@@ -25,7 +25,7 @@ Route::get('/lowongan/{id}', function () { return view('detail-lowongan'); });
 
 // Route bantu development: akses /logout-now di browser untuk clear sesi
 Route::get('/logout-now', function () {
-    auth()->logout();
+    auth()->guard('web')->logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
     return redirect('/login');
@@ -33,16 +33,16 @@ Route::get('/logout-now', function () {
 
 // ===== AUTH PELAMAR =====
 // Hanya bisa diakses kalau belum login
-Route::middleware('guest')->group(function () {
-    Route::get('/login',            fn() => view('auth.login'))->name('login');
-    Route::post('/login',           [AuthController::class, 'login']);
-    Route::get('/register',         fn() => view('auth.register'))->name('register');
-    Route::post('/register',        [AuthController::class, 'register']);
-    Route::get('/forgot-password',  fn() => view('auth.forgot-password'))->name('password.request');
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');
-    Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
-    Route::post('/reset-password',  [AuthController::class, 'resetPassword'])->name('password.update');
-});
+// Auth routes — GET bisa diakses siapapun, POST diproses controller
+Route::get('/login',            fn() => view('auth.login'))->name('login');
+Route::post('/login',           [AuthController::class, 'login']);
+Route::get('/register',         fn() => view('auth.register'))->name('register');
+Route::post('/register',        [AuthController::class, 'register']);
+Route::get('/forgot-password',  fn() => view('auth.forgot-password'))->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password',  [AuthController::class, 'resetPassword'])->name('password.update');
+
 
 // ===== AUTH HR =====
 // /hr/login bisa diakses siapapun (tidak pakai middleware guest)
@@ -88,7 +88,8 @@ Route::middleware('role:applicant')->group(function () {
     Route::post('/pelamar/lampiran/portofolio',              [ApplicantLampiranController::class, 'portofolioStore'])->name('pelamar.portofolio.store');
     Route::patch('/pelamar/lampiran/portofolio/{portofolio}',[ApplicantLampiranController::class, 'portofolioUpdate'])->name('pelamar.portofolio.update');
     Route::delete('/pelamar/lampiran/portofolio/{portofolio}',[ApplicantLampiranController::class, 'portofolioDestroy'])->name('pelamar.portofolio.destroy');
-    Route::get('/pelamar/cv',                  [ApplicantCvController::class, 'index'])->name('pelamar.cv');
+    Route::get('/pelamar/cv',                        [ApplicantCvController::class, 'index'])->name('pelamar.cv');
+    Route::get('/pelamar/cv/{template}/generate',    [ApplicantCvController::class, 'generate'])->name('pelamar.cv.generate');
     Route::get('/pelamar/status-lamaran',      fn() => view('pelamar.status-lamaran'));
     Route::get('/pelamar/lowongan',            fn() => view('lowongan', ['layout' => 'layouts.pelamar-public']));
     Route::get('/pelamar/lowongan/{id}',       fn($id) => view('detail-lowongan', ['layout' => 'layouts.pelamar-public']));

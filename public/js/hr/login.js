@@ -1,24 +1,42 @@
 /**
  * HR Login JS
- * Mengirim kredensial ke POST /hr/login dan menampilkan error jika gagal.
+ * Remember Me: simpan email ke localStorage → auto-fill saat halaman login dibuka lagi.
  */
 document.addEventListener('DOMContentLoaded', function () {
 
-    const btnLogin    = document.getElementById('btn-login');
-    const emailInput  = document.getElementById('hr-email');
-    const passInput   = document.getElementById('hr-password');
-    const rememberChk = document.getElementById('hr-remember');
-    const alertEl     = document.getElementById('alert-error');
-    const alertText   = document.getElementById('alert-error-text');
-    const toggleBtn   = document.getElementById('toggle-password');
-    const eyeIcon     = document.getElementById('eye-icon');
-    const eyeOffIcon  = document.getElementById('eye-off-icon');
+    const btnLogin       = document.getElementById('btn-login');
+    const emailInput     = document.getElementById('hr-email');
+    const passInput      = document.getElementById('hr-password');
+    const rememberChk    = document.getElementById('hr-remember');
+    const alertEl        = document.getElementById('alert-error');
+    const alertText      = document.getElementById('alert-error-text');
+    const toggleBtn      = document.getElementById('toggle-password');
+    const eyeIcon        = document.getElementById('eye-icon');
+    const eyeOffIcon     = document.getElementById('eye-off-icon');
     const btnForgot      = document.getElementById('btn-forgot');
     const modalForgot    = document.getElementById('modal-forgot');
     const btnCloseForgot = document.getElementById('btn-close-forgot');
     const btnSendReset   = document.getElementById('btn-send-reset');
 
-    // === Toggle Password ===
+    // ============================================================
+    // Remember Me — restore email dari localStorage saat halaman dibuka
+    // ============================================================
+    const savedEmail = localStorage.getItem('hr_remember_email');
+    if (savedEmail) {
+        emailInput.value    = savedEmail;
+        rememberChk.checked = true;
+    }
+
+    // Jika HR uncheck → hapus data tersimpan
+    rememberChk.addEventListener('change', function () {
+        if (!this.checked) {
+            localStorage.removeItem('hr_remember_email');
+        }
+    });
+
+    // ============================================================
+    // Toggle Password
+    // ============================================================
     toggleBtn.addEventListener('click', function () {
         const isPass = passInput.type === 'password';
         passInput.type = isPass ? 'text' : 'password';
@@ -26,12 +44,16 @@ document.addEventListener('DOMContentLoaded', function () {
         eyeOffIcon.classList.toggle('hidden', !isPass);
     });
 
-    // === Enter key ===
+    // ============================================================
+    // Enter key trigger login
+    // ============================================================
     [emailInput, passInput].forEach(el => {
         el.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
     });
 
-    // === Login ===
+    // ============================================================
+    // Login
+    // ============================================================
     btnLogin.addEventListener('click', doLogin);
 
     function doLogin() {
@@ -62,6 +84,12 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
+                // Simpan atau hapus email berdasarkan status checkbox
+                if (rememberChk.checked) {
+                    localStorage.setItem('hr_remember_email', email);
+                } else {
+                    localStorage.removeItem('hr_remember_email');
+                }
                 window.location.href = data.redirect_url;
             } else {
                 showError(data.message || 'Login gagal. Coba lagi.');
@@ -81,7 +109,9 @@ document.addEventListener('DOMContentLoaded', function () {
         alertEl.classList.remove('hidden');
     }
 
-    // === Forgot Password Modal ===
+    // ============================================================
+    // Forgot Password Modal
+    // ============================================================
     btnForgot.addEventListener('click', () => modalForgot.classList.remove('hidden'));
     btnCloseForgot.addEventListener('click', () => modalForgot.classList.add('hidden'));
     modalForgot.addEventListener('click', e => {
