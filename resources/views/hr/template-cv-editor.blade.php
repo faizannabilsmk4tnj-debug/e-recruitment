@@ -198,7 +198,7 @@ var TEMPLATE_STATUS      = @json($template ? $template->status : 'draft');
 var TEMPLATE_DESCRIPTION = @json($template ? ($template->description ?? '') : '');
 var TEMPLATE_HTML        = @json($template ? ($template->content_html ?? '') : '');
 var TEMPLATE_NAME        = @json($template ? $template->name : null);
-var UPDATE_URL           = @json($template ? route('hr.template-cv.update', $template) : '');
+var UPDATE_URL           = {!! json_encode($template ? route('hr.template-cv.update', $template) : '') !!};
 
 // Tampilkan nama template (pakai @json agar quote tidak di-escape Blade)
 document.getElementById('tname').textContent = TEMPLATE_NAME ||
