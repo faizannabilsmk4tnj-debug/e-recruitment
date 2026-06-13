@@ -22,6 +22,8 @@ class User extends Authenticatable
         'password',
         'role',
         'phone',
+        'job_title',
+        'language',
         'is_active',
     ];
 
@@ -45,6 +47,9 @@ class User extends Authenticatable
             'is_active'         => 'boolean',
         ];
     }
+    /**
+     * Relasi ke UserProfile.
+     */
     public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);
@@ -68,5 +73,13 @@ class User extends Authenticatable
     public function applicantCvs(): HasMany
     {
         return $this->hasMany(ApplicantCv::class);
+    }
+
+    /**
+     * Relasi ke NotificationPreference.
+     */
+    public function notificationPreference(): HasOne
+    {
+        return $this->hasOne(NotificationPreference::class);
     }
 }
