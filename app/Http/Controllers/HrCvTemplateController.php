@@ -63,6 +63,47 @@ class HrCvTemplateController extends Controller
         return view('hr.template-cv-editor', ['template' => $template]);
     }
 
+    public function preview(CvTemplate $template): \Illuminate\Http\Response
+    {
+        $content = $template->content_html ?? '';
+
+        $html = '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
+<title>Preview: ' . e($template->name) . '</title>
+<style>
+body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:center;
+     padding:24px;font-family:\'Segoe UI\',sans-serif}
+.page{width:595px;background:#fff;box-shadow:0 2px 16px rgba(0,0,0,.15);margin-bottom:24px}
+[contenteditable]{outline:none;pointer-events:none}
+.bh{display:none!important}
+.blk{border:none!important}
+.preview-bar{position:fixed;top:0;left:0;right:0;height:44px;background:#0f3c20;
+             display:flex;align-items:center;padding:0 20px;gap:12px;z-index:100}
+.preview-bar a{color:#86efac;font-size:12px;font-weight:600;text-decoration:none}
+.preview-bar span{color:#fff;font-size:13px;font-weight:700;flex:1;text-align:center}
+body{padding-top:68px}
+</style></head><body>
+<div class="preview-bar">
+  <a href="javascript:history.back()">← Kembali</a>
+  <span>Preview: ' . e($template->name) . '</span>
+</div>';
+
+        if ($content) {
+            $html .= $content;
+        } else {
+            $html .= '<div style="text-align:center;padding:80px 40px;color:#9ca3af;">
+                <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin:0 auto 16px;display:block;opacity:.4">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <p style="font-size:15px;font-weight:600;margin:0 0 8px">Template belum memiliki konten</p>
+                <p style="font-size:13px;margin:0">Silakan buka editor dan simpan layout terlebih dahulu.</p>
+            </div>';
+        }
+
+        $html .= '</body></html>';
+
+        return response($html, 200, ['Content-Type' => 'text/html; charset=utf-8']);
+    }
+
     public function create(): View
     {
         return view('hr.template-cv-editor', ['template' => null]);

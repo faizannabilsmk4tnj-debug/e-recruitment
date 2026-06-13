@@ -87,7 +87,7 @@
 
                     {{-- Preview Hover Button --}}
                     <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <a href="{{ route('hr.template-cv.editor', $template) }}"
+                        <a href="{{ route('hr.template-cv.preview', $template) }}" target="_blank"
                            class="bg-white text-[#0f3c20] text-xs font-bold px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
                             Preview Template
                         </a>

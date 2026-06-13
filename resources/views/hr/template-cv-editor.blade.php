@@ -92,8 +92,8 @@ var pages=[document.getElementById('p1')], pgN=1, blkN=0;
 var hist=[], hIdx=-1, mut=false;
 function curPage(){return pages[pages.length-1]}
 function save(){if(mut)return;hist.splice(hIdx+1);hist.push(document.getElementById('canvas').innerHTML);if(hist.length>50)hist.shift();hIdx=hist.length-1;updUD()}
-function undo(){if(hIdx<=0)return;hIdx--;mut=true;document.getElementById('canvas').innerHTML=hist[hIdx];mut=false;syncPages();updUD();toast('Undo','#374151')}
-function redo(){if(hIdx>=hist.length-1)return;hIdx++;mut=true;document.getElementById('canvas').innerHTML=hist[hIdx];mut=false;syncPages();updUD();toast('Redo','#374151')}
+function undo(){if(hIdx<=0)return;hIdx--;mut=true;document.getElementById('canvas').innerHTML=hist[hIdx];syncPages();updUD();toast('Undo','#374151');setTimeout(function(){mut=false;},0);}
+function redo(){if(hIdx>=hist.length-1)return;hIdx++;mut=true;document.getElementById('canvas').innerHTML=hist[hIdx];syncPages();updUD();toast('Redo','#374151');setTimeout(function(){mut=false;},0);}
 function updUD(){var u=document.getElementById('bundo'),r=document.getElementById('bredo');u.disabled=hIdx<=0;r.disabled=hIdx>=hist.length-1}
 function syncPages(){pages=Array.from(document.querySelectorAll('.page'))}
 var t2;new MutationObserver(function(){if(mut)return;clearTimeout(t2);t2=setTimeout(save,700)}).observe(document.getElementById('canvas'),{childList:true,subtree:true,characterData:true,attributes:true})
@@ -136,7 +136,16 @@ function saveDraft(){
     .then(function(r){toast('Tersimpan!','#0f3c20');})
     .catch(function(){toast('Gagal menyimpan!','#dc2626');});
 }
-function doPreview(){var w=window.open('','_blank');var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Preview CV</title><style>body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:center;padding:24px;font-family:\'Segoe UI\',sans-serif}.page{width:595px;background:#fff;min-height:842px;overflow:visible;box-shadow:0 2px 16px rgba(0,0,0,.15);margin-bottom:24px}[contenteditable]{outline:none}.bh{display:none}.blk{border:none!important}</style></head><body>'+document.getElementById('canvas').innerHTML+'</body></html>';w.document.write(html);w.document.close();}
+function doPreview(){
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Preview CV</title><style>body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:center;padding:24px;font-family:\'Segoe UI\',sans-serif}.page{width:595px;background:#fff;min-height:842px;overflow:visible;box-shadow:0 2px 16px rgba(0,0,0,.15);margin-bottom:24px}[contenteditable]{outline:none;pointer-events:none}.bh{display:none!important}.blk{border:none!important}</style></head><body>'+document.getElementById('canvas').innerHTML+'</body></html>';
+  var blob=new Blob([html],{type:'text/html'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.target='_blank';a.rel='noopener';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);},5000);
+}
 function doPublish(){
   var name=document.getElementById('tname').textContent.trim()||'Template Baru';
   var html=document.getElementById('canvas').innerHTML;
@@ -192,15 +201,26 @@ function applyImport(){
   iHTML='';
 }
 
+@php
+$_tplData = json_encode([
+    'id'          => $template ? $template->id : null,
+    'name'        => $template ? $template->name : null,
+    'status'      => $template ? $template->status : 'draft',
+    'description' => $template ? ($template->description ?? '') : '',
+    'html'        => $template ? ($template->content_html ?? '') : '',
+    'updateUrl'   => $template ? route('hr.template-cv.update', $template) : '',
+], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE);
+@endphp
 // ── Data template dari Laravel ──
-var TEMPLATE_ID          = {{ $template ? $template->id : 'null' }};
-var TEMPLATE_STATUS      = @json($template ? $template->status : 'draft');
-var TEMPLATE_DESCRIPTION = @json($template ? ($template->description ?? '') : '');
-var TEMPLATE_HTML        = @json($template ? ($template->content_html ?? '') : '');
-var TEMPLATE_NAME        = @json($template ? $template->name : null);
-var UPDATE_URL           = {!! json_encode($template ? route('hr.template-cv.update', $template) : '') !!};
+var _tpl = {!! $_tplData !!};
+var TEMPLATE_ID          = _tpl.id;
+var TEMPLATE_STATUS      = _tpl.status;
+var TEMPLATE_DESCRIPTION = _tpl.description;
+var TEMPLATE_HTML        = _tpl.html;
+var TEMPLATE_NAME        = _tpl.name;
+var UPDATE_URL           = _tpl.updateUrl;
 
-// Tampilkan nama template (pakai @json agar quote tidak di-escape Blade)
+// Tampilkan nama template
 document.getElementById('tname').textContent = TEMPLATE_NAME ||
   (new URLSearchParams(location.search).get('name')
     ? decodeURIComponent(new URLSearchParams(location.search).get('name'))

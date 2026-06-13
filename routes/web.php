@@ -112,13 +112,14 @@ Route::middleware('role:hr')->group(function () {
     Route::get('/hr/wawancara/daftar',           fn() => view('hr.wawancara-daftar'));
     Route::get('/hr/laporan',                    fn() => view('hr.laporan'));
     // HR CV Template Management (CRUD via HrCvTemplateController)
-    Route::get('/hr/template-cv',                          [HrCvTemplateController::class, 'index'])->name('hr.template-cv.index');
-    Route::post('/hr/template-cv',                         [HrCvTemplateController::class, 'store'])->name('hr.template-cv.store');
-    Route::get('/hr/template-cv/create',                   [HrCvTemplateController::class, 'create'])->name('hr.template-cv.create');
-    Route::get('/hr/template-cv/{template}/edit',          [HrCvTemplateController::class, 'edit'])->name('hr.template-cv.editor');
-    Route::put('/hr/template-cv/{template}',               [HrCvTemplateController::class, 'update'])->name('hr.template-cv.update');
-    Route::patch('/hr/template-cv/{template}/publish',     [HrCvTemplateController::class, 'publish'])->name('hr.template-cv.publish');
-    Route::patch('/hr/template-cv/{template}/default',     [HrCvTemplateController::class, 'setDefault'])->name('hr.template-cv.setDefault');
-    Route::delete('/hr/template-cv/{template}',            [HrCvTemplateController::class, 'destroy'])->name('hr.template-cv.destroy');
+    Route::get('/hr/template-cv',                           [HrCvTemplateController::class, 'index'])->name('hr.template-cv.index');
+    Route::post('/hr/template-cv',                          [HrCvTemplateController::class, 'store'])->name('hr.template-cv.store');
+    Route::get('/hr/template-cv/create',                    [HrCvTemplateController::class, 'create'])->name('hr.template-cv.create');
+    Route::get('/hr/template-cv/{template}/edit',           [HrCvTemplateController::class, 'edit'])->name('hr.template-cv.editor');
+    Route::get('/hr/template-cv/{template}/preview',        [HrCvTemplateController::class, 'preview'])->name('hr.template-cv.preview');
+    Route::put('/hr/template-cv/{template}',                [HrCvTemplateController::class, 'update'])->name('hr.template-cv.update');
+    Route::patch('/hr/template-cv/{template}/publish',      [HrCvTemplateController::class, 'publish'])->name('hr.template-cv.publish');
+    Route::patch('/hr/template-cv/{template}/default',      [HrCvTemplateController::class, 'setDefault'])->name('hr.template-cv.setDefault');
+    Route::delete('/hr/template-cv/{template}',             [HrCvTemplateController::class, 'destroy'])->name('hr.template-cv.destroy');
 
 });
