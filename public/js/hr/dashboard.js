@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const MAX_HEIGHT = 140; // px — bar tertinggi
 
-    const chartData = {
+    const chartData = window.dbChartData || {
         monthly: {
             labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN'],
             values: [55, 72, 65, 88, 78, 100],
@@ -22,6 +22,13 @@ document.addEventListener('DOMContentLoaded', function () {
             activeIndex: -1
         }
     };
+    if (!chartData.month_weeks) {
+        chartData.month_weeks = {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', '', ''],
+            values: [0, 0, 0, 0, 0, 0],
+            activeIndex: -1
+        };
+    }
 
     let currentMode = 'monthly';
     const bars       = document.querySelectorAll('.chart-bar');
@@ -228,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
     lowonganDropdown.addEventListener('click', e => e.stopPropagation());
 
     // ===== JADWAL WAWANCARA =====
-    const wawancaraData = {
+    const wawancaraData = (window.dbChartData && window.dbChartData.wawancara) || {
         '2026-04-30': [
             { time: '09:00', ampm: 'AM', name: 'Budi Santoso', role: 'Technical Lead - R&D', location: 'Google Meet', isOnline: true, statusClass: 'border-green-700' },
             { time: '11:30', ampm: 'AM', name: 'Siska Wijaya', role: 'Finance Supervisor', location: 'Ruang Meeting A2', isOnline: false, statusClass: 'border-gray-300' },

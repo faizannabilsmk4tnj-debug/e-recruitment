@@ -49,9 +49,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div id="dropdown-cat" class="hidden absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg p-3 z-50 w-48">
-                @foreach(['Engineering','Sustainability','IT & Digital','Finance','Operations','R&D','Human Resources','Safety','Supply Chain'] as $cat)
+                @foreach($categories as $cat)
                 <label class="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
-                    <input type="checkbox" class="filter-cat accent-green-700 w-4 h-4 rounded" value="{{ $cat }}"> {{ $cat }}
+                    <input type="checkbox" class="filter-cat accent-green-700 w-4 h-4 rounded" value="{{ $cat->name }}"> {{ $cat->name }}
                 </label>
                 @endforeach
             </div>
@@ -104,69 +104,90 @@
     <div class="grid grid-cols-3 gap-5" id="job-grid">
 
         @php
-        $jobs = [
-            [
-                'id' => 1, 'title' => 'Mechanical Process Engineer',
-                'category' => 'Engineering', 'type' => 'Full-time', 'location' => 'Batam Plant',
-                'status' => 'ACTIVE', 'quota' => 2, 'deadline' => 'Oct 24, 2025',
-                'icon_bg' => 'bg-green-50', 'icon_color' => 'text-green-700',
-                'icon' => '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+        $iconMap = [
+            'engineering' => [
+                'bg' => 'bg-green-50',
+                'color' => 'text-green-700',
+                'svg' => '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>'
             ],
-            [
-                'id' => 2, 'title' => 'QC Analyst Lab (Oleochemicals)',
-                'category' => 'R&D', 'type' => 'Full-time', 'location' => 'Medan Site',
-                'status' => 'ACTIVE', 'quota' => 3, 'deadline' => 'Nov 12, 2025',
-                'icon_bg' => 'bg-purple-50', 'icon_color' => 'text-purple-600',
-                'icon' => '<path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/>',
+            'r&d' => [
+                'bg' => 'bg-purple-50',
+                'color' => 'text-purple-600',
+                'svg' => '<path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/>'
             ],
-            [
-                'id' => 3, 'title' => 'HR Specialist - Talent Acquisition',
-                'category' => 'Human Resources', 'type' => 'Full-time', 'location' => 'Jakarta HQ',
-                'status' => 'CLOSED', 'quota' => 1, 'deadline' => 'Oct 18, 2024',
-                'icon_bg' => 'bg-blue-50', 'icon_color' => 'text-blue-600',
-                'icon' => '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+            'r&d lab' => [
+                'bg' => 'bg-purple-50',
+                'color' => 'text-purple-600',
+                'svg' => '<path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/>'
             ],
-            [
-                'id' => 4, 'title' => 'Supply Chain Coordinator',
-                'category' => 'Supply Chain', 'type' => 'Full-time', 'location' => 'Surabaya Plant',
-                'status' => 'ACTIVE', 'quota' => 1, 'deadline' => 'Nov 05, 2025',
-                'icon_bg' => 'bg-amber-50', 'icon_color' => 'text-amber-600',
-                'icon' => '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>',
+            'human resources' => [
+                'bg' => 'bg-blue-50',
+                'color' => 'text-blue-600',
+                'svg' => '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'
             ],
-            [
-                'id' => 5, 'title' => 'Electrical Maintenance Lead',
-                'category' => 'Engineering', 'type' => 'Full-time', 'location' => 'Batam Plant',
-                'status' => 'ACTIVE', 'quota' => 2, 'deadline' => 'Dec 01, 2025',
-                'icon_bg' => 'bg-yellow-50', 'icon_color' => 'text-yellow-600',
-                'icon' => '<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
+            'hr & legal' => [
+                'bg' => 'bg-blue-50',
+                'color' => 'text-blue-600',
+                'svg' => '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'
             ],
-            [
-                'id' => 6, 'title' => 'HSE Officer',
-                'category' => 'Safety', 'type' => 'Full-time', 'location' => 'Medan Site',
-                'status' => 'FILLED', 'quota' => 1, 'deadline' => 'Oct 30, 2024',
-                'icon_bg' => 'bg-red-50', 'icon_color' => 'text-red-600',
-                'icon' => '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+            'supply chain' => [
+                'bg' => 'bg-amber-50',
+                'color' => 'text-amber-600',
+                'svg' => '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>'
             ],
+            'logistics' => [
+                'bg' => 'bg-amber-50',
+                'color' => 'text-amber-600',
+                'svg' => '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>'
+            ],
+            'safety' => [
+                'bg' => 'bg-red-50',
+                'color' => 'text-red-600',
+                'svg' => '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'
+            ],
+            'technology' => [
+                'bg' => 'bg-cyan-50',
+                'color' => 'text-cyan-600',
+                'svg' => '<path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>'
+            ],
+            'it & digital' => [
+                'bg' => 'bg-cyan-50',
+                'color' => 'text-cyan-600',
+                'svg' => '<path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>'
+            ]
         ];
         @endphp
 
         @foreach($jobs as $job)
         @php
-            $isActive = $job['status'] === 'ACTIVE';
-            $isClosed = $job['status'] === 'CLOSED';
-            $isFilled = $job['status'] === 'FILLED';
+            $catName = $job->category->name ?? '';
+            $catLower = strtolower($catName);
+            $icon = $iconMap[$catLower] ?? [
+                'bg' => 'bg-gray-50',
+                'color' => 'text-gray-600',
+                'svg' => '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'
+            ];
+            
+            $jobType = ucfirst($job->employment_type);
+            
+            $isActive = $job->status === 'open';
+            $isClosed = $job->status === 'closed';
+            $isFilled = $job->status === 'filled';
+            
+            $statusStr = $isActive ? 'ACTIVE' : ($isClosed ? 'CLOSED' : 'FILLED');
             $cardOpacity = ($isClosed || $isFilled) ? 'opacity-60' : '';
             $cardHover   = $isActive ? 'job-card cursor-pointer' : 'job-card';
-            $url = isset($layout) ? '/pelamar/lowongan/'.$job['id'] : '/lowongan/'.$job['id'];
+            $url = isset($layout) ? '/pelamar/lowongan/'.$job->id : '/lowongan/'.$job->id;
         @endphp
         <div class="bg-white rounded-2xl border border-gray-100 p-6 {{ $cardHover }} {{ $cardOpacity }}"
-             data-category="{{ $job['category'] }}" data-type="{{ $job['type'] }}"
-             data-location="{{ $job['location'] }}" data-status="{{ $job['status'] }}">
+             data-category="{{ $catName }}" data-type="{{ $jobType }}"
+             data-location="{{ $job->location }}" data-status="{{ $statusStr }}"
+             @if($isActive) onclick="window.location.href='{{ $url }}'" @endif>
 
             {{-- Card Header --}}
             <div class="flex items-start justify-between mb-4">
-                <div class="w-11 h-11 {{ $job['icon_bg'] }} rounded-xl flex items-center justify-center shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {{ $job['icon_color'] }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">{!! $job['icon'] !!}</svg>
+                <div class="w-11 h-11 {{ $icon['bg'] }} rounded-xl flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {{ $icon['color'] }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">{!! $icon['svg'] !!}</svg>
                 </div>
                 {{-- Status badge --}}
                 @if($isActive)
@@ -179,33 +200,33 @@
             </div>
 
             {{-- Title --}}
-            <h3 class="font-bold text-gray-900 text-sm leading-snug mb-3 {{ $isClosed ? 'line-through text-gray-400' : '' }}">{{ $job['title'] }}</h3>
+            <h3 class="font-bold text-gray-900 text-sm leading-snug mb-3 {{ $isClosed ? 'line-through text-gray-400' : '' }}">{{ $job->title }}</h3>
 
             {{-- Meta info --}}
             <div class="space-y-1.5 text-xs text-gray-500 mb-4">
                 <p class="flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                    {{ $job['category'] }}
+                    {{ $catName }}
                 </p>
                 <p class="flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    {{ $job['type'] }}
+                    {{ $jobType }}
                 </p>
                 <p class="flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                    {{ $job['location'] }}
+                    {{ $job->location }}
                 </p>
             </div>
 
             {{-- Footer --}}
-            <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+            <div class="pt-4 border-t border-gray-100 flex items-center justify-between" onclick="event.stopPropagation();">
                 <div>
                     @if($isActive)
                     <p class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Deadline</p>
-                    <p class="text-xs font-bold text-green-700 mt-0.5">{{ $job['deadline'] }}</p>
+                    <p class="text-xs font-bold text-green-700 mt-0.5">{{ $job->deadline ? $job->deadline->format('d M Y') : '-' }}</p>
                     @elseif($isClosed)
                     <p class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Closed</p>
-                    <p class="text-xs font-bold text-red-500 mt-0.5">{{ $job['deadline'] }}</p>
+                    <p class="text-xs font-bold text-red-500 mt-0.5">{{ $job->deadline ? $job->deadline->format('d M Y') : '-' }}</p>
                     @else
                     <p class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Status</p>
                     <p class="text-xs font-bold text-blue-500 mt-0.5">Position Filled</p>
@@ -260,8 +281,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function applyFilters() {
         const selectedCats = [...document.querySelectorAll('.filter-cat:checked')].map(c => c.value);
-        const selectedType = document.querySelector('.filter-type:checked')?.value || '';
-        const selectedLoc  = document.querySelector('.filter-loc:checked')?.value  || '';
+        const selectedType = document.querySelector('.filter-type:checked')?.value.toLowerCase() || '';
+        const selectedLoc  = document.querySelector('.filter-loc:checked')?.value.toLowerCase().split(' ')[0] || '';
         const searchQ      = document.getElementById('search-job').value.toLowerCase();
         const showClosed   = document.getElementById('toggle-show-closed').checked;
 
@@ -272,8 +293,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (status === 'CLOSED' && !showClosed) { card.style.display = 'none'; return; }
 
             const matchCat    = selectedCats.length === 0 || selectedCats.includes(card.dataset.category || '');
-            const matchType   = !selectedType || card.dataset.type === selectedType;
-            const matchLoc    = !selectedLoc  || card.dataset.location === selectedLoc;
+            const matchType   = !selectedType || (card.dataset.type || '').toLowerCase() === selectedType;
+            const matchLoc    = !selectedLoc  || (card.dataset.location || '').toLowerCase().includes(selectedLoc);
             const matchSearch = !searchQ || card.textContent.toLowerCase().includes(searchQ);
             const show = matchCat && matchType && matchLoc && matchSearch;
             card.style.display = show ? '' : 'none';

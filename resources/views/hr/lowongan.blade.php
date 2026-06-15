@@ -7,6 +7,19 @@
 @section('content')
 <div class="px-8 py-6">
 
+    <!-- Header Row with Period Selector -->
+    <div class="flex items-center justify-between mb-4">
+        <div>
+            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Recruitment Performance Metrics</h2>
+        </div>
+        <div class="flex bg-gray-100 rounded-lg p-0.5 gap-0.5 border border-gray-200">
+            <button class="btn-period px-3 py-1.5 text-xs font-semibold rounded-md transition-all text-gray-500 hover:text-gray-700" data-period="daily">Daily</button>
+            <button class="btn-period px-3 py-1.5 text-xs font-semibold rounded-md transition-all bg-white text-gray-800 shadow-sm" data-period="weekly">Weekly</button>
+            <button class="btn-period px-3 py-1.5 text-xs font-semibold rounded-md transition-all text-gray-500 hover:text-gray-700" data-period="monthly">Monthly</button>
+            <button class="btn-period px-3 py-1.5 text-xs font-semibold rounded-md transition-all text-gray-500 hover:text-gray-700" data-period="yearly">Yearly</button>
+        </div>
+    </div>
+
     <!-- Stat Cards -->
     <div class="grid grid-cols-4 gap-5 mb-6">
         <div class="bg-white rounded-2xl border border-gray-100 p-5">
@@ -14,36 +27,39 @@
                 <div class="w-11 h-11 bg-green-50 rounded-xl flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                 </div>
-                <span class="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full">+12%</span>
+                <span class="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full" id="trend-vacancies-badge">+{{ $trends['weekly']['vacancies'] }}</span>
             </div>
-            <p class="text-3xl font-extrabold text-gray-900">24</p>
+            <p class="text-3xl font-extrabold text-gray-900">{{ str_pad($totalVacancies, 2, '0', STR_PAD_LEFT) }}</p>
             <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-1">Total Vacancies</p>
+            <p class="text-[10px] text-gray-400 mt-1 font-medium" id="trend-vacancies-label">+{{ $trends['weekly']['vacancies'] }} new this week</p>
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 p-5">
             <div class="flex items-start justify-between mb-4">
                 <div class="w-11 h-11 bg-green-50 rounded-xl flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
-                <span class="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full">+5.4%</span>
+                <span class="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full" id="trend-applicants-badge">+{{ $trends['weekly']['applicants'] }}</span>
             </div>
-            <p class="text-3xl font-extrabold text-gray-900">1,482</p>
+            <p class="text-3xl font-extrabold text-gray-900">{{ number_format($activeApplicants) }}</p>
             <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-1">Active Applicants</p>
+            <p class="text-[10px] text-gray-400 mt-1 font-medium" id="trend-applicants-label">+{{ $trends['weekly']['applicants'] }} applied this week</p>
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 p-5">
             <div class="flex items-start justify-between mb-4">
                 <div class="w-11 h-11 bg-red-50 rounded-xl flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                 </div>
-                <span class="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full">-2.1%</span>
+                <span class="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full" id="trend-closed-badge">-{{ $trends['weekly']['closed'] }}</span>
             </div>
-            <p class="text-3xl font-extrabold text-gray-900">08</p>
+            <p class="text-3xl font-extrabold text-gray-900">{{ str_pad($closingSoon, 2, '0', STR_PAD_LEFT) }}</p>
             <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-1">Closing Soon</p>
+            <p class="text-[10px] text-gray-400 mt-1 font-medium" id="trend-closed-label">-{{ $trends['weekly']['closed'] }} closed this week</p>
         </div>
         <div class="bg-green-900 rounded-2xl p-5 relative overflow-hidden">
             <p class="text-xs font-semibold text-green-300 uppercase tracking-wider mb-2">Recruitment Target</p>
-            <p class="text-4xl font-extrabold text-white mb-3">88%</p>
+            <p class="text-4xl font-extrabold text-white mb-3">{{ $recruitmentTargetPercentage }}%</p>
             <div class="h-1.5 bg-green-700 rounded-full overflow-hidden">
-                <div class="h-full bg-white rounded-full" style="width: 88%"></div>
+                <div class="h-full bg-white rounded-full" style="width: {{ $recruitmentTargetPercentage }}%"></div>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" class="absolute bottom-3 right-4 w-12 h-12 text-green-700 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/></svg>
         </div>
@@ -67,11 +83,9 @@
             </select>
             <select id="filter-category" class="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-600">
                 <option value="">Category: All</option>
-                <option value="Production">Production</option>
-                <option value="Operations">Operations</option>
-                <option value="Logistics">Logistics</option>
-                <option value="Technology">Technology</option>
-                <option value="R&D Lab">R&D Lab</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->name }}">{{ $cat->name }}</option>
+                @endforeach
             </select>
             <a href="/hr/lowongan/buat" class="ml-auto flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg text-sm transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
@@ -94,50 +108,60 @@
             </thead>
             <tbody id="vacancy-table">
 
-                @php
-                $vacancies = [
-                    ['id' => 'REF-ECO-2024-001', 'title' => 'Chemical Process Engineer', 'category' => 'Production',  'applicants' => 124, 'quota' => 12, 'deadline' => '15 Oct 2024', 'status' => 'ACTIVE',  'progress' => 80],
-                    ['id' => 'REF-ECO-2024-004', 'title' => 'EHS Specialist',            'category' => 'Operations',  'applicants' => 42,  'quota' => 3,  'deadline' => '22 Oct 2024', 'status' => 'ACTIVE',  'progress' => 30],
-                    ['id' => 'REF-ECO-2024-008', 'title' => 'Supply Chain Manager',      'category' => 'Logistics',   'applicants' => 0,   'quota' => 1,  'deadline' => '-',            'status' => 'DRAFT',   'progress' => 0],
-                    ['id' => 'REF-ECO-2023-142', 'title' => 'IT Infrastructure Lead',    'category' => 'Technology',  'applicants' => 215, 'quota' => 1,  'deadline' => '30 Sep 2024', 'status' => 'CLOSED',  'progress' => 100],
-                    ['id' => 'REF-ECO-2024-006', 'title' => 'Analytical Chemist',        'category' => 'R&D Lab',     'applicants' => 18,  'quota' => 4,  'deadline' => '05 Nov 2024', 'status' => 'ACTIVE',  'progress' => 20],
-                ];
-                @endphp
-
                 @foreach($vacancies as $v)
-                <tr class="border-t border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer vacancy-row {{ $v['status'] === 'CLOSED' ? 'opacity-50' : '' }}"
-                    data-title="{{ strtolower($v['title']) }}"
-                    data-ref="{{ strtolower($v['id']) }}"
-                    data-status="{{ $v['status'] }}"
-                    data-category="{{ $v['category'] }}"
-                    onclick="if(!event.target.closest('button')) window.location.href='/hr/lowongan/{{ $loop->iteration }}'">
+                @php
+                    // Map database status to uppercase badge text
+                    $statusBadge = 'DRAFT';
+                    if ($v->status === 'open') {
+                        $statusBadge = 'ACTIVE';
+                    } elseif ($v->status === 'closed') {
+                        $statusBadge = 'CLOSED';
+                    } elseif ($v->status === 'expired') {
+                        $statusBadge = 'CLOSED';
+                    }
+                    
+                    // Compute progress
+                    $progress = $v->quota > 0 ? min(100, ($v->applicant_count / $v->quota) * 100) : 0;
+                    
+                    // Reference ID format (REF-ECO-YEAR-ID)
+                    $refId = 'REF-ECO-' . $v->created_at->format('Y') . '-' . str_pad($v->id, 3, '0', STR_PAD_LEFT);
+                @endphp
+                <tr class="border-t border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer vacancy-row {{ $v->status === 'closed' || $v->status === 'expired' ? 'opacity-50' : '' }}"
+                    data-id="{{ $v->id }}"
+                    data-title="{{ strtolower($v->title) }}"
+                    data-ref="{{ strtolower($refId) }}"
+                    data-status="{{ $statusBadge }}"
+                    data-category="{{ $v->category->name ?? '' }}"
+                    data-category-id="{{ $v->category_id }}"
+                    data-quota="{{ $v->quota }}"
+                    data-deadline="{{ $v->deadline ? $v->deadline->format('Y-m-d') : '' }}"
+                    data-desc="{{ $v->description }}"
+                    onclick="if(!event.target.closest('button')) window.location.href='/hr/lowongan/{{ $v->id }}'">
 
                     <td class="py-4 pr-4">
-                        <p class="font-bold text-sm {{ $v['status'] === 'CLOSED' ? 'line-through text-gray-400' : 'text-gray-900' }}">{{ $v['title'] }}</p>
-                        <p class="text-[10px] text-gray-400 mt-0.5">{{ $v['id'] }}</p>
+                        <p class="font-bold text-sm {{ $v->status === 'closed' || $v->status === 'expired' ? 'line-through text-gray-400' : 'text-gray-900' }}">{{ $v->title }}</p>
+                        <p class="text-[10px] text-gray-400 mt-0.5">{{ $refId }}</p>
                     </td>
-                    <td class="py-4 pr-4 text-sm text-gray-500">{{ $v['category'] }}</td>
+                    <td class="py-4 pr-4 text-sm text-gray-500">{{ $v->category->name ?? '-' }}</td>
                     <td class="py-4 pr-4">
-                        @if($v['applicants'] === 0)
+                        @if($v->applicant_count === 0)
                             <span class="text-sm text-green-600 font-medium">No applicants yet</span>
                         @else
                             <div class="flex items-center gap-2">
                                 <div class="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                    <div class="h-full {{ $v['status'] === 'CLOSED' ? 'bg-gray-400' : 'bg-green-600' }} rounded-full" style="width: {{ min($v['progress'], 100) }}%"></div>
+                                    <div class="h-full {{ $v->status === 'closed' || $v->status === 'expired' ? 'bg-gray-400' : 'bg-green-600' }} rounded-full" style="width: {{ $progress }}%"></div>
                                 </div>
-                                <span class="text-sm font-semibold text-gray-700">{{ $v['applicants'] }}</span>
+                                <span class="text-sm font-semibold text-gray-700">{{ $v->applicant_count }}</span>
                             </div>
                         @endif
                     </td>
-                    <td class="py-4 pr-4 text-sm font-semibold text-gray-700">{{ str_pad($v['quota'], 2, '0', STR_PAD_LEFT) }}</td>
-                    <td class="py-4 pr-4 text-sm text-gray-500">{{ $v['deadline'] }}</td>
+                    <td class="py-4 pr-4 text-sm font-semibold text-gray-700">{{ str_pad($v->quota, 2, '0', STR_PAD_LEFT) }}</td>
+                    <td class="py-4 pr-4 text-sm text-gray-500">{{ $v->deadline ? $v->deadline->format('d M Y') : '-' }}</td>
                     <td class="py-4 pr-4">
-                        @if($v['status'] === 'ACTIVE')
+                        @if($statusBadge === 'ACTIVE')
                             <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full">ACTIVE</span>
-                        @elseif($v['status'] === 'DRAFT')
+                        @elseif($statusBadge === 'DRAFT')
                             <span class="text-xs font-bold text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">DRAFT</span>
-                        @elseif($v['status'] === 'FILLED')
-                            <span class="text-xs font-bold text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">FILLED</span>
                         @else
                             <span class="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">CLOSED</span>
                         @endif
@@ -155,7 +179,7 @@
 
         <!-- Pagination -->
         <div class="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
-            <p class="text-xs text-gray-400">Showing 1-5 of 24 vacancies</p>
+            <p class="text-xs text-gray-400">Showing {{ $vacancies->count() }} of {{ $totalVacancies }} vacancies</p>
             <div class="flex items-center gap-1">
                 <button class="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-lg text-gray-400 hover:bg-gray-50 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
@@ -240,13 +264,9 @@
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Category</label>
                 <select id="v-category" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
                     <option value="">Select category...</option>
-                    <option>Production</option>
-                    <option>Operations</option>
-                    <option>Logistics</option>
-                    <option>Technology</option>
-                    <option>R&D Lab</option>
-                    <option>Finance</option>
-                    <option>HR & Legal</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                    @endforeach
                 </select>
             </div>
             <div>
@@ -297,5 +317,8 @@
 @endsection
 
 @section('js')
+<script>
+    window.vacancyTrends = @json($trends);
+</script>
 <script src="{{ asset('js/hr/lowongan.js') }}"></script>
 @endsection

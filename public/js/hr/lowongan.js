@@ -3,6 +3,48 @@
  */
 document.addEventListener('DOMContentLoaded', function () {
 
+    // ===== PERIOD TREND TOGGLE =====
+    const periodButtons = document.querySelectorAll('.btn-period');
+    const trendVacanciesBadge = document.getElementById('trend-vacancies-badge');
+    const trendVacanciesLabel = document.getElementById('trend-vacancies-label');
+    const trendApplicantsBadge = document.getElementById('trend-applicants-badge');
+    const trendApplicantsLabel = document.getElementById('trend-applicants-label');
+    const trendClosedBadge = document.getElementById('trend-closed-badge');
+    const trendClosedLabel = document.getElementById('trend-closed-label');
+
+    periodButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+            // Remove active style from all period buttons
+            periodButtons.forEach(b => {
+                b.classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
+                b.classList.add('text-gray-500', 'hover:text-gray-700');
+            });
+            // Add active style to clicked button
+            this.classList.remove('text-gray-500', 'hover:text-gray-700');
+            this.classList.add('bg-white', 'text-gray-800', 'shadow-sm');
+
+            const period = this.dataset.period;
+            const data = window.vacancyTrends ? window.vacancyTrends[period] : null;
+            if (!data) return;
+
+            // Define suffix labels
+            let timeSuffix = 'today';
+            if (period === 'weekly') timeSuffix = 'this week';
+            else if (period === 'monthly') timeSuffix = 'this month';
+            else if (period === 'yearly') timeSuffix = 'this year';
+
+            // Update Badges & Labels
+            if (trendVacanciesBadge) trendVacanciesBadge.textContent = '+' + data.vacancies;
+            if (trendVacanciesLabel) trendVacanciesLabel.textContent = `+${data.vacancies} new ${timeSuffix}`;
+
+            if (trendApplicantsBadge) trendApplicantsBadge.textContent = '+' + data.applicants;
+            if (trendApplicantsLabel) trendApplicantsLabel.textContent = `+${data.applicants} applied ${timeSuffix}`;
+
+            if (trendClosedBadge) trendClosedBadge.textContent = '-' + data.closed;
+            if (trendClosedLabel) trendClosedLabel.textContent = `-${data.closed} closed ${timeSuffix}`;
+        });
+    });
+
     // ===== SEARCH + FILTER =====
     const searchInput   = document.getElementById('search-vacancy');
     const filterStatus  = document.getElementById('filter-status');
@@ -46,27 +88,68 @@ document.addEventListener('DOMContentLoaded', function () {
     // View Applicants
     dropdown.querySelector('.vd-view').addEventListener('click', () => {
         dropdown.classList.add('hidden');
-        // Find row index
-        const rows = Array.from(document.querySelectorAll('.vacancy-row'));
-        const idx  = rows.indexOf(activeRow) + 1;
-        window.location.href = '/hr/lowongan/' + idx;
+        if (!activeRow) return;
+        const id = activeRow.dataset.id;
+        window.location.href = '/hr/lowongan/' + id;
     });
 
     // Edit Vacancy
     dropdown.querySelector('.vd-edit').addEventListener('click', () => {
         dropdown.classList.add('hidden');
         if (!activeRow) return;
-        const title    = activeRow.querySelector('p.font-bold')?.textContent || '';
-        const category = activeRow.dataset.category;
-        const status   = activeRow.dataset.status;
+        const title      = activeRow.querySelector('p.font-bold')?.textContent.trim() || '';
+        const categoryId = activeRow.dataset.categoryId || '';
+        const status     = activeRow.dataset.status || 'DRAFT';
+        const quota      = activeRow.dataset.quota || '';
+        const deadline   = activeRow.dataset.deadline || '';
+        const desc       = activeRow.dataset.desc || '';
 
         document.getElementById('v-title').value    = title;
-        document.getElementById('v-category').value = category;
+        document.getElementById('v-category').value = categoryId;
         document.getElementById('v-status').value   = status;
+        document.getElementById('v-quota').value    = quota;
+        document.getElementById('v-deadline').value = deadline;
+        document.getElementById('v-desc').value     = desc;
 
         document.querySelector('#modal-vacancy .bg-green-900 h2').textContent = 'Edit Vacancy';
         document.getElementById('btn-save-vacancy').textContent = 'Save Changes';
         document.getElementById('modal-vacancy').classList.remove('hidden');
+    });
+
+    // Mark as Filled
+    dropdown.querySelector('.vd-fill').addEventListener('click', () => {
+        dropdown.classList.add('hidden');
+        if (!activeRow) return;
+        const id = activeRow.dataset.id;
+
+        if (confirm('Tandai lowongan ini sebagai terpenuhi (Mark as Filled)? Ini akan menutup lowongan.')) {
+            fetch('/hr/lowongan/' + id + '/status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    status: 'closed'
+                })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to update status');
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert('Gagal memperbarui status lowongan.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Terjadi kesalahan jaringan atau server.');
+            });
+        }
     });
 
     // Close Vacancy
@@ -94,16 +177,62 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('modal-vacancy').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
 
     document.getElementById('btn-save-vacancy').addEventListener('click', function () {
-        const title    = document.getElementById('v-title').value.trim();
-        const category = document.getElementById('v-category').value;
-        const quota    = document.getElementById('v-quota').value;
-        const deadline = document.getElementById('v-deadline').value;
-        const status   = document.getElementById('v-status').value;
+        const title      = document.getElementById('v-title').value.trim();
+        const categoryId = document.getElementById('v-category').value;
+        const quota      = document.getElementById('v-quota').value;
+        const deadline   = document.getElementById('v-deadline').value;
+        const status     = document.getElementById('v-status').value;
+        const desc       = document.getElementById('v-desc').value;
 
-        if (!title || !category || !quota) { alert('Position, category, dan quota wajib diisi.'); return; }
+        if (!title || !categoryId || !quota) { alert('Position, category, dan quota wajib diisi.'); return; }
 
-        if (this.textContent.includes('Create')) {
-            // Add new row
+        this.disabled = true;
+        const isEditing = this.textContent.includes('Save');
+        this.textContent = isEditing ? 'Saving...' : 'Creating...';
+
+        if (isEditing) {
+            const id = activeRow.dataset.id;
+            let dbStatus = 'open';
+            if (status === 'DRAFT') dbStatus = 'draft';
+            if (status === 'CLOSED') dbStatus = 'closed';
+
+            fetch('/hr/lowongan/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    category_id: categoryId,
+                    quota: quota,
+                    deadline: deadline || null,
+                    status: dbStatus,
+                    description: desc
+                })
+            })
+            .then(response => {
+                if (!response.ok) return response.json().then(err => { throw err; });
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert('Gagal menyimpan perubahan: ' + (data.message || ''));
+                    this.disabled = false;
+                    this.textContent = 'Save Changes';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Terjadi kesalahan saat menyimpan perubahan.');
+                this.disabled = false;
+                this.textContent = 'Save Changes';
+            });
+        } else {
+            // Creation is handled in lowongan-buat page.
             const ref = 'REF-ECO-2024-' + String(Math.floor(Math.random() * 900) + 100);
             const deadlineFormatted = deadline ? new Date(deadline).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}) : '-';
             const badgeClass = status === 'ACTIVE'
@@ -115,13 +244,13 @@ document.addEventListener('DOMContentLoaded', function () {
             row.dataset.title    = title.toLowerCase();
             row.dataset.ref      = ref.toLowerCase();
             row.dataset.status   = status;
-            row.dataset.category = category;
+            row.dataset.category = document.querySelector(`#v-category option[value="${categoryId}"]`)?.textContent || '';
             row.innerHTML = `
                 <td class="py-4 pr-4">
                     <p class="font-bold text-sm text-gray-900">${title}</p>
                     <p class="text-[10px] text-gray-400 mt-0.5">${ref}</p>
                 </td>
-                <td class="py-4 pr-4 text-sm text-gray-500">${category}</td>
+                <td class="py-4 pr-4 text-sm text-gray-500">${row.dataset.category}</td>
                 <td class="py-4 pr-4"><span class="text-sm text-green-600 font-medium">No applicants yet</span></td>
                 <td class="py-4 pr-4 text-sm font-semibold text-gray-700">${String(quota).padStart(2,'0')}</td>
                 <td class="py-4 pr-4 text-sm text-gray-500">${deadlineFormatted}</td>
@@ -142,24 +271,10 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             document.getElementById('vacancy-table').appendChild(row);
-        } else {
-            // Update existing row
-            if (activeRow) {
-                activeRow.querySelector('p.font-bold').textContent = title;
-                activeRow.querySelector('td:nth-child(2)').textContent = category;
-                const badge = activeRow.querySelector('td:nth-child(6) span');
-                if (badge) {
-                    badge.textContent = status;
-                    if (status === 'ACTIVE') badge.className = 'text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full';
-                    else badge.className = 'text-xs font-bold text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full';
-                }
-                activeRow.dataset.status   = status;
-                activeRow.dataset.category = category;
-                activeRow.dataset.title    = title.toLowerCase();
-            }
+            this.disabled = false;
+            this.textContent = 'Create Vacancy';
+            closeModal();
         }
-
-        closeModal();
     });
 
     // ===== MODAL: Close Vacancy =====
@@ -168,14 +283,41 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('modal-close-vacancy').addEventListener('click', function (e) { if (e.target === this) this.classList.add('hidden'); });
 
     document.getElementById('btn-confirm-close-vacancy').addEventListener('click', function () {
-        if (activeRow) {
-            activeRow.classList.add('opacity-50');
-            const titleEl = activeRow.querySelector('p.font-bold');
-            if (titleEl) { titleEl.classList.add('line-through', 'text-gray-400'); titleEl.classList.remove('text-gray-900'); }
-            const badge = activeRow.querySelector('td:nth-child(6) span');
-            if (badge) { badge.textContent = 'CLOSED'; badge.className = 'text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full'; }
-            activeRow.dataset.status = 'CLOSED';
-        }
-        document.getElementById('modal-close-vacancy').classList.add('hidden');
+        if (!activeRow) return;
+        const id = activeRow.dataset.id;
+        
+        this.disabled = true;
+        this.textContent = 'Closing...';
+
+        fetch('/hr/lowongan/' + id + '/status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                status: 'closed'
+            })
+        })
+        .then(response => {
+            if (!response.ok) return response.json().then(err => { throw err; });
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Gagal menutup lowongan.');
+                this.disabled = false;
+                this.textContent = 'Yes, Close Vacancy';
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Terjadi kesalahan saat menutup lowongan.');
+            this.disabled = false;
+            this.textContent = 'Yes, Close Vacancy';
+        });
     });
 });

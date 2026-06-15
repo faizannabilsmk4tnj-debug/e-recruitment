@@ -10,6 +10,9 @@ use App\Http\Controllers\ApplicantWorkExperienceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HrCvTemplateController;
 use App\Http\Controllers\HR\SettingController;
+use App\Http\Controllers\HR\JobPostingController;
+use App\Http\Controllers\HR\DashboardController;
+use App\Http\Controllers\VacancyController;
 use App\Http\Middleware\SetUserLocale;
 use Illuminate\Support\Facades\Route;
 
@@ -22,8 +25,8 @@ use Illuminate\Support\Facades\Route;
 // ===== PUBLIK (tanpa login) =====
 Route::get('/', function () { return view('landing'); });
 Route::get('/tentang-kami', function () { return view('tentang-kami'); });
-Route::get('/lowongan', function () { return view('lowongan'); });
-Route::get('/lowongan/{id}', function () { return view('detail-lowongan'); });
+Route::get('/lowongan',                       [VacancyController::class, 'index'])->name('lowongan.index');
+Route::get('/lowongan/{id}',                  [VacancyController::class, 'show'])->name('lowongan.show')->where('id', '[0-9]+');
 
 // Route bantu development: akses /logout-now di browser untuk clear sesi
 Route::get('/logout-now', function () {
@@ -93,9 +96,10 @@ Route::middleware('role:applicant')->group(function () {
     Route::get('/pelamar/cv',                        [ApplicantCvController::class, 'index'])->name('pelamar.cv');
     Route::get('/pelamar/cv/{template}/generate',    [ApplicantCvController::class, 'generate'])->name('pelamar.cv.generate');
     Route::get('/pelamar/status-lamaran',      fn() => view('pelamar.status-lamaran'));
-    Route::get('/pelamar/lowongan',            fn() => view('lowongan', ['layout' => 'layouts.pelamar-public']));
-    Route::get('/pelamar/lowongan/{id}',       fn($id) => view('detail-lowongan', ['layout' => 'layouts.pelamar-public']));
-    Route::get('/pelamar/review-lamaran/{id}', fn($id) => view('pelamar.review-lamaran'));
+    Route::get('/pelamar/lowongan',            [VacancyController::class, 'index'])->name('pelamar.lowongan.index');
+    Route::get('/pelamar/lowongan/{id}',       [VacancyController::class, 'show'])->name('pelamar.lowongan.show')->where('id', '[0-9]+');
+    Route::get('/pelamar/review-lamaran/{id}',    [VacancyController::class, 'showReview'])->name('pelamar.review-lamaran');
+    Route::post('/pelamar/review-lamaran/{id}',   [VacancyController::class, 'submitApplication'])->name('pelamar.review-lamaran.submit');
     Route::get('/pelamar/lamaran-terkirim',    fn() => view('pelamar.lamaran-terkirim'));
 
 });
@@ -103,7 +107,7 @@ Route::middleware('role:applicant')->group(function () {
 // ===== HR — harus login dan role=hr =====
 Route::middleware(['role:hr', SetUserLocale::class])->group(function () {
 
-    Route::get('/hr/dashboard',                  fn() => view('hr.dashboard'));
+    Route::get('/hr/dashboard',                  [DashboardController::class, 'index'])->name('hr.dashboard');
     Route::get('/hr/setting',                    [SettingController::class, 'index'])->name('hr.setting');
     Route::post('/hr/setting/profile',           [SettingController::class, 'updateProfile'])->name('hr.setting.profile');
     Route::post('/hr/setting/avatar/remove',     [SettingController::class, 'removeAvatar'])->name('hr.setting.avatar.remove');
@@ -113,9 +117,12 @@ Route::middleware(['role:hr', SetUserLocale::class])->group(function () {
     Route::delete('/hr/setting/session/{id}',    [SettingController::class, 'logoutDevice'])->name('hr.setting.session.destroy');
     Route::delete('/hr/setting/sessions',        [SettingController::class, 'logoutAllDevices'])->name('hr.setting.sessions.destroy');
     Route::get('/hr/tim',                        fn() => view('hr.tim'));
-    Route::get('/hr/lowongan',                   fn() => view('hr.lowongan'));
-    Route::get('/hr/lowongan/buat',              fn() => view('hr.lowongan-buat'));
-    Route::get('/hr/lowongan/{id}',              fn($id) => view('hr.lowongan-detail'))->where('id', '[0-9]+');
+    Route::get('/hr/lowongan',                   [JobPostingController::class, 'index'])->name('hr.lowongan.index');
+    Route::get('/hr/lowongan/buat',              [JobPostingController::class, 'create'])->name('hr.lowongan.create');
+    Route::post('/hr/lowongan',                  [JobPostingController::class, 'store'])->name('hr.lowongan.store');
+    Route::get('/hr/lowongan/{id}',              [JobPostingController::class, 'show'])->name('hr.lowongan.show')->where('id', '[0-9]+');
+    Route::put('/hr/lowongan/{id}',              [JobPostingController::class, 'update'])->name('hr.lowongan.update')->where('id', '[0-9]+');
+    Route::post('/hr/lowongan/{id}/status',      [JobPostingController::class, 'updateStatus'])->name('hr.lowongan.status')->where('id', '[0-9]+');
     Route::get('/hr/pelamar',                    fn() => view('hr.pelamar'));
     Route::get('/hr/pelamar/{id}',               fn($id) => view('hr.pelamar-detail'))->where('id', '[0-9]+');
     Route::get('/hr/wawancara',                  fn() => view('hr.wawancara'));

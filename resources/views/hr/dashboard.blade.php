@@ -22,10 +22,10 @@
                 <div class="w-11 h-11 bg-green-50 rounded-xl flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                 </div>
-                <span class="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full">+12%</span>
+                <span class="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full">Active</span>
             </div>
             <p class="text-sm text-gray-500 mb-1">Active Vacancies</p>
-            <p class="text-3xl font-extrabold text-gray-900">24</p>
+            <p class="text-3xl font-extrabold text-gray-900">{{ $activeVacanciesCount }}</p>
         </a>
 
         <!-- Total Pelamar Hari Ini -->
@@ -34,10 +34,10 @@
                 <div class="w-11 h-11 bg-green-50 rounded-xl flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
-                <span class="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full">+45</span>
+                <span class="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full">Today</span>
             </div>
-            <p class="text-sm text-gray-500 mb-1">Total Applicants Today</p>
-            <p class="text-3xl font-extrabold text-gray-900">158</p>
+            <p class="text-sm text-gray-500 mb-1">Total Applicants Today / overall</p>
+            <p class="text-3xl font-extrabold text-gray-900">{{ $totalApplicantsToday }}</p>
         </a>
 
         <!-- Wawancara Minggu Ini -->
@@ -46,10 +46,10 @@
                 <div class="w-11 h-11 bg-green-50 rounded-xl flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                 </div>
-                <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">Intensive</span>
+                <span class="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">This Week</span>
             </div>
-            <p class="text-sm text-gray-500 mb-1">Interviews This Week</p>
-            <p class="text-3xl font-extrabold text-gray-900">42</p>
+            <p class="text-sm text-gray-500 mb-1">Interviews This Week / scheduled</p>
+            <p class="text-3xl font-extrabold text-gray-900">{{ $interviewsThisWeekCount }}</p>
         </a>
 
 
@@ -86,30 +86,19 @@
                     </div>
                     <!-- Bars -->
                     <div class="ml-8 flex items-end gap-3" style="height: 160px;">
+                        @foreach($monthlyTrends as $monthLabel => $val)
+                        @php
+                            $isCurrentMonth = ($monthLabel === strtoupper(now()->format('M')));
+                            $barColor = $isCurrentMonth ? 'bg-green-800' : 'bg-green-200';
+                            $textColor = $isCurrentMonth ? 'text-green-800 font-semibold' : 'text-gray-400 font-semibold';
+                            $maxVal = max(array_values($monthlyTrends));
+                            $percentHeight = $maxVal > 0 ? round(($val / $maxVal) * 140) : 0;
+                        @endphp
                         <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                            <div class="w-full rounded-t-lg bg-green-200 chart-bar transition-all duration-500" style="height:55px;" data-monthly="55" data-weekly="40"></div>
-                            <span class="text-[10px] font-semibold text-gray-400 chart-label">JAN</span>
+                            <div class="w-full rounded-t-lg {{ $barColor }} chart-bar transition-all duration-500" style="height:{{ $percentHeight }}px;" data-monthly="{{ $val }}" data-weekly="40"></div>
+                            <span class="text-[10px] {{ $textColor }} chart-label">{{ $monthLabel }}</span>
                         </div>
-                        <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                            <div class="w-full rounded-t-lg bg-green-200 chart-bar transition-all duration-500" style="height:72px;" data-monthly="72" data-weekly="60"></div>
-                            <span class="text-[10px] font-semibold text-gray-400 chart-label">FEB</span>
-                        </div>
-                        <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                            <div class="w-full rounded-t-lg bg-green-200 chart-bar transition-all duration-500" style="height:65px;" data-monthly="65" data-weekly="85"></div>
-                            <span class="text-[10px] font-semibold text-gray-400 chart-label">MAR</span>
-                        </div>
-                        <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                            <div class="w-full rounded-t-lg bg-green-200 chart-bar transition-all duration-500" style="height:88px;" data-monthly="88" data-weekly="55"></div>
-                            <span class="text-[10px] font-semibold text-gray-400 chart-label">APR</span>
-                        </div>
-                        <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                            <div class="w-full rounded-t-lg bg-green-200 chart-bar transition-all duration-500" style="height:78px;" data-monthly="78" data-weekly="70"></div>
-                            <span class="text-[10px] font-semibold text-gray-400 chart-label">MAY</span>
-                        </div>
-                        <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                            <div class="w-full rounded-t-lg bg-green-800 chart-bar transition-all duration-500" style="height:140px;" data-monthly="100" data-weekly="45"></div>
-                            <span class="text-[10px] font-semibold text-green-800 chart-label">JUN</span>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -127,63 +116,34 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        <tr>
-                            <td class="py-4 pr-4">
-                                <p class="font-semibold text-sm text-gray-900">Senior Chemical Engineer</p>
-                            </td>
-                            <td class="py-4 pr-4 text-sm text-gray-500">Production</td>
-                            <td class="py-4 pr-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                        <div class="h-full bg-green-700 rounded-full" style="width:75%"></div>
+                        @forelse($activeVacancies as $job)
+                            @php
+                                $progress = $job->quota > 0 ? min(100, round(($job->applicant_count / $job->quota) * 100)) : 0;
+                            @endphp
+                            <tr>
+                                <td class="py-4 pr-4">
+                                    <p class="font-semibold text-sm text-gray-900">{{ $job->title }}</p>
+                                </td>
+                                <td class="py-4 pr-4 text-sm text-gray-500">{{ $job->category->name ?? 'Category' }}</td>
+                                <td class="py-4 pr-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                            <div class="h-full bg-green-700 rounded-full" style="width:{{ $progress }}%"></div>
+                                        </div>
+                                        <span class="text-xs font-semibold text-gray-600 w-8">{{ $progress }}%</span>
                                     </div>
-                                    <span class="text-xs font-semibold text-gray-600 w-8">75%</span>
-                                </div>
-                            </td>
-                            <td class="py-4 text-right">
-                                <button class="text-gray-400 hover:text-gray-700 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 pr-4">
-                                <p class="font-semibold text-sm text-gray-900">Sustainability Officer</p>
-                            </td>
-                            <td class="py-4 pr-4 text-sm text-gray-500">Compliance</td>
-                            <td class="py-4 pr-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                        <div class="h-full bg-green-700 rounded-full" style="width:40%"></div>
-                                    </div>
-                                    <span class="text-xs font-semibold text-gray-600 w-8">40%</span>
-                                </div>
-                            </td>
-                            <td class="py-4 text-right">
-                                <button class="text-gray-400 hover:text-gray-700 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 pr-4">
-                                <p class="font-semibold text-sm text-gray-900">Plant Manager</p>
-                            </td>
-                            <td class="py-4 pr-4 text-sm text-gray-500">Operations</td>
-                            <td class="py-4 pr-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                        <div class="h-full bg-green-700 rounded-full" style="width:15%"></div>
-                                    </div>
-                                    <span class="text-xs font-semibold text-gray-600 w-8">15%</span>
-                                </div>
-                            </td>
-                            <td class="py-4 text-right">
-                                <button class="text-gray-400 hover:text-gray-700 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                                </button>
-                            </td>
-                        </tr>
+                                </td>
+                                <td class="py-4 text-right">
+                                    <button class="text-gray-400 hover:text-gray-700 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-8 text-center text-sm text-gray-400 italic">No active vacancies available.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -200,10 +160,16 @@
                         <span id="wawancara-count" class="text-xs font-bold text-green-700 bg-green-50 px-2 py-1 rounded-full">3 Sessions</span>
                     </div>
                     <select id="wawancara-date" class="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-green-700 text-gray-700 w-full font-medium cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
-                        <option value="2026-04-30">Thursday, 30 Apr 2026</option>
-                        <option value="2026-05-01">Friday, 1 May 2026</option>
-                        <option value="2026-05-05">Tuesday, 5 May 2026</option>
-                        <option value="2026-05-12">Tuesday, 12 May 2026</option>
+                        @if(count($wawancaraData) > 0)
+                            @foreach(array_keys($wawancaraData) as $dateStr)
+                                <option value="{{ $dateStr }}">{{ \Carbon\Carbon::parse($dateStr)->format('l, d M Y') }}</option>
+                            @endforeach
+                        @else
+                            <option value="2026-04-30">Thursday, 30 Apr 2026</option>
+                            <option value="2026-05-01">Friday, 1 May 2026</option>
+                            <option value="2026-05-05">Tuesday, 5 May 2026</option>
+                            <option value="2026-05-12">Tuesday, 12 May 2026</option>
+                        @endif
                     </select>
                 </div>
 
@@ -257,5 +223,20 @@
 @endsection
 
 @section('js')
+<script>
+    window.dbChartData = {
+        monthly: {
+            labels: {!! json_encode(array_keys($monthlyTrends)) !!},
+            values: {!! json_encode(array_values($monthlyTrends)) !!},
+            activeIndex: {{ array_search(strtoupper(now()->format('M')), array_keys($monthlyTrends)) !== false ? array_search(strtoupper(now()->format('M')), array_keys($monthlyTrends)) : 5 }}
+        },
+        weekly: {
+            labels: {!! json_encode(array_keys($weeklyTrends)) !!},
+            values: {!! json_encode(array_values($weeklyTrends)) !!},
+            activeIndex: {{ array_search(strtoupper(now()->format('D')), array_keys($weeklyTrends)) !== false ? array_search(strtoupper(now()->format('D')), array_keys($weeklyTrends)) : 5 }}
+        },
+        wawancara: {!! json_encode($wawancaraData) !!}
+    };
+</script>
 <script src="{{ asset('js/hr/dashboard.js') }}"></script>
 @endsection
