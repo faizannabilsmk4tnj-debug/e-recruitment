@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\ApplicantCvController;
 use App\Http\Controllers\ApplicantEducationController;
 use App\Http\Controllers\ApplicantLampiranController;
@@ -15,10 +14,11 @@ use App\Http\Controllers\HR\DashboardController;
 use App\Http\Controllers\VacancyController;
 use App\Http\Middleware\SetUserLocale;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routes - Hanya return view, tidak ada logic
 |--------------------------------------------------------------------------
 */
 
@@ -36,9 +36,7 @@ Route::get('/logout-now', function () {
     return redirect('/login');
 });
 
-// ===== AUTH PELAMAR =====
-// Hanya bisa diakses kalau belum login
-// Auth routes — GET bisa diakses siapapun, POST diproses controller
+// ===== AUTH =====
 Route::get('/login',            fn() => view('auth.login'))->name('login');
 Route::post('/login',           [AuthController::class, 'login']);
 Route::get('/register',         fn() => view('auth.register'))->name('register');
@@ -48,17 +46,11 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password',  [AuthController::class, 'resetPassword'])->name('password.update');
 
-
-// ===== AUTH HR =====
-// /hr/login bisa diakses siapapun (tidak pakai middleware guest)
-Route::get('/hr/login',  fn() => view('hr.login'))->name('hr.login');
-Route::post('/hr/login', [AuthController::class, 'hrLogin']);
-
-// Logout (untuk kedua role)
+Route::get('/hr/login', fn() => view('hr.login'));
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // ===== PELAMAR — harus login dan role=applicant =====
-Route::middleware('role:applicant')->group(function () {
+Route::middleware(['auth', 'role:applicant'])->group(function () {
 
     Route::get('/pelamar/dashboard',           fn() => view('pelamar.dashboard'));
     Route::get('/pelamar/profil',              [ApplicantProfileController::class, 'edit'])->name('pelamar.profil.edit');
@@ -105,7 +97,7 @@ Route::middleware('role:applicant')->group(function () {
 });
 
 // ===== HR — harus login dan role=hr =====
-Route::middleware(['role:hr', SetUserLocale::class])->group(function () {
+Route::middleware(['auth', 'role:hr', SetUserLocale::class])->group(function () {
 
     Route::get('/hr/dashboard',                  [DashboardController::class, 'index'])->name('hr.dashboard');
     Route::get('/hr/setting',                    [SettingController::class, 'index'])->name('hr.setting');
@@ -140,3 +132,4 @@ Route::middleware(['role:hr', SetUserLocale::class])->group(function () {
     Route::delete('/hr/template-cv/{template}',             [HrCvTemplateController::class, 'destroy'])->name('hr.template-cv.destroy');
 
 });
+

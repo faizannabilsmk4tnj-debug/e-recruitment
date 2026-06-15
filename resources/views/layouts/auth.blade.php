@@ -8,7 +8,7 @@
     @vite(['resources/css/app.css'])
     <style>
         .bg-gradient-eco {
-            background: linear-gradient(135deg, #f0fdf4 0%, #f9fafb 40%, #f9fafb 60%, #ecfdf5 100%);
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
         }
         .green-blob-left {
             position: absolute;
@@ -37,34 +37,34 @@
             background: radial-gradient(ellipse, rgba(220, 252, 231, 0.5) 0%, transparent 70%);
             pointer-events: none;
         }
-
-        /* Animasi shake saat login gagal */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            15%       { transform: translateX(-6px); }
-            30%       { transform: translateX(6px); }
-            45%       { transform: translateX(-5px); }
-            60%       { transform: translateX(5px); }
-            75%       { transform: translateX(-3px); }
-            90%       { transform: translateX(3px); }
+    </style>
+    <style>
+        body > nav, body > footer, body > footer * { background: #15803d !important; background-image: none !important; }
+        button[class*="bg-green-600"], button[class*="bg-green-700"], button[class*="bg-green-800"], button[class*="bg-green-900"], button[class*="bg-[#0f3c20]"], button[class*="bg-[#166534]"],
+        a[class*="bg-green-600"], a[class*="bg-green-700"], a[class*="bg-green-800"], a[class*="bg-green-900"], a[class*="bg-[#0f3c20]"], a[class*="bg-[#166534]"] {
+            background-color: #15803d !important;
+            border-color: #15803d !important;
         }
-        .shake-error {
-            animation: shake 0.6s ease-in-out;
-            border-color: #ef4444 !important;
+        button[class*="bg-green-600"]:hover, button[class*="bg-green-700"]:hover, button[class*="bg-green-800"]:hover, button[class*="bg-green-900"]:hover, button[class*="bg-[#0f3c20]"]:hover, button[class*="bg-[#166534]"]:hover,
+        a[class*="bg-green-600"]:hover, a[class*="bg-green-700"]:hover, a[class*="bg-green-800"]:hover, a[class*="bg-green-900"]:hover, a[class*="bg-[#0f3c20]"]:hover, a[class*="bg-[#166534]"]:hover {
+            background-color: #166534 !important;
+            border-color: #166534 !important;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col bg-gray-50">
+<body class="min-h-screen flex flex-col bg-gray-200">
 
     <!-- Navbar -->
-    <nav class="bg-green-900 px-10 py-3 flex items-center justify-between relative z-50">
+    <nav style="background: #15803d !important; border-bottom: 2px solid #14532d !important; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08) !important;" class="px-10 py-3 flex items-center justify-between relative z-50">
         <div class="flex items-center gap-3">
             <!-- Logo + Company Name -->
             <a href="/" class="flex items-center gap-3">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-12 w-auto">
             </a>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-6">
+            <a href="/" class="text-green-50 hover:text-white text-sm transition-colors font-medium">Home</a>
+            <a href="/tentang-kami" class="text-green-50 hover:text-white text-sm transition-colors font-medium">About Us</a>
             <!-- Help Icon → HR Login -->
             <a href="/hr/login"
                title="Masuk sebagai HR Staff"
@@ -97,13 +97,16 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-green-900 text-white py-8 px-10 relative z-50">
-        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div>
-                <h3 class="font-bold text-lg">@yield('footer-title', 'PT Ecogreen Oleochemicals')</h3>
-                <p class="text-green-300 text-sm mt-1">© 2024 PT Ecogreen Oleochemicals. All rights reserved.</p>
+    <footer style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="text-white py-4 px-8 relative z-50">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">
+                <div>
+                    <h3 class="font-semibold text-sm text-white">@yield('footer-title', 'PT Ecogreen Oleochemicals')</h3>
+                    <p class="text-green-50 text-xs mt-0.5">© 2024 PT Ecogreen Oleochemicals. All rights reserved.</p>
+                </div>
             </div>
-            <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-green-200">
+            <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-green-50">
                 <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
                 <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
                 <a href="#" class="hover:text-white transition-colors">Sustainability Report</a>
@@ -113,5 +116,25 @@
     </footer>
 
     @yield('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nav = document.querySelector('body > nav');
+            const footer = document.querySelector('body > footer');
+            if (nav && footer) {
+                const navBg = getComputedStyle(nav).backgroundColor;
+                footer.style.setProperty('background', navBg, 'important');
+                footer.style.setProperty('background-color', navBg, 'important');
+                footer.style.setProperty('background-image', 'none', 'important');
+                footer.querySelectorAll('*').forEach(function(el) {
+                    const elBg = getComputedStyle(el).backgroundColor;
+                    if (elBg !== 'rgba(0, 0, 0, 0)' && elBg !== 'transparent' && elBg !== navBg) {
+                        el.style.setProperty('background', navBg, 'important');
+                        el.style.setProperty('background-color', navBg, 'important');
+                        el.style.setProperty('background-image', 'none', 'important');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

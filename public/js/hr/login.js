@@ -22,110 +22,112 @@ document.addEventListener('DOMContentLoaded', function () {
     // Remember Me — restore email dari localStorage saat halaman dibuka
     // ============================================================
     const savedEmail = localStorage.getItem('hr_remember_email');
-    if (savedEmail) {
+    if (savedEmail && emailInput) {
         emailInput.value    = savedEmail;
-        rememberChk.checked = true;
+        if (rememberChk) rememberChk.checked = true;
     }
 
     // Jika HR uncheck → hapus data tersimpan
-    rememberChk.addEventListener('change', function () {
-        if (!this.checked) {
-            localStorage.removeItem('hr_remember_email');
-        }
-    });
+    if (rememberChk) {
+        rememberChk.addEventListener('change', function () {
+            if (!this.checked) {
+                localStorage.removeItem('hr_remember_email');
+            }
+        });
+    }
 
     // ============================================================
     // Toggle Password
     // ============================================================
-    toggleBtn.addEventListener('click', function () {
-        const isPass = passInput.type === 'password';
-        passInput.type = isPass ? 'text' : 'password';
-        eyeIcon.classList.toggle('hidden', isPass);
-        eyeOffIcon.classList.toggle('hidden', !isPass);
-    });
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+            const isPass = passInput.type === 'password';
+            passInput.type = isPass ? 'text' : 'password';
+            if (eyeIcon) eyeIcon.classList.toggle('hidden', isPass);
+            if (eyeOffIcon) eyeOffIcon.classList.toggle('hidden', !isPass);
+        });
+    }
 
-    // ============================================================
-    // Enter key trigger login
-    // ============================================================
+    // Enter key
     [emailInput, passInput].forEach(el => {
-        el.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+        if (el) {
+            el.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+        }
     });
 
-    // ============================================================
     // Login
-    // ============================================================
-    btnLogin.addEventListener('click', doLogin);
+    if (btnLogin) btnLogin.addEventListener('click', doLogin);
 
     function doLogin() {
         const email = emailInput.value.trim();
-        const pass  = passInput.value;
+        const pass  = passInput.value.trim();
         alertEl.classList.add('hidden');
 
         if (!email || !pass) {
-            showError('Email dan password wajib diisi.');
+            alertText.textContent = 'Email dan password wajib diisi.';
+            alertEl.classList.remove('hidden');
             return;
         }
 
-        // Loading state
         btnLogin.disabled = true;
-        btnLogin.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg><span>Memverifikasi...</span>';
+        btnLogin.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg><span>Verifying...</span>';
 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+        const remember = rememberChk ? rememberChk.checked : false;
 
-        fetch('/hr/login', {
+        fetch('/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             },
-            body: JSON.stringify({ email, password: pass, remember: rememberChk.checked }),
+            body: JSON.stringify({ email: email, password: pass, remember: remember })
         })
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                // Simpan atau hapus email berdasarkan status checkbox
-                if (rememberChk.checked) {
+                if (rememberChk && rememberChk.checked) {
                     localStorage.setItem('hr_remember_email', email);
                 } else {
                     localStorage.removeItem('hr_remember_email');
                 }
-                window.location.href = data.redirect_url;
+
+                if (data.role === 'hr') {
+                    window.location.href = '/hr/dashboard';
+                } else {
+                    alertText.textContent = 'Akun ini bukan akun HR.';
+                    alertEl.classList.remove('hidden');
+                }
             } else {
-                showError(data.message || 'Login gagal. Coba lagi.');
-                btnLogin.disabled = false;
-                btnLogin.textContent = 'Masuk ke HR Panel';
+                alertText.textContent = data.message || 'Login gagal.';
+                alertEl.classList.remove('hidden');
             }
-        })
-        .catch(() => {
-            showError('Terjadi kesalahan koneksi. Coba lagi nanti.');
             btnLogin.disabled = false;
-            btnLogin.textContent = 'Masuk ke HR Panel';
+            btnLogin.innerHTML = 'Masuk ke HR Panel';
+        })
+        .catch((err) => {
+            console.log('Fetch error:', err);
+            alertText.textContent = 'Terjadi kesalahan. Coba lagi.';
+            alertEl.classList.remove('hidden');
+            btnLogin.disabled = false;
+            btnLogin.innerHTML = 'Masuk ke HR Panel';
         });
     }
 
-    function showError(message) {
-        alertText.textContent = message;
-        alertEl.classList.remove('hidden');
+    // Forgot password modal
+    if (btnForgot) btnForgot.addEventListener('click', () => modalForgot.classList.remove('hidden'));
+    if (btnCloseForgot) btnCloseForgot.addEventListener('click', () => modalForgot.classList.add('hidden'));
+    if (modalForgot) modalForgot.addEventListener('click', e => { if (e.target === modalForgot) modalForgot.classList.add('hidden'); });
+
+    if (btnSendReset) {
+        btnSendReset.addEventListener('click', function () {
+            const email = document.getElementById('forgot-email').value.trim();
+            if (!email) { alert('Masukkan email terlebih dahulu.'); return; }
+            this.textContent = 'Mengirim...';
+            this.disabled = true;
+            setTimeout(() => {
+                this.textContent = '✓ Link dikirim ke ' + email;
+                setTimeout(() => modalForgot.classList.add('hidden'), 2000);
+            }, 1500);
+        });
     }
-
-    // ============================================================
-    // Forgot Password Modal
-    // ============================================================
-    btnForgot.addEventListener('click', () => modalForgot.classList.remove('hidden'));
-    btnCloseForgot.addEventListener('click', () => modalForgot.classList.add('hidden'));
-    modalForgot.addEventListener('click', e => {
-        if (e.target === modalForgot) modalForgot.classList.add('hidden');
-    });
-
-    btnSendReset.addEventListener('click', function () {
-        const email = document.getElementById('forgot-email').value.trim();
-        if (!email) { alert('Masukkan email terlebih dahulu.'); return; }
-        this.textContent = 'Mengirim...';
-        this.disabled = true;
-        setTimeout(() => {
-            this.textContent = '✓ Link dikirim ke ' + email;
-            setTimeout(() => modalForgot.classList.add('hidden'), 2000);
-        }, 1500);
-    });
 });

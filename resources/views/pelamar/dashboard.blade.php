@@ -30,18 +30,21 @@
     <!-- Green fill based on percentage -->
     <div class="absolute inset-0 bg-gradient-to-r from-green-800 to-green-900 transition-all duration-1000 ease-out" id="progress-fill" style="width: 0%"></div>
     <!-- Content -->
-    <div class="relative z-10 p-6 flex items-center justify-between">
+    <div class="relative z-10 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold" id="greeting-text"><span id="user-name" class="hidden">{{ auth()->user()->name }}</span></h1>
             <p class="mt-1 text-sm" id="greeting-sub">Welcome back. Here is a summary of your application activities.</p>
         </div>
-        <div class="text-right flex items-center gap-4">
-            <div>
-                <p class="text-xs uppercase tracking-wider font-medium" id="progress-label">Complete Profile</p>
-                <p class="text-3xl font-bold mt-0.5" id="progress-number">85%</p>
-            </div>
-            <div class="w-10 h-10 rounded-full border-2 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" id="progress-arrow">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        <div class="shrink-0 flex items-center">
+            <!-- Glass/White Badge -->
+            <div class="bg-white/95 backdrop-blur-md border border-white/50 shadow-sm rounded-xl px-5 py-3 flex items-center gap-4 group-hover:shadow-md transition-all">
+                <div class="text-right">
+                    <p class="text-[10px] uppercase tracking-widest font-bold text-gray-500 mb-0.5">Complete Profile</p>
+                    <p class="text-2xl font-black text-green-700 leading-none tracking-tight">85%</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 transition-transform group-hover:translate-x-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
             </div>
         </div>
     </div>

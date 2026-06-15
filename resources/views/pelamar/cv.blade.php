@@ -53,7 +53,7 @@
 
         {{-- Thumbnail --}}
         <div class="cv-thumb relative overflow-hidden flex items-center justify-center p-6"
-             style="background:{{ $tpl->is_default ? '#0f3c20' : '#f1f5f9' }}">
+             style="background:{{ $tpl->is_default ? '#15803d' : '#f1f5f9' }}">
             @if($tpl->is_default)
             <span class="absolute top-3 left-3 bg-green-600 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
@@ -64,10 +64,10 @@
             @endif
             <div class="text-center">
                 <div class="w-14 h-14 rounded-lg mx-auto mb-3 flex items-center justify-center text-xs font-mono font-bold"
-                     style="background:{{ $tpl->is_default ? '#1a5c35' : '#e2e8f0' }};color:{{ $tpl->is_default ? '#86efac' : '#64748b' }}">CV</div>
+                     style="background:{{ $tpl->is_default ? '#166534' : '#e2e8f0' }};color:{{ $tpl->is_default ? '#86efac' : '#64748b' }}">CV</div>
                 <div class="space-y-1.5">
-                    <div class="h-2 w-24 rounded mx-auto" style="background:{{ $tpl->is_default ? '#1a5c35' : '#cbd5e1' }}"></div>
-                    <div class="h-1.5 w-16 rounded mx-auto" style="background:{{ $tpl->is_default ? '#166534' : '#e2e8f0' }}"></div>
+                    <div class="h-2 w-24 rounded mx-auto" style="background:{{ $tpl->is_default ? '#166534' : '#cbd5e1' }}"></div>
+                    <div class="h-1.5 w-16 rounded mx-auto" style="background:{{ $tpl->is_default ? '#14532d' : '#e2e8f0' }}"></div>
                     <div class="h-1 w-28 rounded mx-auto mt-2" style="background:{{ $tpl->is_default ? '#14532d' : '#e2e8f0' }}"></div>
                     <div class="h-1 w-20 rounded mx-auto" style="background:{{ $tpl->is_default ? '#14532d' : '#e2e8f0' }}"></div>
                 </div>
@@ -164,8 +164,6 @@
         <iframe id="cv-preview-frame" title="Preview CV"></iframe>
     </div>
 
-
-
     <div class="max-w-3xl mx-auto mt-4 bg-amber-50 border border-amber-200 rounded-lg px-5 py-3 flex items-start gap-3">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
@@ -182,7 +180,7 @@
 </div>
 
 {{-- Kelengkapan Data CV --}}
-<div id="kelengkapan-section" class="bg-white rounded-xl border border-gray-200 p-6 mb-24">
+<div id="kelengkapan-section" class="bg-white rounded-xl border border-gray-200 p-6 mb-10">
     <h2 class="text-base font-bold text-gray-900 mb-4">Kelengkapan Data CV</h2>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
@@ -256,6 +254,45 @@
     </div>
 </div>
 
+<!-- Tips Profesional -->
+<div class="bg-gradient-to-br from-green-50 to-gray-50 rounded-xl border border-gray-200 p-8 mb-8">
+    <div class="flex items-start gap-8">
+        <div class="flex-1">
+            <h2 class="text-xl font-bold text-gray-900 italic mb-4">Pro Tips</h2>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4">Choose a template with a balanced text-to-whitespace ratio. For technical roles, use <strong>Modern Executive</strong>. For marketing or design positions, creative styles are the best choice.</p>
+            <a href="#" class="text-sm font-semibold text-green-700 hover:text-green-600 flex items-center gap-1 transition-colors">
+                Read Full Career Guide
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+            </a>
+        </div>
+        <div class="flex gap-4 shrink-0">
+            <div class="bg-white rounded-xl border border-gray-200 p-5 w-40">
+                <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                </div>
+                <p class="font-bold text-sm text-gray-900">ATS Friendly</p>
+                <p class="text-xs text-gray-500 mt-1">Passes company ATS screening bots</p>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-200 p-5 w-40">
+                <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                </div>
+                <p class="font-bold text-sm text-gray-900">Auto-Save</p>
+                <p class="text-xs text-gray-500 mt-1">Safely stored in the cloud</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Download Button Section (Integrated with page) -->
+<div class="bg-white border-t border-gray-200 p-6 -mx-8 -mb-8 mt-4 flex items-center justify-between">
+    <p class="text-sm text-gray-500">Make sure you have saved all changes before downloading.</p>
+    <button id="btn-download-bottom" onclick="downloadCvPdf()" class="flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg text-sm transition-colors shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+        Download PDF
+    </button>
+</div>
+
 {{-- Modal Full Screen Preview --}}
 <div id="cv-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl w-full max-w-4xl h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-preview">
@@ -296,7 +333,6 @@
         </div>
     </div>
 </div>
-
 
 @endsection
 

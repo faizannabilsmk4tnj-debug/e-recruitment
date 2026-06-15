@@ -8,7 +8,7 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 px-8 py-10">
         <!-- Icon -->
         <div class="flex justify-center mb-5">
-            <div class="w-14 h-14 bg-green-950 rounded-xl flex items-center justify-center">
+            <div class="w-14 h-14 bg-[#15803d] rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     <path d="m9 12 2 2 4-4"/>
@@ -19,6 +19,17 @@
         <!-- Title -->
         <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">Login to Your Account</h1>
         <p class="text-center text-gray-500 text-sm mb-8">Welcome back! Please sign in to manage your account.</p>
+
+        {{-- Auth Warning (dari redirect middleware) --}}
+        @if(session('auth_warning'))
+        <div id="alert-auth-warning" class="mb-4 bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 flex items-start gap-3 animate-pulse-once">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-500 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <p class="text-amber-700 text-sm font-medium">{{ session('auth_warning') }}</p>
+        </div>
+        @endif
 
         <!-- Error Alert (hidden by default, shown via JS) -->
         <div id="alert-error" class="hidden mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3 flex items-start gap-3">
@@ -39,7 +50,7 @@
             <p class="text-amber-700 text-sm font-medium" id="alert-warning-text">Account temporarily locked due to multiple failed login attempts. Please try again in 30 minutes.</p>
         </div>
 
-        <!-- Success Alert — muncul setelah register berhasil -->
+        <!-- Success Alert — muncul setelah register/reset-password berhasil -->
         <div id="alert-success" class="hidden mb-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3 flex items-start gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -76,7 +87,7 @@
             <div>
                 <div class="flex items-center justify-between mb-2">
                     <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider">Password</label>
-                <a href="/forgot-password" class="text-xs font-semibold text-green-800 hover:text-green-600 underline transition-colors">Forgot Password?</a>
+                    <a href="/forgot-password" class="text-xs font-semibold text-green-800 hover:text-green-600 underline transition-colors">Forgot Password?</a>
                 </div>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -116,7 +127,7 @@
             <button
                 type="button"
                 id="btn-login"
-                class="w-full bg-green-950 hover:bg-green-900 text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 text-sm"
+                class="w-full bg-[#15803d] hover:bg-[#166534] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 text-sm"
             >
                 Sign In
             </button>
@@ -168,4 +179,3 @@
     }
 </script>
 @endsection
-

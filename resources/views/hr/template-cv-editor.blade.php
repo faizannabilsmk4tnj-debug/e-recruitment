@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:'Segoe UI',sans-serif;background:#f1f5f9;overflow:hidden}
-#bar{height:52px;background:#0f3c20;display:flex;align-items:center;padding:0 16px;gap:8px;position:fixed;top:0;left:0;right:0;z-index:100}
+#bar{height:52px;background:#15803d;display:flex;align-items:center;padding:0 16px;gap:8px;position:fixed;top:0;left:0;right:0;z-index:100}
 #ribbon{height:40px;background:#fff;border-bottom:1px solid #e5e7eb;position:fixed;top:52px;left:0;right:0;z-index:99;display:flex;align-items:center;padding:0 8px;gap:2px;overflow-x:auto}
 #sb{width:260px;background:#fff;border-right:1px solid #e5e7eb;position:fixed;top:92px;left:0;bottom:0;overflow-y:auto;padding:12px}
 #canvas{position:fixed;top:92px;left:260px;right:0;bottom:0;overflow-y:auto;background:#cbd5e1;display:flex;flex-direction:column;align-items:center;padding:24px}
@@ -25,9 +25,9 @@
 .drag-grip{background:#4b5563!important;cursor:grab!important;font-size:13px!important;padding:2px 5px!important;}
 .drag-grip:active{cursor:grabbing!important;}
 .ab{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;font-size:12px;font-weight:600;color:#374151;margin-bottom:5px}
-.ab:hover{background:#f0fdf4;border-color:#0f3c20;color:#0f3c20}
+.ab:hover{background:#f0fdf4;border-color:#15803d;color:#15803d}
 .rb{background:none;border:none;color:#374151;cursor:pointer;padding:4px 6px;border-radius:5px;font-size:12px;font-weight:700;display:flex;align-items:center}
-.rb:hover,.rb.on{background:#dcfce7;color:#0f3c20}
+.rb:hover,.rb.on{background:#dcfce7;color:#15803d}
 .rs{width:1px;height:20px;background:#e5e7eb;margin:0 3px}
 .rs2{background:#f9fafb;border:1px solid #e5e7eb;border-radius:5px;padding:3px 5px;font-size:11px;font-weight:600;cursor:pointer;outline:none;height:28px}
 [contenteditable]{outline:none}[contenteditable]:focus{background:#fffbeb8a}
@@ -51,7 +51,7 @@
   <button id="bredo" class="tb" disabled onclick="redo()" title="Ctrl+Y">&#8618; Redo</button>
   <button class="tb" onclick="saveDraft()">Save</button>
   <button class="tb" onclick="doPreview()">Preview</button>
-  <button onclick="doPublish()" style="background:#4ade80;color:#0f3c20;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer">Publish</button>
+  <button onclick="doPublish()" style="background:#4ade80;color:#15803d;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer">Publish</button>
 </div>
 <div id="ribbon">
   <select class="rs2" onchange="fmt('formatBlock',this.value)" style="width:96px"><option value="p">Paragraf</option><option value="h1">Heading 1</option><option value="h2">Heading 2</option><option value="h3">Heading 3</option></select>
@@ -201,7 +201,7 @@ function applyImport(){
     pg.innerHTML = oldHTML;
     toast('Gagal: Template melebihi 1 halaman (tidak didukung).', '#dc2626');
   } else {
-    toast('Import berhasil ditimpa!', '#0f3c20');
+    toast('Import berhasil ditimpa!', '#15803d');
     save();
   }
   iHTML='';
@@ -300,4 +300,3 @@ save();
 </script>
 </body>
 </html>
-

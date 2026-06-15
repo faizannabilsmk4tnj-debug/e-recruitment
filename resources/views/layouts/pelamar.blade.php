@@ -20,52 +20,67 @@
             background-image:
                 radial-gradient(ellipse at 0% 0%, rgba(34, 197, 94, 0.12) 0%, transparent 50%),
                 radial-gradient(ellipse at 100% 100%, rgba(34, 197, 94, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 60% 30%, rgba(187, 247, 208, 0.15) 0%, transparent 40%),
-                linear-gradient(rgba(0, 80, 40, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 80, 40, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+                radial-gradient(ellipse at 60% 30%, rgba(187, 247, 208, 0.15) 0%, transparent 40%);
+            background-size: 100% 100%, 100% 100%, 100% 100%;
         }
     </style>
     @yield('css')
+    <style>
+        body > nav, body > footer, body > footer * { background: #15803d !important; background-image: none !important; }
+        button[class*="bg-green-600"], button[class*="bg-green-700"], button[class*="bg-green-800"], button[class*="bg-green-900"], button[class*="bg-[#0f3c20]"], button[class*="bg-[#166534]"],
+        a[class*="bg-green-600"], a[class*="bg-green-700"], a[class*="bg-green-800"], a[class*="bg-green-900"], a[class*="bg-[#0f3c20]"], a[class*="bg-[#166534]"] {
+            background-color: #15803d !important;
+            border-color: #15803d !important;
+        }
+        button[class*="bg-green-600"]:hover, button[class*="bg-green-700"]:hover, button[class*="bg-green-800"]:hover, button[class*="bg-green-900"]:hover, button[class*="bg-[#0f3c20]"]:hover, button[class*="bg-[#166534]"]:hover,
+        a[class*="bg-green-600"]:hover, a[class*="bg-green-700"]:hover, a[class*="bg-green-800"]:hover, a[class*="bg-green-900"]:hover, a[class*="bg-[#0f3c20]"]:hover, a[class*="bg-[#166534]"]:hover {
+            background-color: #166534 !important;
+            border-color: #166534 !important;
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-gray-50 flex flex-col">
+<body class="h-screen bg-gray-200 flex flex-col overflow-hidden">
 
     <!-- ========== NAVBAR (full-width, top) ========== -->
-    <nav class="bg-green-900 px-8 py-3 flex items-center justify-between sticky top-0 z-50">
+    <nav style="background: #15803d !important; border-bottom: 2px solid #14532d !important; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08) !important;" class="px-16 py-3 flex items-center justify-between z-50 shrink-0">
         <!-- Left: Logo + Company Name -->
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-3">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-9 w-auto">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-12 w-auto">
             </a>
         </div>
 
         <!-- Nav Links -->
         <div class="flex items-center gap-6">
-            <a href="/pelamar/lowongan" class="text-green-300 hover:text-white text-sm transition-colors">Vacancies</a>
-            <a href="/pelamar/profil" class="text-green-300 hover:text-white text-sm transition-colors">My Profile</a>
+            <button type="button" onclick="openModal('/', 'Home')" class="text-green-50 hover:text-white text-sm transition-colors font-medium">Home</button>
+            <button type="button" onclick="openModal('/pelamar/lowongan', 'Vacancies')" class="text-green-50 hover:text-white text-sm transition-colors font-medium">Vacancies</button>
+            <button type="button" onclick="openModal('/tentang-kami', 'About Us')" class="text-green-50 hover:text-white text-sm transition-colors font-medium">About Us</button>
+            <a href="/pelamar/profil" class="text-green-50 hover:text-white text-sm transition-colors font-medium">My Profile</a>
 
             <!-- Avatar -->
-            @php $navProfile = auth()->user()->profile; @endphp
+            @php $navProfile = auth()->user() ? auth()->user()->profile : null; @endphp
             <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-green-900 font-bold text-sm ring-2 ring-green-300 overflow-hidden" id="user-avatar">
-                @if ($navProfile?->avatar_url)
+                @if ($navProfile && $navProfile->avatar_url)
                     <img src="{{ asset('storage/' . $navProfile->avatar_url) }}" alt="Avatar" class="w-full h-full object-cover">
+                @elseif (auth()->check() && auth()->user()->avatar)
+                    <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Avatar" class="w-full h-full object-cover">
                 @else
-                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                    {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
                 @endif
             </div>
 
             <!-- Help / Tutorial -->
-            <button id="btn-help" onclick="sessionStorage.removeItem('tour-done'); window.location.href='/pelamar/dashboard';" class="w-8 h-8 bg-green-800 hover:bg-green-700 rounded-full flex items-center justify-center text-white transition-colors" title="User Guide">
+            <button id="btn-help" onclick="sessionStorage.removeItem('tour-done'); window.location.href='/pelamar/dashboard';" class="w-8 h-8 bg-[#15803d] hover:bg-[#166534] rounded-full flex items-center justify-center text-white transition-colors" title="User Guide">
                 <span class="text-sm font-bold">?</span>
             </button>
         </div>
     </nav>
 
     <!-- ========== BODY: Sidebar + Content ========== -->
-    <div class="flex flex-1">
+    <div class="flex flex-1 overflow-hidden">
 
         <!-- ========== SIDEBAR ========== -->
-        <aside class="w-60 bg-white border-r border-gray-200 flex flex-col sticky top-[52px] h-[calc(100vh-52px)]">
+        <aside class="w-60 bg-white border-r border-gray-200 flex flex-col overflow-y-auto shrink-0">
 
             <!-- Profile Progress -->
             <div class="px-6 py-4 border-b border-gray-100">
@@ -133,9 +148,9 @@
 
             <!-- Logout -->
             <div class="px-4 py-4 border-t border-gray-100">
-                <form method="POST" action="/logout">
+                <form action="{{ route('logout') }}" method="POST" id="logout-form">
                     @csrf
-                    <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors">
+                    <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors text-left">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
                         </svg>
@@ -146,36 +161,142 @@
         </aside>
 
         <!-- ========== MAIN CONTENT ========== -->
-        <div class="flex-1 flex flex-col min-h-[calc(100vh-52px)]">
-
-            <!-- Page Content -->
-            <main class="flex-1 p-8 content-bg">
-                @yield('content')
-            </main>
-
-            <!-- Footer -->
-            <footer class="bg-green-950 text-white px-8 py-6">
-                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-5 w-auto">
-                        </div>
-                        <p class="text-green-400 text-xs">© 2023 Human Resources Department. All Rights Reserved.</p>
-                    </div>
-                    <div class="flex flex-wrap gap-6 text-xs text-green-300">
-                        <a href="/" class="hover:text-white transition-colors">Career Portal</a>
-                        <a href="/" class="hover:text-white transition-colors">About Us</a>
-                        <a href="/" class="hover:text-white transition-colors">Help Center</a>
-                        <a href="/" class="hover:text-white transition-colors">Privacy</a>
-                        <a href="/" class="hover:text-white transition-colors">Terms</a>
-                    </div>
-                </div>
-            </footer>
-        </div>
+        <main class="flex-1 p-8 content-bg overflow-y-auto">
+            @yield('content')
+        </main>
 
     </div>
 
+    <!-- Footer -->
+    <footer style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="text-white px-16 py-3 shrink-0 relative z-50">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+            <div class="flex items-center gap-4">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-6 w-auto">
+                <p class="text-green-50 text-[11px] border-l border-green-700/30 pl-4">© 2023 PT Ecogreen Oleochemicals</p>
+            </div>
+            <div class="flex flex-wrap gap-5 text-[11px] text-green-50">
+                <a href="#" class="cursor-pointer hover:text-white hover:underline transition-colors relative z-50">Career Portal</a>
+                <a href="#" class="cursor-pointer hover:text-white hover:underline transition-colors relative z-50">Help Center</a>
+                <a href="#" class="cursor-pointer hover:text-white hover:underline transition-colors relative z-50">Terms & Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Centered Modal -->
+    <div id="content-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-black/50 transition-opacity opacity-0" id="modal-backdrop" onclick="closeModal()"></div>
+        <div class="relative w-full max-w-5xl h-[85vh] bg-white rounded-xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300 flex flex-col overflow-hidden" id="modal-panel">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white z-10 shrink-0">
+                <h2 id="modal-title" class="text-xl font-bold text-gray-800">Content</h2>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="flex-1 relative bg-gray-50">
+                <!-- Loader -->
+                <div id="modal-loader" class="absolute inset-0 flex items-center justify-center bg-white z-10">
+                    <div class="animate-spin rounded-full h-10 w-10 border-4 border-green-200 border-t-green-700"></div>
+                </div>
+                <!-- Iframe -->
+                <iframe id="modal-iframe" class="w-full h-full border-0 opacity-0 transition-opacity duration-300 rounded-b-xl"></iframe>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        function openModal(url, title) {
+            const modal = document.getElementById('content-modal');
+            const backdrop = document.getElementById('modal-backdrop');
+            const panel = document.getElementById('modal-panel');
+            const iframe = document.getElementById('modal-iframe');
+            const titleEl = document.getElementById('modal-title');
+            const loader = document.getElementById('modal-loader');
+            
+            titleEl.innerText = title;
+            
+            // Show modal container
+            modal.classList.remove('hidden');
+            
+            // Trigger reflow for transitions
+            void modal.offsetWidth;
+            
+            backdrop.classList.remove('opacity-0');
+            backdrop.classList.add('opacity-100');
+            
+            panel.classList.remove('scale-95', 'opacity-0');
+            panel.classList.add('scale-100', 'opacity-100');
+            
+            // Reset iframe state
+            iframe.classList.add('opacity-0');
+            iframe.classList.remove('opacity-100');
+            loader.classList.remove('hidden');
+            
+            iframe.src = url;
+            
+            iframe.onload = function() {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    // Attempt to hide navbar and footer in the loaded page to keep the modal clean
+                    const nav = iframeDoc.querySelector('nav');
+                    const footer = iframeDoc.querySelector('footer');
+                    if(nav) nav.style.display = 'none';
+                    if(footer) footer.style.display = 'none';
+                    
+                    // Some pages might have a main wrapper with padding top because of fixed navs
+                    const main = iframeDoc.querySelector('main');
+                    if(main) {
+                        main.style.paddingTop = '0';
+                        main.style.minHeight = 'auto';
+                    }
+                } catch(e) {
+                    console.error('Could not modify iframe content:', e);
+                }
+                
+                loader.classList.add('hidden');
+                iframe.classList.remove('opacity-0');
+                iframe.classList.add('opacity-100');
+            };
+        }
+        
+        function closeModal() {
+            const backdrop = document.getElementById('modal-backdrop');
+            const panel = document.getElementById('modal-panel');
+            const iframe = document.getElementById('modal-iframe');
+            
+            backdrop.classList.remove('opacity-100');
+            backdrop.classList.add('opacity-0');
+            
+            panel.classList.remove('scale-100', 'opacity-100');
+            panel.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                document.getElementById('content-modal').classList.add('hidden');
+                iframe.src = '';
+            }, 300); // Wait for transition
+        }
+    </script>
     @yield('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nav = document.querySelector('body > nav');
+            const footer = document.querySelector('body > footer');
+            if (nav && footer) {
+                const navBg = getComputedStyle(nav).backgroundColor;
+                footer.style.setProperty('background', navBg, 'important');
+                footer.style.setProperty('background-color', navBg, 'important');
+                footer.style.setProperty('background-image', 'none', 'important');
+                footer.querySelectorAll('*').forEach(function(el) {
+                    const elBg = getComputedStyle(el).backgroundColor;
+                    if (elBg !== 'rgba(0, 0, 0, 0)' && elBg !== 'transparent' && elBg !== navBg) {
+                        el.style.setProperty('background', navBg, 'important');
+                        el.style.setProperty('background-color', navBg, 'important');
+                        el.style.setProperty('background-image', 'none', 'important');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

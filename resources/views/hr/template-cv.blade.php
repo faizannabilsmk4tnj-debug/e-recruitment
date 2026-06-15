@@ -12,7 +12,7 @@
             <h2 class="text-3xl font-bold text-gray-900 mb-1">CV Template Management</h2>
             <p class="text-gray-500 text-sm">Manage and customize profile summary formats for all candidates.</p>
         </div>
-        <button id="btn-tambah" class="bg-[#0f3c20] hover:bg-[#1b5e32] text-white font-semibold py-2.5 px-5 rounded-lg flex items-center gap-2 text-sm transition-colors shadow-sm">
+        <button id="btn-tambah" class="bg-[#15803d] hover:bg-[#166534] text-white font-semibold py-2.5 px-5 rounded-lg flex items-center gap-2 text-sm transition-colors shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             Add New Template
         </button>
@@ -42,11 +42,11 @@
         <div class="flex items-center gap-2 flex-shrink-0">
             <div class="flex rounded-lg border border-gray-200 overflow-hidden text-sm font-semibold">
                 <a href="{{ route('hr.template-cv.index', ['status' => 'semua']) }}"
-                   class="filter-btn px-4 py-2 transition-colors {{ $activeStatus === 'semua' ? 'bg-[#0f3c20] text-white' : 'text-gray-600 hover:bg-gray-50' }}">All</a>
+                   class="filter-btn px-4 py-2 transition-colors {{ $activeStatus === 'semua' ? 'bg-[#15803d] text-white' : 'text-gray-600 hover:bg-gray-50' }}">All</a>
                 <a href="{{ route('hr.template-cv.index', ['status' => 'published']) }}"
-                   class="filter-btn px-4 py-2 transition-colors {{ $activeStatus === 'published' ? 'bg-[#0f3c20] text-white' : 'text-gray-600 hover:bg-gray-50' }}">Published</a>
+                   class="filter-btn px-4 py-2 transition-colors {{ $activeStatus === 'published' ? 'bg-[#15803d] text-white' : 'text-gray-600 hover:bg-gray-50' }}">Published</a>
                 <a href="{{ route('hr.template-cv.index', ['status' => 'draft']) }}"
-                   class="filter-btn px-4 py-2 transition-colors {{ $activeStatus === 'draft' ? 'bg-[#0f3c20] text-white' : 'text-gray-600 hover:bg-gray-50' }}">Draft</a>
+                   class="filter-btn px-4 py-2 transition-colors {{ $activeStatus === 'draft' ? 'bg-[#15803d] text-white' : 'text-gray-600 hover:bg-gray-50' }}">Draft</a>
             </div>
         </div>
     </div>
@@ -56,7 +56,7 @@
 
         @forelse($templates as $template)
         @php
-            $bgColors = ['bg-[#0f3c20]', 'bg-gray-800', 'bg-slate-600', 'bg-teal-700', 'bg-indigo-700'];
+            $bgColors = ['bg-[#15803d]', 'bg-gray-800', 'bg-slate-600', 'bg-teal-700', 'bg-indigo-700'];
             $bg = $bgColors[$template->id % count($bgColors)];
         @endphp
         <div class="template-card" data-status="{{ $template->status }}" data-name="{{ strtolower($template->name) }}" data-id="{{ $template->id }}">
@@ -66,7 +66,7 @@
                 <div class="relative {{ $bg }} h-48 overflow-hidden flex items-center justify-center flex-shrink-0">
                     {{-- Badge --}}
                     @if($template->is_default)
-                        <span class="status-badge absolute top-3 left-3 bg-[#0f3c20] border border-green-400 text-green-300 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full">★ Primary</span>
+                        <span class="status-badge absolute top-3 left-3 bg-[#15803d] border border-green-400 text-green-300 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full">★ Primary</span>
                     @elseif($template->status === 'published')
                         <span class="status-badge absolute top-3 left-3 bg-white/20 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full">Published</span>
                     @else
@@ -88,7 +88,7 @@
                     {{-- Preview Hover Button --}}
                     <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <a href="{{ route('hr.template-cv.preview', $template) }}" target="_blank"
-                           class="bg-white text-[#0f3c20] text-xs font-bold px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                           class="bg-white text-[#15803d] text-xs font-bold px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
                             Preview Template
                         </a>
                     </div>
@@ -135,7 +135,7 @@
                             <form method="POST" action="{{ route('hr.template-cv.publish', $template) }}" class="flex-1">
                                 @csrf @method('PATCH')
                                 <button type="submit"
-                                    class="w-full text-xs font-bold bg-[#0f3c20] text-white rounded-lg py-2 hover:bg-[#1b5e32] transition-colors">
+                                    class="w-full text-xs font-bold bg-[#15803d] text-white rounded-lg py-2 hover:bg-[#166534] transition-colors">
                                     Publish
                                 </button>
                             </form>
@@ -144,7 +144,7 @@
                             <form method="POST" action="{{ route('hr.template-cv.setDefault', $template) }}" class="flex-1">
                                 @csrf @method('PATCH')
                                 <button type="submit"
-                                    class="w-full text-xs font-bold bg-[#0f3c20] text-white rounded-lg py-2 hover:bg-[#1b5e32] transition-colors">
+                                    class="w-full text-xs font-bold bg-[#15803d] text-white rounded-lg py-2 hover:bg-[#166534] transition-colors">
                                     Set as Default
                                 </button>
                             </form>
@@ -177,12 +177,12 @@
 
         {{-- Card: Create From Scratch --}}
         <div id="card-create" class="template-card" data-status="create" data-name="">
-            <button id="btn-create-scratch" class="w-full h-full min-h-[320px] bg-white rounded-xl border-2 border-dashed border-gray-200 hover:border-[#0f3c20] hover:bg-green-50/30 transition-all group flex flex-col items-center justify-center gap-3 p-6">
+            <button id="btn-create-scratch" class="w-full h-full min-h-[320px] bg-white rounded-xl border-2 border-dashed border-gray-200 hover:border-[#15803d] hover:bg-green-50/30 transition-all group flex flex-col items-center justify-center gap-3 p-6">
                 <div class="w-14 h-14 rounded-full bg-gray-100 group-hover:bg-green-100 flex items-center justify-center transition-colors">
-                    <svg class="w-7 h-7 text-gray-400 group-hover:text-[#0f3c20] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    <svg class="w-7 h-7 text-gray-400 group-hover:text-[#15803d] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </div>
                 <div class="text-center">
-                    <div class="font-bold text-gray-700 group-hover:text-[#0f3c20] transition-colors">Create From Scratch</div>
+                    <div class="font-bold text-gray-700 group-hover:text-[#15803d] transition-colors">Create From Scratch</div>
                     <div class="text-xs text-gray-400 mt-1">Start building a new template using our<br>drag-and-drop editor.</div>
                 </div>
             </button>
@@ -204,7 +204,7 @@
 <div id="modal-tambah" class="fixed inset-0 z-[200] flex items-center justify-center p-4" style="display:none!important;">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="modal-tambah-backdrop"></div>
     <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md z-10 overflow-hidden">
-        <div class="bg-[#0f3c20] p-6">
+        <div class="bg-[#15803d] p-6">
             <div class="flex justify-between items-center">
                 <div>
                     <div class="text-xs font-bold uppercase tracking-widest text-green-300 mb-1">CV Template Management</div>
@@ -236,7 +236,7 @@
             </div>
             <div class="flex gap-3 pt-2">
                 <button type="button" id="modal-tambah-cancel" class="flex-1 border border-gray-200 text-gray-700 font-semibold text-sm py-2.5 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
-                <button type="submit" class="flex-1 bg-[#0f3c20] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#1b5e32] transition-colors">Create Template →</button>
+                <button type="submit" class="flex-1 bg-[#15803d] text-white font-semibold text-sm py-2.5 rounded-lg hover:bg-[#166534] transition-colors">Create Template →</button>
             </div>
         </form>
     </div>

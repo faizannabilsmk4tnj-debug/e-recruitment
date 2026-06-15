@@ -48,6 +48,19 @@
                 </div>
             </div>
 
+            <!-- New Month Selector Dropdown (Jan - Dec) -->
+            <div class="relative">
+                <button id="btn-select-month" class="bg-white border border-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors shadow-sm flex items-center gap-2">
+                    <span id="label-select-month-btn">October</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                <div id="dropdown-select-month" class="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-100 rounded-xl shadow-lg hidden z-50 py-1 max-h-60 overflow-y-auto">
+                    @foreach(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] as $index => $month)
+                    <button class="dropdown-item-select-month w-full text-left px-4 py-2 text-sm {{ $index == 9 ? 'font-bold text-green-800 bg-green-50' : 'text-gray-700' }} hover:bg-green-50 hover:text-green-800 transition-colors" data-val="{{ $month }}" data-index="{{ $index }}">{{ $month }}</button>
+                    @endforeach
+                </div>
+            </div>
+
             <!-- Bulan Dropdown -->
             <div class="relative">
                 <button id="btn-bulan" class="bg-white border border-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors shadow-sm flex items-center gap-2">
@@ -223,9 +236,14 @@
         const dropdownBulan = document.getElementById('dropdown-bulan');
         const labelBulanBtn = document.getElementById('label-bulan-btn');
 
+        const btnSelectMonth = document.getElementById('btn-select-month');
+        const dropdownSelectMonth = document.getElementById('dropdown-select-month');
+        const labelSelectMonthBtn = document.getElementById('label-select-month-btn');
+
         function closeAllDropdowns() {
             dropdownFilter.classList.add('hidden');
             dropdownBulan.classList.add('hidden');
+            dropdownSelectMonth.classList.add('hidden');
         }
 
         btnFilter.addEventListener('click', (e) => {
@@ -240,6 +258,13 @@
             const isHidden = dropdownBulan.classList.contains('hidden');
             closeAllDropdowns();
             if (isHidden) dropdownBulan.classList.remove('hidden');
+        });
+
+        btnSelectMonth.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = dropdownSelectMonth.classList.contains('hidden');
+            closeAllDropdowns();
+            if (isHidden) dropdownSelectMonth.classList.remove('hidden');
         });
 
         document.addEventListener('click', closeAllDropdowns);
@@ -266,6 +291,22 @@
                 } else {
                     currentMonthIndex = 9; // October
                 }
+                updateMonthDisplay();
+            });
+        });
+
+        // Handle Dropdown Select Month (Jan - Dec)
+        document.querySelectorAll('.dropdown-item-select-month').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.dropdown-item-select-month').forEach(el => {
+                    el.className = 'dropdown-item-select-month w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors';
+                });
+                this.className = 'dropdown-item-select-month w-full text-left px-4 py-2 text-sm font-bold text-green-800 bg-green-50 transition-colors';
+                
+                labelSelectMonthBtn.textContent = this.dataset.val;
+                closeAllDropdowns();
+
+                currentMonthIndex = parseInt(this.dataset.index);
                 updateMonthDisplay();
             });
         });
@@ -297,6 +338,18 @@
         function updateMonthDisplay() {
             const text = `${months[currentMonthIndex]} ${currentYear}`;
             monthTitles.forEach(el => el.textContent = text);
+            
+            // Sync select month dropdown label and active classes
+            if (labelSelectMonthBtn) {
+                labelSelectMonthBtn.textContent = months[currentMonthIndex];
+            }
+            document.querySelectorAll('.dropdown-item-select-month').forEach(el => {
+                if (parseInt(el.dataset.index) === currentMonthIndex) {
+                    el.className = 'dropdown-item-select-month w-full text-left px-4 py-2 text-sm font-bold text-green-800 bg-green-50 transition-colors';
+                } else {
+                    el.className = 'dropdown-item-select-month w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors';
+                }
+            });
         }
 
         btnPrevMonth.forEach(btn => {

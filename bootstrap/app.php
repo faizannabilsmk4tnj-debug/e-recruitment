@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\Authenticate;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -11,20 +12,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias([
-            'role' => \App\Http\Middleware\EnsureRole::class,
-        ]);
-
-        // Ketika user sudah login tapi mencoba akses halaman guest (login/register),
-        // redirect ke dashboard yang sesuai dengan role-nya
-        \Illuminate\Auth\Middleware\RedirectIfAuthenticated::redirectUsing(function ($request) {
-            if (auth()->check()) {
-                return auth()->user()->role === 'hr'
-                    ? '/hr/dashboard'
-                    : '/pelamar/dashboard';
+        $middleware->redirectGuestsTo(function ($request) {
+            if (str_starts_with($request->path(), 'hr/')) {
+                return '/hr/login';
             }
-            return '/';
+            return route('login');
         });
+        $middleware->alias([
+            'auth' => Authenticate::class,
+            'role' => \App\Http\Middleware\CheckRole::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

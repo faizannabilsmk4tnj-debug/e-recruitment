@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -10,12 +12,9 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * Kolom yang boleh diisi secara massal (mass assignment).
-     * Disesuaikan dengan kolom di tabel users.
-     */
     protected $fillable = [
         'name',
         'email',
@@ -27,24 +26,20 @@ class User extends Authenticatable
         'is_active',
     ];
 
-    /**
-     * Kolom yang disembunyikan saat model dikonversi ke array/JSON.
-     */
     protected $hidden = [
         'password',
-        'remember_token',
+        'remember_token'
     ];
 
     /**
-     * Cast otomatis untuk tipe data tertentu.
-     * 'password' => 'hashed' → Laravel otomatis hash password sebelum disimpan.
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password'          => 'hashed',  // ← inilah yang melakukan hashing
-            'is_active'         => 'boolean',
         ];
     }
     /**
