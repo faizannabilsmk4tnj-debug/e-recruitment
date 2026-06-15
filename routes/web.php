@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PelamarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,7 +48,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 // ===== PELAMAR — harus login dan role=applicant =====
 Route::middleware('role:applicant')->group(function () {
 
-    Route::get('/pelamar/dashboard',           fn() => view('pelamar.dashboard'));
+   Route::get('/pelamar/dashboard', [PelamarController::class, 'dashboard']);
     Route::get('/pelamar/profil',              fn() => view('pelamar.profil'));
     Route::get('/pelamar/pengalaman-kerja',    fn() => view('pelamar.pengalaman-kerja'));
     Route::get('/pelamar/pengalaman-kerja/tambah', fn() => view('pelamar.tambah-pengalaman'));

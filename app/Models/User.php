@@ -10,37 +10,30 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * Kolom yang boleh diisi secara massal (mass assignment).
-     * Disesuaikan dengan kolom di tabel users.
-     */
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password_hash',
         'role',
         'phone',
         'is_active',
     ];
 
-    /**
-     * Kolom yang disembunyikan saat model dikonversi ke array/JSON.
-     */
     protected $hidden = [
-        'password',
+        'password_hash',
         'remember_token',
     ];
 
-    /**
-     * Cast otomatis untuk tipe data tertentu.
-     * 'password' => 'hashed' → Laravel otomatis hash password sebelum disimpan.
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password'          => 'hashed',  // ← inilah yang melakukan hashing
             'is_active'         => 'boolean',
         ];
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
     }
 }
