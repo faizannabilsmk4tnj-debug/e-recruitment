@@ -14,7 +14,7 @@
         <span>›</span>
         <a href="{{ isset($layout) ? '/pelamar/lowongan' : '/lowongan' }}" class="hover:text-green-700 transition-colors">Vacancies</a>
         <span>›</span>
-        <span class="text-gray-700 font-medium" id="breadcrumb-title">Senior Web Developer</span>
+        <span class="text-gray-700 font-medium" id="breadcrumb-title">{{ $vacancy->title }}</span>
     </div>
 </div>
 
@@ -33,38 +33,46 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-3">
-                            <h1 class="text-2xl font-bold text-gray-900" id="job-title">Senior Web Developer</h1>
-                            <span class="text-xs font-bold text-orange-700 bg-orange-50 border border-orange-200 px-2.5 py-0.5 rounded-full uppercase" id="job-badge">Urgent</span>
+                            <h1 class="text-2xl font-bold text-gray-900" id="job-title">{{ $vacancy->title }}</h1>
+                            @if($vacancy->status === 'open')
+                            <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-0.5 rounded-full uppercase" id="job-badge">Active</span>
+                            @else
+                            <span class="text-xs font-bold text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full uppercase" id="job-badge">Closed</span>
+                            @endif
                         </div>
                         <p class="text-green-700 font-medium mt-1" id="job-company">PT Ecogreen Oleochemicals</p>
                         <div class="flex items-center gap-4 mt-2 text-sm text-gray-500">
                             <span class="flex items-center gap-1.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                                <span id="job-location">Batam, Kepulauan Riau</span>
+                                <span id="job-location">{{ $vacancy->location }}</span>
                             </span>
                             <span class="flex items-center gap-1.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <span id="job-type">Full-time</span>
+                                <span id="job-type">{{ ucfirst($vacancy->employment_type) }}</span>
                             </span>
                             <span class="flex items-center gap-1.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                                <span id="job-posted">Posted 2 days ago</span>
+                                <span id="job-posted">Posted {{ $vacancy->created_at->diffForHumans() }}</span>
                             </span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Slot Progress -->
+                @php
+                    $remainingSlots = max(0, $vacancy->quota - $vacancy->applicant_count);
+                    $progress = $vacancy->quota > 0 ? min(100, ($vacancy->applicant_count / $vacancy->quota) * 100) : 0;
+                @endphp
                 <div class="bg-gray-50 rounded-lg p-4">
                     <div class="flex items-center justify-between mb-1">
                         <div>
                             <p class="text-sm font-bold text-gray-900">Slots Filled</p>
-                            <p class="text-xs text-gray-500" id="slot-desc">7 positions remaining out of 10 total</p>
+                            <p class="text-xs text-gray-500" id="slot-desc">{{ $remainingSlots }} positions remaining out of {{ $vacancy->quota }} total</p>
                         </div>
-                        <span class="text-sm font-bold text-gray-900" id="slot-count">3/10</span>
+                        <span class="text-sm font-bold text-gray-900" id="slot-count">{{ $vacancy->applicant_count }}/{{ $vacancy->quota }}</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div class="bg-green-600 h-2 rounded-full transition-all" id="slot-bar" style="width: 30%"></div>
+                        <div class="bg-green-600 h-2 rounded-full transition-all" id="slot-bar" style="width: {{ $progress }}%"></div>
                     </div>
                 </div>
             </div>
@@ -73,76 +81,41 @@
             <div class="bg-white rounded-xl border border-gray-200 p-8">
                 <h2 class="text-lg font-bold text-gray-900 mb-4">Job Description</h2>
                 <div class="text-sm text-gray-600 leading-relaxed space-y-3" id="job-description">
-                    <p>We are looking for an experienced Senior Web Developer to join our IT team in Batam. You will be responsible for building and maintaining critical internal web applications for our global oleochemical manufacturing operations.</p>
-                    <p>You will work in a dynamic environment with the latest technologies to deliver scalable and secure software solutions.</p>
+                    {!! nl2br(e($vacancy->description)) !!}
                 </div>
 
                 <h2 class="text-lg font-bold text-gray-900 mt-8 mb-4">Qualifications</h2>
                 <ul class="space-y-2.5 text-sm text-gray-600" id="job-qualifications">
-                    <li class="flex items-start gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        Minimum 5 years of experience in full-stack web development.
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        In-depth expertise in React.js, Node.js, and SQL/NoSQL databases.
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        Experience with microservices architecture and Docker/Kubernetes.
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        Understands CI/CD principles and automated testing.
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        Bachelor's degree in Computer Science, Informatics Engineering, or a related field.
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        Able to communicate in English (at minimum passive).
-                    </li>
+                    @foreach(explode("\n", str_replace("\r", "", $vacancy->requirements)) as $req)
+                        @if(trim($req))
+                            <li class="flex items-start gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                                {{ trim($req) }}
+                            </li>
+                        @endif
+                    @endforeach
                 </ul>
 
                 <h2 class="text-lg font-bold text-gray-900 mt-8 mb-4">Keuntungan & Fasilitas</h2>
                 <div class="grid grid-cols-2 gap-4" id="job-benefits">
-                    <div class="flex items-start gap-3 bg-gray-50 rounded-lg p-4">
-                        <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-sm text-gray-900">Competitive Salary</p>
-                            <p class="text-xs text-gray-500">Regular adjustments based on performance.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3 bg-gray-50 rounded-lg p-4">
-                        <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-sm text-gray-900">Health Insurance</p>
-                            <p class="text-xs text-gray-500">Full coverage for employees and family.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3 bg-gray-50 rounded-lg p-4">
-                        <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-sm text-gray-900">Work Equipment</p>
-                            <p class="text-xs text-gray-500">High-end work devices provided.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3 bg-gray-50 rounded-lg p-4">
-                        <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-sm text-gray-900">Annual Bonus</p>
-                            <p class="text-xs text-gray-500">Holiday allowance and performance bonus.</p>
-                        </div>
-                    </div>
+                    @if($vacancy->benefits)
+                        @foreach(explode(",", $vacancy->benefits) as $benefit)
+                            @php $benefit = trim($benefit); @endphp
+                            @if($benefit)
+                                <div class="flex items-start gap-3 bg-gray-50 rounded-lg p-4">
+                                    <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center shrink-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-sm text-gray-900">{{ $benefit }}</p>
+                                        <p class="text-xs text-gray-500">Provided for this position.</p>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    @else
+                        <div class="col-span-2 text-sm text-gray-400 italic">No specific benefits listed.</div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -154,8 +127,12 @@
             <div class="bg-white rounded-xl border border-gray-200 p-6">
                 <h3 class="font-bold text-gray-900 mb-2">Quick Actions</h3>
                 <p class="text-sm text-gray-500 mb-5">Interested in this position? Apply now before the quota is full.</p>
-                @if(isset($layout))
-                <a href="/pelamar/review-lamaran/1" class="flex items-center justify-center gap-2 w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors mb-3">
+                @if($vacancy->status !== 'open')
+                <span class="flex items-center justify-center gap-2 w-full bg-gray-100 text-gray-400 font-semibold py-3 rounded-lg text-sm cursor-not-allowed mb-3">
+                    Closed / Filled
+                </span>
+                @elseif(isset($layout) && $layout === 'layouts.pelamar-public')
+                <a href="/pelamar/review-lamaran/{{ $vacancy->id }}" class="flex items-center justify-center gap-2 w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors mb-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     Apply Now
                 </a>

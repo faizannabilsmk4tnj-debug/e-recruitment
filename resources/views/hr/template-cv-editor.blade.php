@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Template Editor</title>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>{{ $template ? 'Edit: '.$template->name : 'Template Editor' }}</title>
 @vite(['resources/css/app.css','resources/js/app.js'])
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <style>
@@ -15,9 +16,14 @@
 .blk{position:relative;border:2px solid transparent}
 .blk:hover{border-color:#86efac;cursor:default}
 .blk.sel{border-color:#0f3c20;border-style:dashed}
+.blk.dragging{opacity:0.35;border:2px dashed #0f3c20!important;background:rgba(15,60,32,.04)}
+.blk.drag-top{border-top:3px solid #0f3c20!important;}
+.blk.drag-bottom{border-bottom:3px solid #0f3c20!important;}
 .bh{position:absolute;top:4px;right:4px;display:none;gap:4px;z-index:5}
 .blk:hover .bh,.blk.sel .bh{display:flex}
 .hb{background:#0f3c20;color:#fff;border:none;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer;font-weight:700}
+.drag-grip{background:#4b5563!important;cursor:grab!important;font-size:13px!important;padding:2px 5px!important;}
+.drag-grip:active{cursor:grabbing!important;}
 .ab{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer;font-size:12px;font-weight:600;color:#374151;margin-bottom:5px}
 .ab:hover{background:#f0fdf4;border-color:#0f3c20;color:#0f3c20}
 .rb{background:none;border:none;color:#374151;cursor:pointer;padding:4px 6px;border-radius:5px;font-size:12px;font-weight:700;display:flex;align-items:center}
@@ -91,8 +97,8 @@ var pages=[document.getElementById('p1')], pgN=1, blkN=0;
 var hist=[], hIdx=-1, mut=false;
 function curPage(){return pages[pages.length-1]}
 function save(){if(mut)return;hist.splice(hIdx+1);hist.push(document.getElementById('canvas').innerHTML);if(hist.length>50)hist.shift();hIdx=hist.length-1;updUD()}
-function undo(){if(hIdx<=0)return;hIdx--;mut=true;document.getElementById('canvas').innerHTML=hist[hIdx];mut=false;syncPages();updUD();toast('Undo','#374151')}
-function redo(){if(hIdx>=hist.length-1)return;hIdx++;mut=true;document.getElementById('canvas').innerHTML=hist[hIdx];mut=false;syncPages();updUD();toast('Redo','#374151')}
+function undo(){if(hIdx<=0)return;hIdx--;mut=true;document.getElementById('canvas').innerHTML=hist[hIdx];syncPages();applyDragEvents();updUD();toast('Undo','#374151');setTimeout(function(){mut=false;},0);}
+function redo(){if(hIdx>=hist.length-1)return;hIdx++;mut=true;document.getElementById('canvas').innerHTML=hist[hIdx];syncPages();applyDragEvents();updUD();toast('Redo','#374151');setTimeout(function(){mut=false;},0);}
 function updUD(){var u=document.getElementById('bundo'),r=document.getElementById('bredo');u.disabled=hIdx<=0;r.disabled=hIdx>=hist.length-1}
 function syncPages(){pages=Array.from(document.querySelectorAll('.page'))}
 var t2;new MutationObserver(function(){if(mut)return;clearTimeout(t2);t2=setTimeout(save,700)}).observe(document.getElementById('canvas'),{childList:true,subtree:true,characterData:true,attributes:true})
@@ -110,19 +116,57 @@ function fmtSize(s){document.execCommand('fontSize',false,7);document.querySelec
 function fmtColor(c){document.getElementById('cp').style.background=c;document.execCommand('foreColor',false,c)}
 function updRibbon(){['b','i','u','s'].forEach(function(k,i){document.getElementById('rb-'+k).classList.toggle('on',document.queryCommandState(['bold','italic','underline','strikeThrough'][i]))})}
 document.addEventListener('selectionchange',updRibbon)
-function mkBlk(id,type,inner){return '<div class="blk" id="'+id+'" data-type="'+type+'" onclick="selBlk(this)"><div class="bh"><button class="hb" onclick="event.stopPropagation();mvUp(\''+id+'\')">&#8679;</button><button class="hb" onclick="event.stopPropagation();mvDn(\''+id+'\')">&#8681;</button><button class="hb" onclick="event.stopPropagation();delBlk(\''+id+'\')" style="background:#dc2626">&#x2715;</button></div>'+inner+'</div>'}
+function mkBlk(id,type,inner){return '<div class="blk" id="'+id+'" data-type="'+type+'" draggable="true" onclick="selBlk(this)"><div class="bh"><span class="hb drag-grip" title="Drag to reorder" onmousedown="event.stopPropagation();_dragReady=true" onmouseup="event.stopPropagation()">&#8942;&#8942;</span><button class="hb" onclick="event.stopPropagation();mvUp(\''+id+'\')" title="Move up">&#8679;</button><button class="hb" onclick="event.stopPropagation();mvDn(\''+id+'\')" title="Move down">&#8681;</button><button class="hb" onclick="event.stopPropagation();delBlk(\''+id+'\')" style="background:#dc2626" title="Delete">&#x2715;</button></div>'+inner+'</div>';}
 var acc='#0f3c20'
 function addBlk(type){var id='b'+(++blkN),h='';if(type==='header')h='<div style="display:flex;align-items:center;gap:16px;padding:20px 28px"><div style="width:64px;height:64px;border-radius:50%;background:#e5e7eb;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px">&#128100;</div><div><div contenteditable="true" style="font-size:20px;font-weight:800;color:#111">Nama Lengkap</div><div contenteditable="true" style="font-size:12px;font-weight:600;margin-top:3px;color:'+acc+'">Posisi / Jabatan</div></div></div>';else if(type==='contact')h='<div style="padding:10px 28px;background:#f9fafb;display:flex;gap:20px;flex-wrap:wrap;font-size:11px"><span>&#9993; <span contenteditable="true">email@contoh.com</span></span><span>&#128222; <span contenteditable="true">+62 812 0000 0000</span></span><span>&#128205; <span contenteditable="true">Medan, Indonesia</span></span></div>';else if(type==='summary')h='<div style="padding:16px 28px"><div contenteditable="true" style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:'+acc+';margin-bottom:8px">Ringkasan Profil</div><p contenteditable="true" style="font-size:11px;line-height:1.7;color:#374151;margin:0;border-left:3px solid '+acc+';padding-left:10px">Tuliskan ringkasan singkat Anda di sini.</p></div>';else if(type==='exp')h='<div style="padding:16px 28px"><div contenteditable="true" style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:'+acc+';margin-bottom:10px">Work Experience</div><div style="display:flex;justify-content:space-between"><div><div contenteditable="true" style="font-size:12px;font-weight:700;color:#111">Nama Jabatan</div><div contenteditable="true" style="font-size:11px;color:#6b7280">Perusahaan &middot; Kota</div></div><div contenteditable="true" style="font-size:10px;color:#9ca3af">Jan 2022 &ndash; Skrg</div></div><ul contenteditable="true" style="margin:8px 0 0 16px;font-size:11px;color:#374151;line-height:1.6"><li>Tanggung jawab utama</li><li>Pencapaian terukur</li></ul></div>';else if(type==='edu')h='<div style="padding:16px 28px"><div contenteditable="true" style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:'+acc+';margin-bottom:10px">Education</div><div style="display:flex;justify-content:space-between"><div><div contenteditable="true" style="font-size:12px;font-weight:700;color:#111">S1 Nama Jurusan</div><div contenteditable="true" style="font-size:11px;color:#6b7280">Nama Universitas</div></div><div contenteditable="true" style="font-size:10px;color:#9ca3af">2018 &ndash; 2022</div></div></div>';else if(type==='skills')h='<div style="padding:16px 28px"><div contenteditable="true" style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:'+acc+';margin-bottom:8px">Keahlian</div><div style="display:flex;flex-wrap:wrap;gap:5px" id="'+id+'-tags"><span contenteditable="true" style="background:#f0fdf4;color:#0f3c20;font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;border:1px solid #bbf7d0">Keahlian 1</span><span contenteditable="true" style="background:#f0fdf4;color:#0f3c20;font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;border:1px solid #bbf7d0">Keahlian 2</span></div></div>';else if(type==='div')h='<div style="padding:4px 0"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0 28px"></div>';else h='<div contenteditable="true" style="padding:16px 28px;font-size:11px;color:#374151">Konten...</div>';
 var pg=curPage();var oldH=pg.innerHTML;pg.insertAdjacentHTML('beforeend',mkBlk(id,type,h));
 if(pg.scrollHeight>842){pg.innerHTML=oldH;toast('Gagal: Seksi baru melebihi kapasitas halaman.','#dc2626');}
+else{applyDragEvents();}
 }
 function selBlk(el){document.querySelectorAll('.blk').forEach(function(b){b.classList.remove('sel')});el.classList.add('sel')}
 function mvUp(id){var el=document.getElementById(id),p=el.previousElementSibling;if(p&&p.classList.contains('blk')){el.parentNode.insertBefore(el,p);}}
 function mvDn(id){var el=document.getElementById(id),n=el.nextElementSibling;if(n&&n.classList.contains('blk')){el.parentNode.insertBefore(n,el);}}
 function delBlk(id){if(confirm('Hapus seksi ini?')){document.getElementById(id).remove();}}
-function saveDraft(){toast('Draft tersimpan!','#0f3c20')}
-function doPreview(){var w=window.open('','_blank');var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Preview CV</title><style>body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:center;padding:24px;font-family:\'Segoe UI\',sans-serif}.page{width:595px;background:#fff;min-height:842px;overflow:visible;box-shadow:0 2px 16px rgba(0,0,0,.15);margin-bottom:24px}[contenteditable]{outline:none}.bh{display:none}.blk{border:none!important}</style></head><body>'+document.getElementById('canvas').innerHTML+'</body></html>';w.document.write(html);w.document.close()}
-function doPublish(){toast('Template dipublikasikan!','#166534');setTimeout(function(){window.location.href='/hr/template-cv'},1500)}
+function saveDraft(){
+  var name=document.getElementById('tname').textContent.trim()||'Template Baru';
+  var html=document.getElementById('canvas').innerHTML;
+  if(!TEMPLATE_ID){toast('Simpan gagal: buka template melalui halaman daftar template.','#dc2626');return;}
+  var fd=new FormData();
+  fd.append('_token',document.querySelector('meta[name="csrf-token"]').content);
+  fd.append('_method','PUT');
+  fd.append('name',name);
+  fd.append('content_html',html);
+  fd.append('description',TEMPLATE_DESCRIPTION);
+  fd.append('status',TEMPLATE_STATUS);
+  fetch(UPDATE_URL,{method:'POST',body:fd})
+    .then(function(r){toast('Tersimpan!','#0f3c20');})
+    .catch(function(){toast('Gagal menyimpan!','#dc2626');});
+}
+function doPreview(){
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Preview CV</title><style>body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:center;padding:24px;font-family:\'Segoe UI\',sans-serif}.page{width:595px;background:#fff;min-height:842px;overflow:visible;box-shadow:0 2px 16px rgba(0,0,0,.15);margin-bottom:24px}[contenteditable]{outline:none;pointer-events:none}.bh{display:none!important}.blk{border:none!important}</style></head><body>'+document.getElementById('canvas').innerHTML+'</body></html>';
+  var blob=new Blob([html],{type:'text/html'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.target='_blank';a.rel='noopener';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);},5000);
+}
+function doPublish(){
+  var name=document.getElementById('tname').textContent.trim()||'Template Baru';
+  var html=document.getElementById('canvas').innerHTML;
+  if(!TEMPLATE_ID){toast('Publish gagal: buka template melalui halaman daftar template.','#dc2626');return;}
+  var fd=new FormData();
+  fd.append('_token',document.querySelector('meta[name="csrf-token"]').content);
+  fd.append('_method','PUT');
+  fd.append('name',name);
+  fd.append('content_html',html);
+  fd.append('description',TEMPLATE_DESCRIPTION);
+  fd.append('status','published');
+  fetch(UPDATE_URL,{method:'POST',body:fd})
+    .then(function(){toast('Dipublikasikan!','#166534');setTimeout(function(){window.location.href='/hr/template-cv';},1200);})
+    .catch(function(){toast('Gagal publish!','#dc2626');});
+}
 function toast(m,bg){var t=document.createElement('div');t.style.cssText='position:fixed;bottom:20px;right:20px;z-index:999;background:'+bg+';color:#fff;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.2)';t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2200)}
 var iHTML='';
 function doImport(inp){var f=inp.files[0];if(!f)return;var ext=f.name.split('.').pop().toLowerCase();if(ext==='docx'){var rd=new FileReader();rd.onload=function(e){mammoth.convertToHtml({arrayBuffer:e.target.result}).then(function(r){iHTML=cleanHTML(r.value);applyImport()}).catch(function(e){toast('Gagal: '+e.message,'#dc2626')})}; rd.readAsArrayBuffer(f)}else if(ext==='html'||ext==='htm'){var rd=new FileReader();rd.onload=function(e){var doc=new DOMParser().parseFromString(e.target.result,'text/html');iHTML=cleanHTML(doc.body?doc.body.innerHTML:e.target.result);applyImport()};rd.readAsText(f)}else{toast('Gunakan .docx atau .html','#dc2626')}inp.value=''}
@@ -163,8 +207,95 @@ function applyImport(){
   iHTML='';
 }
 
-var p=new URLSearchParams(location.search);if(p.get('name'))document.getElementById('tname').textContent=decodeURIComponent(p.get('name'));
-['header','contact','summary','exp','edu','skills'].forEach(addBlk);
+@php
+$_tplData = json_encode([
+    'id'          => $template ? $template->id : null,
+    'name'        => $template ? $template->name : null,
+    'status'      => $template ? $template->status : 'draft',
+    'description' => $template ? ($template->description ?? '') : '',
+    'html'        => $template ? ($template->content_html ?? '') : '',
+    'updateUrl'   => $template ? route('hr.template-cv.update', $template) : '',
+], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE);
+@endphp
+// ── Data template dari Laravel ──
+var _tpl = {!! $_tplData !!};
+var TEMPLATE_ID          = _tpl.id;
+var TEMPLATE_STATUS      = _tpl.status;
+var TEMPLATE_DESCRIPTION = _tpl.description;
+var TEMPLATE_HTML        = _tpl.html;
+var TEMPLATE_NAME        = _tpl.name;
+var UPDATE_URL           = _tpl.updateUrl;
+
+// Tampilkan nama template
+document.getElementById('tname').textContent = TEMPLATE_NAME ||
+  (new URLSearchParams(location.search).get('name')
+    ? decodeURIComponent(new URLSearchParams(location.search).get('name'))
+    : 'Template Baru');
+
+// ── Drag-and-Drop untuk reorder section ──
+var _dragSrc = null, _dragReady = false;
+document.addEventListener('mouseup', function(){ _dragReady = false; });
+function applyDragEvents(){
+  document.querySelectorAll('.blk').forEach(function(blk){
+    // Tambahkan draggable jika belum ada
+    if(!blk.hasAttribute('draggable')) blk.setAttribute('draggable','true');
+
+    // Sisipkan drag handle jika belum ada di .bh
+    var bh = blk.querySelector('.bh');
+    if(bh && !bh.querySelector('.drag-grip')){
+      var grip = document.createElement('span');
+      grip.className = 'hb drag-grip';
+      grip.title = 'Drag to reorder';
+      grip.innerHTML = '&#8942;&#8942;';
+      grip.addEventListener('mousedown', function(e){ e.stopPropagation(); _dragReady = true; });
+      grip.addEventListener('mouseup',   function(e){ e.stopPropagation(); });
+      bh.insertBefore(grip, bh.firstChild);
+    }
+
+    if(blk._dnd) return;
+    blk._dnd = true;
+    blk.addEventListener('dragstart', function(e){
+      if(!_dragReady){ e.preventDefault(); return; }
+      _dragSrc = blk;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', blk.id);
+      setTimeout(function(){ blk.classList.add('dragging'); }, 0);
+    });
+    blk.addEventListener('dragend', function(){
+      blk.classList.remove('dragging');
+      document.querySelectorAll('.blk').forEach(function(b){ b.classList.remove('drag-top','drag-bottom'); });
+      _dragSrc = null; _dragReady = false;
+      setTimeout(save, 100);
+    });
+    blk.addEventListener('dragover', function(e){
+      e.preventDefault();
+      if(!_dragSrc || _dragSrc === blk) return;
+      var mid = blk.getBoundingClientRect().top + blk.getBoundingClientRect().height / 2;
+      document.querySelectorAll('.blk').forEach(function(b){ b.classList.remove('drag-top','drag-bottom'); });
+      blk.classList.add(e.clientY < mid ? 'drag-top' : 'drag-bottom');
+    });
+    blk.addEventListener('dragleave', function(e){
+      if(!blk.contains(e.relatedTarget)) blk.classList.remove('drag-top','drag-bottom');
+    });
+    blk.addEventListener('drop', function(e){
+      e.preventDefault();
+      if(!_dragSrc || _dragSrc === blk) return;
+      blk.classList.remove('drag-top','drag-bottom');
+      var mid = blk.getBoundingClientRect().top + blk.getBoundingClientRect().height / 2;
+      if(e.clientY < mid){ blk.parentNode.insertBefore(_dragSrc, blk); }
+      else { blk.parentNode.insertBefore(_dragSrc, blk.nextSibling); }
+    });
+  });
+}
+
+// Load konten dari DB jika ada, atau pakai blok default
+if(TEMPLATE_HTML && TEMPLATE_HTML.trim() !== ''){
+  document.getElementById('canvas').innerHTML = TEMPLATE_HTML;
+  syncPages();
+} else {
+  ['header','contact','summary','exp','edu','skills'].forEach(addBlk);
+}
+applyDragEvents();
 save();
 </script>
 </body>

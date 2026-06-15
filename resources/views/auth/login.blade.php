@@ -157,5 +157,15 @@
         el.classList.remove('hidden');
         window.history.replaceState({}, '', '/login');
     }
+
+    if (params.get('loggedout') === '1') {
+        // Tampilkan notifikasi logout berhasil
+        const el = document.getElementById('alert-success');
+        el.querySelector('p.text-green-800').textContent = 'Berhasil keluar.';
+        el.querySelector('p.text-green-700').textContent = 'Silakan masuk kembali dengan akun yang diinginkan.';
+        el.classList.remove('hidden');
+        window.history.replaceState({}, '', '/login');
+    }
 </script>
-@endsection
+@endsection
+

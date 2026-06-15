@@ -150,9 +150,59 @@ document.addEventListener('DOMContentLoaded', function () {
         this.disabled = true;
         this.innerHTML = '<svg class="w-4 h-4 animate-spin inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Publishing...';
 
-        setTimeout(() => {
-            window.location.href = '/hr/lowongan';
-        }, 1500);
+        const descEl = document.getElementById('f-description');
+        const descText = descEl.textContent.trim();
+        const descVal = (descText && descText !== descEl.dataset.placeholder) ? descEl.innerHTML : '';
+
+        const reqEl = document.getElementById('f-requirements');
+        const reqText = reqEl.textContent.trim();
+        const reqVal = (reqText && reqText !== reqEl.dataset.placeholder) ? reqEl.innerHTML : '';
+
+        const payload = {
+            title: title,
+            category_id: document.getElementById('f-category').value,
+            location: document.getElementById('f-location').value,
+            quota: quota,
+            deadline: document.getElementById('f-deadline').value || null,
+            salary_min: document.getElementById('f-salary-min').value || null,
+            salary_max: document.getElementById('f-salary-max').value || null,
+            show_salary: document.getElementById('toggle-salary').checked ? 1 : 0,
+            description: descVal,
+            requirements: reqVal,
+            benefits: Array.from(document.querySelectorAll('.benefit-tag')).map(t => t.childNodes[0].textContent.trim()),
+            status: 'open'
+        };
+
+        fetch('/hr/lowongan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/hr/lowongan';
+            } else {
+                alert('Gagal menyimpan: ' + (data.message || 'Error tidak diketahui.'));
+                this.disabled = false;
+                this.innerHTML = 'Publish Vacancy';
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Terjadi kesalahan saat menyimpan lowongan.');
+            this.disabled = false;
+            this.innerHTML = 'Publish Vacancy';
+        });
     });
 
     // ===== PREVIEW MODAL =====
@@ -164,7 +214,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('prev-title').textContent = title || '(Belum Diisi)';
 
         // Category & Location
-        document.getElementById('prev-category').textContent = document.getElementById('f-category').value;
+        const catSelect = document.getElementById('f-category');
+        document.getElementById('prev-category').textContent = catSelect.options[catSelect.selectedIndex].text;
         document.getElementById('prev-location').textContent = document.getElementById('f-location').value;
 
         // Quota

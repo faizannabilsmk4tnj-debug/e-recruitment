@@ -50,12 +50,9 @@
                         <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Job Category</label>
                         <div class="relative">
                             <select id="f-category" class="w-full appearance-none border-0 border-b border-gray-300 pb-2 text-sm focus:outline-none focus:border-green-600 bg-transparent pr-6">
-                                <option>Production & Operations</option>
-                                <option>Logistics</option>
-                                <option>Technology</option>
-                                <option>R&D Lab</option>
-                                <option>Finance</option>
-                                <option>HR & Legal</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                @endforeach
                             </select>
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 absolute right-0 top-0.5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
                         </div>

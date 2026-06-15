@@ -11,13 +11,13 @@
         <span>›</span>
         <a href="/pelamar/lowongan" class="hover:text-green-700 transition-colors">Vacancies</a>
         <span>›</span>
-        <span class="text-green-700 font-medium">Review Application</span>
+        <span class="text-green-700 font-medium">Review: {{ $vacancy->title }}</span>
     </div>
 </div>
 
 <!-- Header -->
 <section class="px-16 pt-8 pb-2 bg-white">
-    <h1 class="text-3xl font-extrabold text-gray-900">Review Job Application</h1>
+    <h1 class="text-3xl font-extrabold text-gray-900">Review Application - {{ $vacancy->title }}</h1>
     <p class="text-gray-500 mt-2 max-w-lg">Make sure all information is correct before clicking the Submit Application button.</p>
 </section>
 
@@ -95,28 +95,34 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Full Name</p>
-                            <p class="text-sm font-semibold text-gray-900 mt-0.5">Andi Pratama Putra</p>
+                            <p class="text-sm font-semibold text-gray-900 mt-0.5">{{ $user->name }}</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                         <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Email</p>
-                            <p class="text-sm font-semibold text-gray-900 mt-0.5">andi.pratama@email.com</p>
+                            <p class="text-sm font-semibold text-gray-900 mt-0.5">{{ $user->email }}</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91"/></svg>
                         <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Phone Number</p>
-                            <p class="text-sm font-semibold text-gray-900 mt-0.5">+62 812 3456 7890</p>
+                            <p class="text-sm font-semibold text-gray-900 mt-0.5">{{ $profile->phone ?? $user->phone ?? '-' }}</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                         <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Location</p>
-                            <p class="text-sm font-semibold text-gray-900 mt-0.5">Batam, Kepulauan Riau</p>
+                            <p class="text-sm font-semibold text-gray-900 mt-0.5">
+                                @if(optional($profile)->city || optional($profile)->province)
+                                    {{ $profile->city ?? '' }}{{ $profile->city && $profile->province ? ', ' : '' }}{{ $profile->province ?? '' }}
+                                @else
+                                    -
+                                @endif
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -199,12 +205,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Kirim lamaran
-    document.getElementById('btn-kirim').addEventListener('click', function () {
+    document.getElementById('btn-kirim').addEventListener('click', function () { const fileInput = document.getElementById('file-input'); const file = fileInput.files[0]; if (!file) { alert('Please upload your CV document.'); return; } const coverLetter = document.getElementById('cover-letter').value; const formData = new FormData(); formData.append('cover_letter', coverLetter); formData.append('file_cv', file); const btn = this; btn.disabled = true; const original = btn.innerHTML; btn.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>'; fetch(window.location.href, { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), 'Accept': 'application/json' }, body: formData }).then(r => r.json()).then(d => { if (d.success) { window.location.href = d.redirect_url; } else { alert(d.message || 'Error'); btn.disabled = false; btn.innerHTML = original; } }).catch(e => { console.error(e); alert('Error'); btn.disabled = false; btn.innerHTML = original; }); if (false) {
         this.disabled = true;
         this.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
         setTimeout(() => {
             window.location.href = '/pelamar/lamaran-terkirim';
-        }, 1500);
+        }, 1500); }
     });
 });
 </script>

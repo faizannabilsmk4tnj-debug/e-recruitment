@@ -80,10 +80,10 @@
                         <!-- Remember & Forgot -->
                         <div class="flex items-center justify-between">
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" class="w-3.5 h-3.5 rounded border-gray-300 text-green-700 focus:ring-green-500">
-                                <span class="text-xs text-gray-500">Ingat saya</span>
+                                <input type="checkbox" id="hr-remember" class="w-3.5 h-3.5 rounded border-gray-300 text-green-700 focus:ring-green-500">
+                                <span class="text-xs text-gray-500">Remember me</span>
                             </label>
-                            <button type="button" id="btn-forgot" class="text-xs text-green-700 hover:text-green-900 font-medium transition-colors">Lupa password?</button>
+                            <button type="button" id="btn-forgot" class="text-xs text-green-700 hover:text-green-900 font-medium transition-colors">Forgot password?</button>
                         </div>
 
                         <!-- Login Button -->

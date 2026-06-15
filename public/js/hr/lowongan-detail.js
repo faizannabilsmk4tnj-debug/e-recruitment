@@ -5,19 +5,16 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     // ===== POSTED DATE (hari pertama loker dibuka) =====
-    // Demo: Oct 12, 2023 = Kamis
-    const POSTED_DATE = new Date('2023-10-12');
+    const POSTED_DATE = window.postedDate ? new Date(window.postedDate) : new Date('2023-10-12');
     const DAYS_ID    = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
     const MONTHS_ID  = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 
-    // ===== DUMMY DATA =====
-    // Data per minggu (4 minggu sejak dibuka), masing-masing 7 hari.
-    // Index 0 = hari pertama (hari loker dibuka)
-    const weeklyDailyData = [
-        [3, 8, 14, 10, 18, 15, 12],   // Week 1
-        [20, 28, 22, 35, 30, 18, 15],  // Week 2
-        [25, 32, 40, 38, 30, 22, 18],  // Week 3
-        [15, 20, 25, 18, 12, 8, 5]     // Week 4
+    // ===== DYNAMIC DATA =====
+    const weeklyDailyData = window.weeklyDailyData || [
+        [0, 0, 0, 0, 0, 0, 0],   // Week 1
+        [0, 0, 0, 0, 0, 0, 0],   // Week 2
+        [0, 0, 0, 0, 0, 0, 0],   // Week 3
+        [0, 0, 0, 0, 0, 0, 0]    // Week 4
     ];
 
     // ===== DOM =====

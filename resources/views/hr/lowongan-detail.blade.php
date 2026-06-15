@@ -39,39 +39,45 @@
                 <div class="flex-1">
                     <div class="flex items-start justify-between">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-gray-900">Senior Chemical Engineer</h1>
+                            <h1 class="text-2xl font-extrabold text-gray-900">{{ $vacancy->title }}</h1>
                             <p class="flex items-center gap-1 text-sm text-gray-500 mt-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                            Batam, Kepulauan Riau — Plant Operations
+                            {{ $vacancy->location ?: 'Batam Plant' }} — {{ $vacancy->category->name ?? '' }}
                             </p>
                         </div>
                         <span class="flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 text-xs font-bold px-3 py-1.5 rounded-full">
-                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                            ACTIVE RECRUITMENT
+                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                            {{ strtoupper($vacancy->status === 'open' ? 'ACTIVE RECRUITMENT' : $vacancy->status) }}
                         </span>
                     </div>
 
                     <div class="flex items-center gap-8 mt-5">
                         <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Salary Range</p>
-                            <p class="text-sm font-bold text-gray-900 mt-1">Rp 25.0M - 35.0M</p>
+                            <p class="text-sm font-bold text-gray-900 mt-1">
+                                @if($vacancy->show_salary && $vacancy->salary_min && $vacancy->salary_max)
+                                    Rp {{ number_format($vacancy->salary_min / 1000000, 1, ',', '.') }}jt - {{ number_format($vacancy->salary_max / 1000000, 1, ',', '.') }}jt
+                                @else
+                                    Hidden
+                                @endif
+                            </p>
                         </div>
                         <div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Experience</p>
-                            <p class="text-sm font-bold text-gray-900 mt-1">8 - 12 Years</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Quota</p>
+                            <p class="text-sm font-bold text-gray-900 mt-1">{{ $vacancy->quota }} Personel</p>
                         </div>
                         <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Posted Date</p>
-                            <p class="text-sm font-bold text-gray-900 mt-1">Oct 12, 2023</p>
+                            <p class="text-sm font-bold text-gray-900 mt-1">{{ $vacancy->created_at->format('M d, Y') }}</p>
                         </div>
                     </div>
 
                     <div class="flex gap-3 mt-6">
-                        <a href="/hr/pelamar?lowongan=1" class="flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors">
+                        <a href="/hr/pelamar?lowongan={{ $vacancy->id }}" class="flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             View Applicants
                         </a>
-                        <a href="/hr/lowongan/buat" class="px-5 py-2.5 border border-gray-300 text-gray-700 font-semibold rounded-lg text-sm hover:bg-gray-50 transition-colors">Edit Vacancy</a>
+                        <a href="/hr/lowongan" class="px-5 py-2.5 border border-gray-300 text-gray-700 font-semibold rounded-lg text-sm hover:bg-gray-50 transition-colors">Kembali</a>
                     </div>
                 </div>
             </div>
@@ -104,7 +110,7 @@
             </div>
             <div>
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Applicants</p>
-                <p class="text-3xl font-extrabold text-gray-900 mt-0.5">124</p>
+                <p class="text-3xl font-extrabold text-gray-900 mt-0.5">{{ $stats['total'] }}</p>
             </div>
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 p-5 flex items-center gap-4">
@@ -113,7 +119,7 @@
             </div>
             <div>
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Shortlisted</p>
-                <p class="text-3xl font-extrabold text-gray-900 mt-0.5">42</p>
+                <p class="text-3xl font-extrabold text-gray-900 mt-0.5">{{ $stats['shortlisted'] }}</p>
             </div>
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 p-5 flex items-center gap-4">
@@ -122,7 +128,7 @@
             </div>
             <div>
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Interview</p>
-                <p class="text-3xl font-extrabold text-gray-900 mt-0.5">18</p>
+                <p class="text-3xl font-extrabold text-gray-900 mt-0.5">{{ $stats['interview'] }}</p>
             </div>
         </div>
         <div class="bg-white rounded-2xl border border-gray-100 p-5 flex items-center gap-4">
@@ -131,7 +137,7 @@
             </div>
             <div>
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Rejected</p>
-                <p class="text-3xl font-extrabold text-gray-900 mt-0.5">64</p>
+                <p class="text-3xl font-extrabold text-gray-900 mt-0.5">{{ $stats['rejected'] }}</p>
             </div>
         </div>
     </div>
@@ -199,40 +205,35 @@
             <h2 class="font-bold text-gray-900 mb-5">Recent Applicants</h2>
 
             <div class="space-y-4">
-                <!-- Applicant 1 -->
-                <a href="/hr/pelamar/1" class="flex items-center gap-3 -mx-2 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors group">
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm shrink-0">AW</div>
+                @forelse($applicants->take(3) as $app)
+                @php
+                    $initials = '';
+                    $parts = explode(' ', $app->applicant_name);
+                    foreach($parts as $part) {
+                        $initials .= strtoupper(substr($part, 0, 1));
+                    }
+                    $initials = substr($initials, 0, 2);
+                    
+                    // Simple randomized gradient/color for visual aesthetic
+                    $colors = ['from-blue-400 to-blue-600', 'from-purple-400 to-purple-600', 'from-amber-400 to-amber-600', 'from-green-400 to-green-600', 'from-rose-400 to-rose-600'];
+                    $colorGrad = $colors[$app->user_id % count($colors)];
+                @endphp
+                <a href="/hr/pelamar/{{ $app->user_id }}" class="flex items-center gap-3 -mx-2 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors group">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br {{ $colorGrad }} flex items-center justify-center text-white font-bold text-sm shrink-0">{{ $initials }}</div>
                     <div class="flex-1 min-w-0">
-                        <p class="font-semibold text-sm text-gray-900 truncate group-hover:text-green-800 transition-colors">Adrian Wijaya</p>
-                        <p class="text-xs text-gray-400 truncate">Master of Chemical Eng.</p>
+                        <p class="font-semibold text-sm text-gray-900 truncate group-hover:text-green-800 transition-colors">{{ $app->applicant_name }}</p>
+                        <p class="text-xs text-gray-400 truncate">{{ $app->education_level ?: 'Applicant' }}</p>
                     </div>
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 group-hover:text-green-700 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                 </a>
-
-                <!-- Applicant 2 -->
-                <a href="/hr/pelamar/2" class="flex items-center gap-3 -mx-2 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors group">
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-sm shrink-0">SR</div>
-                    <div class="flex-1 min-w-0">
-                        <p class="font-semibold text-sm text-gray-900 truncate group-hover:text-green-800 transition-colors">Siti Rahayu</p>
-                        <p class="text-xs text-gray-400 truncate">Lead Process Engineer</p>
-                    </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 group-hover:text-green-700 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-                </a>
-
-                <!-- Applicant 3 -->
-                <a href="/hr/pelamar/3" class="flex items-center gap-3 -mx-2 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors group">
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white font-bold text-sm shrink-0">BH</div>
-                    <div class="flex-1 min-w-0">
-                        <p class="font-semibold text-sm text-gray-900 truncate group-hover:text-green-800 transition-colors">Bambang Hartono</p>
-                        <p class="text-xs text-gray-400 truncate">Chemical Operations Spec.</p>
-                    </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 group-hover:text-green-700 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-                </a>
+                @empty
+                <p class="text-xs text-gray-400 py-2">No applicants yet.</p>
+                @endforelse
             </div>
 
             <div class="border-t border-gray-100 mt-5 pt-4">
-                <a href="/hr/pelamar?lowongan=1" class="flex items-center justify-between text-sm font-semibold text-green-800 hover:text-green-700 transition-colors">
-                    View All 124 Applicants
+                <a href="/hr/pelamar?lowongan={{ $vacancy->id }}" class="flex items-center justify-between text-sm font-semibold text-green-800 hover:text-green-700 transition-colors">
+                    View All {{ $stats['total'] }} Applicants
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </a>
             </div>
@@ -250,5 +251,9 @@
 @endsection
 
 @section('js')
+<script>
+    window.postedDate = "{{ $vacancy->created_at->format('Y-m-d') }}";
+    window.weeklyDailyData = @json($weeklyDailyData);
+</script>
 <script src="{{ asset('js/hr/lowongan-detail.js') }}"></script>
 @endsection

@@ -1,198 +1,105 @@
 @extends('layouts.pelamar')
 
-@section('title', 'Tambah Pengalaman Kerja')
+@section('title', $workExperience->exists ? 'Edit Pengalaman Kerja' : 'Tambah Pengalaman Kerja')
 @section('nav-pengalaman', 'active')
 
 @section('content')
 
-<!-- Breadcrumb -->
+@php
+    $isEdit = $workExperience->exists;
+@endphp
+
 <div class="flex items-center gap-2 text-sm text-gray-400 mb-4">
-    <a href="/pelamar/pengalaman-kerja" class="hover:text-green-700 transition-colors">Work Experience</a>
-    <span>›</span>
-    <span class="text-gray-700 font-medium">Add New</span>
+    <a href="{{ route('pelamar.pengalaman-kerja.index') }}" class="hover:text-green-700 transition-colors">Work Experience</a>
+    <span>&rsaquo;</span>
+    <span class="text-gray-700 font-medium">{{ $isEdit ? 'Edit' : 'Add New' }}</span>
 </div>
 
-<!-- Header -->
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Add Work Experience</h1>
+    <h1 class="text-2xl font-bold text-gray-900">{{ $isEdit ? 'Edit Work Experience' : 'Add Work Experience' }}</h1>
     <p class="text-gray-500 mt-1">Complete your professional experience details for a better profile.</p>
 </div>
 
-<!-- Form Card -->
-<div class="bg-white rounded-xl border border-gray-200 p-8">
+@if ($errors->any())
+    <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <p class="font-semibold">Periksa kembali data pengalaman kerja.</p>
+        <ul class="mt-1 list-disc pl-5">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+<form action="{{ $isEdit ? route('pelamar.pengalaman-kerja.update', $workExperience) : route('pelamar.pengalaman-kerja.store') }}" method="POST" class="bg-white rounded-xl border border-gray-200 p-8">
+    @csrf
+    @if ($isEdit)
+        @method('PUT')
+    @endif
+
     <div class="space-y-6">
-
-        <!-- Position & Company -->
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Position / Job Title <span class="text-red-500">*</span></label>
-                <input type="text" id="posisi" placeholder="Contoh: Chemical Engineer" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <label for="position" class="block text-sm font-medium text-gray-700 mb-1.5">Position / Job Title <span class="text-red-500">*</span></label>
+                <input type="text" id="position" name="position" value="{{ old('position', $workExperience->position) }}" placeholder="Contoh: Chemical Engineer" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Company Name <span class="text-red-500">*</span></label>
-                <input type="text" id="perusahaan" placeholder="Contoh: PT Ecogreen Oleochemicals" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <label for="company_name" class="block text-sm font-medium text-gray-700 mb-1.5">Company Name <span class="text-red-500">*</span></label>
+                <input type="text" id="company_name" name="company_name" value="{{ old('company_name', $workExperience->company_name) }}" placeholder="Contoh: PT Ecogreen Oleochemicals" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
             </div>
         </div>
 
-        <!-- Industry & Employment Type -->
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Industry</label>
-                <select id="industri" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none">
-                    <option value="">Select Industry</option>
-                    <option value="teknologi">Technology</option>
-                    <option value="manufaktur">Manufacturing</option>
-                    <option value="kimia">Chemistry & Oleochemical</option>
-                    <option value="keuangan">Finance & Banking</option>
-                    <option value="kesehatan">Healthcare</option>
-                    <option value="pendidikan">Education</option>
-                    <option value="energi">Energy & Mining</option>
-                    <option value="lainnya">Others</option>
-                </select>
+                <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1.5">Start Date <span class="text-red-500">*</span></label>
+                <input type="date" id="start_date" name="start_date" value="{{ old('start_date', optional($workExperience->start_date)->format('Y-m-d')) }}" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Employment Type</label>
-                <select id="tipe" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent appearance-none">
-                    <option value="">Select Job Type</option>
-                    <option value="Full-Time">Full-Time</option>
-                    <option value="Part-Time">Part-Time</option>
-                    <option value="Contract">Contract</option>
-                    <option value="Internship">Internship</option>
-                    <option value="Freelance">Freelance</option>
-                </select>
+                <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1.5">End Date</label>
+                <input type="date" id="end_date" name="end_date" value="{{ old('end_date', optional($workExperience->end_date)->format('Y-m-d')) }}" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
         </div>
 
-        <!-- Location -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Location</label>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
-                    </svg>
-                </div>
-                <input type="text" id="lokasi" placeholder="Contoh: Batam, Kepulauan Riau" class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-            </div>
-        </div>
-
-        <!-- Start & End Date -->
-        <div class="grid grid-cols-2 gap-6">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Start Date</label>
-                <input type="date" id="mulai" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">End Date</label>
-                <input type="date" id="selesai" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-            </div>
-        </div>
-
-        <!-- Currently Working -->
         <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" id="masih-bekerja" class="h-4 w-4 rounded border-gray-300 accent-green-800 cursor-pointer">
+            <input type="checkbox" id="is_current" name="is_current" value="1" @checked(old('is_current', $workExperience->is_current)) class="h-4 w-4 rounded border-gray-300 accent-green-800 cursor-pointer">
             <span class="text-sm text-gray-600">I am currently working in this role</span>
         </label>
 
-        <!-- Photo Upload -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Company / Workplace Photo</label>
-            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-400 transition-colors cursor-pointer" id="drop-zone">
-                <div id="upload-placeholder">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-300 mx-auto mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-                    </svg>
-                    <p class="text-sm text-gray-500">Click or drag photo here</p>
-                    <p class="text-xs text-gray-400 mt-1">JPG, PNG (Maks 5MB)</p>
-                </div>
-                <div id="upload-preview" class="hidden">
-                    <img id="preview-img" src="" alt="Preview" class="max-h-40 mx-auto rounded-lg">
-                    <button type="button" id="remove-foto" class="mt-3 text-xs text-red-500 hover:text-red-700 font-medium">Remove Photo</button>
-                </div>
-                <input type="file" id="foto-kerja" accept="image/jpeg,image/png" class="hidden">
-            </div>
-        </div>
-
-        <!-- Job Description -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">Job Description</label>
-            <textarea id="deskripsi" rows="5" placeholder="Describe your responsibilities and achievements during this position..." class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"></textarea>
+            <label for="description" class="block text-sm font-medium text-gray-700 mb-1.5">Job Description</label>
+            <textarea id="description" name="description" rows="6" placeholder="Describe your responsibilities and achievements during this position..." class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none">{{ old('description', $workExperience->description) }}</textarea>
             <p class="text-xs text-gray-400 mt-1.5 italic">Tips: Use bullet points to describe your key achievements.</p>
         </div>
 
-        <!-- Buttons -->
-        <div class="grid grid-cols-2 gap-4 pt-4">
-            <button type="button" id="btn-simpan" class="bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+            <button type="submit" class="bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                Save Experience
+                {{ $isEdit ? 'Update Experience' : 'Save Experience' }}
             </button>
-            <a href="/pelamar/pengalaman-kerja" class="border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg text-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
+            <a href="{{ route('pelamar.pengalaman-kerja.index') }}" class="border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg text-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
                 Cancel
             </a>
         </div>
-
     </div>
-</div>
+</form>
 
 @endsection
 
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Checkbox "masih bekerja" disable end date
-    const cb = document.getElementById('masih-bekerja');
-    const endDate = document.getElementById('selesai');
-    cb.addEventListener('change', function () {
-        endDate.disabled = this.checked;
-        if (this.checked) endDate.value = '';
-    });
+    const currentCheckbox = document.getElementById('is_current');
+    const endDateInput = document.getElementById('end_date');
 
-    // Photo upload
-    const dropZone = document.getElementById('drop-zone');
-    const fotoInput = document.getElementById('foto-kerja');
-    const placeholder = document.getElementById('upload-placeholder');
-    const preview = document.getElementById('upload-preview');
-    const previewImg = document.getElementById('preview-img');
-    const removeBtn = document.getElementById('remove-foto');
-
-    dropZone.addEventListener('click', () => fotoInput.click());
-    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-green-500', 'bg-green-50'); });
-    dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-green-500', 'bg-green-50'); });
-    dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropZone.classList.remove('border-green-500', 'bg-green-50');
-        if (e.dataTransfer.files.length) { fotoInput.files = e.dataTransfer.files; handleFile(e.dataTransfer.files[0]); }
-    });
-
-    fotoInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
-
-    function handleFile(file) {
-        if (file.size > 5 * 1024 * 1024) { alert('File size exceeds 5MB.'); return; }
-        if (!['image/jpeg', 'image/png'].includes(file.type)) { alert('Format must be JPG or PNG.'); return; }
-        const reader = new FileReader();
-        reader.onload = (e) => { previewImg.src = e.target.result; placeholder.classList.add('hidden'); preview.classList.remove('hidden'); };
-        reader.readAsDataURL(file);
+    function syncEndDate() {
+        endDateInput.disabled = currentCheckbox.checked;
+        if (currentCheckbox.checked) {
+            endDateInput.value = '';
+        }
     }
 
-    removeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        fotoInput.value = '';
-        previewImg.src = '';
-        preview.classList.add('hidden');
-        placeholder.classList.remove('hidden');
-    });
-
-    // Simpan
-    document.getElementById('btn-simpan').addEventListener('click', function () {
-        const posisi = document.getElementById('posisi').value.trim();
-        const perusahaan = document.getElementById('perusahaan').value.trim();
-        if (!posisi || !perusahaan) {
-            alert('Position dan Company Name wajib diisi.');
-            return;
-        }
-        alert('Experience saved successfully! (demo)');
-        window.location.href = '/pelamar/pengalaman-kerja';
-    });
+    currentCheckbox.addEventListener('change', syncEndDate);
+    syncEndDate();
 });
 </script>
 @endsection

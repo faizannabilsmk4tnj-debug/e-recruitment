@@ -45,8 +45,13 @@
             <a href="/pelamar/profil" class="text-green-300 hover:text-white text-sm transition-colors">My Profile</a>
 
             <!-- Avatar -->
+            @php $navProfile = auth()->user()->profile; @endphp
             <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-green-900 font-bold text-sm ring-2 ring-green-300 overflow-hidden" id="user-avatar">
-                <img src="{{ asset('images/avatar.png') }}" alt="Avatar" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.textContent='A';">
+                @if ($navProfile?->avatar_url)
+                    <img src="{{ asset('storage/' . $navProfile->avatar_url) }}" alt="Avatar" class="w-full h-full object-cover">
+                @else
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                @endif
             </div>
 
             <!-- Help / Tutorial -->

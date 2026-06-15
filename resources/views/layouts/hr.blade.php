@@ -25,7 +25,7 @@
 
         {{-- Right side --}}
         <div class="flex items-center gap-4">
-            <a href="/hr/tim" class="text-sm text-green-200 hover:text-white font-medium transition-colors">HR Team</a>
+            <a href="/hr/tim" class="text-sm text-green-200 hover:text-white font-medium transition-colors">{{ __('hr_layout.hr_team') }}</a>
 
             {{-- Notification --}}
             <div class="relative">
@@ -40,8 +40,8 @@
                 {{-- Dropdown Notif --}}
                 <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
                     <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                        <h3 class="text-sm font-bold text-gray-800">Notifications</h3>
-                        <span id="notif-header-count" class="text-[10px] text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded-full">4 New</span>
+                        <h3 class="text-sm font-bold text-gray-800">{{ __('hr_layout.notifications') }}</h3>
+                        <span id="notif-header-count" class="text-[10px] text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded-full">{{ __('hr_layout.new_count', ['count' => 4]) }}</span>
                     </div>
                     <div class="max-h-80 overflow-y-auto">
                         <!-- Notif Pelamar Baru -->
@@ -101,7 +101,7 @@
                         </a>
                     </div>
                     <div class="px-4 py-2 border-t border-gray-100 text-center">
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('notif-badge').classList.add('hidden'); document.getElementById('notif-header-count').innerText = '0 New';" class="text-xs font-semibold text-green-700 hover:text-green-900 transition-colors">Mark all as read</a>
+                        <a href="#" onclick="event.preventDefault(); document.getElementById('notif-badge').classList.add('hidden'); document.getElementById('notif-header-count').innerText = '{{ __('hr_layout.new_count', ['count' => 0]) }}';" class="text-xs font-semibold text-green-700 hover:text-green-900 transition-colors">{{ __('hr_layout.mark_all_read') }}</a>
                     </div>
                 </div>
             </div>
@@ -130,25 +130,37 @@
             <div class="relative">
                 <div class="flex items-center gap-2 cursor-pointer group" onclick="document.getElementById('logout-dropdown').classList.toggle('hidden')">
                     <div class="text-right">
-                        <div class="text-xs font-semibold text-white leading-none">Gilbert Blythe</div>
-                        <div class="text-[10px] text-green-300 leading-none mt-0.5">HR Senior Manager</div>
+                        <div class="text-xs font-semibold text-white leading-none">{{ Auth::user()->name }}</div>
+                        <div class="text-[10px] text-green-300 leading-none mt-0.5">{{ Auth::user()->job_title ?: 'HR Staff' }}</div>
                     </div>
                     <div class="w-8 h-8 rounded-full bg-green-600 border-2 border-green-400 overflow-hidden flex items-center justify-center">
-                        <span class="text-xs font-bold text-white">GB</span>
+                        @if(Auth::user()->profile && Auth::user()->profile->avatar_url)
+                        <img id="navbar-avatar-img" src="{{ Auth::user()->profile->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
+                        @else
+                        @php
+                            $words = explode(' ', Auth::user()->name);
+                            $initials = '';
+                            foreach ($words as $w) {
+                                $initials .= strtoupper($w[0] ?? '');
+                            }
+                            $initials = substr($initials, 0, 2);
+                        @endphp
+                        <span id="navbar-avatar-initials" class="text-xs font-bold text-white">{{ $initials }}</span>
+                        @endif
                     </div>
                 </div>
 
                 {{-- Dropdown Menu --}}
                 <div id="logout-dropdown" class="hidden absolute right-0 mt-3 w-40 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
                     <div class="px-4 py-2 border-b border-gray-100 mb-1">
-                        <p class="text-xs text-gray-500">Signed in as</p>
-                        <p class="text-sm font-semibold text-gray-800 truncate">Gilbert Blythe</p>
+                        <p class="text-xs text-gray-500">{{ __('hr_layout.signed_in_as') }}</p>
+                        <p class="text-sm font-semibold text-gray-800 truncate">{{ Auth::user()->name }}</p>
                     </div>
                     <form method="POST" action="/logout">
                         @csrf
                         <button type="submit" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                            Logout
+                            {{ __('hr_layout.logout') }}
                         </button>
                     </form>
                 </div>
@@ -162,33 +174,33 @@
             <a href="/hr/dashboard"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-dashboard', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
-                Dashboard
+                {{ __('hr_layout.nav.dashboard') }}
             </a>
             <a href="/hr/lowongan"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-lowongan', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
-                Vacancies
+                {{ __('hr_layout.nav.vacancies') }}
             </a>
             <a href="/hr/pelamar"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-pelamar', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
-                Applicants
+                {{ __('hr_layout.nav.applicants') }}
             </a>
             <a href="/hr/wawancara"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-wawancara', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
-                Interviews
+                {{ __('hr_layout.nav.interviews') }}
             </a>
 
             <a href="/hr/laporan"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-laporan', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
-                Reports
+                {{ __('hr_layout.nav.reports') }}
             </a>
             <a href="/hr/template-cv"
                class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
                       @yield('nav-template', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
-                CV Templates
+                {{ __('hr_layout.nav.cv_templates') }}
             </a>
 
         </div>
