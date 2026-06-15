@@ -1,29 +1,26 @@
-@extends('layouts.pelamar-public')
+@extends('layouts.pelamar')
 
 @section('title', 'Review Application')
 
 @section('content')
 
 <!-- Breadcrumb -->
-<div class="px-16 py-4 bg-white border-b border-gray-100">
-    <div class="flex items-center gap-2 text-sm text-gray-400">
-        <a href="/pelamar/dashboard" class="hover:text-green-700 transition-colors">Home</a>
-        <span>›</span>
-        <a href="/pelamar/lowongan" class="hover:text-green-700 transition-colors">Vacancies</a>
-        <span>›</span>
-        <span class="text-green-700 font-medium">Review: {{ $vacancy->title }}</span>
-    </div>
+<div class="flex items-center gap-2 text-xs text-gray-400 mb-6">
+    <a href="/pelamar/dashboard" class="hover:text-green-700 transition-colors">Home</a>
+    <span>›</span>
+    <a href="/pelamar/lowongan" class="hover:text-green-700 transition-colors">Vacancies</a>
+    <span>›</span>
+    <span class="text-gray-700 font-medium">Review: {{ $vacancy->title }}</span>
 </div>
 
 <!-- Header -->
-<section class="px-16 pt-8 pb-2 bg-white">
-    <h1 class="text-3xl font-extrabold text-gray-900">Review Application - {{ $vacancy->title }}</h1>
-    <p class="text-gray-500 mt-2 max-w-lg">Make sure all information is correct before clicking the Submit Application button.</p>
-</section>
+<div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Review Application - {{ $vacancy->title }}</h1>
+    <p class="text-sm text-gray-500 mt-1">Make sure all information is correct before clicking the Submit Application button.</p>
+</div>
 
 <!-- Main Content -->
-<section class="px-16 py-8 bg-white">
-    <div class="flex gap-6 items-start">
+<div class="flex flex-col lg:flex-row gap-6 items-start">
 
         <!-- LEFT: Dokumen & Cover Letter -->
         <div class="flex-1 space-y-6">
@@ -139,10 +136,9 @@
                 </div>
 
                 <p class="text-xs text-gray-400 text-center mt-4 leading-relaxed">By clicking "Submit Application", you agree to the Privacy Policy of PT Ecogreen Oleochemicals.</p>
-            </div>
         </div>
     </div>
-</section>
+</div>
 
 @endsection
 

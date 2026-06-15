@@ -10,7 +10,7 @@ class Portofolio extends Model
     protected $table = 'portofolio';
 
     protected $fillable = [
-        'id_user',
+        'user_id',
         'title',
         'description',
         'type',
@@ -21,6 +21,6 @@ class Portofolio extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

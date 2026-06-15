@@ -167,9 +167,13 @@
                         @endif
                     </td>
                     <td class="py-4 text-right relative">
-                        <button class="btn-vacancy-action text-gray-400 hover:text-gray-700 transition-colors p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                        </button>
+                        @if($v->status !== 'closed' && $v->status !== 'expired')
+                            <button class="btn-vacancy-action text-gray-400 hover:text-gray-700 transition-colors p-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                            </button>
+                        @else
+                            <span class="text-xs font-semibold text-gray-400 italic pr-1">Closed</span>
+                        @endif
                     </td>
                 </tr>
                 @endforeach
@@ -226,7 +230,7 @@
 </div>
 
 <!-- Dropdown action vacancy -->
-<div id="vacancy-dropdown" class="hidden fixed bg-white border border-gray-200 rounded-xl shadow-lg z-50 w-44 py-1.5">
+<div id="vacancy-dropdown" class="hidden absolute bg-white border border-gray-200 rounded-xl shadow-lg z-50 w-44 py-1.5">
     <button class="vd-view w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         View Applicants

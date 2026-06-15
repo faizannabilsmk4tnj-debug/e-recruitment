@@ -71,14 +71,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const dropdown = document.getElementById('vacancy-dropdown');
     let activeRow  = null;
 
+    function toggleActionDropdown(btn, row) {
+        if (!dropdown) return;
+        const rect = btn.getBoundingClientRect();
+        
+        // If same button and dropdown is open, close it
+        if (activeRow === row && !dropdown.classList.contains('hidden')) {
+            dropdown.classList.add('hidden');
+            return;
+        }
+        
+        activeRow = row;
+        dropdown.style.top   = (rect.bottom + window.scrollY + 4) + 'px';
+        dropdown.style.right = (window.innerWidth - rect.right + window.scrollX) + 'px';
+        dropdown.classList.remove('hidden');
+    }
+
     document.querySelectorAll('.btn-vacancy-action').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.stopPropagation();
-            activeRow = this.closest('.vacancy-row');
-            const rect = this.getBoundingClientRect();
-            dropdown.style.top   = (rect.bottom + window.scrollY + 4) + 'px';
-            dropdown.style.right = (window.innerWidth - rect.right) + 'px';
-            dropdown.classList.toggle('hidden');
+            toggleActionDropdown(this, this.closest('.vacancy-row'));
         });
     });
 
@@ -231,49 +243,46 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.disabled = false;
                 this.textContent = 'Save Changes';
             });
-        } else {
-            // Creation is handled in lowongan-buat page.
-            const ref = 'REF-ECO-2024-' + String(Math.floor(Math.random() * 900) + 100);
-            const deadlineFormatted = deadline ? new Date(deadline).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}) : '-';
-            const badgeClass = status === 'ACTIVE'
-                ? 'text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full'
-                : 'text-xs font-bold text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full';
+            let dbStatus = 'draft';
+            if (status === 'ACTIVE') dbStatus = 'open';
 
-            const row = document.createElement('tr');
-            row.className = 'border-t border-gray-50 hover:bg-gray-50 transition-colors vacancy-row';
-            row.dataset.title    = title.toLowerCase();
-            row.dataset.ref      = ref.toLowerCase();
-            row.dataset.status   = status;
-            row.dataset.category = document.querySelector(`#v-category option[value="${categoryId}"]`)?.textContent || '';
-            row.innerHTML = `
-                <td class="py-4 pr-4">
-                    <p class="font-bold text-sm text-gray-900">${title}</p>
-                    <p class="text-[10px] text-gray-400 mt-0.5">${ref}</p>
-                </td>
-                <td class="py-4 pr-4 text-sm text-gray-500">${row.dataset.category}</td>
-                <td class="py-4 pr-4"><span class="text-sm text-green-600 font-medium">No applicants yet</span></td>
-                <td class="py-4 pr-4 text-sm font-semibold text-gray-700">${String(quota).padStart(2,'0')}</td>
-                <td class="py-4 pr-4 text-sm text-gray-500">${deadlineFormatted}</td>
-                <td class="py-4 pr-4"><span class="${badgeClass}">${status}</span></td>
-                <td class="py-4 text-right relative">
-                    <button class="btn-vacancy-action text-gray-400 hover:text-gray-700 transition-colors p-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                    </button>
-                </td>`;
-
-            row.querySelector('.btn-vacancy-action').addEventListener('click', function (e) {
-                e.stopPropagation();
-                activeRow = row;
-                const rect = this.getBoundingClientRect();
-                dropdown.style.top   = (rect.bottom + window.scrollY + 4) + 'px';
-                dropdown.style.right = (window.innerWidth - rect.right) + 'px';
-                dropdown.classList.toggle('hidden');
+            fetch('/hr/lowongan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    category_id: categoryId,
+                    quota: quota,
+                    deadline: deadline || null,
+                    status: dbStatus,
+                    description: desc || 'Brief job description.',
+                    location: 'Batam Plant',
+                    requirements: 'Requirements will be updated soon.'
+                })
+            })
+            .then(response => {
+                if (!response.ok) return response.json().then(err => { throw err; });
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert('Gagal membuat lowongan: ' + (data.message || ''));
+                    this.disabled = false;
+                    this.textContent = 'Create Vacancy';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Terjadi kesalahan saat membuat lowongan.');
+                this.disabled = false;
+                this.textContent = 'Create Vacancy';
             });
-
-            document.getElementById('vacancy-table').appendChild(row);
-            this.disabled = false;
-            this.textContent = 'Create Vacancy';
-            closeModal();
         }
     });
 

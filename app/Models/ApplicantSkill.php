@@ -9,8 +9,10 @@ class ApplicantSkill extends Model
 {
     protected $table = 'applicant_skills';
 
+    public $timestamps = false;
+
     protected $fillable = [
-        'id_user',
+        'user_id',
         'skill_name',
         'category',
         'level',
@@ -21,6 +23,6 @@ class ApplicantSkill extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

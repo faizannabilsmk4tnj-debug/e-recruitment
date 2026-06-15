@@ -96,202 +96,189 @@
 </div>
 @endif
 
-{{-- CV Preview Section --}}
-<div id="cv-preview-section" class="mb-10 {{ $templates->isNotEmpty() ? '' : 'hidden' }}">
-    <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-bold text-gray-900">
-            Preview CV —
+{{-- CV Workspace Section (Preview & Kelengkapan side-by-side) --}}
+<div id="cv-preview-section" class="mb-10 scroll-mt-8 {{ $templates->isNotEmpty() ? '' : 'hidden' }}">
+    <div class="flex items-center justify-between mb-6 border-b border-gray-100 pb-4 pt-2">
+        <h2 class="text-xl font-bold text-gray-900">
+            Workspace CV —
             <span id="preview-template-name" class="text-green-800">{{ optional($templates->first())->name }}</span>
         </h2>
         <div class="flex items-center gap-3">
             <span id="preview-loading-badge" class="hidden text-xs text-gray-400 italic animate-pulse">⏳ Memuat data CV...</span>
             
-            <!-- Download Button -->
-            <button id="btn-download" onclick="downloadCvPdf()"
-                class="hidden items-center gap-1.5 px-3 py-1.5 bg-green-800 hover:bg-green-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                Download PDF
-            </button>
-            
-            <!-- Print Button -->
-            <button id="btn-print" onclick="printCv()"
-                class="hidden items-center gap-1.5 px-3 py-1.5 border border-green-800 text-green-800 hover:bg-green-50 rounded-lg text-xs font-semibold shadow-sm transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 6 2 18 2 18 9"/>
-                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                    <rect width="12" height="8" x="6" y="14"/>
-                </svg>
-                Print CV
-            </button>
-
-            <span class="text-gray-300">|</span>
-
-            <button onclick="openCvModal()"
-                    class="text-xs text-green-700 hover:text-green-900 font-semibold flex items-center gap-1 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M8 3H5a2 2 0 0 0-2-2v-3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-                </svg>
-                Full Screen
-            </button>
-            <span class="text-gray-300">|</span>
             <button onclick="scrollToTemplates()"
-                    class="text-xs text-green-700 hover:text-green-900 font-semibold flex items-center gap-1 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    class="text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 px-3.5 py-2 rounded-lg font-semibold flex items-center gap-1.5 transition-colors border border-gray-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
                 </svg>
-                Pilih Ulang
-            </button>
-            <span class="text-gray-300">|</span>
-            <button onclick="document.getElementById('cv-preview-section').classList.add('hidden');
-                            document.getElementById('btn-print').classList.add('hidden');
-                            document.getElementById('btn-print').classList.remove('flex');
-                            document.getElementById('btn-download').classList.add('hidden');
-                            document.getElementById('btn-download').classList.remove('flex')"
-                    class="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-                </svg>
-                Tutup
+                Pilih Ulang Template
             </button>
         </div>
     </div>
 
-    <div class="max-w-[620px] mx-auto animate-preview">
-        <iframe id="cv-preview-frame" title="Preview CV"></iframe>
-    </div>
-
-    <div class="max-w-3xl mx-auto mt-4 bg-amber-50 border border-amber-200 rounded-lg px-5 py-3 flex items-start gap-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
-        </svg>
-        <p class="text-xs text-amber-700 leading-relaxed">
-            <strong>Tips:</strong> Data yang tampil diambil dari halaman
-            <a href="{{ route('pelamar.profil.edit') }}" class="underline">Profil</a>,
-            <a href="{{ route('pelamar.pengalaman-kerja.index') }}" class="underline">Pengalaman Kerja</a>,
-            <a href="{{ route('pelamar.pendidikan.index') }}" class="underline">Pendidikan</a>, dan
-            <a href="{{ route('pelamar.lampiran') }}" class="underline">Keahlian</a>.
-            Lengkapi semua halaman agar CV Anda terlihat lengkap dan profesional.
-        </p>
-    </div>
-</div>
-
-{{-- Kelengkapan Data CV --}}
-<div id="kelengkapan-section" class="bg-white rounded-xl border border-gray-200 p-6 mb-10">
-    <h2 class="text-base font-bold text-gray-900 mb-4">Kelengkapan Data CV</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-
-        {{-- Profil --}}
-        <a href="{{ route('pelamar.profil.edit') }}" class="group flex flex-col items-center p-4 rounded-xl border transition-all
-            {{ $profile ? 'border-green-200 bg-green-50' : 'border-gray-200 hover:border-green-300' }}">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center mb-2
-                {{ $profile ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                </svg>
-            </div>
-            <p class="text-xs font-semibold {{ $profile ? 'text-green-700' : 'text-gray-500' }}">Profil</p>
-            <p class="text-[10px] {{ $profile ? 'text-green-500' : 'text-gray-400' }} mt-0.5">
-                {{ $profile ? '✓ Lengkap' : 'Belum diisi' }}
-            </p>
-        </a>
-
-        {{-- Pengalaman Kerja --}}
-        <a href="{{ route('pelamar.pengalaman-kerja.index') }}" class="group flex flex-col items-center p-4 rounded-xl border transition-all
-            {{ $works->count() ? 'border-green-200 bg-green-50' : 'border-gray-200 hover:border-green-300' }}">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center mb-2
-                {{ $works->count() ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-                </svg>
-            </div>
-            <p class="text-xs font-semibold {{ $works->count() ? 'text-green-700' : 'text-gray-500' }}">Pengalaman</p>
-            <p class="text-[10px] {{ $works->count() ? 'text-green-500' : 'text-gray-400' }} mt-0.5">
-                {{ $works->count() ? $works->count().' entri' : 'Belum diisi' }}
-            </p>
-        </a>
-
-        {{-- Pendidikan --}}
-        <a href="{{ route('pelamar.pendidikan.index') }}" class="group flex flex-col items-center p-4 rounded-xl border transition-all
-            {{ $educations->count() ? 'border-green-200 bg-green-50' : 'border-gray-200 hover:border-green-300' }}">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center mb-2
-                {{ $educations->count() ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
-                </svg>
-            </div>
-            <p class="text-xs font-semibold {{ $educations->count() ? 'text-green-700' : 'text-gray-500' }}">Pendidikan</p>
-            <p class="text-[10px] {{ $educations->count() ? 'text-green-500' : 'text-gray-400' }} mt-0.5">
-                {{ $educations->count() ? $educations->count().' entri' : 'Belum diisi' }}
-            </p>
-        </a>
-
-        {{-- Lampiran & Keahlian --}}
-        @php
-            $hasAttachment = $skills->count() > 0 || $portos->count() > 0;
-        @endphp
-        <a href="{{ route('pelamar.lampiran') }}" class="group flex flex-col items-center p-4 rounded-xl border transition-all
-            {{ $hasAttachment ? 'border-green-200 bg-green-50' : 'border-gray-200 hover:border-green-300' }}">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center mb-2
-                {{ $hasAttachment ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/>
-                </svg>
-            </div>
-            <p class="text-xs font-semibold {{ $hasAttachment ? 'text-green-700' : 'text-gray-500' }}">Lampiran</p>
-            <p class="text-[10px] {{ $hasAttachment ? 'text-green-500' : 'text-gray-400' }} mt-0.5">
-                @if($hasAttachment)
-                    ✓ Lengkap ({{ $skills->count() }} skill, {{ $portos->count() }} porto)
-                @else
-                    Belum diisi
-                @endif
-            </p>
-        </a>
-
-    </div>
-</div>
-
-<!-- Tips Profesional -->
-<div class="bg-gradient-to-br from-green-50 to-gray-50 rounded-xl border border-gray-200 p-8 mb-8">
-    <div class="flex items-start gap-8">
-        <div class="flex-1">
-            <h2 class="text-xl font-bold text-gray-900 italic mb-4">Pro Tips</h2>
-            <p class="text-sm text-gray-600 leading-relaxed mb-4">Choose a template with a balanced text-to-whitespace ratio. For technical roles, use <strong>Modern Executive</strong>. For marketing or design positions, creative styles are the best choice.</p>
-            <a href="#" class="text-sm font-semibold text-green-700 hover:text-green-600 flex items-center gap-1 transition-colors">
-                Read Full Career Guide
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
-            </a>
-        </div>
-        <div class="flex gap-4 shrink-0">
-            <div class="bg-white rounded-xl border border-gray-200 p-5 w-40">
-                <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {{-- Left: Live Preview (lg:col-span-7) --}}
+        <div class="lg:col-span-7 flex flex-col items-center">
+            <div class="w-full bg-slate-100 rounded-2xl p-4 border border-gray-200 shadow-sm">
+                <!-- Toolbar Preview -->
+                <div class="flex items-center justify-between mb-3 px-1">
+                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">CV Live Preview</span>
+                    <div class="flex items-center gap-2">
+                        <!-- Full Screen -->
+                        <button onclick="openCvModal()"
+                                class="p-1.5 text-gray-500 hover:text-green-700 hover:bg-white rounded-lg transition-all"
+                                title="Full Screen Preview">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                            </svg>
+                        </button>
+                        <!-- Print -->
+                        <button id="btn-print" onclick="printCv()"
+                                class="p-1.5 text-gray-500 hover:text-green-700 hover:bg-white rounded-lg transition-all hidden"
+                                title="Print CV">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"/>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                                <rect width="12" height="8" x="6" y="14"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-                <p class="font-bold text-sm text-gray-900">ATS Friendly</p>
-                <p class="text-xs text-gray-500 mt-1">Passes company ATS screening bots</p>
-            </div>
-            <div class="bg-white rounded-xl border border-gray-200 p-5 w-40">
-                <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+
+                <div class="animate-preview w-full">
+                    <iframe id="cv-preview-frame" title="Preview CV" class="w-full"></iframe>
                 </div>
-                <p class="font-bold text-sm text-gray-900">Auto-Save</p>
-                <p class="text-xs text-gray-500 mt-1">Safely stored in the cloud</p>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Download Button Section (Integrated with page) -->
-<div class="bg-white border-t border-gray-200 p-6 -mx-8 -mb-8 mt-4 flex items-center justify-between">
-    <p class="text-sm text-gray-500">Make sure you have saved all changes before downloading.</p>
-    <button id="btn-download-bottom" onclick="downloadCvPdf()" class="flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg text-sm transition-colors shadow-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-        Download PDF
-    </button>
-</div>
+        {{-- Right: Kelengkapan Data & Actions (lg:col-span-5) --}}
+        <div class="lg:col-span-5 space-y-6">
+            {{-- Action Cards (Download) --}}
+            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <h3 class="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3 text-slate-500">Unduh Dokumen</h3>
+                <h2 class="text-base font-bold text-gray-900 mb-2">Simpan CV sebagai PDF</h2>
+                <p class="text-xs text-gray-500 mb-4">Ekspor CV Anda ke dalam format PDF standar A4 berkualitas tinggi.</p>
+                
+                <button id="btn-download" onclick="downloadCvPdf()"
+                    class="w-full bg-[#15803d] hover:bg-[#166534] text-white font-semibold py-3 px-6 rounded-lg text-sm transition-colors shadow-sm flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" x2="12" y1="3" y2="15"/>
+                    </svg>
+                    Download PDF CV
+                </button>
+            </div>
+
+            {{-- Kelengkapan Data CV --}}
+            <div id="kelengkapan-section" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-50">
+                    <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">Kelengkapan Data CV</h3>
+                    <span class="text-[10px] font-semibold text-green-700 bg-green-50 px-2.5 py-0.5 rounded-full">Real-time Check</span>
+                </div>
+                
+                <div class="space-y-3">
+                    {{-- Profil --}}
+                    <a href="{{ route('pelamar.profil.edit') }}" class="flex items-center justify-between p-3 rounded-lg border transition-all hover:bg-gray-50
+                        {{ $profile ? 'border-green-100 bg-green-50/30' : 'border-gray-100 hover:border-green-200 hover:shadow-sm' }}">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center
+                                {{ $profile ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-700">Profil</p>
+                                <p class="text-[10px] text-gray-400">Data pribadi, bio & medsos</p>
+                            </div>
+                        </div>
+                        <span class="text-[11px] font-bold {{ $profile ? 'text-green-600' : 'text-gray-400' }}">
+                            {{ $profile ? 'Lengkap ✓' : 'Belum diisi' }}
+                        </span>
+                    </a>
+
+                    {{-- Pengalaman Kerja --}}
+                    <a href="{{ route('pelamar.pengalaman-kerja.index') }}" class="flex items-center justify-between p-3 rounded-lg border transition-all hover:bg-gray-50
+                        {{ $works->count() ? 'border-green-100 bg-green-50/30' : 'border-gray-100 hover:border-green-200 hover:shadow-sm' }}">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center
+                                {{ $works->count() ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-700">Pengalaman Kerja</p>
+                                <p class="text-[10px] text-gray-400">Karir & deskripsi pekerjaan</p>
+                            </div>
+                        </div>
+                        <span class="text-[11px] font-bold {{ $works->count() ? 'text-green-600' : 'text-gray-400' }}">
+                            {{ $works->count() ? $works->count().' entri ✓' : 'Belum diisi' }}
+                        </span>
+                    </a>
+
+                    {{-- Pendidikan --}}
+                    <a href="{{ route('pelamar.pendidikan.index') }}" class="flex items-center justify-between p-3 rounded-lg border transition-all hover:bg-gray-50
+                        {{ $educations->count() ? 'border-green-100 bg-green-50/30' : 'border-gray-100 hover:border-green-200 hover:shadow-sm' }}">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center
+                                {{ $educations->count() ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-700">Pendidikan</p>
+                                <p class="text-[10px] text-gray-400">Sekolah/Universitas & IPK</p>
+                            </div>
+                        </div>
+                        <span class="text-[11px] font-bold {{ $educations->count() ? 'text-green-600' : 'text-gray-400' }}">
+                            {{ $educations->count() ? $educations->count().' entri ✓' : 'Belum diisi' }}
+                        </span>
+                    </a>
+
+                    {{-- Lampiran & Keahlian --}}
+                    @php
+                        $hasAttachment = $skills->count() > 0 || $portos->count() > 0;
+                    @endphp
+                    <a href="{{ route('pelamar.lampiran') }}" class="flex items-center justify-between p-3 rounded-lg border transition-all hover:bg-gray-50
+                        {{ $hasAttachment ? 'border-green-100 bg-green-50/30' : 'border-gray-100 hover:border-green-200 hover:shadow-sm' }}">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center
+                                {{ $hasAttachment ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-700">Lampiran & Keahlian</p>
+                                <p class="text-[10px] text-gray-400">Sertifikat & kompetensi</p>
+                            </div>
+                        </div>
+                        <span class="text-[11px] font-bold {{ $hasAttachment ? 'text-green-600' : 'text-gray-400' }}">
+                            {{ $hasAttachment ? 'Lengkap ✓' : 'Belum diisi' }}
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            {{-- Tips Profesional --}}
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 shadow-sm">
+                <div class="flex items-start gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+                    </svg>
+                    <div>
+                        <h4 class="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">Tips Profesional</h4>
+                        <p class="text-xs text-amber-700 leading-relaxed">
+                            Pilih template dengan rasio teks-ke-ruang yang seimbang. Desain yang rapi membantu rekruter membaca keahlian utama Anda lebih cepat.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {{-- Modal Full Screen Preview --}}
 <div id="cv-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center p-4">
@@ -342,7 +329,7 @@
 // Global variable to store fetched CV HTML
 window.currentCvHtml = '';
 
-function selectTemplate(card) {
+function selectTemplate(card, shouldScroll = true) {
     // Update selected state
     document.querySelectorAll('.template-card').forEach(function(c) {
         c.classList.remove('selected');
@@ -358,15 +345,14 @@ function selectTemplate(card) {
     var previewSec = document.getElementById('cv-preview-section');
     previewSec.classList.remove('hidden');
 
-    // Smooth scroll down to the preview section header (accounting for the sticky navbar height of 52px + margins)
-    setTimeout(function() {
-        if (previewSec) {
-            var rect = previewSec.getBoundingClientRect();
-            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            var targetY = rect.top + scrollTop - 70; // 70px offset is perfect to clear the navbar
-            window.scrollTo({ top: targetY, behavior: 'smooth' });
-        }
-    }, 100);
+    // Smooth scroll down to the preview section header
+    if (shouldScroll) {
+        setTimeout(function() {
+            if (previewSec) {
+                previewSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
+    }
 
     // Loading state
     var badge = document.getElementById('preview-loading-badge');
@@ -455,7 +441,12 @@ function downloadCvPdf() {
 }
 
 function scrollToTemplates() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    var main = document.querySelector('main');
+    if (main) {
+        main.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 
 function openCvModal() {
@@ -523,7 +514,7 @@ function downloadCvPdfFromModal() {
 window.addEventListener('DOMContentLoaded', function() {
     @if($templates->isNotEmpty())
     var firstCard = document.querySelector('.template-card');
-    if (firstCard) { selectTemplate(firstCard); }
+    if (firstCard) { selectTemplate(firstCard, false); }
     @endif
 });
 </script>

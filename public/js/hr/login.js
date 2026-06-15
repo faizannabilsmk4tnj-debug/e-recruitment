@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const remember = rememberChk ? rememberChk.checked : false;
 
-        fetch('/login', {
+        fetch('/hr/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

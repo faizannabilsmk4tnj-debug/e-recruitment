@@ -52,10 +52,10 @@
 
         <!-- Nav Links -->
         <div class="flex items-center gap-6">
-            <button type="button" onclick="openModal('/', 'Home')" class="text-green-50 hover:text-white text-sm transition-colors font-medium">Home</button>
-            <button type="button" onclick="openModal('/pelamar/lowongan', 'Vacancies')" class="text-green-50 hover:text-white text-sm transition-colors font-medium">Vacancies</button>
-            <button type="button" onclick="openModal('/tentang-kami', 'About Us')" class="text-green-50 hover:text-white text-sm transition-colors font-medium">About Us</button>
-            <a href="/pelamar/profil" class="text-green-50 hover:text-white text-sm transition-colors font-medium">My Profile</a>
+            <a href="/" onclick="return confirmHomeExit(event, this)" class="text-sm transition-colors font-medium text-green-50 hover:text-white">Home</a>
+            <a href="/pelamar/lowongan" class="text-sm transition-colors font-medium {{ Request::is('pelamar/lowongan*') ? 'text-white font-semibold' : 'text-green-50 hover:text-white' }}">Vacancies</a>
+            <a href="/tentang-kami" onclick="return confirmHomeExit(event, this)" class="text-sm transition-colors font-medium text-green-50 hover:text-white">About Us</a>
+            <a href="/pelamar/profil" class="text-sm transition-colors font-medium {{ Request::is('pelamar/profil*') ? 'text-white font-semibold' : 'text-green-50 hover:text-white' }}">My Profile</a>
 
             <!-- Avatar -->
             @php $navProfile = auth()->user() ? auth()->user()->profile : null; @endphp
@@ -276,6 +276,49 @@
                 iframe.src = '';
             }, 300); // Wait for transition
         }
+
+        function confirmHomeExit(event, element) {
+            if (event) event.preventDefault();
+            const targetUrl = element ? element.getAttribute('href') : '/';
+            
+            const modal = document.getElementById('confirm-exit-modal');
+            const panel = document.getElementById('confirm-exit-panel');
+            const confirmBtn = document.getElementById('btn-confirm-exit-link');
+            const subtitle = modal.querySelector('#confirm-exit-panel p.text-xs.text-gray-500');
+            
+            if (subtitle) {
+                if (targetUrl === '/tentang-kami') {
+                    subtitle.textContent = "Anda akan dialihkan ke halaman Tentang Kami.";
+                } else {
+                    subtitle.textContent = "Anda akan dialihkan ke halaman utama.";
+                }
+            }
+            
+            confirmBtn.setAttribute('href', targetUrl);
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Trigger transition
+            void modal.offsetWidth;
+            panel.classList.remove('scale-95', 'opacity-0');
+            panel.classList.add('scale-100', 'opacity-100');
+            
+            return false;
+        }
+
+        function closeConfirmExitModal() {
+            const modal = document.getElementById('confirm-exit-modal');
+            const panel = document.getElementById('confirm-exit-panel');
+            
+            panel.classList.remove('scale-100', 'opacity-100');
+            panel.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
     </script>
     @yield('scripts')
     <script>
@@ -298,5 +341,36 @@
             }
         });
     </script>
+
+    {{-- Custom Confirm Exit Modal --}}
+    <div id="confirm-exit-modal" class="fixed inset-0 z-[110] hidden overflow-y-auto flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeConfirmExitModal()"></div>
+        <div class="relative bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 transform scale-95 opacity-0 transition-all duration-300 flex flex-col z-50 animate-preview" id="confirm-exit-panel">
+            <div class="flex items-start gap-4 mb-4">
+                <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-gray-900">Keluar dari Dashboard?</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">Anda akan dialihkan ke halaman utama.</p>
+                </div>
+            </div>
+            
+            <p class="text-xs text-gray-600 leading-relaxed bg-gray-50 p-3.5 rounded-xl border border-gray-100 mb-6">
+                Aktivitas Anda di dalam dashboard pelamar akan ditutup. Anda harus melakukan login ulang menggunakan akun Anda jika ingin masuk kembali ke dashboard ini.
+            </p>
+
+            <div class="flex items-center justify-end gap-3">
+                <button onclick="closeConfirmExitModal()" class="px-4 py-2 rounded-lg text-xs font-semibold text-gray-500 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors">
+                    Batal
+                </button>
+                <a id="btn-confirm-exit-link" href="/" class="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-green-700 hover:bg-green-800 transition-colors shadow-sm">
+                    Ya, Keluar
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

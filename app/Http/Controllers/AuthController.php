@@ -12,7 +12,7 @@ use Carbon\Carbon;
 class AuthController extends Controller
 {
 
-    public function login(Request $request)
+    public function loginApplicant(Request $request)
     {
         $user = User::where('email', $request->email)->first();
 
@@ -20,6 +20,13 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Email tidak ditemukan'
+            ]);
+        }
+
+        if ($user->role !== 'applicant') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email tidak terdaftar sebagai pelamar'
             ]);
         }
 
@@ -31,6 +38,41 @@ class AuthController extends Controller
         }
 
         Auth::login($user);
+        $request->session()->regenerate();
+
+        return response()->json([
+            'success' => true,
+            'role' => $user->role
+        ]);
+    }
+
+    public function loginHr(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email tidak ditemukan'
+            ]);
+        }
+
+        if ($user->role !== 'hr') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun ini bukan akun HR'
+            ]);
+        }
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Password salah'
+            ]);
+        }
+
+        $remember = $request->input('remember', false);
+        Auth::login($user, $remember);
         $request->session()->regenerate();
 
         return response()->json([

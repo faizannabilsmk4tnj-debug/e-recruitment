@@ -18,7 +18,11 @@ class VacancyController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $layout = $request->is('pelamar/*') ? 'layouts.pelamar-public' : 'layouts.landing';
+        if ($request->is('pelamar/*')) {
+            return view('pelamar.lowongan', compact('jobs', 'categories'));
+        }
+
+        $layout = 'layouts.landing';
 
         return view('lowongan', compact('jobs', 'categories', 'layout'));
     }
@@ -27,7 +31,11 @@ class VacancyController extends Controller
     {
         $vacancy = JobPosting::with('category')->findOrFail($id);
         
-        $layout = $request->is('pelamar/*') ? 'layouts.pelamar-public' : 'layouts.landing';
+        if ($request->is('pelamar/*')) {
+            return view('pelamar.detail-lowongan', compact('vacancy'));
+        }
+
+        $layout = 'layouts.landing';
 
         return view('detail-lowongan', compact('vacancy', 'layout'));
     }

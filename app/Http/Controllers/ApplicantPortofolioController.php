@@ -33,7 +33,7 @@ class ApplicantPortofolioController extends Controller
         }
 
         Portofolio::create([
-            'id_user'     => auth()->id(),
+            'user_id'     => auth()->id(),
             'title'       => $request->title,
             'description' => $request->description,
             'type'        => $request->type,
@@ -53,7 +53,7 @@ class ApplicantPortofolioController extends Controller
      */
     public function update(Request $request, Portofolio $portofolio): JsonResponse
     {
-        abort_unless($portofolio->id_user === auth()->id(), 403);
+        abort_unless($portofolio->user_id === auth()->id(), 403);
 
         $request->validate([
             'title'       => ['required', 'string', 'max:200'],
@@ -71,7 +71,7 @@ class ApplicantPortofolioController extends Controller
      */
     public function destroy(Portofolio $portofolio): JsonResponse
     {
-        abort_unless($portofolio->id_user === auth()->id(), 403);
+        abort_unless($portofolio->user_id === auth()->id(), 403);
 
         if ($portofolio->file_url) {
             Storage::disk('public')->delete($portofolio->file_url);

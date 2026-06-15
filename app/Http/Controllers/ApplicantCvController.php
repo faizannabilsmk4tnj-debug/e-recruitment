@@ -22,8 +22,8 @@ class ApplicantCvController extends Controller
         $works         = WorkExperience::where('user_id', $userId)->orderByDesc('start_date')->get();
         $educations    = Education::where('user_id', $userId)->orderByDesc('start_year')->get();
         $organizations = OrganizationExperience::where('user_id', $userId)->orderByDesc('start_date')->get();
-        $skills        = ApplicantSkill::where('id_user', $userId)->get();
-        $portos        = Portofolio::where('id_user', $userId)->get();
+        $skills        = ApplicantSkill::where('user_id', $userId)->get();
+        $portos        = Portofolio::where('user_id', $userId)->get();
 
         // Hanya template yang sudah di-publish oleh HR yang tampil ke pelamar
         $templates = CvTemplate::where('status', 'published')
@@ -69,7 +69,7 @@ class ApplicantCvController extends Controller
                 return [
                     'pos' => $o->position,
                     'org' => $o->organization_name,
-                    's'   => $o->start_date->format('Y'),
+                    's'   => $o->start_date ? $o->start_date->format('Y') : '',
                     'e'   => $o->end_date ? $o->end_date->format('Y') : 'Sekarang',
                 ];
             })->values()->all(),
@@ -102,7 +102,7 @@ class ApplicantCvController extends Controller
         $works         = WorkExperience::where('user_id', $userId)->orderByDesc('start_date')->get();
         $educations    = Education::where('user_id', $userId)->orderByDesc('start_year')->get();
         $organizations = OrganizationExperience::where('user_id', $userId)->orderByDesc('start_date')->get();
-        $skills        = ApplicantSkill::where('id_user', $userId)->get();
+        $skills        = ApplicantSkill::where('user_id', $userId)->get();
 
         $templateHtml = $template->content_html ?? '';
 
@@ -277,10 +277,11 @@ body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:
                 if ($organizations->isEmpty()) return '';
                 $inner = '';
                 foreach ($organizations as $org) {
+                    $s   = $org->start_date ? $org->start_date->format('Y') : '';
                     $e   = $org->end_date ? $org->end_date->format('Y') : 'Sekarang';
                     $inner .= '<div style="margin-bottom:8px">
                         <div style="font-size:12px;font-weight:700;color:#111">' . e($org->position) . '</div>
-                        <div style="font-size:11px;color:#6b7280">' . e($org->organization_name) . ' &bull; ' . $org->start_date->format('Y') . '&ndash;' . $e . '</div>
+                        <div style="font-size:11px;color:#6b7280">' . e($org->organization_name) . ' &bull; ' . $s . '&ndash;' . $e . '</div>
                     </div>';
                 }
                 return '<div class="blk" data-type="org">

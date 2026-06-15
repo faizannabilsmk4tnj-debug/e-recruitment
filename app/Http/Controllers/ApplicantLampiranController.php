@@ -14,12 +14,12 @@ class ApplicantLampiranController extends Controller
     // ===== INDEX =====
     public function index()
     {
-        $skills = ApplicantSkill::where('id_user', auth()->id())
+        $skills = ApplicantSkill::where('user_id', auth()->id())
             ->orderBy('category')
             ->orderBy('skill_name')
             ->get();
 
-        $portofolios = Portofolio::where('id_user', auth()->id())
+        $portofolios = Portofolio::where('user_id', auth()->id())
             ->latest()
             ->get();
 
@@ -46,7 +46,7 @@ class ApplicantLampiranController extends Controller
         }
 
         ApplicantSkill::create([
-            'id_user'         => auth()->id(),
+            'user_id'         => auth()->id(),
             'skill_name'      => $request->skill_name,
             'category'        => $request->category,
             'level'           => $request->level,
@@ -62,7 +62,7 @@ class ApplicantLampiranController extends Controller
     // ===== SKILL UPDATE =====
     public function skillUpdate(Request $request, ApplicantSkill $skill): JsonResponse
     {
-        abort_unless($skill->id_user === auth()->id(), 403);
+        abort_unless($skill->user_id === auth()->id(), 403);
 
         $request->validate([
             'skill_name' => ['required', 'string', 'max:100'],
@@ -92,7 +92,7 @@ class ApplicantLampiranController extends Controller
     // ===== SKILL DESTROY =====
     public function skillDestroy(ApplicantSkill $skill): JsonResponse
     {
-        abort_unless($skill->id_user === auth()->id(), 403);
+        abort_unless($skill->user_id === auth()->id(), 403);
 
         if ($skill->cert_file_path) {
             Storage::disk('public')->delete($skill->cert_file_path);
@@ -123,7 +123,7 @@ class ApplicantLampiranController extends Controller
         }
 
         Portofolio::create([
-            'id_user'     => auth()->id(),
+            'user_id'     => auth()->id(),
             'title'       => $request->title,
             'description' => $request->description,
             'type'        => $request->type,
@@ -140,7 +140,7 @@ class ApplicantLampiranController extends Controller
     // ===== PORTOFOLIO UPDATE =====
     public function portofolioUpdate(Request $request, Portofolio $portofolio): JsonResponse
     {
-        abort_unless($portofolio->id_user === auth()->id(), 403);
+        abort_unless($portofolio->user_id === auth()->id(), 403);
 
         $request->validate([
             'title'       => ['required', 'string', 'max:200'],
@@ -155,7 +155,7 @@ class ApplicantLampiranController extends Controller
     // ===== PORTOFOLIO DESTROY =====
     public function portofolioDestroy(Portofolio $portofolio): JsonResponse
     {
-        abort_unless($portofolio->id_user === auth()->id(), 403);
+        abort_unless($portofolio->user_id === auth()->id(), 403);
 
         if ($portofolio->file_url) {
             \Storage::disk('public')->delete($portofolio->file_url);

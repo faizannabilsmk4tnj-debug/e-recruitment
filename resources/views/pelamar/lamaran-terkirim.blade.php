@@ -1,10 +1,10 @@
-@extends('layouts.pelamar-public')
+@extends('layouts.pelamar')
 
 @section('title', 'Application Submitted')
 
 @section('content')
 
-<section class="bg-white px-16 py-20 flex-1">
+<div class="bg-white rounded-2xl border border-gray-200 p-12 flex-1">
     <div class="max-w-lg mx-auto text-center">
 
         <!-- Success Icon -->
@@ -44,6 +44,6 @@
         <p class="text-sm text-gray-400">Having trouble? <a href="#" class="font-semibold text-green-700 hover:text-green-600 transition-colors">Contact Recruitment Team</a></p>
 
     </div>
-</section>
+</div>
 
 @endsection

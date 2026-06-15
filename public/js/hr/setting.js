@@ -464,9 +464,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('selected-lang-input').value = lang;
         });
     });
-=======
-
->>>>>>> front-pelamar
 
     // ===== UPDATE ALL BUTTON =====
     const btnUpdateAll = document.getElementById('btn-update-all');

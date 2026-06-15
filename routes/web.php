@@ -38,7 +38,7 @@ Route::get('/logout-now', function () {
 
 // ===== AUTH =====
 Route::get('/login',            fn() => view('auth.login'))->name('login');
-Route::post('/login',           [AuthController::class, 'login']);
+Route::post('/login',           [AuthController::class, 'loginApplicant']);
 Route::get('/register',         fn() => view('auth.register'))->name('register');
 Route::post('/register',        [AuthController::class, 'register']);
 Route::get('/forgot-password',  fn() => view('auth.forgot-password'))->name('password.request');
@@ -47,6 +47,7 @@ Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])-
 Route::post('/reset-password',  [AuthController::class, 'resetPassword'])->name('password.update');
 
 Route::get('/hr/login', fn() => view('hr.login'));
+Route::post('/hr/login', [AuthController::class, 'loginHr']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // ===== PELAMAR — harus login dan role=applicant =====
