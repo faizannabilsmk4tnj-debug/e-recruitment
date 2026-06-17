@@ -30,7 +30,7 @@ class AuthController extends Controller
             ]);
         }
 
-        if (!Hash::check($request->password, $user->password)) {
+        if (!Hash::check($request->password, $user->password_hash)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Password salah'
@@ -64,7 +64,7 @@ class AuthController extends Controller
             ]);
         }
 
-        if (!Hash::check($request->password, $user->password)) {
+        if (!Hash::check($request->password, $user->password_hash)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Password salah'
@@ -172,7 +172,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $user->password = Hash::make($request->password);
+        $user->password_hash = Hash::make($request->password);
         $user->save();
 
         DB::table('password_reset_tokens')

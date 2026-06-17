@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
@@ -140,7 +141,7 @@ class SettingController extends Controller
         $validated = $request->validated();
 
         $user->update([
-            'password' => $validated['password'],
+            'password_hash' => Hash::make($validated['password']),
         ]);
 
         return response()->json([
