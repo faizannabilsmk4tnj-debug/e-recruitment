@@ -26,6 +26,11 @@ class Application extends Model
         return $this->belongsTo(JobPosting::class, 'job_id');
     }
 
+    public function jobPosting()
+    {
+        return $this->belongsTo(JobPosting::class, 'job_id');
+    }
+
     public function cv()
     {
         return $this->belongsTo(ApplicantCv::class, 'cv_id');

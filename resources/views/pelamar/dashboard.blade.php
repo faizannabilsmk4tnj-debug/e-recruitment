@@ -28,7 +28,7 @@
     <!-- Background: white base -->
     <div class="absolute inset-0 bg-white"></div>
     <!-- Green fill based on percentage -->
-    <div class="absolute inset-0 bg-gradient-to-r from-green-800 to-green-900 transition-all duration-1000 ease-out" id="progress-fill" style="width: 0%"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-green-800 to-green-900 transition-all duration-1000 ease-out" id="progress-fill" style="width: 0%; background: linear-gradient(to right, #15803d, #166534) !important;"></div>
     <!-- Content -->
     <div class="relative z-10 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -40,7 +40,7 @@
             <div class="bg-white/95 backdrop-blur-md border border-white/50 shadow-sm rounded-xl px-5 py-3 flex items-center gap-4 group-hover:shadow-md transition-all">
                 <div class="text-right">
                     <p class="text-[10px] uppercase tracking-widest font-bold text-gray-500 mb-0.5">Complete Profile</p>
-                    <p class="text-2xl font-black text-green-700 leading-none tracking-tight">85%</p>
+                    <p class="text-2xl font-black text-green-700 leading-none tracking-tight" id="progress-number">{{ $persentase }}%</p>
                 </div>
                 <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 transition-transform group-hover:translate-x-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -57,7 +57,7 @@
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-sm text-gray-500 mb-1">Total Applications</p>
-                <p class="text-3xl font-bold text-gray-900" id="stat-total">12</p>
+                <p class="text-3xl font-bold text-gray-900" id="stat-total">{{ $totalLamaran }}</p>
             </div>
             <div class="w-11 h-11 bg-gradient-to-br from-green-50 to-green-100 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -76,7 +76,7 @@
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-sm text-gray-500 mb-1">Active</p>
-                <p class="text-3xl font-bold text-emerald-700" id="stat-aktif">4</p>
+                <p class="text-3xl font-bold text-emerald-700" id="stat-aktif">{{ $aktif }}</p>
             </div>
             <div class="w-11 h-11 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -90,7 +90,7 @@
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-sm text-gray-500 mb-1">Rejected</p>
-                <p class="text-3xl font-bold text-red-600" id="stat-ditolak">2</p>
+                <p class="text-3xl font-bold text-red-600" id="stat-ditolak">{{ $ditolak }}</p>
             </div>
             <div class="w-11 h-11 bg-gradient-to-br from-red-50 to-red-100 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
@@ -104,7 +104,7 @@
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-sm text-gray-500 mb-1">Interviews</p>
-                <p class="text-3xl font-bold text-blue-600" id="stat-wawancara">3</p>
+                <p class="text-3xl font-bold text-blue-600" id="stat-wawancara">{{ $wawancara }}</p>
             </div>
             <div class="w-11 h-11 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -140,47 +140,28 @@
                     </tr>
                 </thead>
                 <tbody id="lamaran-table">
-                    <tr class="border-b border-gray-50 hover:bg-green-50/40 transition-colors cursor-pointer group">
-                        <td class="px-6 py-4">
-                            <p class="font-semibold text-sm text-gray-900 group-hover:text-green-800 transition-colors">Process Engineer</p>
-                            <p class="text-xs text-gray-400">Plant Division - Batam</p>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">12 Okt 2023</td>
-                        <td class="px-6 py-4"><span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">Shortlisted</span></td>
-                    </tr>
-                    <tr class="border-b border-gray-50 hover:bg-green-50/40 transition-colors cursor-pointer group">
-                        <td class="px-6 py-4">
-                            <p class="font-semibold text-sm text-gray-900 group-hover:text-green-800 transition-colors">Quality Assurance Specialist</p>
-                            <p class="text-xs text-gray-400">Laboratory - Medan</p>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">08 Okt 2023</td>
-                        <td class="px-6 py-4"><span class="text-xs font-semibold px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">Interview</span></td>
-                    </tr>
-                    <tr class="border-b border-gray-50 hover:bg-green-50/40 transition-colors cursor-pointer group">
-                        <td class="px-6 py-4">
-                            <p class="font-semibold text-sm text-gray-900 group-hover:text-green-800 transition-colors">Finance & Accounting Staff</p>
-                            <p class="text-xs text-gray-400">Head Office - Jakarta</p>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">05 Okt 2023</td>
-                        <td class="px-6 py-4"><span class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-50 text-gray-500 border border-gray-200">Applied</span></td>
-                    </tr>
-                    <tr class="border-b border-gray-50 hover:bg-green-50/40 transition-colors cursor-pointer group">
-                        <td class="px-6 py-4">
-                            <p class="font-semibold text-sm text-gray-900 group-hover:text-green-800 transition-colors">HR Generalist</p>
-                            <p class="text-xs text-gray-400">Head Office - Jakarta</p>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">30 Sep 2023</td>
-                        <td class="px-6 py-4"><span class="text-xs font-semibold px-3 py-1 rounded-full bg-red-50 text-red-600 border border-red-200">Rejected</span></td>
-                    </tr>
-                    <tr class="hover:bg-green-50/40 transition-colors cursor-pointer group">
-                        <td class="px-6 py-4">
-                            <p class="font-semibold text-sm text-gray-900 group-hover:text-green-800 transition-colors">Supply Chain Manager</p>
-                            <p class="text-xs text-gray-400">Logistics - Batam</p>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">25 Sep 2023</td>
-                        <td class="px-6 py-4"><span class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-50 text-gray-500 border border-gray-200">Applied</span></td>
-                    </tr>
-                </tbody>
+    @forelse($lamaran as $item)
+    <tr class="border-b border-gray-50 hover:bg-green-50/40 transition-colors cursor-pointer group">
+        <td class="px-6 py-4">
+            <p class="font-semibold text-sm text-gray-900 group-hover:text-green-800 transition-colors">{{ $item->jobPosting->title ?? '-' }}</p>
+            <p class="text-xs text-gray-400">{{ $item->jobPosting->division ?? '' }} - {{ $item->jobPosting->location ?? '' }}</p>
+        </td>
+        <td class="px-6 py-4 text-sm text-gray-500">{{ $item->created_at->format('d M Y') }}</td>
+        <td class="px-6 py-4">
+            <span class="text-xs font-semibold px-3 py-1 rounded-full
+                @if($item->status == 'shortlisted') bg-green-50 text-green-700 border border-green-200
+                @elseif($item->status == 'interview') bg-blue-50 text-blue-700 border border-blue-200
+                @elseif($item->status == 'rejected') bg-red-50 text-red-600 border border-red-200
+                @else bg-gray-50 text-gray-500 border border-gray-200
+                @endif">
+                {{ ucfirst($item->status) }}
+            </span>
+        </td>
+    </tr>
+    @empty
+    <tr><td colspan="3" class="px-6 py-8 text-center text-gray-400 text-sm">Belum ada lamaran</td></tr>
+    @endforelse
+</tbody>
             </table>
         </div>
     </div>
@@ -198,42 +179,19 @@
                 <a href="/#lowongan" class="text-xs font-semibold text-green-700 hover:text-green-600 transition-colors">See All</a>
             </div>
             <div class="divide-y divide-gray-50" id="saved-jobs">
+                @forelse($savedJobs as $job)
                 <div class="saved-job flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors cursor-pointer">
                     <div class="w-10 h-10 bg-gradient-to-br from-green-100 to-green-200 rounded-lg flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="saved-job-title font-semibold text-sm text-gray-900 truncate transition-colors">Maintenance Supervisor</p>
-                        <p class="text-xs text-gray-400">Batam • 5 days ago</p>
+                        <p class="saved-job-title font-semibold text-sm text-gray-900 truncate transition-colors">{{ $job->jobPosting->title ?? '-' }}</p>
+                        <p class="text-xs text-gray-400">{{ $job->jobPosting->location ?? '-' }} • {{ $job->created_at->diffForHumans() }}</p>
                     </div>
-                    <button class="text-gray-300 hover:text-yellow-500 transition-colors shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
-                    </button>
                 </div>
-                <div class="saved-job flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors cursor-pointer">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/></svg>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="saved-job-title font-semibold text-sm text-gray-900 truncate transition-colors">Chemical Lab Tech</p>
-                        <p class="text-xs text-gray-400">Medan • 2 days ago</p>
-                    </div>
-                    <button class="text-gray-300 hover:text-yellow-500 transition-colors shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
-                    </button>
-                </div>
-                <div class="saved-job flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors cursor-pointer">
-                    <div class="w-10 h-10 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-purple-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="saved-job-title font-semibold text-sm text-gray-900 truncate transition-colors">Talent Acquisition Lead</p>
-                        <p class="text-xs text-gray-400">Jakarta • New</p>
-                    </div>
-                    <button class="text-gray-300 hover:text-yellow-500 transition-colors shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
-                    </button>
-                </div>
+                @empty
+                <p class="text-sm text-gray-400 px-5 py-4">Belum ada lowongan tersimpan</p>
+                @endforelse
             </div>
         </div>
 
@@ -244,33 +202,24 @@
                     <div class="w-1.5 h-5 bg-amber-500 rounded-full"></div>
                     <h3 class="font-bold text-gray-900 text-sm">Notifications</h3>
                 </div>
-                <span class="text-xs font-bold text-white bg-green-600 px-2.5 py-0.5 rounded-full animate-pulse">3 New</span>
+                @php $unreadCount = $notifications->filter(fn($n) => is_null($n->read_at))->count(); @endphp
+                @if($unreadCount > 0)
+                <span class="text-xs font-bold text-white bg-green-600 px-2.5 py-0.5 rounded-full animate-pulse">{{ $unreadCount }} New</span>
+                @endif
             </div>
             <div class="divide-y divide-gray-50" id="notifications">
+                @forelse($notifications as $notif)
                 <div class="flex items-start gap-3 px-5 py-4 hover:bg-blue-50/30 transition-colors cursor-pointer">
-                    <div class="w-2.5 h-2.5 bg-blue-500 rounded-full mt-1.5 shrink-0 ring-2 ring-blue-200"></div>
+                    <div class="w-2.5 h-2.5 {{ is_null($notif->read_at) ? 'bg-blue-500 ring-2 ring-blue-200' : 'bg-gray-300' }} rounded-full mt-1.5 shrink-0"></div>
                     <div>
-                        <p class="font-semibold text-sm text-gray-900">Interview Schedule Confirmed</p>
-                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Technical interview invitation for Process Engineer has been sent to your email.</p>
-                        <p class="text-xs text-gray-400 mt-1.5 font-medium">1 hour ago</p>
+                        <p class="font-semibold text-sm text-gray-900">{{ $notif->title }}</p>
+                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">{{ $notif->message }}</p>
+                        <p class="text-xs text-gray-400 mt-1.5 font-medium">{{ $notif->created_at->diffForHumans() }}</p>
                     </div>
                 </div>
-                <div class="flex items-start gap-3 px-5 py-4 hover:bg-blue-50/30 transition-colors cursor-pointer">
-                    <div class="w-2.5 h-2.5 bg-blue-500 rounded-full mt-1.5 shrink-0 ring-2 ring-blue-200"></div>
-                    <div>
-                        <p class="font-semibold text-sm text-gray-900">Application Status Update</p>
-                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Your application for the QA Specialist position has been updated to 'Shortlisted'.</p>
-                        <p class="text-xs text-gray-400 mt-1.5 font-medium">Yesterday, 14:20</p>
-                    </div>
-                </div>
-                <div class="flex items-start gap-3 px-5 py-4 hover:bg-blue-50/30 transition-colors cursor-pointer">
-                    <div class="w-2.5 h-2.5 bg-blue-500 rounded-full mt-1.5 shrink-0 ring-2 ring-blue-200"></div>
-                    <div>
-                        <p class="font-semibold text-sm text-gray-900">Complete Your Profile</p>
-                        <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">Your TOEFL certificate is expiring soon. Please update your supporting documents.</p>
-                        <p class="text-xs text-gray-400 mt-1.5 font-medium">2 days ago</p>
-                    </div>
-                </div>
+                @empty
+                <p class="text-sm text-gray-400 px-5 py-4">Tidak ada notifikasi</p>
+                @endforelse
             </div>
             <div class="px-5 py-3 border-t border-gray-100 bg-gray-50/50">
                 <a href="#" class="text-sm font-semibold text-green-700 hover:text-green-600 transition-colors flex items-center justify-center gap-1">
@@ -279,9 +228,9 @@
                 </a>
             </div>
         </div>
+
     </div>
 </div>
-
 <!-- ========== ONBOARDING GUIDED TOUR ========== -->
 <div id="tour-overlay" class="fixed inset-0 z-[70] hidden" style="pointer-events:none;">
     <!-- Dark backdrop with hole -->
@@ -325,6 +274,10 @@
 @endsection
 
 @section('scripts')
+<script>
+    window.PROFILE_PERCENT = {{ $persentase }};
+    window.USER_NAME = "{{ $user->name }}";
+</script>
 <script src="{{ asset('js/pelamar/dashboard.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {

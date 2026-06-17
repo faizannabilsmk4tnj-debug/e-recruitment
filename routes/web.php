@@ -15,6 +15,7 @@ use App\Http\Controllers\VacancyController;
 use App\Http\Middleware\SetUserLocale;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PelamarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +54,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 // ===== PELAMAR — harus login dan role=applicant =====
 Route::middleware(['auth', 'role:applicant'])->group(function () {
 
-    Route::get('/pelamar/dashboard',           fn() => view('pelamar.dashboard'));
+    Route::get('/pelamar/dashboard',           [PelamarController::class, 'dashboard'])->name('pelamar.dashboard');
     Route::get('/pelamar/profil',              [ApplicantProfileController::class, 'edit'])->name('pelamar.profil.edit');
     Route::put('/pelamar/profil',              [ApplicantProfileController::class, 'update'])->name('pelamar.profil.update');
     Route::delete('/pelamar/profil',           [ApplicantProfileController::class, 'destroy'])->name('pelamar.profil.destroy');
@@ -131,6 +132,4 @@ Route::middleware(['auth', 'role:hr', SetUserLocale::class])->group(function () 
     Route::patch('/hr/template-cv/{template}/publish',      [HrCvTemplateController::class, 'publish'])->name('hr.template-cv.publish');
     Route::patch('/hr/template-cv/{template}/default',      [HrCvTemplateController::class, 'setDefault'])->name('hr.template-cv.setDefault');
     Route::delete('/hr/template-cv/{template}',             [HrCvTemplateController::class, 'destroy'])->name('hr.template-cv.destroy');
-
 });
-

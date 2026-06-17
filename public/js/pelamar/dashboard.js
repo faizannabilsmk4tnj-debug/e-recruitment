@@ -5,7 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const PROFILE_PERCENT = 85;
+    const PROFILE_PERCENT = window.PROFILE_PERCENT ?? 0;
 
     // ===== GREETING BY TIME =====
     function getGreeting() {
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
             greetSub.classList.remove('text-gray-500');
         } else {
             greetText.classList.remove('text-white');
-            greetText.classList.add('text-gray-900');
+            greetText.classList.add('text-green-800');  // ganti dari text-gray-900
             greetSub.classList.remove('text-green-200');
             greetSub.classList.add('text-gray-500');
         }
@@ -73,7 +73,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 16);
     }
 
-    const counters = { 'stat-total': 12, 'stat-aktif': 4, 'stat-ditolak': 2, 'stat-wawancara': 3 };
+    const counters = {
+    'stat-total': parseInt(document.getElementById('stat-total')?.textContent) || 0,
+    'stat-aktif': parseInt(document.getElementById('stat-aktif')?.textContent) || 0,
+    'stat-ditolak': parseInt(document.getElementById('stat-ditolak')?.textContent) || 0,
+    'stat-wawancara': parseInt(document.getElementById('stat-wawancara')?.textContent) || 0,
+};
     Object.entries(counters).forEach(([id, target]) => {
         const el = document.getElementById(id);
         if (el) { el.textContent = '0'; setTimeout(() => animateCounter(el, target, 800), 400); }

@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') — Applicant Portal</title>
     @vite(['resources/css/app.css'])
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .sidebar-link.active {
             background-color: #dcfce7;
@@ -86,10 +87,10 @@
             <div class="px-6 py-4 border-b border-gray-100">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Your Profile</span>
-                    <span class="text-xs font-bold text-green-700" id="profile-percent">85%</span>
+                    <span class="text-xs font-bold text-green-700" id="profile-percent">{{ $persentase ?? 0 }}%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-1.5">
-                    <div class="bg-green-600 h-1.5 rounded-full" style="width: 85%" id="profile-bar"></div>
+                    <div class="bg-green-600 h-1.5 rounded-full" style="width: {{ $persentase ?? 0 }}%; background-color: #16a34a !important;" id="profile-bar"></div>
                 </div>
                 <p class="text-xs text-gray-400 mt-2">Complete education to reach 100%</p>
             </div>

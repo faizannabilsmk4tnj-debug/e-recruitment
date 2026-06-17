@@ -18,7 +18,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password_hash',
         'role',
         'phone',
         'job_title',
@@ -27,8 +27,8 @@ class User extends Authenticatable
     ];
 
     protected $hidden = [
-        'password',
-        'remember_token'
+        'password_hash',
+        'remember_token',
     ];
 
     /**
@@ -40,8 +40,15 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'is_active'         => 'boolean',
         ];
     }
+
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
     /**
      * Relasi ke UserProfile.
      */
