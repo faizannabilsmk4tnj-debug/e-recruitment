@@ -37,11 +37,15 @@ class PelamarController extends Controller
                             ->latest()
                             ->take(3)
                             ->get();
+        $lamaranBulanIni = Application::where('user_id', $user->id)
+                            ->whereMonth('created_at', now()->month)
+                            ->whereYear('created_at', now()->year)
+                            ->count();
 
         return view('pelamar.dashboard', compact(
-            'user', 'totalLamaran', 'aktif', 'ditolak', 'wawancara',
-            'lamaran', 'savedJobs', 'notifications', 'persentase'
-        ));
+    'user', 'totalLamaran', 'aktif', 'ditolak', 'wawancara',
+    'lamaran', 'savedJobs', 'notifications', 'persentase', 'lamaranBulanIni'
+));
     }
 
     private function hitungPersentaseProfil($userId)

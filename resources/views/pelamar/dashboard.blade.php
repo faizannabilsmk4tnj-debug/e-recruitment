@@ -38,7 +38,7 @@
         <div class="text-right flex items-center gap-4">
             <div>
                 <p class="text-xs uppercase tracking-wider font-medium" id="progress-label">Complete Profile</p>
-                <<p class="text-3xl font-bold mt-0.5" id="progress-number">{{ $persentase }}%</p>
+                <p class="text-3xl font-bold mt-0.5" id="progress-number">{{ $persentase }}%</p>
             </div>
             <div class="w-10 h-10 rounded-full border-2 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" id="progress-arrow">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -64,7 +64,7 @@
         </div>
         <div class="flex items-center gap-1.5 mt-3 bg-green-50 rounded-md px-2 py-1 w-fit">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-            <span class="text-xs font-semibold text-green-700">+2 this month</span>
+            <span class="text-xs font-semibold text-green-700">+{{ $lamaranBulanIni }} this month</span>
         </div>
     </div>
 
