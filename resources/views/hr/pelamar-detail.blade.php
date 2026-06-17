@@ -18,7 +18,15 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-start gap-6 relative">
         {{-- Photo --}}
         <div class="relative">
-            <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=14532d&color=fff&size=128" alt="Budi Santoso" class="w-28 h-28 rounded-xl object-cover shadow-sm">
+            @php
+                $initials = '';
+                $parts = explode(' ', $user->name);
+                foreach($parts as $part) {
+                    $initials .= strtoupper(substr($part, 0, 1));
+                }
+                $initials = substr($initials, 0, 2);
+            @endphp
+            <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=14532d&color=fff&size=128" alt="{{ $user->name }}" class="w-28 h-28 rounded-xl object-cover shadow-sm">
             {{-- Verified Badge --}}
             <div class="absolute -bottom-2 -right-2 bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center border-2 border-white">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
@@ -27,25 +35,25 @@
 
         {{-- Info --}}
         <div class="flex-1 pt-1">
-            <h2 class="text-2xl font-bold text-gray-900">Budi Santoso, S.T.</h2>
-            <div class="text-gray-600 mt-1 mb-4 font-medium">Software Engineer (Senior) Applicant</div>
+            <h2 class="text-2xl font-bold text-gray-900">{{ $user->name }}</h2>
+            <div class="text-gray-600 mt-1 mb-4 font-medium">{{ $profile->job_title ?? 'Applicant' }}</div>
             
             <div class="flex flex-wrap items-center gap-x-8 gap-y-2 text-sm text-gray-600">
                 <div class="flex items-center gap-2">
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    budi.santoso@email.com
+                    {{ $user->email }}
                 </div>
                 <div class="flex items-center gap-2">
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                    +62 812 3456 7890
+                    {{ $user->phone ?? 'N/A' }}
                 </div>
                 <div class="flex items-center gap-2">
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    Batam, Kepulauan Riau
+                    {{ $profile->city ?? 'N/A' }}, {{ $profile->province ?? 'N/A' }}
                 </div>
                 <div class="flex items-center gap-2">
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    Applied: 24 Oct 2023
+                    Applied: {{ $application->created_at->format('d M Y') ?? 'N/A' }}
                 </div>
             </div>
         </div>
@@ -53,7 +61,22 @@
         {{-- Actions --}}
         <div class="flex flex-col items-end">
             <div class="bg-green-100 text-green-800 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase mb-6 border border-green-200">
-                Assessment Phase
+                @switch($application->status ?? 'applied')
+                    @case('applied')
+                        Assessment Phase
+                        @break
+                    @case('shortlisted')
+                        Shortlisted
+                        @break
+                    @case('interview')
+                        Interview Phase
+                        @break
+                    @case('rejected')
+                        Rejected
+                        @break
+                    @default
+                        Under Review
+                @endswitch
             </div>
             <div class="flex items-center gap-2">
                 <button class="w-10 h-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-gray-500 hover:text-green-800 hover:border-green-800 hover:bg-green-50 transition-colors shadow-sm" title="Download CV">
@@ -83,35 +106,38 @@
                 <div class="grid grid-cols-2 gap-x-8 gap-y-6">
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">NIK</div>
-                        <div class="text-sm font-semibold text-gray-900">2171011210920003</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $profile->nik ?? '-' }}</div>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">FULL NAME</div>
-                        <div class="text-sm font-semibold text-gray-900">Budi Santoso, S.T.</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $user->name }}</div>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">GENDER</div>
-                        <div class="text-sm font-semibold text-gray-900">Male</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $profile->gender ?? '-' }}</div>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">PHONE NUMBER</div>
-                        <div class="text-sm font-semibold text-gray-900">+62 812 3456 7890</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $user->phone ?? '-' }}</div>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">EMAIL</div>
-                        <div class="text-sm font-semibold text-gray-900">budi.santoso@email.com</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $user->email }}</div>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">PLACE, DATE OF BIRTH</div>
-                        <div class="text-sm font-semibold text-gray-900">Batam, 12 October 1992</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $profile->birthplace ?? '-' }}, {{ $profile->birthdate ? \Carbon\Carbon::parse($profile->birthdate)->format('d M Y') : '-' }}</div>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">AGE</div>
-                        <div class="text-sm font-semibold text-gray-900">31 Years Old</div>
+                        @php
+                            $age = $profile->birthdate ? \Carbon\Carbon::parse($profile->birthdate)->age : null;
+                        @endphp
+                        <div class="text-sm font-semibold text-gray-900">{{ $age ? $age . ' Years Old' : '-' }}</div>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">MARITAL STATUS</div>
-                        <div class="text-sm font-semibold text-gray-900">Married</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $profile->marital_status ?? '-' }}</div>
                     </div>
                 </div>
             </section>
@@ -122,24 +148,32 @@
                     <svg class="w-5 h-5 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path></svg>
                     <h3 class="text-lg font-bold text-gray-900">Education</h3>
                 </div>
-                <div class="grid grid-cols-2 gap-x-8 gap-y-6">
+                @forelse($user->educations as $edu)
+                <div class="grid grid-cols-2 gap-x-8 gap-y-6 mb-6 pb-6 border-b border-gray-100 last:border-0 last:pb-0 last:mb-0">
                     <div>
-                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">LAST EDUCATION</div>
-                        <div class="text-sm font-semibold text-gray-900">B.Eng. Informatics Engineering</div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">LEVEL</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $edu->education_level ?? '-' }}</div>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">SCHOOL / UNIVERSITY</div>
-                        <div class="text-sm font-semibold text-gray-900">Institut Teknologi Bandung</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $edu->institution_name ?? '-' }}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">FIELD OF STUDY</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $edu->field_of_study ?? '-' }}</div>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">GRADUATION YEAR</div>
-                        <div class="text-sm font-semibold text-gray-900">September 2018</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $edu->graduation_year ?? '-' }}</div>
                     </div>
                     <div>
                         <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">GPA</div>
-                        <div class="text-sm font-semibold text-gray-900">3.85 / 4.00</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $edu->gpa ?? '-' }}</div>
                     </div>
                 </div>
+                @empty
+                <div class="text-sm text-gray-400 italic">No education records found.</div>
+                @endforelse
             </section>
 
             {{-- Informasi Alamat --}}
@@ -155,23 +189,23 @@
                     <div class="grid grid-cols-2 gap-x-8 gap-y-5">
                         <div>
                             <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">PROVINCE</div>
-                            <div class="text-sm font-semibold text-gray-900">Kepulauan Riau</div>
+                            <div class="text-sm font-semibold text-gray-900">{{ $profile->province ?? '-' }}</div>
                         </div>
                         <div>
                             <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">CITY / REGENCY</div>
-                            <div class="text-sm font-semibold text-gray-900">Kota Batam</div>
+                            <div class="text-sm font-semibold text-gray-900">{{ $profile->city ?? '-' }}</div>
                         </div>
                         <div>
                             <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">DISTRICT</div>
-                            <div class="text-sm font-semibold text-gray-900">Batam Kota</div>
+                            <div class="text-sm font-semibold text-gray-900">{{ $profile->district ?? '-' }}</div>
                         </div>
                         <div>
                             <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">SUB-DISTRICT</div>
-                            <div class="text-sm font-semibold text-gray-900">Belian</div>
+                            <div class="text-sm font-semibold text-gray-900">{{ $profile->sub_district ?? '-' }}</div>
                         </div>
                         <div class="col-span-2">
                             <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">FULL ADDRESS</div>
-                            <div class="text-sm font-semibold text-gray-900">Jl. Gajah Mada No. 123, Komplek Mega Legenda Blok A1 No. 5</div>
+                            <div class="text-sm font-semibold text-gray-900">{{ $profile->address ?? '-' }}</div>
                         </div>
                     </div>
                 </div>
@@ -185,23 +219,23 @@
                     <div class="grid grid-cols-2 gap-x-8 gap-y-5">
                         <div>
                             <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">PROVINCE</div>
-                            <div class="text-sm font-semibold text-gray-900">Kepulauan Riau</div>
+                            <div class="text-sm font-semibold text-gray-900">{{ $profile->province ?? '-' }}</div>
                         </div>
                         <div>
                             <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">CITY / REGENCY</div>
-                            <div class="text-sm font-semibold text-gray-900">Kota Batam</div>
+                            <div class="text-sm font-semibold text-gray-900">{{ $profile->city ?? '-' }}</div>
                         </div>
                         <div>
                             <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">DISTRICT</div>
-                            <div class="text-sm font-semibold text-gray-900">Batam Kota</div>
+                            <div class="text-sm font-semibold text-gray-900">{{ $profile->district ?? '-' }}</div>
                         </div>
                         <div>
                             <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">SUB-DISTRICT</div>
-                            <div class="text-sm font-semibold text-gray-900">Belian</div>
+                            <div class="text-sm font-semibold text-gray-900">{{ $profile->sub_district ?? '-' }}</div>
                         </div>
                         <div class="col-span-2">
                             <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">FULL ADDRESS</div>
-                            <div class="text-sm font-semibold text-gray-900">Jl. Gajah Mada No. 123, Komplek Mega Legenda Blok A1 No. 5</div>
+                            <div class="text-sm font-semibold text-gray-900">{{ $profile->address ?? '-' }}</div>
                         </div>
                     </div>
                 </div>

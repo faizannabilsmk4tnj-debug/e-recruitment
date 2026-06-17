@@ -115,60 +115,6 @@
     <!-- Lowongan Cards -->
     <div class="space-y-4" id="lowongan-container">
 
-        @php
-        $lowonganList = [
-            [
-                'id' => 1,
-                'title' => 'Chemical Process Engineer',
-                'department' => 'Production',
-                'total' => 124,
-                'posted' => '12 Oct 2024',
-                'days_since' => 12,
-                'deadline_days' => 3,   // urgent
-                'counts' => ['terkirim' => 40, 'shortlisted' => 35, 'interview' => 18, 'reviewed' => 20, 'rejected' => 11],
-                'expanded' => true,
-                'pelamar' => [
-                    ['name' => 'Aditya Pratama',   'email' => 'aditya.p@email.com',   'date' => '12 Mei 2024', 'status' => 'shortlisted', 'score' => 85, 'avatar' => 'AP', 'color' => 'bg-blue-500'],
-                    ['name' => 'Siti Aminah',      'email' => 'siti.amin@email.com',  'date' => '10 Mei 2024', 'status' => 'interview',   'score' => 92, 'avatar' => 'SA', 'color' => 'bg-pink-500'],
-                    ['name' => 'Budi Santoso',     'email' => 'budi.san@email.com',   'date' => '08 Mei 2024', 'status' => 'reviewed',    'score' => 65, 'avatar' => 'BS', 'color' => 'bg-amber-500'],
-                    ['name' => 'Lestari Putri',    'email' => 'l.putri@email.com',    'date' => '05 Mei 2024', 'status' => 'rejected',    'score' => 45, 'avatar' => 'LP', 'color' => 'bg-red-400'],
-                    ['name' => 'Rahmat Hidayat',   'email' => 'r.hidayat@email.com',  'date' => '03 Mei 2024', 'status' => 'terkirim',    'score' => 78, 'avatar' => 'RH', 'color' => 'bg-purple-500'],
-                ],
-            ],
-            [
-                'id' => 2,
-                'title' => 'EHS Specialist',
-                'department' => 'Operations',
-                'total' => 42,
-                'posted' => '08 Nov 2024',
-                'days_since' => 4,
-                'deadline_days' => 18,
-                'counts' => ['terkirim' => 15, 'shortlisted' => 12, 'interview' => 5, 'reviewed' => 7, 'rejected' => 3],
-                'expanded' => false,
-                'pelamar' => [
-                    ['name' => 'Dewi Kartika',     'email' => 'dewi.k@email.com',     'date' => '15 Mei 2024', 'status' => 'shortlisted', 'score' => 88, 'avatar' => 'DK', 'color' => 'bg-teal-500'],
-                    ['name' => 'Ahmad Fauzi',      'email' => 'a.fauzi@email.com',    'date' => '14 Mei 2024', 'status' => 'interview',   'score' => 95, 'avatar' => 'AF', 'color' => 'bg-green-600'],
-                    ['name' => 'Maya Sari',        'email' => 'maya.s@email.com',     'date' => '11 Mei 2024', 'status' => 'terkirim',    'score' => 72, 'avatar' => 'MS', 'color' => 'bg-indigo-500'],
-                ],
-            ],
-            [
-                'id' => 3,
-                'title' => 'Analytical Chemist',
-                'department' => 'R&D Lab',
-                'total' => 18,
-                'posted' => '10 Nov 2024',
-                'days_since' => 2,
-                'deadline_days' => 25,
-                'counts' => ['terkirim' => 8, 'shortlisted' => 5, 'interview' => 3, 'reviewed' => 2, 'rejected' => 0],
-                'expanded' => false,
-                'pelamar' => [
-                    ['name' => 'Andi Wijaya',      'email' => 'a.wijaya@email.com',   'date' => '16 Mei 2024', 'status' => 'interview',   'score' => 91, 'avatar' => 'AW', 'color' => 'bg-blue-600'],
-                    ['name' => 'Rina Kusuma',      'email' => 'rina.k@email.com',     'date' => '13 Mei 2024', 'status' => 'shortlisted', 'score' => 82, 'avatar' => 'RK', 'color' => 'bg-rose-500'],
-                ],
-            ],
-        ];
-        @endphp
-
         @foreach($lowonganList as $low)
         @php
             $unreviewed = $low['counts']['terkirim'] + $low['counts']['shortlisted'];
@@ -327,13 +273,13 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
                                     <div class="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                        <div class="h-full rounded-full {{ $p['score'] >= 80 ? 'bg-green-600' : ($p['score'] >= 60 ? 'bg-amber-500' : 'bg-red-400') }}" style="width: {{ $p['score'] }}%"></div>
+                                        <div class="h-full rounded-full {{ $p['score'] >= 80 ? 'bg-green-600' : ($p['score'] >= 60 ? 'bg-amber-500' : 'bg-red-400') }}" @style="'width: ' . $p['score'] . '%'"></div>
                                     </div>
                                     <span class="text-sm font-bold {{ $p['score'] >= 80 ? 'text-green-700' : ($p['score'] >= 60 ? 'text-amber-600' : 'text-red-500') }}">{{ $p['score'] }}</span>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <a href="/hr/pelamar/{{ $pIdx + 1 }}" class="inline-flex items-center gap-1 text-[11px] font-semibold text-green-700 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg transition-colors">
+                                <a href="/hr/pelamar/{{ $p['user_id'] }}" class="inline-flex items-center gap-1 text-[11px] font-semibold text-green-700 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg transition-colors">
                                     Detail
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                                 </a>

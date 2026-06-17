@@ -75,6 +75,21 @@ class User extends Authenticatable
         return $this->hasMany(ApplicantCv::class);
     }
 
+    public function applicantSkills(): HasMany
+    {
+        return $this->hasMany(ApplicantSkill::class, 'id_user');
+    }
+
+    public function certificates(): HasMany
+    {
+        return $this->hasMany(Certificate::class);
+    }
+
+    public function portofolios(): HasMany
+    {
+        return $this->hasMany(Portofolio::class, 'id_user');
+    }
+
     /**
      * Relasi ke NotificationPreference.
      */
