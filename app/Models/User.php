@@ -79,7 +79,7 @@ class User extends Authenticatable
 
     public function applicantSkills(): HasMany
     {
-        return $this->hasMany(ApplicantSkill::class, 'id_user');
+        return $this->hasMany(ApplicantSkill::class, 'user_id');
     }
 
     public function certificates(): HasMany
@@ -89,7 +89,7 @@ class User extends Authenticatable
 
     public function portofolios(): HasMany
     {
-        return $this->hasMany(Portofolio::class, 'id_user');
+        return $this->hasMany(Portofolio::class, 'user_id');
     }
 
     /**
