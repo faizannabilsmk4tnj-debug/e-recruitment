@@ -23,23 +23,23 @@
     <div class="grid grid-cols-5 gap-4 mb-6">
         <div class="bg-white rounded-xl border border-gray-100 p-4">
             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Applicants</p>
-            <p class="text-2xl font-extrabold text-gray-900 mt-1">128</p>
+            <p class="text-2xl font-extrabold text-gray-900 mt-1">{{ $totalApplicants }}</p>
         </div>
         <div class="bg-white rounded-xl border-l-4 border-gray-300 border-y border-r border-r-gray-100 border-y-gray-100 p-4">
             <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Submitted</p>
-            <p class="text-2xl font-extrabold text-gray-900 mt-1">42</p>
+            <p class="text-2xl font-extrabold text-gray-900 mt-1">{{ $submittedCount }}</p>
         </div>
         <div class="bg-white rounded-xl border-l-4 border-amber-400 border-y border-r border-r-gray-100 border-y-gray-100 p-4">
             <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Shortlisted</p>
-            <p class="text-2xl font-extrabold text-gray-900 mt-1">38</p>
+            <p class="text-2xl font-extrabold text-gray-900 mt-1">{{ $shortlistedCount }}</p>
         </div>
         <div class="bg-white rounded-xl border-l-4 border-blue-500 border-y border-r border-r-gray-100 border-y-gray-100 p-4">
             <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Interview</p>
-            <p class="text-2xl font-extrabold text-gray-900 mt-1">18</p>
+            <p class="text-2xl font-extrabold text-gray-900 mt-1">{{ $interviewCount }}</p>
         </div>
         <div class="bg-white rounded-xl border-l-4 border-green-600 border-y border-r border-r-gray-100 border-y-gray-100 p-4">
             <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest">Accepted</p>
-            <p class="text-2xl font-extrabold text-gray-900 mt-1">6</p>
+            <p class="text-2xl font-extrabold text-gray-900 mt-1">{{ $acceptedCount }}</p>
         </div>
     </div>
 
@@ -50,15 +50,15 @@
             <button class="quick-filter active-quick bg-green-800 text-white font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="all">All</button>
             <button class="quick-filter bg-gray-50 border border-gray-200 text-gray-600 hover:border-amber-300 hover:text-amber-700 font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="review">
                 <span class="inline-block w-1.5 h-1.5 bg-amber-400 rounded-full mr-1"></span>
-                Needs Review <span class="text-gray-400 ml-0.5">(80)</span>
+                Needs Review <span class="text-gray-400 ml-0.5">({{ $submittedCount + $shortlistedCount }})</span>
             </button>
             <button class="quick-filter bg-gray-50 border border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-700 font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="interview">
                 <span class="inline-block w-1.5 h-1.5 bg-blue-500 rounded-full mr-1"></span>
-                In Interview <span class="text-gray-400 ml-0.5">(18)</span>
+                In Interview <span class="text-gray-400 ml-0.5">({{ $interviewCount }})</span>
             </button>
             <button class="quick-filter bg-gray-50 border border-gray-200 text-gray-600 hover:border-purple-300 hover:text-purple-700 font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="decision">
                 <span class="inline-block w-1.5 h-1.5 bg-purple-500 rounded-full mr-1"></span>
-                Needs Decision <span class="text-gray-400 ml-0.5">(29)</span>
+                Needs Decision <span class="text-gray-400 ml-0.5">({{ $decisionCount }})</span>
             </button>
         </div>
     </div>
@@ -76,11 +76,9 @@
             <!-- Departemen Filter -->
             <select id="filter-dept" class="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-700 min-w-[160px]">
                 <option value="">All Departments</option>
-                <option value="Production">Production</option>
-                <option value="Operations">Operations</option>
-                <option value="R&D Lab">R&D Lab</option>
-                <option value="Logistics">Logistics</option>
-                <option value="Technology">Technology</option>
+                @foreach($deptList as $dept)
+                    <option value="{{ $dept }}">{{ $dept }}</option>
+                @endforeach
             </select>
 
             <!-- Sort lowongan -->
@@ -109,66 +107,11 @@
     <!-- Result summary -->
     <div class="mb-3 flex items-center justify-between text-xs text-gray-500">
         <p>Showing <span id="visible-lowongan-count" class="font-bold text-gray-700">3</span> vacancies with <span id="visible-applicant-count" class="font-bold text-gray-700">10</span> applicants</p>
-        <p>Total: <span class="font-bold text-gray-700">128 applicants</span> in 3 active vacancies</p>
+        <p>Total: <span class="font-bold text-gray-700">{{ $totalApplicants }} applicants</span> in {{ count($lowonganList) }} active vacancies</p>
     </div>
 
     <!-- Lowongan Cards -->
     <div class="space-y-4" id="lowongan-container">
-
-        @php
-        $lowonganList = [
-            [
-                'id' => 1,
-                'title' => 'Chemical Process Engineer',
-                'department' => 'Production',
-                'total' => 124,
-                'posted' => '12 Oct 2024',
-                'days_since' => 12,
-                'deadline_days' => 3,   // urgent
-                'counts' => ['terkirim' => 40, 'shortlisted' => 35, 'interview' => 18, 'reviewed' => 20, 'rejected' => 11],
-                'expanded' => true,
-                'pelamar' => [
-                    ['name' => 'Aditya Pratama',   'email' => 'aditya.p@email.com',   'date' => '12 Mei 2024', 'status' => 'shortlisted', 'score' => 85, 'avatar' => 'AP', 'color' => 'bg-blue-500'],
-                    ['name' => 'Siti Aminah',      'email' => 'siti.amin@email.com',  'date' => '10 Mei 2024', 'status' => 'interview',   'score' => 92, 'avatar' => 'SA', 'color' => 'bg-pink-500'],
-                    ['name' => 'Budi Santoso',     'email' => 'budi.san@email.com',   'date' => '08 Mei 2024', 'status' => 'reviewed',    'score' => 65, 'avatar' => 'BS', 'color' => 'bg-amber-500'],
-                    ['name' => 'Lestari Putri',    'email' => 'l.putri@email.com',    'date' => '05 Mei 2024', 'status' => 'rejected',    'score' => 45, 'avatar' => 'LP', 'color' => 'bg-red-400'],
-                    ['name' => 'Rahmat Hidayat',   'email' => 'r.hidayat@email.com',  'date' => '03 Mei 2024', 'status' => 'terkirim',    'score' => 78, 'avatar' => 'RH', 'color' => 'bg-purple-500'],
-                ],
-            ],
-            [
-                'id' => 2,
-                'title' => 'EHS Specialist',
-                'department' => 'Operations',
-                'total' => 42,
-                'posted' => '08 Nov 2024',
-                'days_since' => 4,
-                'deadline_days' => 18,
-                'counts' => ['terkirim' => 15, 'shortlisted' => 12, 'interview' => 5, 'reviewed' => 7, 'rejected' => 3],
-                'expanded' => false,
-                'pelamar' => [
-                    ['name' => 'Dewi Kartika',     'email' => 'dewi.k@email.com',     'date' => '15 Mei 2024', 'status' => 'shortlisted', 'score' => 88, 'avatar' => 'DK', 'color' => 'bg-teal-500'],
-                    ['name' => 'Ahmad Fauzi',      'email' => 'a.fauzi@email.com',    'date' => '14 Mei 2024', 'status' => 'interview',   'score' => 95, 'avatar' => 'AF', 'color' => 'bg-green-600'],
-                    ['name' => 'Maya Sari',        'email' => 'maya.s@email.com',     'date' => '11 Mei 2024', 'status' => 'terkirim',    'score' => 72, 'avatar' => 'MS', 'color' => 'bg-indigo-500'],
-                ],
-            ],
-            [
-                'id' => 3,
-                'title' => 'Analytical Chemist',
-                'department' => 'R&D Lab',
-                'total' => 18,
-                'posted' => '10 Nov 2024',
-                'days_since' => 2,
-                'deadline_days' => 25,
-                'counts' => ['terkirim' => 8, 'shortlisted' => 5, 'interview' => 3, 'reviewed' => 2, 'rejected' => 0],
-                'expanded' => false,
-                'pelamar' => [
-                    ['name' => 'Andi Wijaya',      'email' => 'a.wijaya@email.com',   'date' => '16 Mei 2024', 'status' => 'interview',   'score' => 91, 'avatar' => 'AW', 'color' => 'bg-blue-600'],
-                    ['name' => 'Rina Kusuma',      'email' => 'rina.k@email.com',     'date' => '13 Mei 2024', 'status' => 'shortlisted', 'score' => 82, 'avatar' => 'RK', 'color' => 'bg-rose-500'],
-                ],
-            ],
-        ];
-        @endphp
-
         @foreach($lowonganList as $low)
         @php
             $unreviewed = $low['counts']['terkirim'] + $low['counts']['shortlisted'];
@@ -333,7 +276,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <a href="/hr/pelamar/{{ $pIdx + 1 }}" class="inline-flex items-center gap-1 text-[11px] font-semibold text-green-700 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg transition-colors">
+                                <a href="/hr/pelamar/{{ $p['id'] }}" class="inline-flex items-center gap-1 text-[11px] font-semibold text-green-700 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg transition-colors">
                                     Detail
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
                                 </a>

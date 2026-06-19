@@ -123,8 +123,12 @@ Route::middleware(['role:hr', SetUserLocale::class])->group(function () {
     Route::get('/hr/lowongan/{id}',              [JobPostingController::class, 'show'])->name('hr.lowongan.show')->where('id', '[0-9]+');
     Route::put('/hr/lowongan/{id}',              [JobPostingController::class, 'update'])->name('hr.lowongan.update')->where('id', '[0-9]+');
     Route::post('/hr/lowongan/{id}/status',      [JobPostingController::class, 'updateStatus'])->name('hr.lowongan.status')->where('id', '[0-9]+');
-    Route::get('/hr/pelamar',                    fn() => view('hr.pelamar'));
-    Route::get('/hr/pelamar/{id}',               fn($id) => view('hr.pelamar-detail'))->where('id', '[0-9]+');
+    Route::get('/hr/pelamar',                    [\App\Http\Controllers\HR\PelamarController::class, 'index']);
+    Route::get('/hr/pelamar/{id}',               [\App\Http\Controllers\HR\PelamarController::class, 'show'])->where('id', '[0-9]+');
+    Route::get('/hr/pelamar/{id}/cv-preview',    [\App\Http\Controllers\HR\PelamarController::class, 'cvPreview'])->where('id', '[0-9]+');
+    Route::post('/hr/pelamar/{id}/status',       [\App\Http\Controllers\HR\PelamarController::class, 'updateStatus'])->where('id', '[0-9]+');
+    Route::post('/hr/pelamar/{id}/note',         [\App\Http\Controllers\HR\PelamarController::class, 'addNote'])->where('id', '[0-9]+');
+    Route::post('/hr/pelamar/{id}/interview',    [\App\Http\Controllers\HR\PelamarController::class, 'scheduleInterview'])->where('id', '[0-9]+');
     Route::get('/hr/wawancara',                  fn() => view('hr.wawancara'));
     Route::get('/hr/wawancara/daftar',           fn() => view('hr.wawancara-daftar'));
     Route::get('/hr/laporan',                    fn() => view('hr.laporan'));
