@@ -165,6 +165,12 @@ class PelamarController extends Controller
             ->orderBy('scheduled_at', 'desc')
             ->get();
 
+        $educations = $user->educations()->orderByDesc('end_year')->get();
+        $latestEducation = $educations->first();
+        $workExperiences = $user->workExperiences()->orderByDesc('start_date')->get();
+        $organizationExperiences = $user->organizationExperiences()->orderByDesc('start_date')->get();
+        $skills = ApplicantSkill::where('id_user', $user->id)->orderBy('skill_name')->get();
+
         return view('hr.pelamar-detail', compact(
             'application',
             'user',
@@ -172,7 +178,12 @@ class PelamarController extends Controller
             'age',
             'statusLogs',
             'nextInterview',
-            'interviews'
+            'interviews',
+            'educations',
+            'latestEducation',
+            'workExperiences',
+            'organizationExperiences',
+            'skills'
         ));
     }
 
