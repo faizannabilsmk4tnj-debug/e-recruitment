@@ -59,4 +59,9 @@ class JobPosting extends Model
     {
         return $this->belongsTo(JobCategory::class, 'category_id');
     }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'job_id');
+    }
 }

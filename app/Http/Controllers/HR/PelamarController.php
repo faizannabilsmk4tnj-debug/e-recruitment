@@ -1,0 +1,561 @@
+<?php
+
+namespace App\Http\Controllers\HR;
+
+use App\Http\Controllers\Controller;
+use App\Models\Application;
+use App\Models\JobPosting;
+use App\Models\Interview;
+use App\Models\CvTemplate;
+use App\Models\Education;
+use App\Models\WorkExperience;
+use App\Models\OrganizationExperience;
+use App\Models\ApplicantSkill;
+use App\Models\UserProfile;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class PelamarController extends Controller
+{
+    /**
+     * Display a listing of applicants grouped by vacancies.
+     */
+    public function index()
+    {
+        // 1. Calculate stats for cards
+        $totalApplicants = Application::count();
+        $submittedCount  = Application::where('status', 'applied')->count();
+        $shortlistedCount = Application::where('status', 'shortlisted')->count();
+        $interviewCount  = Application::where('status', 'interview')->count();
+        $acceptedCount   = Application::where('status', 'offered')->count(); // Offered represents Accepted/Hired
+        $decisionCount   = Application::whereIn('status', ['reviewed', 'shortlisted'])->count();
+
+        // 2. Fetch active and non-empty job postings
+        $jobs = JobPosting::with(['category', 'applications.user.profile'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $lowonganList = [];
+        $deptList = [];
+
+        foreach ($jobs as $index => $job) {
+            $applications = $job->applications;
+
+            // Collect unique departments for the view dropdown filter
+            $deptName = $job->category ? $job->category->name : 'General';
+            if (!in_array($deptName, $deptList)) {
+                $deptList[] = $deptName;
+            }
+
+            // If a job posting has no applicants, we can still list it or skip it based on preference.
+            // Let's include it so HR sees all vacancies, but filter it dynamically
+            $pelamarData = [];
+            foreach ($applications as $appIdx => $app) {
+                $user = $app->user;
+                if (!$user) continue;
+
+                $profile = $user->profile;
+                $name = $user->name;
+                $initials = $this->getInitials($name);
+                $color = $this->getAvatarColor($name);
+
+                // Calculate a mock assessment score based on GPA, skills and experience for premium feel
+                $gpa = $profile ? ($profile->gpa ?? 3.0) : 3.0;
+                $score = round($gpa * 22); // e.g. 3.8 GPA * 22 = 83.6
+                // Add points for each experience & skill
+                $skillsCount = ApplicantSkill::where('id_user', $user->id)->count();
+                $expCount = WorkExperience::where('user_id', $user->id)->count();
+                $score += ($skillsCount * 2) + ($expCount * 3);
+                $score = min(98, max(50, $score)); // Caps between 50 and 98
+
+                // Map database status 'applied' to view status 'terkirim'
+                $viewStatus = $app->status === 'applied' ? 'terkirim' : $app->status;
+
+                $pelamarData[] = [
+                    'id' => $app->id,
+                    'name' => $name,
+                    'email' => $user->email,
+                    'date' => $app->created_at ? $app->created_at->format('d M Y') : 'N/A',
+                    'status' => $viewStatus,
+                    'score' => $score,
+                    'avatar' => $initials,
+                    'color' => $color,
+                ];
+            }
+
+            $unreviewed = $applications->whereIn('status', ['applied', 'shortlisted'])->count();
+            $interviewCountJob = $applications->where('status', 'interview')->count();
+            $decisionCountJob = $applications->whereIn('status', ['reviewed', 'shortlisted'])->count();
+
+            $lowonganList[] = [
+                'id' => $job->id,
+                'title' => $job->title,
+                'department' => $deptName,
+                'total' => $applications->count(),
+                'posted' => $job->created_at ? $job->created_at->format('d M Y') : 'N/A',
+                'days_since' => $job->created_at ? $job->created_at->diffInDays(now()) : 30,
+                'deadline_days' => $job->deadline ? now()->diffInDays($job->deadline, false) : 30,
+                'counts' => [
+                    'terkirim' => $applications->where('status', 'applied')->count(),
+                    'shortlisted' => $applications->where('status', 'shortlisted')->count(),
+                    'interview' => $applications->where('status', 'interview')->count(),
+                    'reviewed' => $applications->where('status', 'reviewed')->count(),
+                    'rejected' => $applications->where('status', 'rejected')->count(),
+                ],
+                'unreviewed' => $unreviewed,
+                'interview' => $interviewCountJob,
+                'decision' => $decisionCountJob,
+                'expanded' => $index === 0, // Expand the first card by default
+                'pelamar' => $pelamarData,
+            ];
+        }
+
+        return view('hr.pelamar', compact(
+            'totalApplicants',
+            'submittedCount',
+            'shortlistedCount',
+            'interviewCount',
+            'acceptedCount',
+            'decisionCount',
+            'lowonganList',
+            'deptList'
+        ));
+    }
+
+    /**
+     * Show detail page for a specific applicant (via application ID).
+     */
+    public function show($id)
+    {
+        $application = Application::with([
+            'user.profile',
+            'user.educations',
+            'user.workExperiences',
+            'user.organizationExperiences',
+            'job.category',
+            'cv'
+        ])->findOrFail($id);
+
+        $user = $application->user;
+        $profile = $user->profile;
+
+        // Calculate age
+        $age = 'N/A';
+        if ($profile && $profile->birth_date) {
+            $age = $profile->birth_date->age . ' Years Old';
+        }
+
+        // Get activity/status log history
+        $statusLogs = DB::table('application_status_logs')
+            ->join('users', 'application_status_logs.changed_by', '=', 'users.id')
+            ->where('application_id', $application->id)
+            ->select('application_status_logs.*', 'users.name as changer_name', 'users.role as changer_role')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Retrieve the closest upcoming interview session
+        $nextInterview = Interview::where('application_id', $application->id)
+            ->where('scheduled_at', '>=', now())
+            ->where('status', 'scheduled')
+            ->orderBy('scheduled_at', 'asc')
+            ->first();
+
+        // Get all interviews for this application (historical list)
+        $interviews = Interview::where('application_id', $application->id)
+            ->orderBy('scheduled_at', 'desc')
+            ->get();
+
+        $educations = $user->educations()->orderByDesc('end_year')->get();
+        $latestEducation = $educations->first();
+        $workExperiences = $user->workExperiences()->orderByDesc('start_date')->get();
+        $organizationExperiences = $user->organizationExperiences()->orderByDesc('start_date')->get();
+        $skills = ApplicantSkill::where('id_user', $user->id)->orderBy('skill_name')->get();
+
+        return view('hr.pelamar-detail', compact(
+            'application',
+            'user',
+            'profile',
+            'age',
+            'statusLogs',
+            'nextInterview',
+            'interviews',
+            'educations',
+            'latestEducation',
+            'workExperiences',
+            'organizationExperiences',
+            'skills'
+        ));
+    }
+
+    /**
+     * Generate dynamic CV HTML for the preview iframe on the detail page.
+     */
+    public function cvPreview($id)
+    {
+        $application = Application::findOrFail($id);
+        $user = $application->user;
+        if (!$user) {
+            return response('User not found', 404);
+        }
+
+        $profile       = UserProfile::where('user_id', $user->id)->first();
+        $works         = WorkExperience::where('user_id', $user->id)->orderByDesc('start_date')->get();
+        $educations    = Education::where('user_id', $user->id)->orderByDesc('start_year')->get();
+        $organizations = OrganizationExperience::where('user_id', $user->id)->orderByDesc('start_date')->get();
+        $skills        = ApplicantSkill::where('id_user', $user->id)->get();
+
+        // Try to fetch primary template or fallback to first
+        $template = CvTemplate::where('status', 'published')->orderByDesc('is_default')->first();
+        if (!$template) {
+            $template = CvTemplate::first();
+        }
+
+        $templateHtml = $template ? $template->content_html : '';
+
+        // Extract block types
+        preg_match_all('/data-type="([^"]+)"/', $templateHtml, $matches);
+        $blockTypes = $matches[1] ?? [];
+
+        $accentColor = '#0f3c20';
+        $initials = $this->getInitials($user->name);
+        $name = e($user->name);
+        $latestJob = $works->first();
+        $position  = $latestJob ? e($latestJob->position) : ($user->job_title ? e($user->job_title) : 'Applicant');
+
+        $email    = e($user->email);
+        $phone    = e($user->phone ?? (optional($profile)->phone ?? ''));
+        $city     = e(optional($profile)->city ?? '');
+        $province = e(optional($profile)->province ?? '');
+        $linkedin = e(optional($profile)->linkedin_url ?? '');
+        $bio      = e(optional($profile)->bio ?? '');
+
+        $blocksHtml = '';
+
+        if (empty($blockTypes)) {
+            $blockTypes = ['header', 'contact', 'summary', 'exp', 'edu', 'skills'];
+        }
+
+        // Reuse the logic from ApplicantCvController
+        foreach ($blockTypes as $type) {
+            $blocksHtml .= $this->renderBlockHtml(
+                $type, $accentColor,
+                $name, $initials, $position,
+                $email, $phone, $city, $province, $linkedin, $bio,
+                $works, $educations, $organizations, $skills
+            );
+        }
+
+        $html = '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
+<title>CV — ' . $name . '</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:center;
+     padding:0;font-family:\'Segoe UI\',sans-serif}
+.page{width:595px;background:#fff;min-height:842px;}
+.blk{position:relative}
+@media print{
+  body{background:#fff;padding:0}
+  .page{width:100%}
+}
+</style>
+</head><body>
+<div class="page">
+' . $blocksHtml . '
+</div>
+</body></html>';
+
+        return response($html, 200, ['Content-Type' => 'text/html; charset=utf-8']);
+    }
+
+    /**
+     * Update applicant status.
+     */
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:applied,reviewed,shortlisted,interview,offered,rejected,withdrawn',
+            'reason' => 'nullable|string',
+        ]);
+
+        $application = Application::findOrFail($id);
+        $oldStatus = $application->status;
+        $newStatus = $request->status;
+
+        $application->status = $newStatus;
+        if ($request->has('reason')) {
+            $application->hr_notes = $request->reason;
+        }
+        $application->save();
+
+        // Log the status change
+        DB::table('application_status_logs')->insert([
+            'application_id' => $application->id,
+            'changed_by' => auth()->id() ?? 1, // fallback to ID 1 if not authenticated for some reason
+            'old_status' => $oldStatus,
+            'new_status' => $newStatus,
+            'reason' => $request->reason ?? 'Status changed by HR.',
+            'created_at' => now(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status successfully updated to ' . ucfirst($newStatus),
+            'status' => $newStatus
+        ]);
+    }
+
+    /**
+     * Save an internal HR note (without changing status).
+     */
+    public function addNote(Request $request, $id)
+    {
+        $request->validate([
+            'note' => 'required|string',
+        ]);
+
+        $application = Application::findOrFail($id);
+
+        // Add note as a status log where old_status = new_status
+        DB::table('application_status_logs')->insert([
+            'application_id' => $application->id,
+            'changed_by' => auth()->id() ?? 1,
+            'old_status' => $application->status,
+            'new_status' => $application->status,
+            'reason' => $request->note,
+            'created_at' => now(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Note added successfully.'
+        ]);
+    }
+
+    /**
+     * Schedule a new interview session.
+     */
+    public function scheduleInterview(Request $request, $id)
+    {
+        $request->validate([
+            'scheduled_at' => 'required|date',
+            'duration_minutes' => 'required|integer',
+            'interview_type' => 'required|in:online,offline,phone',
+            'location_or_link' => 'nullable|string',
+            'notes' => 'nullable|string',
+        ]);
+
+        $application = Application::findOrFail($id);
+        $oldStatus = $application->status;
+
+        // 1. Create interview record
+        $interview = new Interview();
+        $interview->application_id = $application->id;
+        $interview->scheduled_by = auth()->id() ?? 1;
+        $interview->scheduled_at = $request->scheduled_at;
+        $interview->duration_minutes = $request->duration_minutes;
+        $interview->interview_type = $request->interview_type;
+        $interview->location_or_link = $request->location_or_link;
+        $interview->status = 'scheduled';
+        $interview->notes = $request->notes;
+        $interview->save();
+
+        // 2. Update application status to 'interview' if it isn't already
+        if ($application->status !== 'interview') {
+            $application->status = 'interview';
+            $application->save();
+
+            // Log status change
+            DB::table('application_status_logs')->insert([
+                'application_id' => $application->id,
+                'changed_by' => auth()->id() ?? 1,
+                'old_status' => $oldStatus,
+                'new_status' => 'interview',
+                'reason' => 'Scheduled ' . $request->interview_type . ' interview. Notes: ' . ($request->notes ?? '-'),
+                'created_at' => now(),
+            ]);
+        } else {
+            // Log interview addition without status change
+            DB::table('application_status_logs')->insert([
+                'application_id' => $application->id,
+                'changed_by' => auth()->id() ?? 1,
+                'old_status' => 'interview',
+                'new_status' => 'interview',
+                'reason' => 'Scheduled new interview: ' . $request->interview_type . ' interview.',
+                'created_at' => now(),
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Interview scheduled successfully.'
+        ]);
+    }
+
+    // --- HELPER METHODS ---
+
+    private function getInitials($name)
+    {
+        $words = explode(' ', trim($name));
+        $initials = '';
+        foreach (array_slice($words, 0, 2) as $w) {
+            if (!empty($w)) {
+                $initials .= strtoupper(substr($w, 0, 1));
+            }
+        }
+        return $initials ?: 'AP';
+    }
+
+    private function getAvatarColor($name)
+    {
+        $colors = ['bg-blue-500', 'bg-pink-500', 'bg-amber-500', 'bg-red-400', 'bg-purple-500', 'bg-teal-500', 'bg-green-600', 'bg-indigo-500', 'bg-rose-500'];
+        $hash = crc32($name);
+        return $colors[abs($hash) % count($colors)];
+    }
+
+    private function renderBlockHtml(
+        string $type, string $accent,
+        string $name, string $initials, string $position,
+        string $email, string $phone, string $city, string $province, string $linkedin, string $bio,
+        $works, $educations, $organizations, $skills
+    ): string {
+        switch ($type) {
+            case 'header':
+                return '<div class="blk" data-type="header">
+                    <div style="display:flex;align-items:center;gap:16px;padding:20px 28px">
+                        <div style="width:64px;height:64px;border-radius:50%;background:' . $accent . ';flex-shrink:0;
+                             display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff">
+                            ' . $initials . '
+                        </div>
+                        <div>
+                            <div style="font-size:20px;font-weight:800;color:#111">' . $name . '</div>
+                            ' . ($position ? '<div style="font-size:12px;font-weight:600;margin-top:3px;color:' . $accent . '">' . $position . '</div>' : '') . '
+                        </div>
+                    </div>
+                </div>';
+
+            case 'contact':
+                $parts = [];
+                if ($email)    $parts[] = '&#9993; ' . $email;
+                if ($phone)    $parts[] = '&#128222; ' . $phone;
+                if ($city)     $parts[] = '&#128205; ' . $city . ($province ? ', ' . $province : '');
+                if ($linkedin) $parts[] = '&#128279; ' . $linkedin;
+                return '<div class="blk" data-type="contact">
+                    <div style="padding:10px 28px;background:#f9fafb;font-size:11px;color:#374151;
+                          display:flex;flex-wrap:wrap;gap:6px 20px">
+                        ' . implode('', array_map(fn($p) => '<span>' . $p . '</span>', $parts)) . '
+                    </div>
+                </div>';
+
+            case 'summary':
+                if (!$bio) return '';
+                return '<div class="blk" data-type="summary">
+                    <div style="padding:16px 28px">
+                        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+                             color:' . $accent . ';margin-bottom:8px">Ringkasan Profil</div>
+                        <p style="font-size:11px;line-height:1.7;color:#374151;margin:0;
+                           border-left:3px solid ' . $accent . ';padding-left:10px">' . $bio . '</p>
+                    </div>
+                </div>';
+
+            case 'exp':
+                $inner = '';
+                if ($works->count()) {
+                    foreach ($works as $w) {
+                        $s   = $w->start_date ? $w->start_date->format('M Y') : '';
+                        $end = $w->is_current ? 'Sekarang' : ($w->end_date ? $w->end_date->format('M Y') : '');
+                        $inner .= '<div style="margin-bottom:12px">
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                                <div>
+                                    <div style="font-size:12px;font-weight:700;color:#111">' . e($w->position) . '</div>
+                                    <div style="font-size:11px;color:#6b7280">' . e($w->company_name) . '</div>
+                                </div>
+                                <div style="font-size:10px;color:#9ca3af;white-space:nowrap">' . $s . ' &ndash; ' . $end . '</div>
+                            </div>
+                            ' . ($w->description ? '<p style="font-size:10px;color:#374151;margin:4px 0 0 0;line-height:1.5">' . e($w->description) . '</p>' : '') . '
+                        </div>';
+                    }
+                } else {
+                    $inner = '<p style="font-size:11px;color:#9ca3af">Belum ada pengalaman kerja.</p>';
+                }
+                return '<div class="blk" data-type="exp">
+                    <div style="padding:16px 28px">
+                        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+                             color:' . $accent . ';margin-bottom:10px">Pengalaman Kerja</div>
+                        ' . $inner . '
+                    </div>
+                </div>';
+
+            case 'edu':
+                $inner = '';
+                if ($educations->count()) {
+                    foreach ($educations as $edu) {
+                        $inner .= '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+                            <div>
+                                <div style="font-size:12px;font-weight:700;color:#111">' . e($edu->degree) . ' — ' . e($edu->major) . '</div>
+                                <div style="font-size:11px;color:#6b7280">' . e($edu->institution) . '</div>
+                                ' . ($edu->gpa ? '<div style="font-size:10px;color:#9ca3af">GPA: ' . $edu->gpa . '</div>' : '') . '
+                            </div>
+                            <div style="font-size:10px;color:#9ca3af;white-space:nowrap">' . $edu->start_year . ' &ndash; ' . $edu->end_year . '</div>
+                        </div>';
+                    }
+                } else {
+                    $inner = '<p style="font-size:11px;color:#9ca3af">Belum ada data pendidikan.</p>';
+                }
+                return '<div class="blk" data-type="edu">
+                    <div style="padding:16px 28px">
+                        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+                             color:' . $accent . ';margin-bottom:10px">Pendidikan</div>
+                        ' . $inner . '
+                    </div>
+                </div>';
+
+            case 'org':
+            case 'organisasi':
+                if ($organizations->isEmpty()) return '';
+                $inner = '';
+                foreach ($organizations as $org) {
+                    $e   = $org->end_date ? $org->end_date->format('Y') : 'Sekarang';
+                    $inner .= '<div style="margin-bottom:8px">
+                        <div style="font-size:12px;font-weight:700;color:#111">' . e($org->position) . '</div>
+                        <div style="font-size:11px;color:#6b7280">' . e($org->organization_name) . ' &bull; ' . ($org->start_date ? $org->start_date->format('Y') : '') . '&ndash;' . $e . '</div>
+                    </div>';
+                }
+                return '<div class="blk" data-type="org">
+                    <div style="padding:16px 28px">
+                        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+                             color:' . $accent . ';margin-bottom:10px">Organisasi</div>
+                        ' . $inner . '
+                    </div>
+                </div>';
+
+            case 'skills':
+                $inner = '';
+                if ($skills->count()) {
+                    foreach ($skills as $s) {
+                        $inner .= '<span style="background:#f0fdf4;color:' . $accent . ';font-size:10px;font-weight:600;
+                                   padding:2px 9px;border-radius:20px;border:1px solid #bbf7d0;margin:2px">'
+                                 . e($s->skill_name) . '</span>';
+                    }
+                } else {
+                    $inner = '<span style="font-size:11px;color:#9ca3af">Belum ada keahlian.</span>';
+                }
+                return '<div class="blk" data-type="skills">
+                    <div style="padding:16px 28px">
+                        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+                             color:' . $accent . ';margin-bottom:8px">Keahlian</div>
+                        <div style="display:flex;flex-wrap:wrap;gap:4px">' . $inner . '</div>
+                    </div>
+                </div>';
+
+            case 'div':
+                return '<div class="blk" data-type="div">
+                    <div style="padding:4px 0">
+                        <hr style="border:none;border-top:1px solid #e5e7eb;margin:0 28px">
+                    </div>
+                </div>';
+
+            default:
+                return '';
+        }
+    }
+}
