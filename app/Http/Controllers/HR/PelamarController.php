@@ -63,7 +63,7 @@ class PelamarController extends Controller
                 $gpa = $profile ? ($profile->gpa ?? 3.0) : 3.0;
                 $score = round($gpa * 22); // e.g. 3.8 GPA * 22 = 83.6
                 // Add points for each experience & skill
-                $skillsCount = ApplicantSkill::where('id_user', $user->id)->count();
+                $skillsCount = ApplicantSkill::where('user_id', $user->id)->count();
                 $expCount = WorkExperience::where('user_id', $user->id)->count();
                 $score += ($skillsCount * 2) + ($expCount * 3);
                 $score = min(98, max(50, $score)); // Caps between 50 and 98
@@ -169,7 +169,7 @@ class PelamarController extends Controller
         $latestEducation = $educations->first();
         $workExperiences = $user->workExperiences()->orderByDesc('start_date')->get();
         $organizationExperiences = $user->organizationExperiences()->orderByDesc('start_date')->get();
-        $skills = ApplicantSkill::where('id_user', $user->id)->orderBy('skill_name')->get();
+        $skills = ApplicantSkill::where('user_id', $user->id)->orderBy('skill_name')->get();
 
         return view('hr.pelamar-detail', compact(
             'application',
@@ -202,7 +202,7 @@ class PelamarController extends Controller
         $works         = WorkExperience::where('user_id', $user->id)->orderByDesc('start_date')->get();
         $educations    = Education::where('user_id', $user->id)->orderByDesc('start_year')->get();
         $organizations = OrganizationExperience::where('user_id', $user->id)->orderByDesc('start_date')->get();
-        $skills        = ApplicantSkill::where('id_user', $user->id)->get();
+        $skills        = ApplicantSkill::where('user_id', $user->id)->get();
 
         // Try to fetch primary template or fallback to first
         $template = CvTemplate::where('status', 'published')->orderByDesc('is_default')->first();
