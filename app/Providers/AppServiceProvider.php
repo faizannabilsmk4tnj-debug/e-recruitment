@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('layouts.pelamar', function ($view) {
+        View::composer(['layouts.pelamar', 'pelamar.profil'], function ($view) {
             $persentase = 0;
             if (Auth::check()) {
                 $userId = Auth::id();

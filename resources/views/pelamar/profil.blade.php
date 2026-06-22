@@ -31,6 +31,18 @@
     </div>
 @endif
 
+@if ($profile && ($persentase ?? 0) > 0 && ($persentase ?? 0) < 100)
+    <div class="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 flex items-start gap-3 animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <div>
+            <p class="font-semibold text-amber-900">Lanjutkan Pengisian Profil yang Belum Selesai</p>
+            <p class="text-amber-700 mt-1 leading-relaxed">Profil Anda belum selesai dilengkapi (Baru {{ $persentase ?? 0 }}%). Silakan lengkapi seluruh kolom formulir di bawah ini untuk dapat melamar lowongan pekerjaan yang tersedia.</p>
+        </div>
+    </div>
+@endif
+
 <form id="delete-avatar-form" method="POST" action="{{ route('pelamar.profil.avatar.destroy') }}" class="hidden">
     @csrf
     @method('DELETE')
@@ -254,8 +266,38 @@
         @endif
     </div>
 
-</div>
 </form>
+
+{{-- Custom Leave Confirmation Modal --}}
+<div id="leave-confirm-modal" class="fixed inset-0 z-[120] hidden items-center justify-center p-4">
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeLeaveConfirmModal()"></div>
+    <div class="relative bg-white rounded-2xl max-w-xl w-full p-8 shadow-2xl border border-gray-100 transform scale-95 opacity-0 transition-all duration-300 flex flex-col z-50" id="leave-confirm-panel">
+        <div class="flex items-start gap-5 mb-6">
+            <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-gray-900">Konfirmasi Keluar</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Profile Anda belum selesai dilengkapi.</p>
+            </div>
+        </div>
+        
+        <p class="text-sm text-gray-600 leading-relaxed bg-amber-50/50 p-4 rounded-xl border border-amber-100 mb-8">
+            Data yang baru saja Anda isi belum disimpan dan akan di-reset (hilang) jika Anda meninggalkan halaman ini. Apakah Anda yakin ingin keluar?
+        </p>
+
+        <div class="flex items-center justify-end gap-3">
+            <button onclick="closeLeaveConfirmModal()" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors">
+                Tetap Isi Profile
+            </button>
+            <button id="btn-confirm-leave" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors shadow-sm">
+                Keluar
+            </button>
+        </div>
+    </div>
+</div>
 
 @endsection
 
