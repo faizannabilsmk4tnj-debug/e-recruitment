@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JobCategory;
 use App\Models\JobPosting;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class VacancyController extends Controller
@@ -11,20 +12,39 @@ class VacancyController extends Controller
     public function index(Request $request)
     {
         $categories = JobCategory::where('is_active', true)->get();
+        $locations = \App\Models\WorkLocation::where('is_active', true)->get();
         
-        // Load only open/closed job postings for applicants
-        $jobs = JobPosting::with('category')
-            ->whereIn('status', ['open', 'closed'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = JobPosting::with('category')
+            ->whereIn('status', ['open', 'closed']);
+
+        if ($request->filled('q')) {
+            $search = $request->q;
+            if (\Illuminate\Support\Facades\DB::getDriverName() === 'mysql') {
+                // If it's a simple word or phrase, wrap or format if needed, but BOOLEAN MODE allows simple keywords
+                $query->whereRaw("MATCH(title, description, requirements, benefits) AGAINST(? IN BOOLEAN MODE)", [$search]);
+            } else {
+                $query->where(function($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                      ->orWhere('description', 'like', "%{$search}%")
+                      ->orWhere('requirements', 'like', "%{$search}%")
+                      ->orWhere('benefits', 'like', "%{$search}%");
+                });
+            }
+        }
+
+        $jobs = $query->orderBy('created_at', 'desc')->get();
 
         if ($request->is('pelamar/*')) {
-            return view('pelamar.lowongan', compact('jobs', 'categories'));
+            $savedJobIds = \App\Models\SavedJob::where('user_id', auth()->id())
+                ->pluck('job_id')
+                ->toArray();
+            $activeNav = $request->get('saved') == '1' ? 'saved-jobs' : 'vacancies';
+            return view('pelamar.lowongan', compact('jobs', 'categories', 'locations', 'savedJobIds', 'activeNav'));
         }
 
         $layout = 'layouts.landing';
 
-        return view('lowongan', compact('jobs', 'categories', 'layout'));
+        return view('lowongan', compact('jobs', 'categories', 'locations', 'layout'));
     }
 
     public function show(Request $request, $id)
@@ -32,7 +52,11 @@ class VacancyController extends Controller
         $vacancy = JobPosting::with('category')->findOrFail($id);
         
         if ($request->is('pelamar/*')) {
-            return view('pelamar.detail-lowongan', compact('vacancy'));
+            $isSaved = false;
+            if (auth()->check()) {
+                $isSaved = \App\Models\SavedJob::where('user_id', auth()->id())->where('job_id', $id)->exists();
+            }
+            return view('pelamar.detail-lowongan', compact('vacancy', 'isSaved'));
         }
 
         $layout = 'layouts.landing';
@@ -78,11 +102,26 @@ class VacancyController extends Controller
             ]);
         }
         
-        // Check if already applied
-        $alreadyApplied = \App\Models\Application::where('user_id', $userId)->where('job_id', $id)->exists();
-        if ($alreadyApplied) {
+        // Check eligibility via Stored Function (fn_cek_kelayakan_melamar)
+        $eligibility = \Illuminate\Support\Facades\DB::selectOne("SELECT fn_cek_kelayakan_melamar(?, ?) as eligibility", [$userId, $id])->eligibility;
+        
+        if ($eligibility !== 'ELIGIBLE') {
+            $errorMsg = match($eligibility) {
+                'SUDAH_MELAMAR' => 'Anda sudah melamar pekerjaan ini.',
+                'MELEBIHI_BATAS_AKTIF' => 'Anda tidak dapat memiliki lebih dari 3 lamaran aktif secara bersamaan.',
+                'TANGGAL_LAHIR_KOSONG' => 'Lowongan ini memiliki syarat batas usia. Mohon lengkapi Tanggal Lahir di profil Anda terlebih dahulu.',
+                'USIA_KURANG' => "Usia Anda kurang dari syarat minimum lowongan ini ({$vacancy->age_min} tahun).",
+                'USIA_MELEBIHI' => "Usia Anda melebihi batas maksimum syarat lowongan ini ({$vacancy->age_max} tahun).",
+                default => 'Anda tidak memenuhi syarat untuk melamar pekerjaan ini.'
+            };
+            
+            if ($eligibility === 'TANGGAL_LAHIR_KOSONG') {
+                return redirect()->route('pelamar.profil.edit')
+                    ->with('error', $errorMsg);
+            }
+            
             return redirect()->route('pelamar.lowongan.show', $id)
-                ->with('error', 'Anda sudah melamar pekerjaan ini.');
+                ->with('error', $errorMsg);
         }
 
         return view('pelamar.review-lamaran', compact('vacancy', 'user', 'profile', 'cv'));
@@ -92,13 +131,24 @@ class VacancyController extends Controller
     {
         $user = auth()->user();
         $userId = $user->id;
+        $vacancy = JobPosting::findOrFail($id);
 
-        // Check if already applied to prevent duplicate entry exception
-        $alreadyApplied = \App\Models\Application::where('user_id', $userId)->where('job_id', $id)->exists();
-        if ($alreadyApplied) {
+        // Check eligibility via Stored Function (fn_cek_kelayakan_melamar)
+        $eligibility = \Illuminate\Support\Facades\DB::selectOne("SELECT fn_cek_kelayakan_melamar(?, ?) as eligibility", [$userId, $id])->eligibility;
+        
+        if ($eligibility !== 'ELIGIBLE') {
+            $errorMsg = match($eligibility) {
+                'SUDAH_MELAMAR' => 'Anda sudah mengirimkan lamaran untuk loker ini.',
+                'MELEBIHI_BATAS_AKTIF' => 'Anda tidak dapat memiliki lebih dari 3 lamaran aktif secara bersamaan.',
+                'TANGGAL_LAHIR_KOSONG' => 'Lowongan ini memiliki syarat batas usia. Mohon lengkapi Tanggal Lahir di profil Anda terlebih dahulu.',
+                'USIA_KURANG' => "Usia Anda kurang dari syarat minimum lowongan ini ({$vacancy->age_min} tahun).",
+                'USIA_MELEBIHI' => "Usia Anda melebihi batas maksimum syarat lowongan ini ({$vacancy->age_max} tahun).",
+                default => 'Anda tidak memenuhi syarat untuk melamar pekerjaan ini.'
+            };
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Anda sudah mengirimkan lamaran untuk loker ini.'
+                'message' => $errorMsg
             ], 422);
         }
 
@@ -121,23 +171,77 @@ class VacancyController extends Controller
         if ($request->hasFile('file_cv')) {
             $file = $request->file('file_cv');
             $filename = 'cv_' . $userId . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('public/resumes', $filename);
+            $path = $file->storeAs('resumes', $filename, 'public');
             $resumeUrl = '/storage/resumes/' . $filename;
         }
 
-        // Create application
-        \App\Models\Application::create([
-            'user_id' => $userId,
-            'job_id' => $id,
-            'cv_id' => $cv->id,
-            'cover_letter' => $request->cover_letter,
-            'resume_url' => $resumeUrl,
-            'status' => 'applied',
-        ]);
+        // Create application with try-catch to capture database trigger errors
+        try {
+            $application = \App\Models\Application::create([
+                'user_id' => $userId,
+                'job_id' => $id,
+                'cv_id' => $cv->id,
+                'cover_letter' => $request->cover_letter,
+                'resume_url' => $resumeUrl,
+                'status' => 'applied',
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == '45000' || str_contains($e->getMessage(), '45000')) {
+                $message = $e->getMessage();
+                if (preg_match('/SQLSTATE\[45000\]: [^:]+: (.+)/', $message, $matches)) {
+                    $message = trim($matches[1]);
+                }
+                return response()->json([
+                    'success' => false,
+                    'message' => $message
+                ], 422);
+            }
+            throw $e;
+        }
+
 
         // Increment applicant count on job posting
         $vacancy = JobPosting::findOrFail($id);
         $vacancy->increment('applicant_count');
+
+        // Check if quota is now met and auto-close method allows it
+        $vacancy->refresh();
+        if (in_array($vacancy->auto_close_method, ['quota', 'both'])) {
+            if ($vacancy->quota > 0 && $vacancy->applicant_count >= $vacancy->quota) {
+                $vacancy->update([
+                    'status' => 'closed',
+                    'closed_at' => now(),
+                ]);
+
+                // Notify HR about automatic closure due to quota
+                $hrUsers = \App\Models\User::whereIn('role', ['hr', 'hr_master'])
+                    ->where('is_active', true)
+                    ->get();
+
+                foreach ($hrUsers as $hr) {
+                    $pref = \App\Models\NotificationPreference::where('user_id', $hr->id)->first();
+                    if ($pref && !$pref->notif_vacancy_deadline) {
+                        continue;
+                    }
+
+                    NotificationService::create(
+                        $hr->id,
+                        'vacancy_closed_auto',
+                        'Lowongan Ditutup Otomatis',
+                        "Lowongan \"{$vacancy->title}\" telah ditutup otomatis karena kuota pendaftar terpenuhi ({$vacancy->applicant_count}/{$vacancy->quota}).",
+                        [
+                            'job_id'    => $vacancy->id,
+                            'job_title' => $vacancy->title,
+                            'reason'    => 'quota',
+                        ]
+                    );
+                }
+            }
+        }
+
+        // Notify all HR users about the new application
+        $application->load(['user', 'job']);
+        NotificationService::notifyNewApplication($application);
 
         // Create log entry if needed, but not strictly required
         return response()->json([

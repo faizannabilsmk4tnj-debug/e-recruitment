@@ -32,8 +32,8 @@
         </div>
         <div class="flex items-center gap-6">
             <a href="/" class="text-green-50 hover:text-white text-sm transition-colors font-medium">Home</a>
-            <a href="/pelamar/lowongan" class="text-white font-semibold text-sm hover:text-green-200 transition-colors">Vacancies</a>
             <a href="/tentang-kami" class="text-green-50 hover:text-white text-sm transition-colors font-medium">About Us</a>
+            <a href="/pelamar/lowongan" class="text-white font-semibold text-sm hover:text-green-200 transition-colors">Vacancies</a>
             <a href="/pelamar/profil" class="text-green-50 hover:text-white text-sm transition-colors font-medium">My Profile</a>
             <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#15803d] font-bold text-sm ring-2 ring-[#89B184] overflow-hidden">
                 <img src="{{ asset('images/avatar.png') }}" alt="Avatar" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.textContent='A';">

@@ -15,10 +15,15 @@ class Interview extends Model
         'location_or_link',
         'status',
         'notes',
+        'attendance_status',
+        'attendance_confirmed_at',
+        'attendance_photo',
     ];
 
     protected $casts = [
         'scheduled_at' => 'datetime',
+        'attendance_confirmed_at' => 'datetime',
+        'duration_minutes' => 'integer',
     ];
 
     public function application()
@@ -29,5 +34,10 @@ class Interview extends Model
     public function scheduler()
     {
         return $this->belongsTo(User::class, 'scheduled_by');
+    }
+
+    public function result()
+    {
+        return $this->hasOne(InterviewResult::class, 'interview_id');
     }
 }

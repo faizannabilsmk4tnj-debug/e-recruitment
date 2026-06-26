@@ -67,6 +67,20 @@
                             <p class="text-sm font-bold text-gray-900 mt-1">{{ $vacancy->quota }} Personel</p>
                         </div>
                         <div>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Age Limit</p>
+                            <p class="text-sm font-bold text-gray-900 mt-1">
+                                @if($vacancy->age_min || $vacancy->age_max)
+                                    {{ $vacancy->age_min ?? 'Any' }} - {{ $vacancy->age_max ?? 'Any' }} Yrs
+                                @else
+                                    No Limit
+                                @endif
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Passing Grade</p>
+                            <p class="text-sm font-bold text-gray-900 mt-1">{{ $vacancy->passing_grade ?? 70 }} Point</p>
+                        </div>
+                        <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Posted Date</p>
                             <p class="text-sm font-bold text-gray-900 mt-1">{{ $vacancy->created_at->format('M d, Y') }}</p>
                         </div>

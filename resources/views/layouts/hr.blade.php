@@ -39,7 +39,9 @@
             {{-- Nav Links --}}
             <a href="/" class="text-green-200 hover:text-white text-sm transition-colors font-medium hidden md:block">Home</a>
             <a href="/tentang-kami" class="text-green-200 hover:text-white text-sm transition-colors font-medium hidden md:block">About Us</a>
-            <a href="/hr/tim" class="text-green-200 hover:text-white text-sm transition-colors font-medium hidden md:block">{{ __('hr_layout.hr_team') }}</a>
+            @if(Auth::check() && Auth::user()->role === 'hr_master')
+                <a href="/hr/tim" class="text-green-200 hover:text-white text-sm transition-colors font-medium hidden md:block">{{ __('hr_layout.hr_team') }}</a>
+            @endif
 
             {{-- Notification --}}
             <div class="relative">
@@ -48,74 +50,23 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                     </svg>
-                    <span id="notif-badge" class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-[9px] flex items-center justify-center font-bold text-white">4</span>
+                    <span id="notif-badge" class="hidden absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-[9px] flex items-center justify-center font-bold text-white">0</span>
                 </button>
 
                 {{-- Dropdown Notif --}}
                 <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
                     <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                         <h3 class="text-sm font-bold text-gray-800">{{ __('hr_layout.notifications') }}</h3>
-                        <span id="notif-header-count" class="text-[10px] text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded-full">{{ __('hr_layout.new_count', ['count' => 4]) }}</span>
+                        <span id="notif-header-count" class="text-[10px] text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded-full">0 baru</span>
                     </div>
-                    <div class="max-h-80 overflow-y-auto">
-                        <!-- Notif Pelamar Baru -->
-                        <a href="/hr/pelamar" class="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50">
-                            <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-800 font-medium">New Applicant Registered</p>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Ahmad Fauzi has applied for the <span class="font-semibold text-gray-700">Maintenance Staff</span> position.</p>
-                                    <p class="text-[9px] text-gray-400 mt-1">10 minutes ago</p>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- Notif Jadwal Wawancara -->
-                        <a href="/hr/wawancara" class="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50">
-                            <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-800 font-medium">Interview Schedule</p>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Budi Santoso is ready for HR interview at 14:00.</p>
-                                    <p class="text-[9px] text-gray-400 mt-1">1 hour ago</p>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- Notif Penilaian -->
-                        <a href="/hr/penilaian" class="block px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50">
-                            <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-800 font-medium">Assessment Completed</p>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">Siti Aminah has finished technical test with score 85.</p>
-                                    <p class="text-[9px] text-gray-400 mt-1">2 hours ago</p>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- Notif Lowongan -->
-                        <a href="/hr/lowongan" class="block px-4 py-3 hover:bg-gray-50 transition-colors">
-                            <div class="flex items-start gap-3">
-                                <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-800 font-medium">Vacancy Closing Soon</p>
-                                    <p class="text-[11px] text-gray-500 mt-0.5">IT Support vacancy will expire in 2 days.</p>
-                                    <p class="text-[9px] text-gray-400 mt-1">1 day ago</p>
-                                </div>
-                            </div>
-                        </a>
+                    <div id="notif-list" class="max-h-80 overflow-y-auto">
+                        <div class="px-4 py-8 text-center text-xs text-gray-400">
+                            <svg class="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                            Memuat notifikasi...
+                        </div>
                     </div>
                     <div class="px-4 py-2 border-t border-gray-100 text-center">
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('notif-badge').classList.add('hidden'); document.getElementById('notif-header-count').innerText = '{{ __('hr_layout.new_count', ['count' => 0]) }}';" class="text-xs font-semibold text-green-700 hover:text-green-900 transition-colors">{{ __('hr_layout.mark_all_read') }}</a>
+                        <button id="btn-mark-all-read" onclick="markAllNotificationsRead()" class="text-xs font-semibold text-green-700 hover:text-green-900 transition-colors">{{ __('hr_layout.mark_all_read') }}</button>
                     </div>
                 </div>
             </div>
@@ -310,6 +261,137 @@
 
     @yield('js')
     <script>
+        // ===== NOTIFICATION SYSTEM =====
+        const NOTIF_ICONS = {
+            new_applicant: {
+                bg: 'bg-blue-100', color: 'text-blue-600',
+                svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>',
+                link: '/hr/pelamar'
+            },
+            status_change: {
+                bg: 'bg-green-100', color: 'text-green-600',
+                svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+                link: '/hr/pelamar'
+            },
+            interview_scheduled: {
+                bg: 'bg-purple-100', color: 'text-purple-600',
+                svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>',
+                link: '/hr/wawancara'
+            },
+            vacancy_deadline: {
+                bg: 'bg-orange-100', color: 'text-orange-600',
+                svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>',
+                link: '/hr/lowongan'
+            }
+        };
+        const NOTIF_DEFAULT = {
+            bg: 'bg-gray-100', color: 'text-gray-600',
+            svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>',
+            link: '#'
+        };
+
+        function fetchNotifications() {
+            fetch('/api/notifications?limit=10', {
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (!data.success) return;
+                renderNotifications(data.notifications, data.unread_count);
+            })
+            .catch(e => console.error('Failed to fetch notifications:', e));
+        }
+
+        function renderNotifications(notifications, unreadCount) {
+            const badge = document.getElementById('notif-badge');
+            const headerCount = document.getElementById('notif-header-count');
+            const list = document.getElementById('notif-list');
+
+            // Update badge
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            // Update header count
+            headerCount.textContent = unreadCount + ' baru';
+
+            // Empty state
+            if (!notifications || notifications.length === 0) {
+                list.innerHTML = `<div class="px-4 py-8 text-center text-xs text-gray-400">
+                    <svg class="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                    Belum ada notifikasi
+                </div>`;
+                return;
+            }
+
+            let html = '';
+            notifications.forEach((n, i) => {
+                const icon = NOTIF_ICONS[n.type] || NOTIF_DEFAULT;
+                const unreadBg = n.is_unread ? 'bg-green-50/50' : '';
+                const unreadDot = n.is_unread ? '<div class="w-1.5 h-1.5 bg-green-500 rounded-full absolute top-3 right-3"></div>' : '';
+                const borderClass = i < notifications.length - 1 ? 'border-b border-gray-50' : '';
+
+                html += `<a href="${icon.link}" onclick="markNotifRead(event, ${n.id})" class="block px-4 py-3 hover:bg-gray-50 transition-colors ${borderClass} ${unreadBg} relative">
+                    ${unreadDot}
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full ${icon.bg} flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4 ${icon.color}" fill="none" stroke="currentColor" viewBox="0 0 24 24">${icon.svg}</svg>
+                        </div>
+                        <div class="pr-3">
+                            <p class="text-xs text-gray-800 font-medium">${escapeHtml(n.title)}</p>
+                            <p class="text-[11px] text-gray-500 mt-0.5">${escapeHtml(n.message)}</p>
+                            <p class="text-[9px] text-gray-400 mt-1">${n.time_ago}</p>
+                        </div>
+                    </div>
+                </a>`;
+            });
+
+            list.innerHTML = html;
+        }
+
+        function markNotifRead(event, notifId) {
+            // Don't prevent navigation, just fire the read request
+            fetch('/api/notifications/' + notifId + '/read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            }).catch(() => {});
+        }
+
+        function markAllNotificationsRead() {
+            fetch('/api/notifications/read-all', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) fetchNotifications();
+            })
+            .catch(() => {});
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Fetch on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchNotifications();
+            // Auto-refresh every 60 seconds
+            setInterval(fetchNotifications, 60000);
+        });
+    </script>
+    <script>
         // ===== GUIDED TOUR =====
         const hrTourSteps = [
             {
@@ -495,5 +577,82 @@
             }
         });
     </script>
+    <!-- Deactivated Modal -->
+    <div id="deactivated-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl border border-gray-100 transform scale-95 transition-transform duration-300 mx-4">
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center animate-bounce">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 text-center mb-3">Akun Dinonaktifkan</h3>
+            <p class="text-gray-500 text-sm text-center leading-relaxed mb-6">
+                Akun Anda telah dinonaktifkan oleh <strong>HR Master</strong>. Setelah menutup notifikasi ini, Anda akan otomatis dikeluarkan dari sesi dan kembali ke halaman login. Anda tidak dapat masuk kembali sampai HR Master mengaktifkan kembali akun HR Anda.
+            </p>
+            <button id="btn-confirm-deactivated" class="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold py-3 rounded-xl transition-all duration-200 text-sm shadow-lg shadow-red-100 focus:outline-none">
+                Saya Mengerti & Keluar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function showDeactivatedModal() {
+            const modal = document.getElementById('deactivated-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                // Trigger reflow to apply transitions
+                modal.offsetHeight;
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                const dialog = modal.querySelector('div');
+                if (dialog) {
+                    dialog.classList.remove('scale-95');
+                    dialog.classList.add('scale-100');
+                }
+            }
+        }
+
+        document.getElementById('btn-confirm-deactivated').addEventListener('click', function() {
+            window.location.href = '{{ route('hr.logout-deactivated') }}';
+        });
+
+        // Global Fetch Interceptor to catch deactivation on any AJAX actions
+        const originalFetch = window.fetch;
+        window.fetch = async function(...args) {
+            const response = await originalFetch(...args);
+            if (response.status === 403) {
+                try {
+                    const clone = response.clone();
+                    const data = await clone.json();
+                    if (data && data.redirect) {
+                        if (data.is_deleted) {
+                            window.location.href = data.redirect;
+                        } else {
+                            showDeactivatedModal();
+                        }
+                        // Return fake response to suppress individual alert boxes in calling JS
+                        return new Response(JSON.stringify({ success: false, message: 'Account deactivated.' }), {
+                            status: 200,
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                    }
+                } catch (e) {
+                    // Not JSON or doesn't have redirect
+                }
+            }
+            return response;
+        };
+    </script>
+    @if(Auth::check() && !Auth::user()->is_active)
+    <script>
+        window.addEventListener('load', function() {
+            setTimeout(showDeactivatedModal, 150);
+        });
+    </script>
+    @endif
 </body>
 </html>

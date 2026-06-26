@@ -80,7 +80,6 @@ class DashboardController extends Controller
             
             $wawancaraData[$dateStr][] = [
                 'time' => $timeCarbon->format('H:i'),
-                'ampm' => $timeCarbon->format('A'),
                 'name' => $applicantName,
                 'role' => $jobTitle,
                 'location' => $interview->location_or_link ?? 'Online',

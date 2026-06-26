@@ -16,6 +16,7 @@ use App\Http\Middleware\SetUserLocale;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PelamarController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +50,36 @@ Route::post('/reset-password',  [AuthController::class, 'resetPassword'])->name(
 
 Route::get('/hr/login', fn() => view('hr.login'));
 Route::post('/hr/login', [AuthController::class, 'loginHr']);
+Route::get('/hr/deactivated', function () {
+    if (!Auth::check() || Auth::user()->is_active) {
+        return redirect('/hr/login');
+    }
+    return view('hr.deactivated');
+})->name('hr.deactivated');
+Route::get('/hr/logout-deactivated', function () {
+    if (Auth::check()) {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+    }
+    return redirect('/hr/login')->with('auth_warning', 'Akun Anda telah dinonaktifkan oleh HR Master.');
+})->name('hr.logout-deactivated');
+Route::get('/hr/logout-deleted', function () {
+    if (Auth::check()) {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+    }
+    return redirect('/hr/login')->with('auth_warning', 'Akun HR Anda telah dihapus oleh HR Master.');
+})->name('hr.logout-deleted');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+// ===== NOTIFICATION API (shared, auth-gated) =====
+Route::middleware('auth')->group(function () {
+    Route::get('/api/notifications',              [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/api/notifications/read-all',    [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    Route::post('/api/notifications/{id}/read',   [NotificationController::class, 'markAsRead'])->name('notifications.read');
+});
 
 // ===== PELAMAR — harus login dan role=applicant =====
 Route::middleware(['auth', 'role:applicant'])->group(function () {
@@ -89,17 +119,22 @@ Route::middleware(['auth', 'role:applicant'])->group(function () {
     Route::delete('/pelamar/lampiran/portofolio/{portofolio}',[ApplicantLampiranController::class, 'portofolioDestroy'])->name('pelamar.portofolio.destroy');
     Route::get('/pelamar/cv',                        [ApplicantCvController::class, 'index'])->name('pelamar.cv');
     Route::get('/pelamar/cv/{template}/generate',    [ApplicantCvController::class, 'generate'])->name('pelamar.cv.generate');
-    Route::get('/pelamar/status-lamaran',      fn() => view('pelamar.status-lamaran'));
+    Route::get('/pelamar/status-lamaran',               [\App\Http\Controllers\PelamarController::class, 'statusLamaran'])->name('pelamar.status-lamaran');
+    Route::post('/pelamar/status-lamaran/{id}/withdraw', [\App\Http\Controllers\PelamarController::class, 'withdrawApplication'])->name('pelamar.status-lamaran.withdraw');
+    Route::post('/pelamar/status-lamaran/interview/{id}/confirm', [\App\Http\Controllers\PelamarController::class, 'confirmInterviewAttendance'])->name('pelamar.status-lamaran.confirm-attendance');
     Route::get('/pelamar/lowongan',            [VacancyController::class, 'index'])->name('pelamar.lowongan.index');
     Route::get('/pelamar/lowongan/{id}',       [VacancyController::class, 'show'])->name('pelamar.lowongan.show')->where('id', '[0-9]+');
     Route::get('/pelamar/review-lamaran/{id}',    [VacancyController::class, 'showReview'])->name('pelamar.review-lamaran');
     Route::post('/pelamar/review-lamaran/{id}',   [VacancyController::class, 'submitApplication'])->name('pelamar.review-lamaran.submit');
+    Route::get('/pelamar/lowongan-tersimpan', [\App\Http\Controllers\PelamarController::class, 'savedJobs'])->name('pelamar.lowongan-tersimpan');
+    Route::post('/pelamar/lowongan/{id}/toggle-save', [\App\Http\Controllers\PelamarController::class, 'toggleSaveJob'])->name('pelamar.lowongan.toggle-save');
     Route::get('/pelamar/lamaran-terkirim',    fn() => view('pelamar.lamaran-terkirim'));
+
 
 });
 
 // ===== HR — harus login dan role=hr =====
-Route::middleware(['auth', 'role:hr', SetUserLocale::class])->group(function () {
+Route::middleware(['role:hr', 'auth', SetUserLocale::class])->group(function () {
 
     Route::get('/hr/dashboard',                  [DashboardController::class, 'index'])->name('hr.dashboard');
     Route::get('/hr/setting',                    [SettingController::class, 'index'])->name('hr.setting');
@@ -110,10 +145,19 @@ Route::middleware(['auth', 'role:hr', SetUserLocale::class])->group(function () 
     Route::post('/hr/setting/language',          [SettingController::class, 'updateLanguage'])->name('hr.setting.language');
     Route::delete('/hr/setting/session/{id}',    [SettingController::class, 'logoutDevice'])->name('hr.setting.session.destroy');
     Route::delete('/hr/setting/sessions',        [SettingController::class, 'logoutAllDevices'])->name('hr.setting.sessions.destroy');
-    Route::get('/hr/tim',                        fn() => view('hr.tim'));
+    // HR Team Management (Only accessible by HR Master)
+    Route::middleware('role:hr_master')->group(function () {
+        Route::get('/hr/tim',                        [App\Http\Controllers\HR\TeamController::class, 'index'])->name('hr.tim.index');
+        Route::post('/hr/tim',                       [App\Http\Controllers\HR\TeamController::class, 'store'])->name('hr.tim.store');
+        Route::put('/hr/tim/{id}',                   [App\Http\Controllers\HR\TeamController::class, 'update'])->name('hr.tim.update');
+        Route::delete('/hr/tim/{id}',                [App\Http\Controllers\HR\TeamController::class, 'destroy'])->name('hr.tim.destroy');
+        Route::post('/hr/tim/{id}/toggle-status',    [App\Http\Controllers\HR\TeamController::class, 'toggleStatus'])->name('hr.tim.toggle-status');
+    });
     Route::get('/hr/lowongan',                   [JobPostingController::class, 'index'])->name('hr.lowongan.index');
     Route::get('/hr/lowongan/buat',              [JobPostingController::class, 'create'])->name('hr.lowongan.create');
     Route::post('/hr/lowongan',                  [JobPostingController::class, 'store'])->name('hr.lowongan.store');
+    Route::post('/hr/lowongan/kategori',         [JobPostingController::class, 'storeCategory'])->name('hr.lowongan.store-category');
+    Route::post('/hr/lowongan/lokasi',           [JobPostingController::class, 'storeLocation'])->name('hr.lowongan.store-location');
     Route::get('/hr/lowongan/{id}',              [JobPostingController::class, 'show'])->name('hr.lowongan.show')->where('id', '[0-9]+');
     Route::put('/hr/lowongan/{id}',              [JobPostingController::class, 'update'])->name('hr.lowongan.update')->where('id', '[0-9]+');
     Route::post('/hr/lowongan/{id}/status',      [JobPostingController::class, 'updateStatus'])->name('hr.lowongan.status')->where('id', '[0-9]+');
@@ -123,9 +167,15 @@ Route::middleware(['auth', 'role:hr', SetUserLocale::class])->group(function () 
     Route::post('/hr/pelamar/{id}/status',       [\App\Http\Controllers\HR\PelamarController::class, 'updateStatus'])->name('hr.pelamar.status')->where('id', '[0-9]+');
     Route::post('/hr/pelamar/{id}/note',         [\App\Http\Controllers\HR\PelamarController::class, 'addNote'])->name('hr.pelamar.note')->where('id', '[0-9]+');
     Route::post('/hr/pelamar/{id}/interview',    [\App\Http\Controllers\HR\PelamarController::class, 'scheduleInterview'])->name('hr.pelamar.interview')->where('id', '[0-9]+');
-    Route::get('/hr/wawancara',                  fn() => view('hr.wawancara'));
-    Route::get('/hr/wawancara/daftar',           fn() => view('hr.wawancara-daftar'));
-    Route::get('/hr/laporan',                    fn() => view('hr.laporan'));
+    Route::post('/hr/pelamar/{id}/interview/{interviewId}/evaluate', [\App\Http\Controllers\HR\PelamarController::class, 'evaluateInterview'])->name('hr.pelamar.interview.evaluate')->where(['id' => '[0-9]+', 'interviewId' => '[0-9]+']);
+    Route::get('/hr/wawancara/booked-slots',     [\App\Http\Controllers\HR\InterviewController::class, 'getBookedSlots'])->name('hr.wawancara.booked-slots');
+    Route::get('/hr/wawancara',                  [\App\Http\Controllers\HR\InterviewController::class, 'calendar'])->name('hr.wawancara.calendar');
+    Route::get('/hr/wawancara/daftar',           [\App\Http\Controllers\HR\InterviewController::class, 'index'])->name('hr.wawancara.index');
+    Route::post('/hr/wawancara/buat',            [\App\Http\Controllers\HR\InterviewController::class, 'store'])->name('hr.wawancara.store');
+    Route::put('/hr/wawancara/{id}',             [\App\Http\Controllers\HR\InterviewController::class, 'update'])->name('hr.wawancara.update');
+    Route::post('/hr/wawancara/{id}/status',     [\App\Http\Controllers\HR\InterviewController::class, 'updateStatus'])->name('hr.wawancara.update-status');
+    Route::delete('/hr/wawancara/{id}',          [\App\Http\Controllers\HR\InterviewController::class, 'destroy'])->name('hr.wawancara.destroy');
+    Route::get('/hr/laporan',                    [\App\Http\Controllers\HR\LaporanController::class, 'index'])->name('hr.laporan');
     // HR CV Template Management (CRUD via HrCvTemplateController)
     Route::get('/hr/template-cv',                           [HrCvTemplateController::class, 'index'])->name('hr.template-cv.index');
     Route::post('/hr/template-cv',                          [HrCvTemplateController::class, 'store'])->name('hr.template-cv.store');
@@ -137,3 +187,26 @@ Route::middleware(['auth', 'role:hr', SetUserLocale::class])->group(function () 
     Route::patch('/hr/template-cv/{template}/default',      [HrCvTemplateController::class, 'setDefault'])->name('hr.template-cv.setDefault');
     Route::delete('/hr/template-cv/{template}',             [HrCvTemplateController::class, 'destroy'])->name('hr.template-cv.destroy');
 });
+
+Route::get('/preview-error/{code}', function ($code) {
+    if (!in_array($code, ['403', '404', '419', '500'])) {
+        abort(404);
+    }
+    if ($code == '403') {
+        abort(403, 'Anda tidak memiliki hak untuk melihat berkas internal HR.');
+    }
+    abort((int)$code);
+});
+
+// Helper route untuk test cron job / command secara instan dari browser
+if (app()->environment('local')) {
+    Route::get('/run-deadline-check', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('app:check-vacancy-deadlines');
+            return response('<h3>Output Command:</h3><pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>');
+        } catch (\Exception $e) {
+            return response('Error executing command: ' . $e->getMessage(), 500);
+        }
+    });
+}
+

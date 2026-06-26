@@ -19,14 +19,23 @@ class EnsureRole
     {
         // Jika belum login sama sekali
         if (!Auth::check()) {
-            $loginRoute = $role === 'hr' ? '/hr/login' : '/login';
+            $loginRoute = ($role === 'hr' || $role === 'hr_master') ? '/hr/login' : '/login';
             return redirect($loginRoute);
         }
 
+        $userRole = Auth::user()->role;
+        $allowed = false;
+
+        if ($role === 'hr') {
+            $allowed = ($userRole === 'hr' || $userRole === 'hr_master');
+        } else {
+            $allowed = ($userRole === $role);
+        }
+
         // Sudah login tapi role-nya salah
-        if (Auth::user()->role !== $role) {
+        if (!$allowed) {
             // Arahkan user ke dashboard yang sesuai dengan role-nya sendiri
-            if (Auth::user()->role === 'hr') {
+            if ($userRole === 'hr' || $userRole === 'hr_master') {
                 return redirect('/hr/dashboard');
             }
             // Pelamar yang nyasar ke halaman HR → kembali ke dashboard pelamar

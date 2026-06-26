@@ -45,6 +45,12 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                             <span id="job-type">{{ ucfirst($vacancy->employment_type) }}</span>
                         </span>
+                        @if($vacancy->age_min || $vacancy->age_max)
+                        <span class="flex items-center gap-1.5 text-amber-700 font-medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <span id="job-age">Age: {{ $vacancy->age_min ?? 'Any' }} - {{ $vacancy->age_max ?? 'Any' }} Yrs</span>
+                        </span>
+                        @endif
                         <span class="flex items-center gap-1.5">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                             <span id="job-posted">Posted {{ $vacancy->created_at->diffForHumans() }}</span>
@@ -134,6 +140,13 @@
             </a>
             @endif
 
+            <button id="btn-save-job" data-job-id="{{ $vacancy->id }}" class="flex items-center justify-center gap-2 w-full border {{ $isSaved ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-gray-300 hover:bg-gray-50 text-gray-700' }} font-semibold py-3 rounded-lg text-sm transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 {{ $isSaved ? 'fill-amber-500 text-amber-500' : '' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                </svg>
+                <span>{{ $isSaved ? 'Saved' : 'Save Job' }}</span>
+            </button>
+
             <!-- Share -->
             <div class="mt-5 pt-4 border-t border-gray-150">
                 <p class="text-xs text-gray-500 flex items-center gap-2 mb-3">
@@ -166,4 +179,52 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const btnSave = document.getElementById('btn-save-job');
+    if (btnSave) {
+        btnSave.addEventListener('click', function () {
+            const jobId = this.dataset.jobId;
+            btnSave.disabled = true;
+
+            fetch(`/pelamar/lowongan/${jobId}/toggle-save`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                btnSave.disabled = false;
+                if (data.success) {
+                    const icon = btnSave.querySelector('svg');
+                    const text = btnSave.querySelector('span');
+                    
+                    if (data.is_saved) {
+                        btnSave.className = "flex items-center justify-center gap-2 w-full border border-amber-500 bg-amber-50 text-amber-700 font-semibold py-3 rounded-lg text-sm transition-colors";
+                        icon.classList.add('fill-amber-500', 'text-amber-500');
+                        text.textContent = 'Saved';
+                    } else {
+                        btnSave.className = "flex items-center justify-center gap-2 w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-3 rounded-lg text-sm transition-colors";
+                        icon.classList.remove('fill-amber-500', 'text-amber-500');
+                        text.textContent = 'Save Job';
+                    }
+                } else {
+                    alert('Gagal menyimpan lowongan.');
+                }
+            })
+            .catch(e => {
+                btnSave.disabled = false;
+                console.error(e);
+                alert('Terjadi kesalahan koneksi.');
+            });
+        });
+    }
+});
+</script>
 @endsection

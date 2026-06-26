@@ -145,11 +145,38 @@ class ApplicantLampiranController extends Controller
         $request->validate([
             'title'       => ['required', 'string', 'max:200'],
             'description' => ['nullable', 'string', 'max:500'],
-            'link_url'    => ['nullable', 'url', 'max:500'],
+            'link_url'    => ['required_if:type,link', 'nullable', 'url', 'max:500'],
+            'porto_file'  => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
         ]);
 
-        $portofolio->update($request->only('title', 'description', 'link_url'));
-        return response()->json(['message' => 'OK']);
+        $data = $request->only('title', 'description');
+
+        if ($portofolio->type === 'link') {
+            $data['link_url'] = $request->link_url;
+        } elseif ($portofolio->type === 'file') {
+            if ($request->hasFile('porto_file')) {
+                // Hapus file lama jika ada
+                if ($portofolio->file_url) {
+                    Storage::disk('public')->delete($portofolio->file_url);
+                }
+                $file = $request->file('porto_file');
+                $data['file_url'] = $file->store('portofolio/' . auth()->id(), 'public');
+                $data['file_size'] = $file->getSize();
+            }
+        }
+
+        $portofolio->update($data);
+        
+        return response()->json([
+            'message' => 'OK',
+            'portfolio' => [
+                'title' => $portofolio->title,
+                'description' => $portofolio->description,
+                'link_url' => $portofolio->link_url,
+                'file_url' => $portofolio->file_url ? Storage::url($portofolio->file_url) : null,
+                'file_size_formatted' => $portofolio->file_size ? number_format($portofolio->file_size/1048576, 1) . ' MB' : null
+            ]
+        ]);
     }
 
     // ===== PORTOFOLIO DESTROY =====

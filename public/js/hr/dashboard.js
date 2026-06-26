@@ -237,20 +237,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // ===== JADWAL WAWANCARA =====
     const wawancaraData = (window.dbChartData && window.dbChartData.wawancara) || {
         '2026-04-30': [
-            { time: '09:00', ampm: 'AM', name: 'Budi Santoso', role: 'Technical Lead - R&D', location: 'Google Meet', isOnline: true, statusClass: 'border-green-700' },
-            { time: '11:30', ampm: 'AM', name: 'Siska Wijaya', role: 'Finance Supervisor', location: 'Ruang Meeting A2', isOnline: false, statusClass: 'border-gray-300' },
-            { time: '02:00', ampm: 'PM', name: 'Ahmad Fauzi', role: 'Maintenance Staff', location: 'Workshop Utama', isOnline: false, statusClass: 'border-gray-300' }
+            { time: '09:00', name: 'Budi Santoso', role: 'Technical Lead - R&D', location: 'Google Meet', isOnline: true, statusClass: 'border-green-700' },
+            { time: '11:30', name: 'Siska Wijaya', role: 'Finance Supervisor', location: 'Ruang Meeting A2', isOnline: false, statusClass: 'border-gray-300' },
+            { time: '14:00', name: 'Ahmad Fauzi', role: 'Maintenance Staff', location: 'Workshop Utama', isOnline: false, statusClass: 'border-gray-300' }
         ],
         '2026-05-01': [
-            { time: '10:00', ampm: 'AM', name: 'Dewi Lestari', role: 'HR Staff', location: 'Zoom', isOnline: true, statusClass: 'border-yellow-500' },
-            { time: '01:00', ampm: 'PM', name: 'Andi Saputra', role: 'IT Support', location: 'Google Meet', isOnline: true, statusClass: 'border-gray-300' }
+            { time: '10:00', name: 'Dewi Lestari', role: 'HR Staff', location: 'Zoom', isOnline: true, statusClass: 'border-yellow-500' },
+            { time: '13:00', name: 'Andi Saputra', role: 'IT Support', location: 'Google Meet', isOnline: true, statusClass: 'border-gray-300' }
         ],
         '2026-05-05': [
-            { time: '08:30', ampm: 'AM', name: 'Diana Putri', role: 'Data Analyst', location: 'Google Meet', isOnline: true, statusClass: 'border-green-700' }
+            { time: '08:30', name: 'Diana Putri', role: 'Data Analyst', location: 'Google Meet', isOnline: true, statusClass: 'border-green-700' }
         ],
         '2026-05-12': [
-            { time: '09:00', ampm: 'AM', name: 'Rina Melati', role: 'Marketing Manager', location: 'Ruang Meeting B1', isOnline: false, statusClass: 'border-blue-500' },
-            { time: '14:00', ampm: 'PM', name: 'Joko Anwar', role: 'Sales Executive', location: 'Zoom', isOnline: true, statusClass: 'border-gray-300' }
+            { time: '09:00', name: 'Rina Melati', role: 'Marketing Manager', location: 'Ruang Meeting B1', isOnline: false, statusClass: 'border-blue-500' },
+            { time: '14:00', name: 'Joko Anwar', role: 'Sales Executive', location: 'Zoom', isOnline: true, statusClass: 'border-gray-300' }
         ]
     };
 
@@ -287,9 +287,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 card.href = '/hr/wawancara/daftar?date=' + dateKey;
                 card.className = 'flex gap-4 items-start group hover:bg-gray-50 p-2 -mx-2 rounded-xl transition-colors cursor-pointer';
                 card.innerHTML = `
-                    <div class="text-center shrink-0 w-12 pt-1">
+                    <div class="text-center shrink-0 w-12 pt-2">
                         <p class="text-sm font-bold text-gray-900 leading-none">${item.time}</p>
-                        <p class="text-[10px] text-gray-400 font-medium">${item.ampm}</p>
                     </div>
                     <div class="flex-1 bg-gray-50 group-hover:bg-white group-hover:shadow-sm rounded-xl p-3 border-l-4 ${item.statusClass} transition-all">
                         <p class="font-bold text-sm text-gray-900">${item.name}</p>

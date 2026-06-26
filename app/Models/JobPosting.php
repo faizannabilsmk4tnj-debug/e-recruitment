@@ -25,8 +25,12 @@ class JobPosting extends Model
         'salary_max',
         'show_salary',
         'quota',
+        'age_min',
+        'age_max',
+        'passing_grade',
         'applicant_count',
         'status',
+        'auto_close_method',
         'deadline',
         'closed_at',
     ];
@@ -34,6 +38,9 @@ class JobPosting extends Model
     protected $casts = [
         'show_salary' => 'boolean',
         'quota' => 'integer',
+        'age_min' => 'integer',
+        'age_max' => 'integer',
+        'passing_grade' => 'integer',
         'applicant_count' => 'integer',
         'deadline' => 'date',
         'closed_at' => 'datetime',

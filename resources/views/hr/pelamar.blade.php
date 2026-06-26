@@ -126,7 +126,7 @@
              data-deadline-days="{{ $low['deadline_days'] }}"
              data-unreviewed="{{ $unreviewed }}"
              data-interview="{{ $low['counts']['interview'] }}"
-             data-decision="{{ $low['counts']['reviewed'] + $low['counts']['shortlisted'] }}">
+             data-decision="{{ $low['counts']['shortlisted'] }}">
 
             <!-- Card Header -->
             <button class="lowongan-toggle w-full flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition-colors text-left">
@@ -178,8 +178,8 @@
                     @if($low['counts']['interview'] > 0)
                     <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-1 rounded">{{ $low['counts']['interview'] }} Interview</span>
                     @endif
-                    @if($low['counts']['reviewed'] > 0)
-                    <span class="text-[10px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-1 rounded">{{ $low['counts']['reviewed'] }} Reviewed</span>
+                    @if($low['counts']['accepted'] > 0)
+                    <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-1 rounded">{{ $low['counts']['accepted'] }} Accepted</span>
                     @endif
                     @if($low['counts']['rejected'] > 0)
                     <span class="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-1 rounded">{{ $low['counts']['rejected'] }} Rejected</span>
@@ -202,8 +202,8 @@
                     @if($low['counts']['interview'] > 0)
                     <button class="status-tab px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors" data-status="interview">Interview <span class="text-gray-400 ml-1">({{ $low['counts']['interview'] }})</span></button>
                     @endif
-                    @if($low['counts']['reviewed'] > 0)
-                    <button class="status-tab px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors" data-status="reviewed">Reviewed <span class="text-gray-400 ml-1">({{ $low['counts']['reviewed'] }})</span></button>
+                    @if($low['counts']['accepted'] > 0)
+                    <button class="status-tab px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors" data-status="accepted">Accepted <span class="text-gray-400 ml-1">({{ $low['counts']['accepted'] }})</span></button>
                     @endif
                     @if($low['counts']['rejected'] > 0)
                     <button class="status-tab px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors" data-status="rejected">Rejected <span class="text-gray-400 ml-1">({{ $low['counts']['rejected'] }})</span></button>
@@ -233,7 +233,7 @@
                     </thead>
                     <tbody class="applicant-tbody">
                         @foreach($low['pelamar'] as $pIdx => $p)
-                        <tr class="border-t border-gray-100 hover:bg-gray-50 transition-colors applicant-row"
+                        <tr class="border-t border-gray-100 hover:bg-gray-50 transition-colors applicant-row {{ $p['status'] === 'accepted' ? 'opacity-60 bg-gray-100/90 border-gray-200' : '' }}"
                             data-status="{{ $p['status'] }}"
                             data-name="{{ strtolower($p['name']) }}"
                             data-email="{{ strtolower($p['email']) }}"
@@ -260,8 +260,8 @@
                                     @case('interview')
                                         <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full uppercase">Interview</span>
                                         @break
-                                    @case('reviewed')
-                                        <span class="text-[10px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-1 rounded-full uppercase">Reviewed</span>
+                                    @case('accepted')
+                                        <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full uppercase">Accepted</span>
                                         @break
                                     @case('rejected')
                                         <span class="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full uppercase">Rejected</span>

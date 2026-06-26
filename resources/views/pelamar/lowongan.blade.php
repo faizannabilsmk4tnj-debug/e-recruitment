@@ -1,7 +1,8 @@
 @extends('layouts.pelamar')
 
 @section('title', 'Browse Vacancies')
-@section('nav-lowongan', 'active')
+@section('nav-lowongan', ($activeNav ?? 'vacancies') === 'vacancies' ? 'active' : '')
+@section('nav-saved-jobs', ($activeNav ?? 'vacancies') === 'saved-jobs' ? 'active' : '')
 
 @section('css')
 <style>
@@ -67,15 +68,19 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div id="dropdown-loc" class="hidden absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg p-3 z-50 w-48">
-                @foreach(['Batam Plant','Medan Site','Jakarta HQ','Surabaya Plant','Dumai Site'] as $loc)
+                @foreach($locations as $loc)
                 <label class="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
-                    <input type="radio" name="filter-loc" class="filter-loc accent-green-700 w-4 h-4" value="{{ $loc }}"> {{ $loc }}
+                    <input type="radio" name="filter-loc" class="filter-loc accent-green-700 w-4 h-4" value="{{ $loc->name }}"> {{ $loc->name }}
                 </label>
                 @endforeach
             </div>
         </div>
 
-        <div class="ml-auto flex items-center gap-3">
+        <div class="ml-auto flex items-center gap-4">
+            <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-500 hover:text-gray-700 select-none">
+                <input type="checkbox" id="toggle-saved-only" class="accent-green-700 w-4 h-4 rounded" @if(request('saved') == '1') checked @endif>
+                Saved Only
+            </label>
             <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-500 hover:text-gray-700 select-none">
                 <input type="checkbox" id="toggle-show-closed" class="accent-green-700 w-4 h-4 rounded">
                 Show Closed
@@ -165,10 +170,12 @@
         $cardOpacity = ($isClosed || $isFilled) ? 'opacity-60' : '';
         $cardHover   = $isActive ? 'job-card cursor-pointer' : 'job-card';
         $url = '/pelamar/lowongan/'.$job->id;
+        $isSaved = in_array($job->id, $savedJobIds ?? []);
     @endphp
     <div class="bg-white rounded-2xl border border-gray-200 p-6 {{ $cardHover }} {{ $cardOpacity }}"
          data-category="{{ $catName }}" data-type="{{ $jobType }}"
          data-location="{{ $job->location }}" data-status="{{ $statusStr }}"
+         data-saved="{{ $isSaved ? '1' : '0' }}"
          @if($isActive) onclick="window.location.href='{{ $url }}'" @endif>
 
         {{-- Card Header --}}
@@ -176,14 +183,26 @@
             <div class="w-11 h-11 {{ $icon['bg'] }} rounded-xl flex items-center justify-center shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {{ $icon['color'] }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">{!! $icon['svg'] !!}</svg>
             </div>
-            {{-- Status badge --}}
-            @if($isActive)
-            <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 shrink-0">● OPEN</span>
-            @elseif($isClosed)
-            <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-red-50 text-red-500 border border-red-200 shrink-0">● CLOSED</span>
-            @else
-            <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-blue-50 text-blue-500 border border-blue-200 shrink-0">● FILLED</span>
-            @endif
+            
+            <div class="flex items-center gap-2">
+                {{-- Status badge --}}
+                @if($isActive)
+                <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 shrink-0">● OPEN</span>
+                @elseif($isClosed)
+                <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-red-50 text-red-500 border border-red-200 shrink-0">● CLOSED</span>
+                @else
+                <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-blue-50 text-blue-500 border border-blue-200 shrink-0">● FILLED</span>
+                @endif
+                <button onclick="event.stopPropagation(); toggleCardSave(this, {{ $job->id }});" 
+                        class="p-1.5 rounded-lg hover:bg-gray-50 transition-colors text-amber-500" 
+                        title="{{ $isSaved ? 'Hapus bookmark' : 'Simpan lowongan' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                         class="w-4 h-4 {{ $isSaved ? 'fill-amber-500' : 'fill-none' }} hover:fill-amber-500 transition-colors" 
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                    </svg>
+                </button>
+            </div>
         </div>
 
         {{-- Title --}}
@@ -259,8 +278,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 e.stopPropagation();
                 const el = document.getElementById(dd);
                 const isOpen = !el.classList.contains('hidden');
-                dropdowns.forEach(d => document.getElementById(d.dd).classList.add('hidden'));
-                if (!isOpen) el.classList.remove('hidden');
+                dropdowns.forEach(d => {
+                    const otherEl = document.getElementById(d.dd);
+                    if (otherEl) otherEl.classList.add('hidden');
+                });
+                if (!isOpen && el) el.classList.remove('hidden');
             });
         }
     });
@@ -274,6 +296,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedLoc  = document.querySelector('.filter-loc:checked')?.value.toLowerCase().split(' ')[0] || '';
         const searchQ      = document.getElementById('search-job').value.toLowerCase();
         const showClosed   = document.getElementById('toggle-show-closed').checked;
+        const savedOnly    = document.getElementById('toggle-saved-only').checked;
 
         let visible = 0;
         document.querySelectorAll('.job-card').forEach(card => {
@@ -285,7 +308,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const matchType   = !selectedType || (card.dataset.type || '').toLowerCase() === selectedType;
             const matchLoc    = !selectedLoc  || (card.dataset.location || '').toLowerCase().includes(selectedLoc);
             const matchSearch = !searchQ || card.textContent.toLowerCase().includes(searchQ);
-            const show = matchCat && matchType && matchLoc && matchSearch;
+            const matchSaved  = !savedOnly || card.dataset.saved === '1';
+            const show = matchCat && matchType && matchLoc && matchSearch && matchSaved;
             card.style.display = show ? '' : 'none';
             if (show) visible++;
         });
@@ -296,24 +320,74 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('search-job').addEventListener('input', applyFilters);
     document.querySelectorAll('.filter-cat, .filter-type, .filter-loc').forEach(cb => cb.addEventListener('change', applyFilters));
     document.getElementById('toggle-show-closed').addEventListener('change', applyFilters);
+    document.getElementById('toggle-saved-only').addEventListener('change', applyFilters);
 
     document.getElementById('btn-reset-filter').addEventListener('click', function () {
         document.querySelectorAll('.filter-cat').forEach(cb => cb.checked = false);
         document.querySelectorAll('.filter-type, .filter-loc').forEach(rb => rb.checked = false);
         document.getElementById('search-job').value = '';
         document.getElementById('toggle-show-closed').checked = false;
+        document.getElementById('toggle-saved-only').checked = false;
         dropdowns.forEach(d => document.getElementById(d.dd).classList.add('hidden'));
-        applyFilters();
+        // Redirect to clear the backend query as well
+        window.location.href = window.location.pathname;
     });
 
     // Read ?q= from URL (from landing page hero search)
     const urlQ = new URLSearchParams(window.location.search).get('q');
     if (urlQ) {
         document.getElementById('search-job').value = urlQ;
-        history.replaceState(null, '', window.location.pathname);
     }
 
+    // Trigger backend search on Enter keypress
+    document.getElementById('search-job').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const q = this.value.trim();
+            window.location.href = window.location.pathname + (q ? '?q=' + encodeURIComponent(q) : '');
+        }
+    });
+
+    window.applyFilters = applyFilters;
     applyFilters();
 });
+
+function toggleCardSave(btn, jobId) {
+    const svg = btn.querySelector('svg');
+    
+    fetch(`/pelamar/lowongan/${jobId}/toggle-save`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            const card = btn.closest('.job-card');
+            if (data.is_saved) {
+                svg.classList.remove('fill-none');
+                svg.classList.add('fill-amber-500');
+                btn.title = 'Hapus bookmark';
+                if (card) card.dataset.saved = '1';
+            } else {
+                svg.classList.remove('fill-amber-500');
+                svg.classList.add('fill-none');
+                btn.title = 'Simpan lowongan';
+                if (card) card.dataset.saved = '0';
+            }
+            if (typeof window.applyFilters === 'function') {
+                window.applyFilters();
+            }
+        } else {
+            alert('Gagal memperbarui status bookmark.');
+        }
+    })
+    .catch(e => {
+        console.error(e);
+        alert('Terjadi kesalahan koneksi.');
+    });
+}
 </script>
 @endsection

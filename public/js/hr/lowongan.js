@@ -111,17 +111,27 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!activeRow) return;
         const title      = activeRow.querySelector('p.font-bold')?.textContent.trim() || '';
         const categoryId = activeRow.dataset.categoryId || '';
+        const location   = activeRow.dataset.location || '';
         const status     = activeRow.dataset.status || 'DRAFT';
         const quota      = activeRow.dataset.quota || '';
         const deadline   = activeRow.dataset.deadline || '';
         const desc       = activeRow.dataset.desc || '';
+        const autoClose  = activeRow.dataset.autoCloseMethod || 'both';
+        const ageMin     = activeRow.dataset.ageMin || '';
+        const ageMax     = activeRow.dataset.ageMax || '';
+        const passingGrade = activeRow.dataset.passingGrade || '70';
 
         document.getElementById('v-title').value    = title;
         document.getElementById('v-category').value = categoryId;
+        document.getElementById('v-location').value = location;
         document.getElementById('v-status').value   = status;
         document.getElementById('v-quota').value    = quota;
         document.getElementById('v-deadline').value = deadline;
         document.getElementById('v-desc').value     = desc;
+        document.getElementById('v-auto-close').value = autoClose;
+        document.getElementById('v-age-min').value = ageMin;
+        document.getElementById('v-age-max').value = ageMax;
+        document.getElementById('v-passing-grade').value = passingGrade;
 
         document.querySelector('#modal-vacancy .bg-green-900 h2').textContent = 'Edit Vacancy';
         document.getElementById('btn-save-vacancy').textContent = 'Save Changes';
@@ -131,37 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Mark as Filled
     dropdown.querySelector('.vd-fill').addEventListener('click', () => {
         dropdown.classList.add('hidden');
-        if (!activeRow) return;
-        const id = activeRow.dataset.id;
-
-        if (confirm('Tandai lowongan ini sebagai terpenuhi (Mark as Filled)? Ini akan menutup lowongan.')) {
-            fetch('/hr/lowongan/' + id + '/status', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    status: 'closed'
-                })
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to update status');
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    window.location.reload();
-                } else {
-                    alert('Gagal memperbarui status lowongan.');
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Terjadi kesalahan jaringan atau server.');
-            });
-        }
+        document.getElementById('modal-fill-vacancy').classList.remove('hidden');
     });
 
     // Close Vacancy
@@ -174,11 +154,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const openModal  = () => {
         document.querySelector('#modal-vacancy .bg-green-900 h2').textContent = 'Create New Vacancy';
         document.getElementById('btn-save-vacancy').textContent = 'Create Vacancy';
-        ['v-title','v-category','v-quota','v-deadline','v-desc'].forEach(id => {
+        ['v-title','v-category','v-location','v-quota','v-deadline','v-desc', 'v-age-min', 'v-age-max'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.value = '';
         });
+        document.getElementById('v-passing-grade').value = '70';
         document.getElementById('v-status').value = 'DRAFT';
+        document.getElementById('v-auto-close').value = 'both';
         document.getElementById('modal-vacancy').classList.remove('hidden');
     };
     const closeModal = () => document.getElementById('modal-vacancy').classList.add('hidden');
@@ -191,12 +173,17 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('btn-save-vacancy').addEventListener('click', function () {
         const title      = document.getElementById('v-title').value.trim();
         const categoryId = document.getElementById('v-category').value;
+        const location   = document.getElementById('v-location').value;
         const quota      = document.getElementById('v-quota').value;
         const deadline   = document.getElementById('v-deadline').value;
         const status     = document.getElementById('v-status').value;
         const desc       = document.getElementById('v-desc').value;
+        const autoClose  = document.getElementById('v-auto-close').value;
+        const ageMin     = document.getElementById('v-age-min').value;
+        const ageMax     = document.getElementById('v-age-max').value;
+        const passingGrade = document.getElementById('v-passing-grade').value;
 
-        if (!title || !categoryId || !quota) { alert('Position, category, dan quota wajib diisi.'); return; }
+        if (!title || !categoryId || !location || !quota) { alert('Position, category, location, dan quota wajib diisi.'); return; }
 
         this.disabled = true;
         const isEditing = this.textContent.includes('Save');
@@ -218,9 +205,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify({
                     title: title,
                     category_id: categoryId,
+                    location: location,
                     quota: quota,
+                    age_min: ageMin || null,
+                    age_max: ageMax || null,
+                    passing_grade: passingGrade || null,
                     deadline: deadline || null,
                     status: dbStatus,
+                    auto_close_method: autoClose,
                     description: desc
                 })
             })
@@ -243,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.disabled = false;
                 this.textContent = 'Save Changes';
             });
+        } else {
             let dbStatus = 'draft';
             if (status === 'ACTIVE') dbStatus = 'open';
 
@@ -256,11 +249,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify({
                     title: title,
                     category_id: categoryId,
+                    location: location,
                     quota: quota,
+                    age_min: ageMin || null,
+                    age_max: ageMax || null,
+                    passing_grade: passingGrade || null,
                     deadline: deadline || null,
                     status: dbStatus,
+                    auto_close_method: autoClose,
                     description: desc || 'Brief job description.',
-                    location: 'Batam Plant',
                     requirements: 'Requirements will be updated soon.'
                 })
             })
@@ -327,6 +324,191 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Terjadi kesalahan saat menutup lowongan.');
             this.disabled = false;
             this.textContent = 'Yes, Close Vacancy';
+        });
+    });
+
+    // ===== MODAL: Mark as Filled =====
+    document.getElementById('btn-close-fill-modal').addEventListener('click', () => document.getElementById('modal-fill-vacancy').classList.add('hidden'));
+    document.getElementById('btn-cancel-fill-vacancy').addEventListener('click', () => document.getElementById('modal-fill-vacancy').classList.add('hidden'));
+    document.getElementById('modal-fill-vacancy').addEventListener('click', function (e) { if (e.target === this) this.classList.add('hidden'); });
+
+    document.getElementById('btn-confirm-fill-vacancy').addEventListener('click', function () {
+        if (!activeRow) return;
+        const id = activeRow.dataset.id;
+        
+        this.disabled = true;
+        this.textContent = 'Saving...';
+
+        fetch('/hr/lowongan/' + id + '/status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                status: 'closed'
+            })
+        })
+        .then(response => {
+            if (!response.ok) return response.json().then(err => { throw err; });
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Gagal memperbarui status lowongan.');
+                this.disabled = false;
+                this.textContent = 'Yes, Mark as Filled';
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Terjadi kesalahan saat memperbarui status lowongan.');
+            this.disabled = false;
+            this.textContent = 'Yes, Mark as Filled';
+        });
+    });
+
+    // ===== MODAL: Add Category =====
+    const modalCategory = document.getElementById('modal-add-category');
+    const btnOpenCategory = document.getElementById('btn-open-category-modal');
+    const btnCloseCategory = document.getElementById('btn-close-category-modal');
+    const btnCancelCategory = document.getElementById('btn-cancel-category');
+    const btnSaveCategory = document.getElementById('btn-save-category');
+    const catNameInput = document.getElementById('cat-name-input');
+
+    const openCatModal = () => {
+        if (catNameInput) catNameInput.value = '';
+        modalCategory?.classList.remove('hidden');
+    };
+    const closeCatModal = () => modalCategory?.classList.add('hidden');
+
+    btnOpenCategory?.addEventListener('click', openCatModal);
+    btnCloseCategory?.addEventListener('click', closeCatModal);
+    btnCancelCategory?.addEventListener('click', closeCatModal);
+    modalCategory?.addEventListener('click', function (e) { if (e.target === this) closeCatModal(); });
+
+    btnSaveCategory?.addEventListener('click', function () {
+        const name = catNameInput.value.trim();
+        if (!name) { alert('Nama kategori wajib diisi.'); return; }
+
+        this.disabled = true;
+        this.textContent = 'Menyimpan...';
+
+        fetch('/hr/lowongan/kategori', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ name: name })
+        })
+        .then(response => {
+            if (!response.ok) return response.json().then(err => { throw err; });
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Dynamically add to Category filter and Category selection dropdowns
+                const filterCat = document.getElementById('filter-category');
+                const vCat = document.getElementById('v-category');
+
+                if (filterCat) {
+                    const opt = document.createElement('option');
+                    opt.value = data.category.name;
+                    opt.textContent = data.category.name;
+                    filterCat.appendChild(opt);
+                }
+
+                if (vCat) {
+                    const opt = document.createElement('option');
+                    opt.value = data.category.id;
+                    opt.textContent = data.category.name;
+                    vCat.appendChild(opt);
+                }
+
+                closeCatModal();
+                alert(data.message || 'Kategori baru berhasil ditambahkan.');
+            } else {
+                alert('Gagal menambahkan kategori: ' + (data.message || ''));
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert(err.message || 'Terjadi kesalahan saat menambahkan kategori.');
+        })
+        .finally(() => {
+            this.disabled = false;
+            this.textContent = 'Simpan';
+        });
+    });
+
+    // ===== MODAL: Add Location =====
+    const modalLocation = document.getElementById('modal-add-location');
+    const btnOpenLocation = document.getElementById('btn-open-location-modal');
+    const btnCloseLocation = document.getElementById('btn-close-location-modal');
+    const btnCancelLocation = document.getElementById('btn-cancel-location');
+    const btnSaveLocation = document.getElementById('btn-save-location');
+    const locNameInput = document.getElementById('loc-name-input');
+
+    const openLocModal = () => {
+        if (locNameInput) locNameInput.value = '';
+        modalLocation?.classList.remove('hidden');
+    };
+    const closeLocModal = () => modalLocation?.classList.add('hidden');
+
+    btnOpenLocation?.addEventListener('click', openLocModal);
+    btnCloseLocation?.addEventListener('click', closeLocModal);
+    btnCancelLocation?.addEventListener('click', closeLocModal);
+    modalLocation?.addEventListener('click', function (e) { if (e.target === this) closeLocModal(); });
+
+    btnSaveLocation?.addEventListener('click', function () {
+        const name = locNameInput.value.trim();
+        if (!name) { alert('Nama lokasi wajib diisi.'); return; }
+
+        this.disabled = true;
+        this.textContent = 'Menyimpan...';
+
+        fetch('/hr/lowongan/lokasi', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ name: name })
+        })
+        .then(response => {
+            if (!response.ok) return response.json().then(err => { throw err; });
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Dynamically add to Location selection dropdown in create/edit modal
+                const vLoc = document.getElementById('v-location');
+                if (vLoc) {
+                    const opt = document.createElement('option');
+                    opt.value = data.location.name;
+                    opt.textContent = data.location.name;
+                    vLoc.appendChild(opt);
+                }
+
+                closeLocModal();
+                alert(data.message || 'Lokasi kerja baru berhasil ditambahkan.');
+            } else {
+                alert('Gagal menambahkan lokasi: ' + (data.message || ''));
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert(err.message || 'Terjadi kesalahan saat menambahkan lokasi.');
+        })
+        .finally(() => {
+            this.disabled = false;
+            this.textContent = 'Simpan';
         });
     });
 });

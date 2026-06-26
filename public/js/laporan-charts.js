@@ -1,5 +1,11 @@
 // ============ DATA ============
-const monthlyData = {
+const dbData = window.recruitmentReportsData || {};
+const sourcedCount = dbData.sourcedCount !== undefined ? dbData.sourcedCount : 1284;
+const applicantMoM = dbData.applicantMoM !== undefined ? dbData.applicantMoM : 12;
+const offerAcceptanceRate = dbData.offerAcceptanceRate !== undefined ? dbData.offerAcceptanceRate : 94.2;
+const qualifiedRatio = dbData.qualifiedRatio !== undefined ? dbData.qualifiedRatio : 42;
+
+const monthlyData = dbData.monthlyData || {
   JAN: { total: 210, external: 147, referral: 63, hired: 6, screened: 88, interviewed: 21 },
   FEB: { total: 185, external: 130, referral: 55, hired: 5, screened: 78, interviewed: 18 },
   MAR: { total: 140, external: 84, referral: 56, hired: 4, screened: 59, interviewed: 14 },
@@ -8,7 +14,7 @@ const monthlyData = {
   JUN: { total: 280, external: 196, referral: 84, hired: 10, screened: 118, interviewed: 28 },
 };
 
-const funnelData = {
+const funnelData = dbData.funnelData || {
   sourced: { count: 1284, pct: '100%', desc: 'Total pelamar yang masuk dari semua sumber rekrutmen.' },
   screened: { count: 540, pct: '42%', desc: 'Pelamar yang lolos seleksi administrasi awal (CV screening).' },
   interviewed: { count: 124, pct: '9.6%', desc: 'Pelamar yang dipanggil dan mengikuti sesi wawancara.' },
@@ -16,13 +22,13 @@ const funnelData = {
   hired: { count: 49, pct: '3.8%', desc: 'Pelamar yang resmi bergabung sebagai karyawan.' },
 };
 
-const sourceData = {
+const sourceData = dbData.sourceData || {
   linkedin: { label: 'LinkedIn', count: 706, pct: '55%', color: '#15803d', detail: 'Mayoritas pelamar senior dan profesional berasal dari LinkedIn. Konversi rata-rata 8%.' },
   jobportal: { label: 'Job Portal', count: 321, pct: '25%', color: '#166534', detail: 'Dari platform Jobstreet, Indeed, dan Kalibrr. Konversi rata-rata 5%.' },
   website: { label: 'Website', count: 257, pct: '20%', color: '#bfe3d0', detail: 'Pelamar langsung dari portal karir ecogreen.co.id. Konversi rata-rata 6%.' },
 };
 
-const deptData = {
+const deptData = dbData.deptData || {
   manufacturing: { name: 'Manufacturing', roles: 12, days: 22, status: 'OPTIMAL', color: '#15803d', bg: '#d1f4e0', detail: 'Departemen dengan performa rekrutmen terbaik. Proses seleksi efisien dan tepat waktu.' },
   engineering: { name: 'Engineering', roles: 8, days: 45, status: 'CRITICAL', color: '#9b1c1c', bg: '#fce8e8', detail: 'Kekurangan kandidat yang memenuhi kualifikasi teknis. Perlu strategi sourcing yang lebih aktif.' },
   supplychain: { name: 'Supply Chain', roles: 15, days: 14, status: 'HIGH', color: '#15803d', bg: '#d1f4e0', detail: 'Waktu rekrutmen sangat cepat. Proses onboarding perlu dioptimalkan agar kualitas terjaga.' },
@@ -89,18 +95,18 @@ function initBars() {
     bar.addEventListener('click', function() {
       const m = this.dataset.month;
       const d = monthlyData[m];
-      const convRate = ((d.hired / d.total) * 100).toFixed(1);
+      const convRate = d.total > 0 ? ((d.hired / d.total) * 100).toFixed(1) : '0.0';
       openModal(
         'linear-gradient(135deg, #15803d, #166534)',
         'Monthly Breakdown',
-        `${m} 2024 — ${d.total} Pelamar`,
-        `<p class="text-gray-500 text-sm mb-6">Detail lengkap aktivitas rekrutmen pada bulan ${m} 2024.</p>
+        `${m} 2026 — ${d.total} Pelamar`,
+        `<p class="text-gray-500 text-sm mb-6">Detail lengkap aktivitas rekrutmen pada bulan ${m} 2026.</p>
         <div class="grid grid-cols-2 gap-3 mb-6">
           ${statCard('Total Masuk', d.total.toLocaleString())}
-          ${statCard('External', d.external.toLocaleString(), `${Math.round(d.external/d.total*100)}% dari total`)}
-          ${statCard('Referral', d.referral.toLocaleString(), `${Math.round(d.referral/d.total*100)}% dari total`)}
-          ${statCard('Di-Screening', d.screened.toLocaleString(), `${Math.round(d.screened/d.total*100)}% lolos`)}
-          ${statCard('Diwawancara', d.interviewed.toLocaleString(), `${Math.round(d.interviewed/d.total*100)}% dari masuk`)}
+          ${statCard('External', d.external.toLocaleString(), d.total > 0 ? `${Math.round(d.external/d.total*100)}% dari total` : '0%')}
+          ${statCard('Referral', d.referral.toLocaleString(), d.total > 0 ? `${Math.round(d.referral/d.total*100)}% dari total` : '0%')}
+          ${statCard('Di-Screening', d.screened.toLocaleString(), d.total > 0 ? `${Math.round(d.screened/d.total*100)}% lolos` : '0%')}
+          ${statCard('Diwawancara', d.interviewed.toLocaleString(), d.total > 0 ? `${Math.round(d.interviewed/d.total*100)}% dari masuk` : '0%')}
           ${statCard('Diterima', d.hired.toLocaleString(), `Konversi ${convRate}%`)}
         </div>
         <div class="bg-green-50 border border-green-100 rounded-xl p-4">
@@ -228,7 +234,7 @@ function initExport() {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(180, 220, 195);
-    doc.text(`Reporting Period: January 1, 2024 – June 30, 2024  |  Diekspor: ${now}  |  PT Ecogreen Oleochemicals`, 14, 22);
+    doc.text(`Reporting Period: January 1, 2026 – June 30, 2026  |  Diekspor: ${now}  |  PT Ecogreen Oleochemicals`, 14, 22);
     doc.text('Dokumen Rahasia — Hanya untuk Internal HR', 14, 28);
 
     let y = 40;
@@ -244,12 +250,11 @@ function initExport() {
     y += 8;
 
     const kpis = [
-      { label: 'Total Applicants', value: '1,284', note: '↑ +12% vs bulan lalu' },
-      { label: 'Time to Hire', value: '18 Hari', note: '↓ -3 hari improvement' },
-      { label: 'Offer Acceptance', value: '94.2%', note: '— Stable performance' },
-      { label: 'Qualified Ratio', value: '42%', note: '↑ +5% profile quality' },
+      { label: 'Total Applicants', value: sourcedCount.toLocaleString(), note: `${applicantMoM >= 0 ? '↑ +' : '↓ '}${applicantMoM}% vs bulan lalu` },
+      { label: 'Offer Acceptance', value: `${offerAcceptanceRate.toFixed(1)}%`, note: '— Stable performance' },
+      { label: 'Qualified Ratio', value: `${qualifiedRatio}%`, note: '↑ Profile quality ratio' },
     ];
-    const kpiW = (pageW - 28 - 9) / 4;
+    const kpiW = (pageW - 28 - 6) / 3;
     kpis.forEach((k, i) => {
       const x = 14 + i * (kpiW + 3);
       doc.setFillColor(248, 250, 252);
@@ -293,10 +298,10 @@ function initExport() {
 
     const monthRows = Object.entries(monthlyData).map(([m, d]) => [
       m, d.total, d.external, d.referral, d.screened, d.interviewed, d.hired,
-      `${((d.hired / d.total) * 100).toFixed(1)}%`
+      d.total > 0 ? `${((d.hired / d.total) * 100).toFixed(1)}%` : '0.0%'
     ]);
     monthRows.push(['TOTAL', totalApplicants, totalExternal, totalReferral, totalScreened, totalInterviewed, totalHired,
-      `${((totalHired / totalApplicants) * 100).toFixed(1)}%`]);
+      totalApplicants > 0 ? `${((totalHired / totalApplicants) * 100).toFixed(1)}%` : '0.0%']);
 
     doc.autoTable({
       startY: y,
@@ -331,11 +336,11 @@ function initExport() {
     y += 8;
 
     const funnel = [
-      { label: 'Sourced', count: 1284, pct: 1.0, color: [15, 60, 32] },
-      { label: 'Screened', count: 540, pct: 0.8, color: [27, 94, 50] },
-      { label: 'Interviewed', count: 124, pct: 0.6, color: [91, 156, 116] },
-      { label: 'Offer Made', count: 52, pct: 0.45, color: [140, 190, 159] },
-      { label: 'Hired', count: 49, pct: 0.35, color: [74, 222, 128] },
+      { label: 'Sourced', count: funnelData.sourced.count, pct: 1.0, color: [15, 60, 32] },
+      { label: 'Screened', count: funnelData.screened.count, pct: funnelData.sourced.count > 0 ? (funnelData.screened.count / funnelData.sourced.count) : 0.0, color: [27, 94, 50] },
+      { label: 'Interviewed', count: funnelData.interviewed.count, pct: funnelData.sourced.count > 0 ? (funnelData.interviewed.count / funnelData.sourced.count) : 0.0, color: [91, 156, 116] },
+      { label: 'Offer Made', count: funnelData.offermade.count, pct: funnelData.sourced.count > 0 ? (funnelData.offermade.count / funnelData.sourced.count) : 0.0, color: [140, 190, 159] },
+      { label: 'Hired', count: funnelData.hired.count, pct: funnelData.sourced.count > 0 ? (funnelData.hired.count / funnelData.sourced.count) : 0.0, color: [74, 222, 128] },
     ];
     const maxBarW = pageW - 60;
     funnel.forEach(f => {
@@ -371,7 +376,11 @@ function initExport() {
     doc.autoTable({
       startY: y,
       head: [['Sumber', 'Kandidat', '%']],
-      body: [['LinkedIn', '706', '55%'], ['Job Portal', '321', '25%'], ['Website', '257', '20%']],
+      body: [
+        [sourceData.linkedin.label, sourceData.linkedin.count.toString(), sourceData.linkedin.pct],
+        [sourceData.jobportal.label, sourceData.jobportal.count.toString(), sourceData.jobportal.pct],
+        [sourceData.website.label, sourceData.website.count.toString(), sourceData.website.pct]
+      ],
       styles: { fontSize: 8, cellPadding: 3, textColor: darkGray },
       headStyles: { fillColor: green, textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 7.5 },
       alternateRowStyles: { fillColor: [249, 250, 251] },
@@ -383,12 +392,9 @@ function initExport() {
     doc.autoTable({
       startY: y,
       head: [['Departemen', 'Roles', 'Avg. Days', 'Status']],
-      body: [
-        ['Manufacturing', '12', '22', 'OPTIMAL'],
-        ['Engineering', '8', '45', 'CRITICAL'],
-        ['Supply Chain', '15', '14', 'HIGH'],
-        ['R&D Labor', '4', '31', 'AVERAGE'],
-      ],
+      body: Object.values(deptData).map(d => [
+        d.name, d.roles.toString(), d.days.toString(), d.status
+      ]),
       styles: { fontSize: 8, cellPadding: 3, textColor: darkGray },
       headStyles: { fillColor: green, textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 7.5 },
       alternateRowStyles: { fillColor: [249, 250, 251] },

@@ -61,11 +61,9 @@
                         <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Work Location</label>
                         <div class="relative">
                             <select id="f-location" class="w-full appearance-none border-0 border-b border-gray-300 pb-2 text-sm focus:outline-none focus:border-green-600 bg-transparent pr-6">
-                                <option>Medan Plant (HQ)</option>
-                                <option>Batam Plant</option>
-                                <option>Jakarta Office</option>
-                                <option>Singapore Office</option>
-                                <option>Remote</option>
+                                @foreach($locations as $loc)
+                                    <option value="{{ $loc->name }}">{{ $loc->name }}</option>
+                                @endforeach
                             </select>
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 absolute right-0 top-0.5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
                         </div>
@@ -132,10 +130,46 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="mb-4">
                     <label class="block text-xs font-semibold text-gray-700 mb-2">Application Deadline</label>
                     <input type="date" id="f-deadline"
                            class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-gray-700 mb-2">Age Limits</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                            <input type="number" id="f-age-min" placeholder="Min (e.g. 18)" min="0"
+                                   class="w-full px-3 py-2.5 text-sm focus:outline-none bg-transparent">
+                        </div>
+                        <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                            <input type="number" id="f-age-max" placeholder="Max (e.g. 35)" min="0"
+                                   class="w-full px-3 py-2.5 text-sm focus:outline-none bg-transparent">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-gray-700 mb-2">Interview Passing Grade</label>
+                    <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                        <input type="number" id="f-passing-grade" value="70" min="0" max="100"
+                               class="flex-1 px-3 py-2.5 text-sm focus:outline-none bg-transparent">
+                        <span class="px-3 py-2.5 text-xs font-semibold text-gray-400 bg-gray-50 border-l border-gray-200">POINT</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-2">Auto Close Method</label>
+                    <div class="relative">
+                        <select id="f-auto-close" class="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white pr-8">
+                            <option value="both">Deadline or Quota Met (Whichever First)</option>
+                            <option value="deadline">Only Deadline Reached</option>
+                            <option value="quota">Only Quota Met</option>
+                            <option value="manual">Manual Close Only</option>
+                        </select>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 absolute right-3 top-3.5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                    </div>
                 </div>
             </div>
 

@@ -32,8 +32,8 @@
         </div>
         <div class="flex items-center gap-6">
             <a href="/" class="text-sm transition-colors font-medium @yield('nav-beranda', 'text-green-50 hover:text-white')">Home</a>
-            <a href="/lowongan" class="text-sm transition-colors font-medium @yield('nav-lowongan', 'text-green-50 hover:text-white')">Vacancies</a>
             <a href="/tentang-kami" class="text-sm transition-colors font-medium text-green-50 hover:text-white">About Us</a>
+            <a href="/lowongan" class="text-sm transition-colors font-medium @yield('nav-lowongan', 'text-green-50 hover:text-white')">Vacancies</a>
             <div class="flex items-center gap-2">
                 <a href="/login" class="border border-white bg-white text-[#15803d] text-sm font-semibold px-5 py-2 rounded-lg hover:bg-green-50 transition-colors">
                     Sign In

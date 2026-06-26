@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('application_id')->constrained('applications')->onDelete('cascade');
             $table->foreignId('changed_by')->constrained('users');
-            $table->enum('old_status', ['applied', 'reviewed', 'shortlisted', 'interview', 'offered', 'rejected', 'withdrawn']);
-            $table->enum('new_status', ['applied', 'reviewed', 'shortlisted', 'interview', 'offered', 'rejected', 'withdrawn']);
+            $table->enum('old_status', ['applied', 'shortlisted', 'interview', 'accepted', 'rejected', 'withdrawn']);
+            $table->enum('new_status', ['applied', 'shortlisted', 'interview', 'accepted', 'rejected', 'withdrawn']);
             $table->text('reason')->nullable();
             $table->timestamp('created_at')->useCurrent();
         });

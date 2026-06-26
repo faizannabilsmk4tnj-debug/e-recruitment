@@ -19,6 +19,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password_hash',
+        'password',
         'role',
         'phone',
         'job_title',
@@ -27,6 +28,7 @@ class User extends Authenticatable
     ];
 
     protected $hidden = [
+        'password',
         'password_hash',
         'remember_token',
     ];
@@ -44,9 +46,29 @@ class User extends Authenticatable
         ];
     }
 
-    public function getAuthPassword()
+    /**
+     * Accessor for password.
+     */
+    public function getPasswordAttribute()
     {
         return $this->password_hash;
+    }
+
+    /**
+     * Mutator for password.
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password_hash'] = $value;
+    }
+
+    /**
+     * Return the password hash for authentication.
+     * Reads from password_hash first, falls back to password column.
+     */
+    public function getAuthPassword()
+    {
+        return $this->password_hash ?: $this->password;
     }
 
     /**
@@ -98,5 +120,13 @@ class User extends Authenticatable
     public function notificationPreference(): HasOne
     {
         return $this->hasOne(NotificationPreference::class);
+    }
+
+    /**
+     * Relasi ke Notifications.
+     */
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
     }
 }

@@ -87,6 +87,21 @@
                     <option value="{{ $cat->name }}">{{ $cat->name }}</option>
                 @endforeach
             </select>
+            
+            <button id="btn-open-category-modal" class="flex items-center gap-1.5 border border-green-700 text-green-800 hover:bg-green-50 font-semibold px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                + Kategori
+            </button>
+            
+            <button id="btn-open-location-modal" class="flex items-center gap-1.5 border border-green-700 text-green-800 hover:bg-green-50 font-semibold px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                + Lokasi
+            </button>
+
             <a href="/hr/lowongan/buat" class="ml-auto flex items-center gap-2 bg-green-800 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg text-sm transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
                 Create New Vacancy
@@ -114,10 +129,12 @@
                     $statusBadge = 'DRAFT';
                     if ($v->status === 'open') {
                         $statusBadge = 'ACTIVE';
-                    } elseif ($v->status === 'closed') {
-                        $statusBadge = 'CLOSED';
-                    } elseif ($v->status === 'expired') {
-                        $statusBadge = 'CLOSED';
+                    } elseif ($v->status === 'closed' || $v->status === 'expired') {
+                        if ($v->quota > 0 && $v->applicant_count >= $v->quota) {
+                            $statusBadge = 'FILLED';
+                        } else {
+                            $statusBadge = 'CLOSED';
+                        }
                     }
                     
                     // Compute progress
@@ -133,9 +150,14 @@
                     data-status="{{ $statusBadge }}"
                     data-category="{{ $v->category->name ?? '' }}"
                     data-category-id="{{ $v->category_id }}"
+                    data-location="{{ $v->location }}"
                     data-quota="{{ $v->quota }}"
                     data-deadline="{{ $v->deadline ? $v->deadline->format('Y-m-d') : '' }}"
                     data-desc="{{ $v->description }}"
+                    data-auto-close-method="{{ $v->auto_close_method }}"
+                    data-age-min="{{ $v->age_min }}"
+                    data-age-max="{{ $v->age_max }}"
+                    data-passing-grade="{{ $v->passing_grade }}"
                     onclick="if(!event.target.closest('button')) window.location.href='/hr/lowongan/{{ $v->id }}'">
 
                     <td class="py-4 pr-4">
@@ -162,6 +184,8 @@
                             <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full">ACTIVE</span>
                         @elseif($statusBadge === 'DRAFT')
                             <span class="text-xs font-bold text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">DRAFT</span>
+                        @elseif($statusBadge === 'FILLED')
+                            <span class="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">FILLED</span>
                         @else
                             <span class="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">CLOSED</span>
                         @endif
@@ -274,6 +298,15 @@
                 </select>
             </div>
             <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Work Location</label>
+                <select id="v-location" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                    <option value="">Select location...</option>
+                    @foreach($locations as $loc)
+                        <option value="{{ $loc->name }}">{{ $loc->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Quota</label>
                 <input type="number" id="v-quota" placeholder="e.g. 3" min="1" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
@@ -282,10 +315,30 @@
                 <input type="date" id="v-deadline" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
             <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Age Limits (Min / Max)</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" id="v-age-min" placeholder="Min" min="0" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="number" id="v-age-max" placeholder="Max" min="0" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Interview Passing Grade</label>
+                <input type="number" id="v-passing-grade" placeholder="e.g. 70" min="0" max="100" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+            </div>
+            <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Status</label>
                 <select id="v-status" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
                     <option value="DRAFT">Draft</option>
                     <option value="ACTIVE">Active</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Auto Close Method</label>
+                <select id="v-auto-close" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                    <option value="both">Deadline or Quota Met</option>
+                    <option value="deadline">Only Deadline Reached</option>
+                    <option value="quota">Only Quota Met</option>
+                    <option value="manual">Manual Close Only</option>
                 </select>
             </div>
             <div class="col-span-2">
@@ -314,6 +367,64 @@
         <div class="space-y-2.5">
             <button id="btn-confirm-close-vacancy" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Yes, Close Vacancy</button>
             <button id="btn-cancel-close-vacancy" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Mark as Filled confirm -->
+<div id="modal-fill-vacancy" class="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl w-full max-w-sm mx-4 p-7 text-center relative">
+        <button id="btn-close-fill-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Mark as Filled?</h3>
+        <p class="text-sm text-gray-500 mb-5">This vacancy will be marked as filled and closed for new applications.</p>
+        <div class="space-y-2.5">
+            <button id="btn-confirm-fill-vacancy" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Yes, Mark as Filled</button>
+            <button id="btn-cancel-fill-vacancy" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add Category -->
+<div id="modal-add-category" class="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl w-full max-w-md mx-4 overflow-hidden shadow-2xl">
+        <div class="bg-green-900 px-6 py-4 flex items-center justify-between">
+            <h2 class="text-white font-bold">Tambah Kategori Baru</h2>
+            <button id="btn-close-category-modal" class="text-green-300 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+        <div class="p-6">
+            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 font-sans">Nama Kategori</label>
+            <input type="text" id="cat-name-input" placeholder="Contoh: Engineering, Marketing..." class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+        </div>
+        <div class="px-6 pb-6 flex gap-3">
+            <button id="btn-cancel-category" class="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</button>
+            <button id="btn-save-category" class="flex-1 bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add Location -->
+<div id="modal-add-location" class="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl w-full max-w-md mx-4 overflow-hidden shadow-2xl">
+        <div class="bg-green-900 px-6 py-4 flex items-center justify-between">
+            <h2 class="text-white font-bold">Tambah Cabang / Lokasi Baru</h2>
+            <button id="btn-close-location-modal" class="text-green-300 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+        <div class="p-6">
+            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 font-sans">Nama Cabang / Lokasi</label>
+            <input type="text" id="loc-name-input" placeholder="Contoh: Surabaya Office..." class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+        </div>
+        <div class="px-6 pb-6 flex gap-3">
+            <button id="btn-cancel-location" class="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">Batal</button>
+            <button id="btn-save-location" class="flex-1 bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Simpan</button>
         </div>
     </div>
 </div>

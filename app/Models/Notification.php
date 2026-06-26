@@ -15,6 +15,7 @@ class Notification extends Model
         return [
             'data'    => 'array',
             'read_at' => 'datetime',
+            'created_at' => 'datetime',
         ];
     }
 

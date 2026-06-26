@@ -79,9 +79,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div id="dropdown-loc" class="hidden absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg p-3 z-50 w-48">
-                @foreach(['Batam Plant','Medan Site','Jakarta HQ','Surabaya Plant','Dumai Site'] as $loc)
+                @foreach($locations as $loc)
                 <label class="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
-                    <input type="radio" name="filter-loc" class="filter-loc accent-green-700 w-4 h-4" value="{{ $loc }}"> {{ $loc }}
+                    <input type="radio" name="filter-loc" class="filter-loc accent-green-700 w-4 h-4" value="{{ $loc->name }}"> {{ $loc->name }}
                 </label>
                 @endforeach
             </div>
@@ -314,15 +314,23 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('search-job').value = '';
         document.getElementById('toggle-show-closed').checked = false;
         dropdowns.forEach(d => document.getElementById(d.dd).classList.add('hidden'));
-        applyFilters();
+        // Redirect to clear the backend query as well
+        window.location.href = window.location.pathname;
     });
 
     // Read ?q= from URL (from landing page hero search)
     const urlQ = new URLSearchParams(window.location.search).get('q');
     if (urlQ) {
         document.getElementById('search-job').value = urlQ;
-        history.replaceState(null, '', window.location.pathname);
     }
+
+    // Trigger backend search on Enter keypress
+    document.getElementById('search-job').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const q = this.value.trim();
+            window.location.href = window.location.pathname + (q ? '?q=' + encodeURIComponent(q) : '');
+        }
+    });
 
     applyFilters();
 });

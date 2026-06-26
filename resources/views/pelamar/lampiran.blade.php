@@ -316,6 +316,64 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Submit skill via AJAX saat mode edit (PATCH)
+    formSkill.addEventListener('submit', function (e) {
+        const methodField = document.getElementById('skill-method-field');
+        const isPatch = methodField.innerHTML.includes('PATCH');
+        if (!isPatch) return; // biarkan store (POST) berjalan normal
+
+        e.preventDefault();
+
+        const fd = new FormData(formSkill);
+        fetch(formSkill.action, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
+            body: fd,
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.message === 'OK') {
+                // Update card di DOM tanpa reload
+                const newName     = document.getElementById('skill-name').value;
+                const newCategory = document.getElementById('skill-category').value;
+                const newLevel    = document.getElementById('skill-level').value;
+                const newCertName = document.getElementById('skill-cert-name').value;
+
+                const actionUrl = formSkill.action;
+                document.querySelectorAll('.skill-card').forEach(card => {
+                    const editBtn = card.querySelector('.btn-edit-skill');
+                    if (editBtn && editBtn.dataset.url === actionUrl) {
+                        // Update nama skill di card
+                        const nameEl = card.querySelector('.skill-name');
+                        if (nameEl) nameEl.textContent = newName;
+                        // Update data-attr tombol edit
+                        editBtn.dataset.skill     = newName;
+                        editBtn.dataset.category  = newCategory;
+                        editBtn.dataset.level     = newLevel;
+                        editBtn.dataset.cert_name = newCertName;
+                        // Update level badge
+                        const levelBadge = card.querySelector('span.rounded-full');
+                        if (levelBadge) {
+                            levelBadge.textContent = newLevel.charAt(0).toUpperCase() + newLevel.slice(1);
+                            levelBadge.className = 'text-xs font-medium px-2.5 py-0.5 rounded-full ' +
+                                ({ beginner: 'bg-blue-50 text-blue-700', intermediate: 'bg-amber-50 text-amber-700', expert: 'bg-green-50 text-green-700' }[newLevel] || 'bg-gray-50 text-gray-500');
+                        }
+                        // Update cert name if visible
+                        const certEl = card.querySelector('.border-t p.text-xs');
+                        if (certEl && newCertName) {
+                            certEl.textContent = '📄 ' + newCertName;
+                        }
+                    }
+                });
+
+                modalSkill.classList.add('hidden');
+            } else if (data.errors) {
+                alert(Object.values(data.errors).flat().join('\n'));
+            }
+        })
+        .catch(() => alert('Gagal menyimpan. Coba lagi.'));
+    });
+
     // Delete skill (AJAX)
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('.btn-delete-skill');
@@ -334,18 +392,29 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('porto-title').value = data.title       || '';
         document.getElementById('porto-desc').value  = data.description || '';
         document.getElementById('porto-url').value   = data.link        || '';
+        // Reset file input
+        const fileInput = document.querySelector('#form-porto input[name="porto_file"]');
+        if (fileInput) fileInput.value = '';
+
         document.getElementById('porto-method-field').innerHTML = '';
         document.getElementById('porto-type-wrap').classList.toggle('hidden', mode === 'edit');
-        document.getElementById('porto-file-field').classList.add('hidden');
-        document.getElementById('porto-link-field').classList.remove('hidden');
+        
+        // Ensure enctype is always multipart/form-data to support file uploads in both store and update
+        formPorto.setAttribute('enctype', 'multipart/form-data');
+
         if (mode === 'edit') {
             formPorto.action = data.url;
-            formPorto.removeAttribute('enctype');
             document.getElementById('porto-method-field').innerHTML = '<input type="hidden" name="_method" value="PATCH">';
             document.getElementById('porto-link-field').classList.toggle('hidden', data.type !== 'link');
+            document.getElementById('porto-file-field').classList.toggle('hidden', data.type !== 'file');
         } else {
             formPorto.action = '{{ route('pelamar.portofolio.store') }}';
-            formPorto.setAttribute('enctype','multipart/form-data');
+            document.getElementById('porto-link-field').classList.remove('hidden');
+            document.getElementById('porto-file-field').classList.add('hidden');
+            // reset radio buttons to link
+            document.querySelectorAll('#form-porto input[name="type"]').forEach(r => {
+                r.checked = r.value === 'link';
+            });
         }
         modalPorto.classList.remove('hidden');
     }
@@ -384,28 +453,56 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(r => r.json())
         .then(data => {
             if (data.message === 'OK') {
-                // Update card di DOM tanpa reload
-                const newTitle = document.getElementById('porto-title').value;
-                const newDesc  = document.getElementById('porto-desc').value;
-                const newLink  = document.getElementById('porto-url').value;
-
-                // Cari card berdasarkan action URL (berisi ID)
+                const p = data.portfolio;
                 const actionUrl = formPorto.action;
+
                 document.querySelectorAll('.porto-card').forEach(card => {
                     const editBtn = card.querySelector('.btn-edit-porto');
                     if (editBtn && editBtn.dataset.url === actionUrl) {
                         // Update teks judul
-                        card.querySelector('p.font-semibold').textContent = newTitle;
-                        // Update data-attr tombol edit
-                        editBtn.dataset.title       = newTitle;
-                        editBtn.dataset.description = newDesc;
-                        editBtn.dataset.link        = newLink;
-                        // Update link URL jika ada
-                        const linkEl = card.querySelector('a[target="_blank"]');
-                        if (linkEl && newLink) { linkEl.href = newLink; linkEl.textContent = newLink; }
-                        // Update deskripsi jika ada
-                        const descEl = card.querySelector('p.text-xs.text-gray-500.font-medium');
-                        if (descEl) descEl.textContent = '🔗 ' + (newDesc || '-');
+                        const titleEl = card.querySelector('p.font-semibold');
+                        if (titleEl) titleEl.textContent = p.title;
+
+                        // Update data attributes on edit button
+                        editBtn.dataset.title       = p.title;
+                        editBtn.dataset.description = p.description;
+                        editBtn.dataset.link        = p.link_url;
+
+                        if (editBtn.dataset.type === 'link') {
+                            // Link type
+                            const descEl = card.querySelector('p.text-xs.text-gray-500.font-medium');
+                            if (descEl) descEl.textContent = '🔗 ' + (p.description || '-');
+
+                            const linkEl = card.querySelector('a[target="_blank"]');
+                            if (linkEl && p.link_url) {
+                                linkEl.href = p.link_url;
+                                linkEl.textContent = p.link_url;
+                            }
+                        } else {
+                            // File type
+                            const descEl = card.querySelector('p.text-xs.text-gray-500.font-medium');
+                            if (descEl) {
+                                const fileName = p.file_url ? p.file_url.split('/').pop() : '';
+                                descEl.textContent = '📄 ' + (p.description || fileName || '-');
+                            }
+
+                            // Update View and Download links if a new file was uploaded
+                            if (p.file_url) {
+                                const links = card.querySelectorAll('.flex.gap-3.mt-1.text-xs.text-gray-500 a');
+                                if (links.length >= 2) {
+                                    links[0].href = p.file_url; // View
+                                    links[1].href = p.file_url; // Download
+                                }
+                            }
+
+                            // Update file size if a new file was uploaded
+                            if (p.file_size_formatted) {
+                                const sizeEl = card.querySelector('span.text-gray-400');
+                                if (sizeEl) {
+                                    sizeEl.textContent = p.file_size_formatted;
+                                }
+                            }
+                        }
                     }
                 });
 

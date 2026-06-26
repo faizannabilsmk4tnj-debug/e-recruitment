@@ -220,7 +220,7 @@ class UsersSeeder extends Seeder
                 'name'              => 'Nouzen',
                 'email'             => 'shinnouzen@gmail.com',
                 'password_hash'     => Hash::make('12345678'),
-                'role'              => 'hr',
+                'role'              => 'hr_master',
                 'phone'             => null,
                 'is_active'         => 1,
                 'email_verified_at' => now(),

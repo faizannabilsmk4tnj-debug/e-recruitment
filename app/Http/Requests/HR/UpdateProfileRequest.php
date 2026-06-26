@@ -9,7 +9,7 @@ class UpdateProfileRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->role === 'hr';
+        return $this->user()?->role === 'hr' || $this->user()?->role === 'hr_master';
     }
 
     public function rules(): array

@@ -12,6 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            \App\Http\Middleware\DetectDeletedUser::class,
+        ]);
         $middleware->redirectGuestsTo(function ($request) {
             if (str_starts_with($request->path(), 'hr/')) {
                 return '/hr/login';
@@ -25,4 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
+    })
+    ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule): void {
+        $schedule->command('app:check-vacancy-deadlines')->daily();
     })->create();

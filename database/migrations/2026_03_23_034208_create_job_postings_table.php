@@ -35,7 +35,9 @@ return new class extends Migration
         });
 
         // Full-text index untuk pencarian
-        DB::statement('ALTER TABLE job_postings ADD FULLTEXT KEY ft_job_search (title, description, requirements, benefits)');
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE job_postings ADD FULLTEXT KEY ft_job_search (title, description, requirements, benefits)');
+        }
     }
 
     /**

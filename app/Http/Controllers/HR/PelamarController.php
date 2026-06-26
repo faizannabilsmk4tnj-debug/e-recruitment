@@ -12,6 +12,7 @@ use App\Models\WorkExperience;
 use App\Models\OrganizationExperience;
 use App\Models\ApplicantSkill;
 use App\Models\UserProfile;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -27,8 +28,8 @@ class PelamarController extends Controller
         $submittedCount  = Application::where('status', 'applied')->count();
         $shortlistedCount = Application::where('status', 'shortlisted')->count();
         $interviewCount  = Application::where('status', 'interview')->count();
-        $acceptedCount   = Application::where('status', 'offered')->count(); // Offered represents Accepted/Hired
-        $decisionCount   = Application::whereIn('status', ['reviewed', 'shortlisted'])->count();
+        $acceptedCount   = Application::where('status', 'accepted')->count();
+        $decisionCount   = Application::whereIn('status', ['shortlisted'])->count();
 
         // 2. Fetch active and non-empty job postings
         $jobs = JobPosting::with(['category', 'applications.user.profile'])
@@ -85,7 +86,7 @@ class PelamarController extends Controller
 
             $unreviewed = $applications->whereIn('status', ['applied', 'shortlisted'])->count();
             $interviewCountJob = $applications->where('status', 'interview')->count();
-            $decisionCountJob = $applications->whereIn('status', ['reviewed', 'shortlisted'])->count();
+            $decisionCountJob = $applications->whereIn('status', ['shortlisted'])->count();
 
             $lowonganList[] = [
                 'id' => $job->id,
@@ -99,7 +100,7 @@ class PelamarController extends Controller
                     'terkirim' => $applications->where('status', 'applied')->count(),
                     'shortlisted' => $applications->where('status', 'shortlisted')->count(),
                     'interview' => $applications->where('status', 'interview')->count(),
-                    'reviewed' => $applications->where('status', 'reviewed')->count(),
+                    'accepted' => $applications->where('status', 'accepted')->count(),
                     'rejected' => $applications->where('status', 'rejected')->count(),
                 ],
                 'unreviewed' => $unreviewed,
@@ -154,14 +155,16 @@ class PelamarController extends Controller
             ->get();
 
         // Retrieve the closest upcoming interview session
-        $nextInterview = Interview::where('application_id', $application->id)
+        $nextInterview = Interview::with(['result.reviewer'])
+            ->where('application_id', $application->id)
             ->where('scheduled_at', '>=', now())
             ->where('status', 'scheduled')
             ->orderBy('scheduled_at', 'asc')
             ->first();
 
         // Get all interviews for this application (historical list)
-        $interviews = Interview::where('application_id', $application->id)
+        $interviews = Interview::with(['result.reviewer', 'scheduler'])
+            ->where('application_id', $application->id)
             ->orderBy('scheduled_at', 'desc')
             ->get();
 
@@ -272,14 +275,27 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
      */
     public function updateStatus(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required|in:applied,reviewed,shortlisted,interview,offered,rejected,withdrawn',
-            'reason' => 'nullable|string',
-        ]);
-
         $application = Application::findOrFail($id);
         $oldStatus = $application->status;
-        $newStatus = $request->status;
+        $newStatus = $request->input('status');
+
+        $request->validate([
+            'status' => 'required|in:shortlisted,interview,accepted,rejected',
+        ]);
+
+        // If trying to accept without prior interview, make reason / justification mandatory
+        if ($newStatus === 'accepted' && $oldStatus !== 'interview') {
+            $request->validate([
+                'reason' => 'required|string|min:5',
+            ], [
+                'reason.required' => 'Alasan melewati tahap interview wajib diisi.',
+                'reason.min' => 'Alasan harus diisi minimal 5 karakter.',
+            ]);
+        } else {
+            $request->validate([
+                'reason' => 'nullable|string',
+            ]);
+        }
 
         $application->status = $newStatus;
         if ($request->has('reason')) {
@@ -296,6 +312,10 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
             'reason' => $request->reason ?? 'Status changed by HR.',
             'created_at' => now(),
         ]);
+
+        // Notify the applicant about status change
+        $application->load('job');
+        NotificationService::notifyStatusChange($application, $newStatus);
 
         return response()->json([
             'success' => true,
@@ -344,6 +364,15 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
             'notes' => 'nullable|string',
         ]);
 
+        // Check for schedule overlap
+        $overlap = \App\Http\Controllers\HR\InterviewController::checkOverlap($request->scheduled_at, $request->duration_minutes);
+        if ($overlap['has_overlap']) {
+            return response()->json([
+                'success' => false,
+                'message' => $overlap['message']
+            ], 422);
+        }
+
         $application = Application::findOrFail($id);
         $oldStatus = $application->status;
 
@@ -385,9 +414,91 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
             ]);
         }
 
+        // Notify the applicant about the scheduled interview
+        $interview->load('application.job');
+        NotificationService::notifyInterviewScheduled($interview);
+
         return response()->json([
             'success' => true,
             'message' => 'Interview scheduled successfully.'
+        ]);
+    }
+
+    /**
+     * Submit interview result/evaluation.
+     */
+    public function evaluateInterview(Request $request, $id, $interviewId)
+    {
+        $request->validate([
+            'score' => 'required|integer|min:0|max:100',
+            'feedback' => 'required|string|min:5',
+            'recommendation' => 'required|in:proceed,hold,reject',
+            'attendance_status' => 'nullable|in:pending,present,absent',
+        ]);
+
+        $interview = Interview::where('application_id', $id)->findOrFail($interviewId);
+
+        // Fetch vacancy passing grade
+        $application = \App\Models\Application::findOrFail($id);
+        $vacancy = \App\Models\JobPosting::findOrFail($application->job_id);
+        $passingGrade = $vacancy->passing_grade ?? 70;
+
+        if ($request->recommendation === 'proceed' && $request->score < $passingGrade) {
+            return response()->json([
+                'success' => false,
+                'message' => "Rekomendasi 'PROCEED' tidak diperbolehkan karena skor ({$request->score}) kurang dari passing grade lowongan ini ({$passingGrade})."
+            ], 422);
+        }
+
+        // Update or insert result with trigger exception handling
+        try {
+            DB::table('interview_results')->updateOrInsert(
+                ['interview_id' => $interview->id],
+                [
+                    'reviewed_by' => auth()->id() ?? 1,
+                    'score' => $request->score,
+                    'feedback' => $request->feedback,
+                    'recommendation' => $request->recommendation,
+                    'created_at' => now(),
+                ]
+            );
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == '45000' || str_contains($e->getMessage(), '45000')) {
+                $message = $e->getMessage();
+                if (preg_match('/SQLSTATE\[45000\]: [^:]+: (.+)/', $message, $matches)) {
+                    $message = trim($matches[1]);
+                }
+                return response()->json([
+                    'success' => false,
+                    'message' => $message
+                ], 422);
+            }
+            throw $e;
+        }
+
+        // Update interview status to completed and attendance status if provided
+        $interview->status = 'completed';
+        if ($request->has('attendance_status')) {
+            $interview->attendance_status = $request->attendance_status;
+            if ($request->attendance_status === 'present' && !$interview->attendance_confirmed_at) {
+                $interview->attendance_confirmed_at = now();
+            }
+        }
+        $interview->save();
+
+        // Optional: auto-log this evaluation to application status log
+        DB::table('application_status_logs')->insert([
+            'application_id' => $id,
+            'changed_by' => auth()->id() ?? 1,
+            'old_status' => 'interview',
+            'new_status' => 'interview',
+            'reason' => 'Evaluated interview. Recommendation: ' . strtoupper($request->recommendation) . '. Score: ' . $request->score . '/100. Feedback: ' . substr($request->feedback, 0, 50) . '...',
+            'created_at' => now(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Interview evaluation saved successfully.'
         ]);
     }
 

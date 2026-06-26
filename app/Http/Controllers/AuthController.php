@@ -57,10 +57,17 @@ class AuthController extends Controller
             ]);
         }
 
-        if ($user->role !== 'hr') {
+        if ($user->role !== 'hr' && $user->role !== 'hr_master') {
             return response()->json([
                 'success' => false,
                 'message' => 'Akun ini bukan akun HR'
+            ]);
+        }
+
+        if (!$user->is_active) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun Anda telah dinonaktifkan oleh HR Master.'
             ]);
         }
 
@@ -188,7 +195,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $redirectUrl = '/login';
-        if (Auth::check() && Auth::user()->role === 'hr') {
+        if (Auth::check() && (Auth::user()->role === 'hr' || Auth::user()->role === 'hr_master')) {
             $redirectUrl = '/hr/login';
         }
 

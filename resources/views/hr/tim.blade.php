@@ -23,15 +23,15 @@
     <div class="grid grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-xl border-b-4 border-green-700 p-6">
             <p class="text-sm text-gray-500">Total Members</p>
-            <p class="text-4xl font-extrabold text-green-900 mt-1">4</p>
+            <p class="text-4xl font-extrabold text-green-900 mt-1">{{ $totalCount }}</p>
         </div>
         <div class="bg-gray-50 rounded-xl border-b-4 border-gray-200 p-6">
             <p class="text-sm text-gray-500">HR Master</p>
-            <p class="text-4xl font-extrabold text-gray-800 mt-1">1</p>
+            <p class="text-4xl font-extrabold text-gray-800 mt-1">{{ $masterCount }}</p>
         </div>
         <div class="bg-white rounded-xl border-b-4 border-green-300 p-6">
             <p class="text-sm text-gray-500">HR Staff</p>
-            <p class="text-4xl font-extrabold text-green-900 mt-1">3</p>
+            <p class="text-4xl font-extrabold text-green-900 mt-1">{{ $staffCount }}</p>
         </div>
     </div>
 
@@ -56,141 +56,65 @@
             </thead>
             <tbody id="member-table">
 
-                <!-- Row 1: HR Master -->
-                <tr class="border-t border-gray-100 hover:bg-gray-50 transition-colors member-row"
-                    data-id="1" data-name="Gilbert Blythe" data-email="gilbert.blythe@ecogreen.com" data-role="HR Master" data-status="aktif">
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-green-800 flex items-center justify-center text-white font-bold text-sm shrink-0">GB</div>
-                            <div>
-                                <p class="font-semibold text-sm text-gray-900">Gilbert Blythe</p>
-                                <p class="text-xs text-gray-400">gilbert.blythe@ecogreen.com</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 px-3 py-1 rounded-full">HR Master</span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-2">
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" class="sr-only peer toggle-status" checked>
-                                <div class="w-10 h-6 bg-gray-200 rounded-full peer peer-checked:bg-green-700 peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
-                            </label>
-                            <span class="text-xs font-semibold text-green-700 status-label">ACTIVE</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <button class="btn-action text-gray-400 hover:text-gray-700 transition-colors p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                        </button>
-                    </td>
-                </tr>
+                @foreach($members as $member)
+                @php
+                    $words = explode(' ', $member->name);
+                    $initials = '';
+                    foreach ($words as $w) {
+                        $initials .= strtoupper($w[0] ?? '');
+                    }
+                    $initials = substr($initials, 0, 2);
 
-                <!-- Row 2: HR -->
+                    $colors = ['bg-green-800', 'bg-blue-600', 'bg-purple-600', 'bg-pink-500', 'bg-amber-500'];
+                    $colorClass = $colors[$member->id % count($colors)];
+                @endphp
                 <tr class="border-t border-gray-100 hover:bg-gray-50 transition-colors member-row"
-                    data-id="2" data-name="Ahmad Riva'i" data-email="ahmad.rivai@ecogreen.com" data-role="HR" data-status="aktif">
+                    data-id="{{ $member->id }}"
+                    data-name="{{ $member->name }}"
+                    data-email="{{ $member->email }}"
+                    data-role="{{ $member->role === 'hr_master' ? 'HR Master' : 'HR' }}"
+                    data-status="{{ $member->is_active ? 'aktif' : 'nonaktif' }}">
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm shrink-0">AR</div>
+                            <div class="w-10 h-10 rounded-full {{ $colorClass }} flex items-center justify-center text-white font-bold text-sm shrink-0">{{ $initials }}</div>
                             <div>
-                                <p class="font-semibold text-sm text-gray-900">Ahmad Riva'i</p>
-                                <p class="text-xs text-gray-400">ahmad.rivai@ecogreen.com</p>
+                                <p class="font-semibold text-sm text-gray-900">{{ $member->name }}</p>
+                                <p class="text-xs text-gray-400">{{ $member->email }}</p>
                             </div>
                         </div>
                     </td>
                     <td class="px-6 py-4">
-                        <span class="text-xs font-bold text-green-800 bg-green-50 border border-green-200 px-3 py-1 rounded-full">HR</span>
+                        @if($member->role === 'hr_master')
+                            <span class="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 px-3 py-1 rounded-full">HR Master</span>
+                        @else
+                            <span class="text-xs font-bold text-green-800 bg-green-50 border border-green-200 px-3 py-1 rounded-full">HR</span>
+                        @endif
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-2">
                             <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" class="sr-only peer toggle-status" checked>
+                                <input type="checkbox" class="sr-only peer toggle-status" {{ $member->is_active ? 'checked' : '' }} {{ Auth::id() == $member->id ? 'disabled' : '' }}>
                                 <div class="w-10 h-6 bg-gray-200 rounded-full peer peer-checked:bg-green-700 peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                             </label>
-                            <span class="text-xs font-semibold text-green-700 status-label">ACTIVE</span>
+                            <span class="text-xs font-semibold {{ $member->is_active ? 'text-green-700' : 'text-gray-400' }} status-label">{{ $member->is_active ? 'ACTIVE' : 'INACTIVE' }}</span>
                         </div>
                     </td>
                     <td class="px-6 py-4 text-right">
-                        <button class="btn-action text-gray-400 hover:text-gray-700 transition-colors p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                        </button>
+                        @if(Auth::id() != $member->id)
+                            <button class="btn-action text-gray-400 hover:text-gray-700 transition-colors p-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                            </button>
+                        @endif
                     </td>
                 </tr>
-
-                <!-- Row 3: HR nonaktif -->
-                <tr class="border-t border-gray-100 hover:bg-gray-50 transition-colors member-row"
-                    data-id="3" data-name="Siti Aminah" data-email="siti.aminah@ecogreen.com" data-role="HR" data-status="nonaktif">
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-pink-400 flex items-center justify-center text-white font-bold text-sm shrink-0">SA</div>
-                            <div>
-                                <p class="font-semibold text-sm text-gray-900">Siti Aminah</p>
-                                <p class="text-xs text-gray-400">siti.aminah@ecogreen.com</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="text-xs font-bold text-green-800 bg-green-50 border border-green-200 px-3 py-1 rounded-full">HR</span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-2">
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" class="sr-only peer toggle-status">
-                                <div class="w-10 h-6 bg-gray-200 rounded-full peer peer-checked:bg-green-700 peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
-                            </label>
-                            <span class="text-xs font-semibold text-gray-400 status-label">INACTIVE</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <button class="btn-action text-gray-400 hover:text-gray-700 transition-colors p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                        </button>
-                    </td>
-                </tr>
-
-                <!-- Row 4: HR -->
-                <tr class="border-t border-gray-100 hover:bg-gray-50 transition-colors member-row"
-                    data-id="4" data-name="Budi Santoso" data-email="budi.santoso@ecogreen.com" data-role="HR" data-status="aktif">
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold text-sm shrink-0">BS</div>
-                            <div>
-                                <p class="font-semibold text-sm text-gray-900">Budi Santoso</p>
-                                <p class="text-xs text-gray-400">budi.santoso@ecogreen.com</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <span class="text-xs font-bold text-green-800 bg-green-50 border border-green-200 px-3 py-1 rounded-full">HR</span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center gap-2">
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" class="sr-only peer toggle-status" checked>
-                                <div class="w-10 h-6 bg-gray-200 rounded-full peer peer-checked:bg-green-700 peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
-                            </label>
-                            <span class="text-xs font-semibold text-green-700 status-label">ACTIVE</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <button class="btn-action text-gray-400 hover:text-gray-700 transition-colors p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-                        </button>
-                    </td>
-                </tr>
+                @endforeach
 
             </tbody>
         </table>
 
         <!-- Pagination -->
         <div class="flex items-center justify-between px-6 py-4 border-t border-gray-100">
-            <p class="text-xs text-gray-500">Showing 4 of 4 members</p>
-            <div class="flex items-center gap-1">
-                <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-400 cursor-not-allowed">Previous</button>
-                <button class="px-3 py-1.5 bg-green-800 text-white rounded-lg text-xs font-semibold">1</button>
-                <button class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-400 cursor-not-allowed">Next</button>
-            </div>
+            <p class="text-xs text-gray-500">Showing {{ $members->count() }} of {{ $members->count() }} members</p>
         </div>
     </div>
 </div>
@@ -218,6 +142,7 @@
             </button>
         </div>
         <div class="p-6 space-y-4">
+            <div id="tambah-error" class="hidden text-xs text-red-600 bg-red-50 p-2.5 rounded-lg border border-red-200"></div>
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Full Name</label>
                 <input type="text" id="new-name" placeholder="Enter full name" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
@@ -226,14 +151,7 @@
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Email</label>
                 <input type="email" id="new-email" placeholder="nama@ecogreen.com" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Role</label>
-                <select id="new-role" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white">
-                    <option value="">Select role...</option>
-                    <option value="HR">HR</option>
-                    <option value="HR Master">HR Master</option>
-                </select>
-            </div>
+
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Temporary Password</label>
                 <input type="password" id="new-pass" placeholder="Min. 8 characters" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
@@ -257,6 +175,7 @@
             </button>
         </div>
         <div class="p-6 space-y-4">
+            <div id="edit-error" class="hidden text-xs text-red-600 bg-red-50 p-2.5 rounded-lg border border-red-200"></div>
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Full Name</label>
                 <input type="text" id="edit-name" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
@@ -265,13 +184,7 @@
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Email</label>
                 <input type="email" id="edit-email" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Role</label>
-                <select id="edit-role" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white">
-                    <option value="HR">HR</option>
-                    <option value="HR Master">HR Master</option>
-                </select>
-            </div>
+
             <div>
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">New Password <span class="text-gray-300 normal-case font-normal">(leave blank to keep unchanged)</span></label>
                 <input type="password" id="edit-pass" placeholder="Min. 8 characters" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
@@ -306,5 +219,5 @@
 @endsection
 
 @section('js')
-<script src="{{ asset('js/hr/tim.js') }}"></script>
+<script src="{{ asset('js/hr/tim.js') }}?v={{ time() }}"></script>
 @endsection

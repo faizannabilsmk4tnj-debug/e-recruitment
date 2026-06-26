@@ -74,13 +74,10 @@ class ApplicationsSeeder extends Seeder
 
         // Application Status Logs
         DB::table('application_status_logs')->insert([
-            ['id' => 1, 'application_id' => 1, 'changed_by' => 1, 'old_status' => 'applied',     'new_status' => 'reviewed',    'reason' => 'CV dan pengalaman sesuai dengan kebutuhan posisi.', 'created_at' => '2026-03-26 01:18:14'],
-            ['id' => 2, 'application_id' => 1, 'changed_by' => 1, 'old_status' => 'reviewed',    'new_status' => 'shortlisted', 'reason' => 'Kandidat masuk dalam daftar shortlist untuk wawancara.', 'created_at' => '2026-03-26 01:18:14'],
-            ['id' => 3, 'application_id' => 3, 'changed_by' => 1, 'old_status' => 'applied',     'new_status' => 'reviewed',    'reason' => 'Dokumen lengkap dan pengalaman relevan.', 'created_at' => '2026-03-26 01:18:14'],
-            ['id' => 4, 'application_id' => 3, 'changed_by' => 1, 'old_status' => 'reviewed',    'new_status' => 'shortlisted', 'reason' => 'Kandidat terbaik dari semua pelamar.', 'created_at' => '2026-03-26 01:18:14'],
+            ['id' => 1, 'application_id' => 1, 'changed_by' => 1, 'old_status' => 'applied',     'new_status' => 'shortlisted', 'reason' => 'Kandidat masuk dalam daftar shortlist untuk wawancara.', 'created_at' => '2026-03-26 01:18:14'],
+            ['id' => 3, 'application_id' => 3, 'changed_by' => 1, 'old_status' => 'applied',     'new_status' => 'shortlisted', 'reason' => 'Kandidat terbaik dari semua pelamar.', 'created_at' => '2026-03-26 01:18:14'],
             ['id' => 5, 'application_id' => 3, 'changed_by' => 1, 'old_status' => 'shortlisted', 'new_status' => 'interview',   'reason' => 'Dijadwalkan wawancara tahap pertama.', 'created_at' => '2026-03-26 01:18:14'],
-            ['id' => 6, 'application_id' => 4, 'changed_by' => 1, 'old_status' => 'applied',     'new_status' => 'reviewed',    'reason' => 'Dokumen sudah ditinjau.', 'created_at' => '2026-03-26 01:18:14'],
-            ['id' => 7, 'application_id' => 4, 'changed_by' => 1, 'old_status' => 'reviewed',    'new_status' => 'rejected',    'reason' => 'Kualifikasi belum memenuhi standar minimum posisi ini.', 'created_at' => '2026-03-26 01:18:14'],
+            ['id' => 7, 'application_id' => 4, 'changed_by' => 1, 'old_status' => 'applied',     'new_status' => 'rejected',    'reason' => 'Kualifikasi belum memenuhi standar minimum posisi ini.', 'created_at' => '2026-03-26 01:18:14'],
         ]);
     }
 }

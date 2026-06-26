@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     localStorage.removeItem('hr_remember_email');
                 }
 
-                if (data.role === 'hr') {
+                if (data.role === 'hr' || data.role === 'hr_master') {
                     window.location.href = '/hr/dashboard';
                 } else {
                     alertText.textContent = 'Akun ini bukan akun HR.';

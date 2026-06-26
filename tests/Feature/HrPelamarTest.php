@@ -101,7 +101,7 @@ class HrPelamarTest extends TestCase
         $hr = User::create([
             'name' => 'Demo HR',
             'email' => 'hr@example.test',
-            'password' => 'password123',
+            'password_hash' => bcrypt('password123'),
             'role' => 'hr',
             'is_active' => true,
         ]);
@@ -109,7 +109,7 @@ class HrPelamarTest extends TestCase
         $applicant = User::create([
             'name' => 'Budi Santoso',
             'email' => 'budi@example.test',
-            'password' => 'password123',
+            'password_hash' => bcrypt('password123'),
             'role' => 'applicant',
             'phone' => '081234567890',
             'is_active' => true,

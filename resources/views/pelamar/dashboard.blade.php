@@ -149,7 +149,8 @@
         <td class="px-6 py-4 text-sm text-gray-500">{{ $item->created_at->format('d M Y') }}</td>
         <td class="px-6 py-4">
             <span class="text-xs font-semibold px-3 py-1 rounded-full
-                @if($item->status == 'shortlisted') bg-green-50 text-green-700 border border-green-200
+                @if($item->status == 'accepted') bg-emerald-50 text-emerald-700 border border-emerald-200
+                @elseif($item->status == 'shortlisted') bg-amber-50 text-amber-700 border border-amber-200
                 @elseif($item->status == 'interview') bg-blue-50 text-blue-700 border border-blue-200
                 @elseif($item->status == 'rejected') bg-red-50 text-red-600 border border-red-200
                 @else bg-gray-50 text-gray-500 border border-gray-200
@@ -176,7 +177,7 @@
                     <div class="w-1.5 h-5 bg-blue-500 rounded-full"></div>
                     <h3 class="font-bold text-gray-900 text-sm">Saved Vacancies</h3>
                 </div>
-                <a href="/#lowongan" class="text-xs font-semibold text-green-700 hover:text-green-600 transition-colors">See All</a>
+                <a href="/pelamar/lowongan?saved=1" class="text-xs font-semibold text-green-700 hover:text-green-600 transition-colors">See All</a>
             </div>
             <div class="divide-y divide-gray-50" id="saved-jobs">
                 @forelse($savedJobs as $job)

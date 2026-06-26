@@ -168,5 +168,5 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/hr/login.js') }}"></script>
+<script src="{{ asset('js/hr/login.js') }}?v={{ time() }}"></script>
 @endsection

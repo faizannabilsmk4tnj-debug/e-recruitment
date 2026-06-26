@@ -54,9 +54,36 @@
         <!-- Nav Links -->
         <div class="flex items-center gap-6">
             <a href="/" onclick="return confirmHomeExit(event, this)" class="text-sm transition-colors font-medium text-green-50 hover:text-white">Home</a>
-            <a href="/pelamar/lowongan" class="text-sm transition-colors font-medium {{ Request::is('pelamar/lowongan*') ? 'text-white font-semibold' : 'text-green-50 hover:text-white' }}">Vacancies</a>
             <a href="/tentang-kami" onclick="return confirmHomeExit(event, this)" class="text-sm transition-colors font-medium text-green-50 hover:text-white">About Us</a>
+            <a href="/pelamar/lowongan" class="text-sm transition-colors font-medium {{ Request::is('pelamar/lowongan*') ? 'text-white font-semibold' : 'text-green-50 hover:text-white' }}">Vacancies</a>
             <a href="/pelamar/profil" class="text-sm transition-colors font-medium {{ Request::is('pelamar/profil*') ? 'text-white font-semibold' : 'text-green-50 hover:text-white' }}">My Profile</a>
+
+            {{-- Notification Bell --}}
+            <div class="relative">
+                <button id="btn-notif-pelamar" onclick="document.getElementById('notif-dropdown-pelamar').classList.toggle('hidden')" class="relative text-green-200 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span id="notif-badge-pelamar" class="hidden absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-[9px] flex items-center justify-center font-bold text-white">0</span>
+                </button>
+
+                <div id="notif-dropdown-pelamar" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
+                    <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                        <h3 class="text-sm font-bold text-gray-800">Notifikasi</h3>
+                        <span id="notif-header-count-pelamar" class="text-[10px] text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded-full">0 baru</span>
+                    </div>
+                    <div id="notif-list-pelamar" class="max-h-80 overflow-y-auto">
+                        <div class="px-4 py-8 text-center text-xs text-gray-400">
+                            <svg class="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                            Memuat notifikasi...
+                        </div>
+                    </div>
+                    <div class="px-4 py-2 border-t border-gray-100 text-center">
+                        <button onclick="markAllNotifPelamar()" class="text-xs font-semibold text-green-700 hover:text-green-900 transition-colors">Tandai Semua Dibaca</button>
+                    </div>
+                </div>
+            </div>
 
             <!-- Avatar -->
             @php $navProfile = auth()->user() ? auth()->user()->profile : null; @endphp
@@ -321,7 +348,136 @@
             }, 300);
         }
     </script>
-    @yield('scripts')
+    <script>
+        // ===== PELAMAR NOTIFICATION SYSTEM =====
+        const PELAMAR_NOTIF_ICONS = {
+            status_change: {
+                bg: 'bg-green-100', color: 'text-green-600',
+                svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+                link: '/pelamar/status-lamaran'
+            },
+            interview_scheduled: {
+                bg: 'bg-purple-100', color: 'text-purple-600',
+                svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>',
+                link: '/pelamar/status-lamaran'
+            },
+            new_applicant: {
+                bg: 'bg-blue-100', color: 'text-blue-600',
+                svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>',
+                link: '/pelamar/dashboard'
+            }
+        };
+        const PELAMAR_NOTIF_DEFAULT = {
+            bg: 'bg-gray-100', color: 'text-gray-600',
+            svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>',
+            link: '/pelamar/dashboard'
+        };
+
+        function escapeHtmlPelamar(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function fetchNotifPelamar() {
+            fetch('/api/notifications?limit=10', {
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (!data.success) return;
+                renderNotifPelamar(data.notifications, data.unread_count);
+            })
+            .catch(e => console.error('Failed to fetch notifications:', e));
+        }
+
+        function renderNotifPelamar(notifications, unreadCount) {
+            const badge = document.getElementById('notif-badge-pelamar');
+            const headerCount = document.getElementById('notif-header-count-pelamar');
+            const list = document.getElementById('notif-list-pelamar');
+
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            headerCount.textContent = unreadCount + ' baru';
+
+            if (!notifications || notifications.length === 0) {
+                list.innerHTML = `<div class="px-4 py-8 text-center text-xs text-gray-400">
+                    <svg class="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                    Belum ada notifikasi
+                </div>`;
+                return;
+            }
+
+            let html = '';
+            notifications.forEach((n, i) => {
+                const icon = PELAMAR_NOTIF_ICONS[n.type] || PELAMAR_NOTIF_DEFAULT;
+                const unreadBg = n.is_unread ? 'bg-green-50/50' : '';
+                const unreadDot = n.is_unread ? '<div class="w-1.5 h-1.5 bg-green-500 rounded-full absolute top-3 right-3"></div>' : '';
+                const borderClass = i < notifications.length - 1 ? 'border-b border-gray-50' : '';
+
+                html += `<a href="${icon.link}" onclick="markNotifReadPelamar(event, ${n.id})" class="block px-4 py-3 hover:bg-gray-50 transition-colors ${borderClass} ${unreadBg} relative">
+                    ${unreadDot}
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full ${icon.bg} flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg class="w-4 h-4 ${icon.color}" fill="none" stroke="currentColor" viewBox="0 0 24 24">${icon.svg}</svg>
+                        </div>
+                        <div class="pr-3">
+                            <p class="text-xs text-gray-800 font-medium">${escapeHtmlPelamar(n.title)}</p>
+                            <p class="text-[11px] text-gray-500 mt-0.5">${escapeHtmlPelamar(n.message)}</p>
+                            <p class="text-[9px] text-gray-400 mt-1">${n.time_ago}</p>
+                        </div>
+                    </div>
+                </a>`;
+            });
+
+            list.innerHTML = html;
+        }
+
+        function markNotifReadPelamar(event, notifId) {
+            fetch('/api/notifications/' + notifId + '/read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            }).catch(() => {});
+        }
+
+        function markAllNotifPelamar() {
+            fetch('/api/notifications/read-all', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) fetchNotifPelamar();
+            })
+            .catch(() => {});
+        }
+
+        // Fetch on page load + auto-refresh
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchNotifPelamar();
+            setInterval(fetchNotifPelamar, 60000);
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('notif-dropdown-pelamar');
+            const btn = document.getElementById('btn-notif-pelamar');
+            if (btn && dropdown && !btn.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const nav = document.querySelector('body > nav');
@@ -373,5 +529,6 @@
             </div>
         </div>
     </div>
+    @yield('scripts')
 </body>
 </html>

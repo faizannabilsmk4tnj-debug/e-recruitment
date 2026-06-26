@@ -17,6 +17,7 @@ class JobPostingController extends Controller
     public function index()
     {
         $categories = JobCategory::where('is_active', true)->get();
+        $locations = \App\Models\WorkLocation::where('is_active', true)->get();
         
         $vacancies = JobPosting::with('category')
             ->orderBy('created_at', 'desc')
@@ -65,6 +66,7 @@ class JobPostingController extends Controller
         return view('hr.lowongan', compact(
             'vacancies',
             'categories',
+            'locations',
             'totalVacancies',
             'activeApplicants',
             'closingSoon',
@@ -79,7 +81,8 @@ class JobPostingController extends Controller
     public function create()
     {
         $categories = JobCategory::where('is_active', true)->get();
-        return view('hr.lowongan-buat', compact('categories'));
+        $locations = \App\Models\WorkLocation::where('is_active', true)->get();
+        return view('hr.lowongan-buat', compact('categories', 'locations'));
     }
 
     /**
@@ -92,6 +95,9 @@ class JobPostingController extends Controller
             'category_id' => 'required|exists:job_categories,id',
             'location' => 'required|string|max:200',
             'quota' => 'required|integer|min:1',
+            'age_min' => 'nullable|integer|min:0',
+            'age_max' => 'nullable|integer|min:0',
+            'passing_grade' => 'nullable|integer|min:0|max:100',
             'deadline' => 'nullable|date',
             'description' => 'required|string',
             'requirements' => 'required|string',
@@ -100,6 +106,7 @@ class JobPostingController extends Controller
             'salary_max' => 'nullable|string',
             'show_salary' => 'boolean',
             'status' => 'required|in:draft,open,closed,expired',
+            'auto_close_method' => 'nullable|in:deadline,quota,both,manual',
         ]);
 
         // Clean salary inputs (e.g. "10.000.000" -> 10000000)
@@ -143,7 +150,11 @@ class JobPostingController extends Controller
             'salary_max' => $salaryMax,
             'show_salary' => $validated['show_salary'] ?? false,
             'quota' => $validated['quota'],
+            'age_min' => $validated['age_min'],
+            'age_max' => $validated['age_max'],
+            'passing_grade' => $validated['passing_grade'] ?? 70,
             'status' => $validated['status'],
+            'auto_close_method' => $validated['auto_close_method'] ?? 'both',
             'deadline' => $validated['deadline'],
         ]);
 
@@ -213,21 +224,46 @@ class JobPostingController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:200',
             'category_id' => 'required|exists:job_categories,id',
+            'location' => 'nullable|string|max:200',
             'quota' => 'required|integer|min:1',
+            'age_min' => 'nullable|integer|min:0',
+            'age_max' => 'nullable|integer|min:0',
+            'passing_grade' => 'nullable|integer|min:0|max:100',
             'deadline' => 'nullable|date',
             'status' => 'required|in:draft,open,closed,expired',
+            'auto_close_method' => 'nullable|in:deadline,quota,both,manual',
             'description' => 'nullable|string',
         ]);
 
         $job = JobPosting::findOrFail($id);
-        $job->update([
+        
+        $updateData = [
             'title' => $validated['title'],
             'category_id' => $validated['category_id'],
             'quota' => $validated['quota'],
+            'age_min' => $validated['age_min'],
+            'age_max' => $validated['age_max'],
+            'passing_grade' => $validated['passing_grade'] ?? $job->passing_grade ?? 70,
             'deadline' => $validated['deadline'],
             'status' => $validated['status'],
+            'auto_close_method' => $validated['auto_close_method'] ?? $job->auto_close_method ?? 'both',
             'description' => $validated['description'] ?? $job->description,
-        ]);
+        ];
+
+        if (!empty($validated['location'])) {
+            $updateData['location'] = $validated['location'];
+            
+            // Determine location type
+            $locationType = 'onsite';
+            if (strtolower($validated['location']) === 'remote') {
+                $locationType = 'remote';
+            } else if (str_contains(strtolower($validated['location']), 'hybrid')) {
+                $locationType = 'hybrid';
+            }
+            $updateData['location_type'] = $locationType;
+        }
+
+        $job->update($updateData);
 
         return response()->json([
             'success' => true,
@@ -256,6 +292,49 @@ class JobPostingController extends Controller
             'success' => true,
             'message' => 'Status lowongan berhasil diperbarui.',
             'status' => $job->status
+        ]);
+    }
+
+    /**
+     * Store a new category via AJAX
+     */
+    public function storeCategory(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:100|unique:job_categories,name',
+        ]);
+
+        $category = JobCategory::create([
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+            'is_active' => true,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kategori baru berhasil ditambahkan.',
+            'category' => $category
+        ]);
+    }
+
+    /**
+     * Store a new work location via AJAX
+     */
+    public function storeLocation(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:100|unique:work_locations,name',
+        ]);
+
+        $location = \App\Models\WorkLocation::create([
+            'name' => $validated['name'],
+            'is_active' => true,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Lokasi kerja baru berhasil ditambahkan.',
+            'location' => $location
         ]);
     }
 }

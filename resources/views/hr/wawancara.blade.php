@@ -16,6 +16,11 @@
 </style>
 @endsection
 
+@php
+    $monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    $currentMonthName = $monthNames[$month - 1];
+@endphp
+
 @section('content')
 <div class="px-8 py-6 max-w-7xl mx-auto">
     <!-- Header -->
@@ -25,38 +30,15 @@
             <p class="text-sm text-gray-500 mt-1">Monitor and manage all candidate interview schedules in calendar view.</p>
         </div>
         <div class="flex items-center gap-3">
-            <!-- Filter Dropdown -->
-            <div class="relative">
-                <button id="btn-filter" class="bg-white border border-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors shadow-sm flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
-                    Filter
-                </button>
-                <div id="dropdown-filter" class="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-100 rounded-xl shadow-lg hidden z-50 p-3">
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Interview Type</p>
-                    <label class="flex items-center gap-2 p-1.5 hover:bg-gray-50 rounded cursor-pointer">
-                        <input type="checkbox" checked class="rounded text-green-600 focus:ring-green-500">
-                        <span class="text-sm text-gray-700">Technical Interview</span>
-                    </label>
-                    <label class="flex items-center gap-2 p-1.5 hover:bg-gray-50 rounded cursor-pointer">
-                        <input type="checkbox" checked class="rounded text-green-600 focus:ring-green-500">
-                        <span class="text-sm text-gray-700">HR Interview</span>
-                    </label>
-                    <label class="flex items-center gap-2 p-1.5 hover:bg-gray-50 rounded cursor-pointer">
-                        <input type="checkbox" checked class="rounded text-green-600 focus:ring-green-500">
-                        <span class="text-sm text-gray-700">User Interview</span>
-                    </label>
-                </div>
-            </div>
-
             <!-- New Month Selector Dropdown (Jan - Dec) -->
             <div class="relative">
                 <button id="btn-select-month" class="bg-white border border-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors shadow-sm flex items-center gap-2">
-                    <span id="label-select-month-btn">October</span>
+                    <span id="label-select-month-btn">{{ $currentMonthName }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
                 </button>
                 <div id="dropdown-select-month" class="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-100 rounded-xl shadow-lg hidden z-50 py-1 max-h-60 overflow-y-auto">
-                    @foreach(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] as $index => $month)
-                    <button class="dropdown-item-select-month w-full text-left px-4 py-2 text-sm {{ $index == 9 ? 'font-bold text-green-800 bg-green-50' : 'text-gray-700' }} hover:bg-green-50 hover:text-green-800 transition-colors" data-val="{{ $month }}" data-index="{{ $index }}">{{ $month }}</button>
+                    @foreach($monthNames as $index => $mName)
+                    <button class="dropdown-item-select-month w-full text-left px-4 py-2 text-sm {{ ($index + 1) == $month ? 'font-bold text-green-800 bg-green-50' : 'text-gray-700' }} hover:bg-green-50 hover:text-green-800 transition-colors" data-val="{{ $mName }}" data-index="{{ $index + 1 }}">{{ $mName }}</button>
                     @endforeach
                 </div>
             </div>
@@ -73,30 +55,52 @@
                     <button class="dropdown-item-bulan w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors" data-val="Next Month">Next Month</button>
                 </div>
             </div>
+
+            <a href="/hr/wawancara/daftar" class="bg-green-800 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-green-900 transition-colors shadow-sm flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                List View
+            </a>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <!-- Calendar Sidebar -->
         <div class="lg:col-span-1 space-y-6">
-            <!-- Mini Calendar (Mock) -->
+            <!-- Mini Calendar -->
             <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-sm font-bold text-gray-900 calendar-month-title">Oktober 2024</h3>
+                    <h3 class="text-sm font-bold text-gray-900 calendar-month-title">{{ $currentMonthName }} {{ $year }}</h3>
                     <div class="flex gap-1">
                         <button class="btn-prev-month text-gray-400 hover:text-green-700 transition"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg></button>
                         <button class="btn-next-month text-gray-400 hover:text-green-700 transition"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7-7" /></svg></button>
                     </div>
                 </div>
                 <div class="grid grid-cols-7 text-center text-[10px] font-bold text-gray-400 mb-2">
-                    <div>S</div><div>S</div><div>R</div><div>K</div><div>J</div><div>S</div><div>M</div>
+                    <div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div><div>S</div>
                 </div>
                 <div class="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-700">
-                    <div class="text-gray-300 py-1">29</div><div class="text-gray-300 py-1">30</div>
-                    @for($i=1; $i<=31; $i++)
-                        <div class="py-1 rounded-full cursor-pointer {{ $i == 24 ? 'bg-green-600 text-white font-bold shadow-sm' : 'hover:bg-green-50 hover:text-green-800' }}">{{ $i }}</div>
+                    {{-- Empty days/Prev Month days --}}
+                    @for($i = $emptyDaysBefore; $i > 0; $i--)
+                        @php $prevDayVal = $daysInPrevMonth - $i + 1; @endphp
+                        <div class="text-gray-300 py-1">{{ $prevDayVal }}</div>
                     @endfor
-                    <div class="text-gray-300 py-1">1</div><div class="text-gray-300 py-1">2</div>
+                    
+                    {{-- Actual days --}}
+                    @for($i = 1; $i <= $daysInMonth; $i++)
+                        @php
+                            $isToday = ($i == now()->day && $month == now()->month && $year == now()->year);
+                            $hasEvent = isset($interviews[$i]) && $interviews[$i]->count() > 0;
+                        @endphp
+                        <div class="py-1 rounded-full cursor-pointer {{ $isToday ? 'bg-green-600 text-white font-bold shadow-sm' : ($hasEvent ? 'bg-green-100 text-green-900 font-bold border border-green-200' : 'hover:bg-green-50 hover:text-green-800') }}"
+                             onclick="window.location.href='/hr/wawancara/daftar?date={{ $year }}-{{ sprintf('%02d', $month) }}-{{ sprintf('%02d', $i) }}'">
+                            {{ $i }}
+                        </div>
+                    @endfor
+                    
+                    {{-- Next Month days --}}
+                    @for($i = 1; $i <= $emptyDaysAfter; $i++)
+                        <div class="text-gray-300 py-1">{{ $i }}</div>
+                    @endfor
                 </div>
             </div>
 
@@ -106,15 +110,15 @@
                 <ul class="space-y-3">
                     <li class="flex items-center gap-3">
                         <div class="w-3 h-3 rounded-full bg-blue-500 shadow-sm border border-white"></div>
-                        <span class="text-sm font-semibold text-gray-700">Technical Interview</span>
+                        <span class="text-sm font-semibold text-gray-700">Online Meeting</span>
                     </li>
                     <li class="flex items-center gap-3">
                         <div class="w-3 h-3 rounded-full bg-purple-500 shadow-sm border border-white"></div>
-                        <span class="text-sm font-semibold text-gray-700">HR Interview</span>
+                        <span class="text-sm font-semibold text-gray-700">On-site / Offline</span>
                     </li>
                     <li class="flex items-center gap-3">
                         <div class="w-3 h-3 rounded-full bg-amber-500 shadow-sm border border-white"></div>
-                        <span class="text-sm font-semibold text-gray-700">User / Final Interview</span>
+                        <span class="text-sm font-semibold text-gray-700">Phone Call</span>
                     </li>
                 </ul>
             </div>
@@ -123,22 +127,44 @@
             <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Coming Up</h3>
                 <div class="space-y-4">
-                    <div class="flex gap-3">
-                        <div class="w-1.5 bg-amber-500 rounded-full shrink-0"></div>
+                    @forelse($comingUpInterviews as $interview)
+                    @php
+                        $borderClasses = [
+                            'online' => 'bg-blue-500',
+                            'offline' => 'bg-purple-500',
+                            'phone' => 'bg-amber-500',
+                        ];
+                        $typeLabels = [
+                            'online' => 'Online Meeting',
+                            'offline' => 'On-site Office',
+                            'phone' => 'Phone Call',
+                        ];
+                        $borderClass = $borderClasses[$interview->interview_type] ?? 'bg-gray-500';
+                        $typeLabel = $typeLabels[$interview->interview_type] ?? ucfirst($interview->interview_type);
+                        
+                        $scheduledTime = $interview->scheduled_at;
+                        $timeStr = '';
+                        if ($scheduledTime->isToday()) {
+                            $timeStr = 'Today, ' . $scheduledTime->format('H:i') . ' - ' . (clone $scheduledTime)->addMinutes($interview->duration_minutes)->format('H:i');
+                        } elseif ($scheduledTime->isTomorrow()) {
+                            $timeStr = 'Tomorrow, ' . $scheduledTime->format('H:i') . ' - ' . (clone $scheduledTime)->addMinutes($interview->duration_minutes)->format('H:i');
+                        } else {
+                            $timeStr = $scheduledTime->format('d M, H:i') . ' - ' . (clone $scheduledTime)->addMinutes($interview->duration_minutes)->format('H:i');
+                        }
+                        $isAccepted = $interview->application && $interview->application->status === 'accepted';
+                    @endphp
+                    <div class="flex gap-3 {{ $isAccepted ? 'opacity-50 grayscale cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50' }} p-1.5 rounded-lg transition-colors" 
+                         @if($isAccepted) onclick="event.stopPropagation();" @else onclick="window.location.href='/hr/wawancara/daftar?search={{ urlencode($interview->application->user->name ?? 'Candidate') }}'" @endif>
+                        <div class="w-1.5 {{ $isAccepted ? 'bg-gray-400' : $borderClass }} rounded-full shrink-0"></div>
                         <div>
-                            <div class="text-xs text-gray-500 font-bold mb-0.5">Today, 10:00 - 11:00</div>
-                            <div class="text-sm font-bold text-gray-900">Budi Santoso, S.T.</div>
-                            <div class="text-[11px] text-gray-500 mt-1">User Interview • Via Google Meet</div>
+                            <div class="text-xs text-gray-500 font-bold mb-0.5">{{ $timeStr }}</div>
+                            <div class="text-sm font-bold text-gray-900">{{ $interview->application->user->name ?? 'Candidate' }} {{ $isAccepted ? '(Accepted)' : '' }}</div>
+                            <div class="text-[11px] text-gray-500 mt-1">{{ $typeLabel }} • {{ $interview->location_or_link ?? 'No Link/Location' }}</div>
                         </div>
                     </div>
-                    <div class="flex gap-3">
-                        <div class="w-1.5 bg-blue-500 rounded-full shrink-0"></div>
-                        <div>
-                            <div class="text-xs text-gray-500 font-bold mb-0.5">Tomorrow, 14:00 - 15:00</div>
-                            <div class="text-sm font-bold text-gray-900">Dewi Kartika</div>
-                            <div class="text-[11px] text-gray-500 mt-1">Technical Interview • Via Zoom</div>
-                        </div>
-                    </div>
+                    @empty
+                    <p class="text-xs text-gray-400 font-medium">No upcoming interviews.</p>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -151,13 +177,13 @@
                     <button class="btn-prev-month p-1.5 text-gray-400 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
                     </button>
-                    <h2 class="text-xl font-bold text-gray-900 calendar-month-title">Oktober 2024</h2>
+                    <h2 class="text-xl font-bold text-gray-900 calendar-month-title">{{ $currentMonthName }} {{ $year }}</h2>
                     <button class="btn-next-month p-1.5 text-gray-400 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7-7" /></svg>
                     </button>
                 </div>
                 <div class="flex items-center bg-gray-200/60 rounded-lg p-1">
-                    <button id="tab-minggu" class="px-4 py-1.5 text-xs font-bold text-gray-500 rounded-md hover:text-gray-900 transition-colors">Week</button>
+                    <button id="tab-minggu" onclick="window.location.href='/hr/wawancara/daftar'" class="px-4 py-1.5 text-xs font-bold text-gray-500 rounded-md hover:text-gray-900 transition-colors">List View</button>
                     <button id="tab-bulan" class="px-4 py-1.5 text-xs font-bold text-green-900 bg-white shadow-sm rounded-md transition-colors">Month</button>
                 </div>
             </div>
@@ -171,54 +197,68 @@
 
             <!-- Calendar Grid -->
             <div class="grid grid-cols-7 auto-rows-fr bg-gray-100 gap-px flex-1">
-                <!-- Empty days -->
-                <div class="bg-gray-50/40 p-2"><span class="text-xs font-bold text-gray-300">29</span></div>
-                <div class="bg-gray-50/40 p-2"><span class="text-xs font-bold text-gray-300">30</span></div>
+                <!-- Empty days from prev month -->
+                @for($i = $emptyDaysBefore; $i > 0; $i--)
+                    @php $prevDayVal = $daysInPrevMonth - $i + 1; @endphp
+                    <div class="bg-gray-50/40 p-2"><span class="text-xs font-bold text-gray-300">{{ $prevDayVal }}</span></div>
+                @endfor
                 
                 <!-- Actual days -->
-                @for($i = 1; $i <= 31; $i++)
+                @for($i = 1; $i <= $daysInMonth; $i++)
                 @php
-                    $hasEvent = in_array($i, [5, 12, 24, 28]);
+                    $dayInterviews = $interviews[$i] ?? collect();
+                    $hasEvent = $dayInterviews->count() > 0;
+                    $isToday = ($i == now()->day && $month == now()->month && $year == now()->year);
+                    $formattedDate = sprintf('%04d-%02d-%02d', $year, $month, $i);
                 @endphp
-                <div class="bg-white p-2 flex flex-col group hover:bg-gray-50/80 transition-colors relative cursor-pointer min-h-[100px]"
-                     @if($hasEvent) onclick="window.location.href='/hr/wawancara/daftar'" @endif>
-                    <span class="text-xs font-bold mb-1 {{ $i == 24 ? 'bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-sm' : 'text-gray-700 w-6 h-6 flex items-center justify-center' }}">{{ $i }}</span>
+                <div class="bg-white p-2 flex flex-col group hover:bg-gray-50/80 transition-colors relative cursor-pointer min-h-[120px] select-none"
+                     onclick="window.location.href='/hr/wawancara/daftar?date={{ $formattedDate }}'">
+                    
+                    <span class="text-xs font-bold mb-1 {{ $isToday ? 'bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-sm font-extrabold' : 'text-gray-700 w-6 h-6 flex items-center justify-center' }}">{{ $i }}</span>
                     
                     <div class="space-y-1.5 overflow-y-auto hide-scrollbar flex-1">
-                        @if($i == 5)
-                        <div class="bg-blue-50 border border-blue-100 border-l-2 border-l-blue-500 text-blue-700 text-[10px] px-2 py-1.5 rounded truncate font-semibold" title="Budi Santoso - Technical">
-                            <span class="block text-blue-800/60 text-[9px] mb-0.5 font-bold">09:00</span>
-                            Budi S. (Tech)
+                        @foreach($dayInterviews as $interview)
+                        @php
+                            $colorClasses = [
+                                'online' => 'bg-blue-50 border-blue-100 border-l-blue-500 text-blue-700',
+                                'offline' => 'bg-purple-50 border-purple-100 border-l-purple-500 text-purple-700',
+                                'phone' => 'bg-amber-50 border-amber-100 border-l-amber-500 text-amber-700',
+                            ];
+                            $typeLabels = [
+                                'online' => 'Online',
+                                'offline' => 'Offline',
+                                'phone' => 'Phone',
+                            ];
+                            $colorClass = $colorClasses[$interview->interview_type] ?? 'bg-gray-50 border-gray-100 border-l-gray-500 text-gray-700';
+                            $typeLabel = $typeLabels[$interview->interview_type] ?? ucfirst($interview->interview_type);
+                            $candidateName = $interview->application->user->name ?? 'Candidate';
+                            
+                            $nameParts = explode(' ', trim($candidateName));
+                            $shortName = $nameParts[0];
+                            if (count($nameParts) > 1) {
+                                $shortName .= ' ' . substr($nameParts[1], 0, 1) . '.';
+                            }
+                            $isAccepted = $interview->application && $interview->application->status === 'accepted';
+                        @endphp
+                        <div class="border border-l-2 {{ $isAccepted ? 'opacity-50 grayscale bg-gray-100 text-gray-400 border-gray-300 pointer-events-none' : $colorClass }} text-[10px] px-2 py-1.5 rounded truncate font-semibold" 
+                             title="{{ $candidateName }} - {{ $typeLabel }} Interview {{ $isAccepted ? '(Accepted)' : '' }}"
+                             @if($isAccepted)
+                                 onclick="event.stopPropagation();"
+                             @else
+                                 onclick="event.stopPropagation(); window.location.href='/hr/wawancara/daftar?search={{ urlencode($candidateName) }}'"
+                             @endif>
+                            <span class="block text-[9px] mb-0.5 font-bold opacity-60">{{ $interview->scheduled_at->format('H:i') }}</span>
+                            {{ $shortName }} ({{ $typeLabel }})
                         </div>
-                        @endif
-                        @if($i == 12)
-                        <div class="bg-purple-50 border border-purple-100 border-l-2 border-l-purple-500 text-purple-700 text-[10px] px-2 py-1.5 rounded truncate font-semibold" title="Siti Aminah - HR">
-                            <span class="block text-purple-800/60 text-[9px] mb-0.5 font-bold">11:00</span>
-                            Siti A. (HR)
-                        </div>
-                        <div class="bg-blue-50 border border-blue-100 border-l-2 border-l-blue-500 text-blue-700 text-[10px] px-2 py-1.5 rounded truncate font-semibold" title="Andi Wijaya - Technical">
-                            <span class="block text-blue-800/60 text-[9px] mb-0.5 font-bold">14:00</span>
-                            Andi W. (Tech)
-                        </div>
-                        @endif
-                        @if($i == 24)
-                        <div class="bg-amber-50 border border-amber-100 border-l-2 border-l-amber-500 text-amber-700 text-[10px] px-2 py-1.5 rounded truncate font-semibold shadow-sm ring-1 ring-amber-500/20" title="Budi Santoso - User">
-                            <span class="block text-amber-800/60 text-[9px] mb-0.5 font-bold">10:00</span>
-                            Budi S. (User)
-                        </div>
-                        @endif
-                        @if($i == 28)
-                        <div class="bg-blue-50 border border-blue-100 border-l-2 border-l-blue-500 text-blue-700 text-[10px] px-2 py-1.5 rounded truncate font-semibold" title="Dewi Kartika - Technical">
-                            <span class="block text-blue-800/60 text-[9px] mb-0.5 font-bold">14:00</span>
-                            Dewi K. (Tech)
-                        </div>
-                        @endif
+                        @endforeach
                     </div>
                 </div>
                 @endfor
                 
-                <div class="bg-gray-50/40 p-2"><span class="text-xs font-bold text-gray-300">1</span></div>
-                <div class="bg-gray-50/40 p-2"><span class="text-xs font-bold text-gray-300">2</span></div>
+                <!-- Next month leading days -->
+                @for($i = 1; $i <= $emptyDaysAfter; $i++)
+                    <div class="bg-gray-50/40 p-2"><span class="text-xs font-bold text-gray-300">{{ $i }}</span></div>
+                @endfor
             </div>
         </div>
     </div>
@@ -229,9 +269,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Toggle Dropdowns
-        const btnFilter = document.getElementById('btn-filter');
-        const dropdownFilter = document.getElementById('dropdown-filter');
-        
         const btnBulan = document.getElementById('btn-bulan');
         const dropdownBulan = document.getElementById('dropdown-bulan');
         const labelBulanBtn = document.getElementById('label-bulan-btn');
@@ -241,57 +278,56 @@
         const labelSelectMonthBtn = document.getElementById('label-select-month-btn');
 
         function closeAllDropdowns() {
-            dropdownFilter.classList.add('hidden');
-            dropdownBulan.classList.add('hidden');
-            dropdownSelectMonth.classList.add('hidden');
+            if (dropdownBulan) dropdownBulan.classList.add('hidden');
+            if (dropdownSelectMonth) dropdownSelectMonth.classList.add('hidden');
         }
 
-        btnFilter.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isHidden = dropdownFilter.classList.contains('hidden');
-            closeAllDropdowns();
-            if (isHidden) dropdownFilter.classList.remove('hidden');
-        });
+        if (btnBulan) {
+            btnBulan.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = dropdownBulan.classList.contains('hidden');
+                closeAllDropdowns();
+                if (isHidden) dropdownBulan.classList.remove('hidden');
+            });
+        }
 
-        btnBulan.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isHidden = dropdownBulan.classList.contains('hidden');
-            closeAllDropdowns();
-            if (isHidden) dropdownBulan.classList.remove('hidden');
-        });
-
-        btnSelectMonth.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isHidden = dropdownSelectMonth.classList.contains('hidden');
-            closeAllDropdowns();
-            if (isHidden) dropdownSelectMonth.classList.remove('hidden');
-        });
+        if (btnSelectMonth) {
+            btnSelectMonth.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = dropdownSelectMonth.classList.contains('hidden');
+                closeAllDropdowns();
+                if (isHidden) dropdownSelectMonth.classList.remove('hidden');
+            });
+        }
 
         document.addEventListener('click', closeAllDropdowns);
-        dropdownFilter.addEventListener('click', (e) => e.stopPropagation());
 
         // Handle "Bulan Ini" Dropdown Selection
         document.querySelectorAll('.dropdown-item-bulan').forEach(item => {
             item.addEventListener('click', function() {
-                // Reset all to default style
                 document.querySelectorAll('.dropdown-item-bulan').forEach(el => {
                     el.className = 'dropdown-item-bulan w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors';
                 });
-                // Set active style
                 this.className = 'dropdown-item-bulan w-full text-left px-4 py-2 text-sm font-bold text-green-800 bg-green-50 transition-colors';
                 
-                labelBulanBtn.textContent = this.dataset.val;
+                if (labelBulanBtn) labelBulanBtn.textContent = this.dataset.val;
                 closeAllDropdowns();
 
-                // Mock changing month based on selection
+                const now = new Date();
+                let targetMonth, targetYear;
                 if(this.dataset.val === 'Last Month') {
-                    currentMonthIndex = 8; // September
+                    let d = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    targetMonth = d.getMonth() + 1;
+                    targetYear = d.getFullYear();
                 } else if(this.dataset.val === 'Next Month') {
-                    currentMonthIndex = 10; // November
+                    let d = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+                    targetMonth = d.getMonth() + 1;
+                    targetYear = d.getFullYear();
                 } else {
-                    currentMonthIndex = 9; // October
+                    targetMonth = now.getMonth() + 1;
+                    targetYear = now.getFullYear();
                 }
-                updateMonthDisplay();
+                window.location.href = `/hr/wawancara?month=${targetMonth}&year=${targetYear}`;
             });
         });
 
@@ -303,53 +339,23 @@
                 });
                 this.className = 'dropdown-item-select-month w-full text-left px-4 py-2 text-sm font-bold text-green-800 bg-green-50 transition-colors';
                 
-                labelSelectMonthBtn.textContent = this.dataset.val;
+                if (labelSelectMonthBtn) labelSelectMonthBtn.textContent = this.dataset.val;
                 closeAllDropdowns();
 
-                currentMonthIndex = parseInt(this.dataset.index);
+                currentMonthIndex = parseInt(this.dataset.index) - 1;
                 updateMonthDisplay();
             });
         });
 
-        // Toggle Tabs Minggu/Bulan
-        const tabMinggu = document.getElementById('tab-minggu');
-        const tabBulan = document.getElementById('tab-bulan');
-        
-        tabMinggu.addEventListener('click', function() {
-            tabBulan.className = 'px-4 py-1.5 text-xs font-bold text-gray-500 rounded-md hover:text-gray-900 transition-colors';
-            tabMinggu.className = 'px-4 py-1.5 text-xs font-bold text-green-900 bg-white shadow-sm rounded-md transition-colors';
-            // In a real app, this would switch the calendar view
-        });
-
-        tabBulan.addEventListener('click', function() {
-            tabMinggu.className = 'px-4 py-1.5 text-xs font-bold text-gray-500 rounded-md hover:text-gray-900 transition-colors';
-            tabBulan.className = 'px-4 py-1.5 text-xs font-bold text-green-900 bg-white shadow-sm rounded-md transition-colors';
-        });
-
         // Month Navigation
-        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        let currentMonthIndex = 9; // October
-        let currentYear = 2024;
+        let currentMonthIndex = {{ $month - 1 }};
+        let currentYear = {{ $year }};
         
-        const monthTitles = document.querySelectorAll('.calendar-month-title');
         const btnPrevMonth = document.querySelectorAll('.btn-prev-month');
         const btnNextMonth = document.querySelectorAll('.btn-next-month');
 
         function updateMonthDisplay() {
-            const text = `${months[currentMonthIndex]} ${currentYear}`;
-            monthTitles.forEach(el => el.textContent = text);
-            
-            // Sync select month dropdown label and active classes
-            if (labelSelectMonthBtn) {
-                labelSelectMonthBtn.textContent = months[currentMonthIndex];
-            }
-            document.querySelectorAll('.dropdown-item-select-month').forEach(el => {
-                if (parseInt(el.dataset.index) === currentMonthIndex) {
-                    el.className = 'dropdown-item-select-month w-full text-left px-4 py-2 text-sm font-bold text-green-800 bg-green-50 transition-colors';
-                } else {
-                    el.className = 'dropdown-item-select-month w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors';
-                }
-            });
+            window.location.href = `/hr/wawancara?month=${currentMonthIndex + 1}&year=${currentYear}`;
         }
 
         btnPrevMonth.forEach(btn => {

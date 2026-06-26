@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Watch all inputs for changes
-    const watchFields = ['f-title', 'f-category', 'f-location', 'f-quota', 'f-deadline', 'f-salary-min', 'f-salary-max'];
+    const watchFields = ['f-title', 'f-category', 'f-location', 'f-quota', 'f-age-min', 'f-age-max', 'f-passing-grade', 'f-deadline', 'f-auto-close', 'f-salary-min', 'f-salary-max'];
     watchFields.forEach(id => {
         document.getElementById(id)?.addEventListener('input', triggerAutosave);
         document.getElementById(id)?.addEventListener('change', triggerAutosave);
@@ -163,7 +163,11 @@ document.addEventListener('DOMContentLoaded', function () {
             category_id: document.getElementById('f-category').value,
             location: document.getElementById('f-location').value,
             quota: quota,
+            age_min: document.getElementById('f-age-min').value || null,
+            age_max: document.getElementById('f-age-max').value || null,
+            passing_grade: document.getElementById('f-passing-grade').value || null,
             deadline: document.getElementById('f-deadline').value || null,
+            auto_close_method: document.getElementById('f-auto-close').value,
             salary_min: document.getElementById('f-salary-min').value || null,
             salary_max: document.getElementById('f-salary-max').value || null,
             show_salary: document.getElementById('toggle-salary').checked ? 1 : 0,

