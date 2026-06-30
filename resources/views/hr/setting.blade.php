@@ -72,7 +72,7 @@
                         <div class="relative">
                             <div class="w-20 h-20 rounded-xl bg-gray-800 flex items-center justify-center overflow-hidden border-2 border-gray-200">
                                 <svg class="w-10 h-10 text-gray-400 {{ $profile->avatar_url ? 'hidden' : '' }}" id="photo-placeholder" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                <img id="photo-preview" src="{{ $profile->avatar_url ?: '' }}" alt="Profile" class="w-full h-full object-cover {{ $profile->avatar_url ? '' : 'hidden' }}">
+                                <img id="photo-preview" src="{{ $profile->avatar_url ? (Str::startsWith($profile->avatar_url, ['http', '/']) ? $profile->avatar_url : asset('storage/' . $profile->avatar_url)) : '' }}" alt="Profile" class="w-full h-full object-cover {{ $profile->avatar_url ? '' : 'hidden' }}">
                             </div>
                             <button type="button" id="btn-photo-edit" class="absolute -bottom-1.5 -right-1.5 w-6 h-6 bg-green-700 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors">
                                 <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>

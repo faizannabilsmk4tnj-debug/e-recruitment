@@ -109,6 +109,15 @@ class JobPostingController extends Controller
             'auto_close_method' => 'nullable|in:deadline,quota,both,manual',
         ]);
 
+        // Age validation
+        $ageMin = isset($validated['age_min']) ? (int)$validated['age_min'] : null;
+        $ageMax = isset($validated['age_max']) ? (int)$validated['age_max'] : null;
+        if ($ageMin !== null && $ageMax !== null && $ageMax < $ageMin) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'age_max' => ['Umur maksimal tidak boleh lebih kecil dari umur minimal.'],
+            ]);
+        }
+
         // Clean salary inputs (e.g. "10.000.000" -> 10000000)
         $salaryMin = null;
         if (!empty($validated['salary_min'])) {
@@ -118,6 +127,13 @@ class JobPostingController extends Controller
         $salaryMax = null;
         if (!empty($validated['salary_max'])) {
             $salaryMax = (float) str_replace('.', '', $validated['salary_max']);
+        }
+
+        // Salary validation
+        if ($salaryMin !== null && $salaryMax !== null && $salaryMax < $salaryMin) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'salary_max' => ['Gaji maksimal tidak boleh lebih kecil dari gaji minimal.'],
+            ]);
         }
 
         // Determine location type
@@ -150,12 +166,12 @@ class JobPostingController extends Controller
             'salary_max' => $salaryMax,
             'show_salary' => $validated['show_salary'] ?? false,
             'quota' => $validated['quota'],
-            'age_min' => $validated['age_min'],
-            'age_max' => $validated['age_max'],
+            'age_min' => $validated['age_min'] ?? null,
+            'age_max' => $validated['age_max'] ?? null,
             'passing_grade' => $validated['passing_grade'] ?? 70,
             'status' => $validated['status'],
             'auto_close_method' => $validated['auto_close_method'] ?? 'both',
-            'deadline' => $validated['deadline'],
+            'deadline' => $validated['deadline'] ?? null,
         ]);
 
         return response()->json([
@@ -175,7 +191,7 @@ class JobPostingController extends Controller
         // Fetch applicants for this vacancy
         $applicants = DB::table('applications')
             ->join('users', 'applications.user_id', '=', 'users.id')
-            ->join('user_profiles', 'users.id', '=', 'user_profiles.user_id')
+            ->leftJoin('user_profiles', 'users.id', '=', 'user_profiles.user_id')
             ->where('applications.job_id', $id)
             ->select(
                 'applications.*',
@@ -233,21 +249,58 @@ class JobPostingController extends Controller
             'status' => 'required|in:draft,open,closed,expired',
             'auto_close_method' => 'nullable|in:deadline,quota,both,manual',
             'description' => 'nullable|string',
+            'requirements' => 'required|string',
+            'benefits' => 'nullable|string',
+            'salary_min' => 'nullable|string',
+            'salary_max' => 'nullable|string',
+            'show_salary' => 'boolean',
         ]);
 
         $job = JobPosting::findOrFail($id);
         
+        // Age validation
+        $ageMin = isset($validated['age_min']) ? (int)$validated['age_min'] : null;
+        $ageMax = isset($validated['age_max']) ? (int)$validated['age_max'] : null;
+        if ($ageMin !== null && $ageMax !== null && $ageMax < $ageMin) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'age_max' => ['Umur maksimal tidak boleh lebih kecil dari umur minimal.'],
+            ]);
+        }
+
+        // Clean salary inputs
+        $salaryMin = null;
+        if (!empty($validated['salary_min'])) {
+            $salaryMin = (float) str_replace('.', '', $validated['salary_min']);
+        }
+        
+        $salaryMax = null;
+        if (!empty($validated['salary_max'])) {
+            $salaryMax = (float) str_replace('.', '', $validated['salary_max']);
+        }
+
+        // Salary validation
+        if ($salaryMin !== null && $salaryMax !== null && $salaryMax < $salaryMin) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'salary_max' => ['Gaji maksimal tidak boleh lebih kecil dari gaji minimal.'],
+            ]);
+        }
+
         $updateData = [
             'title' => $validated['title'],
             'category_id' => $validated['category_id'],
             'quota' => $validated['quota'],
-            'age_min' => $validated['age_min'],
-            'age_max' => $validated['age_max'],
+            'age_min' => $validated['age_min'] ?? null,
+            'age_max' => $validated['age_max'] ?? null,
             'passing_grade' => $validated['passing_grade'] ?? $job->passing_grade ?? 70,
-            'deadline' => $validated['deadline'],
+            'deadline' => $validated['deadline'] ?? null,
             'status' => $validated['status'],
             'auto_close_method' => $validated['auto_close_method'] ?? $job->auto_close_method ?? 'both',
             'description' => $validated['description'] ?? $job->description,
+            'requirements' => $validated['requirements'],
+            'benefits' => $validated['benefits'] ?? '',
+            'salary_min' => $salaryMin,
+            'salary_max' => $salaryMax,
+            'show_salary' => $validated['show_salary'] ?? false,
         ];
 
         if (!empty($validated['location'])) {

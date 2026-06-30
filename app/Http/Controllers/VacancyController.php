@@ -102,6 +102,11 @@ class VacancyController extends Controller
             ]);
         }
         
+        if ($user->getProfileCompletionPercentage() < 75) {
+            return redirect()->route('pelamar.profil.edit')
+                ->with('error', 'Kelengkapan profil Anda baru mencapai ' . $user->getProfileCompletionPercentage() . '%. Harap lengkapi data profil Anda minimal hingga 75% sebelum melamar pekerjaan.');
+        }
+
         // Check eligibility via Stored Function (fn_cek_kelayakan_melamar)
         $eligibility = \Illuminate\Support\Facades\DB::selectOne("SELECT fn_cek_kelayakan_melamar(?, ?) as eligibility", [$userId, $id])->eligibility;
         
@@ -133,6 +138,13 @@ class VacancyController extends Controller
         $userId = $user->id;
         $vacancy = JobPosting::findOrFail($id);
 
+        if ($user->getProfileCompletionPercentage() < 75) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kelengkapan profil Anda baru mencapai ' . $user->getProfileCompletionPercentage() . '%. Harap lengkapi data profil Anda minimal hingga 75% sebelum melamar pekerjaan.'
+            ], 422);
+        }
+
         // Check eligibility via Stored Function (fn_cek_kelayakan_melamar)
         $eligibility = \Illuminate\Support\Facades\DB::selectOne("SELECT fn_cek_kelayakan_melamar(?, ?) as eligibility", [$userId, $id])->eligibility;
         
@@ -153,8 +165,9 @@ class VacancyController extends Controller
         }
 
         $request->validate([
+            'cv_source' => 'required|in:builder,upload',
             'cover_letter' => 'nullable|string',
-            'file_cv' => 'required|file|mimes:pdf,doc,docx|max:5120', // Max 5MB
+            'file_cv' => 'required_if:cv_source,upload|nullable|file|mimes:pdf,doc,docx|max:5120', // Max 5MB
         ]);
 
         // Find CV

@@ -14,7 +14,7 @@ class PelamarController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
-        $persentase = $this->hitungPersentaseProfil($user->id);
+        $persentase = $user->getProfileCompletionPercentage();
 
         // Fetch applicant statistics using database stored procedure sp_statistik_pelamar
         $stats = DB::selectOne("CALL sp_statistik_pelamar(?)", [$user->id]);
@@ -46,55 +46,7 @@ class PelamarController extends Controller
         ));
     }
 
-    private function hitungPersentaseProfil($userId)
-    {
-        $poin = 0;
 
-        $profile = DB::table('user_profiles')->where('user_id', $userId)->first();
-        $user    = DB::table('users')->where('id', $userId)->first();
-
-        if ($profile) {
-            if (!empty($profile->avatar_url))   $poin += 5;
-            if (!empty($user->name))            $poin += 3;
-            if (!empty($profile->gender))       $poin += 2;
-            if (!empty($user->phone))           $poin += 3;
-            if (!empty($user->email))           $poin += 2;
-            if (!empty($profile->birth_date))   $poin += 3;
-            if (!empty($profile->address))      $poin += 4;
-            if (!empty($profile->city))         $poin += 2;
-            if (!empty($profile->province))     $poin += 2;
-            if (!empty($profile->bio))          $poin += 3;
-            if (!empty($profile->linkedin_url)) $poin += 3;
-
-            $latestEdu = DB::table('educations')->where('user_id', $userId)->exists();
-            if ($latestEdu) $poin += 3;
-        }
-
-        $education = DB::table('educations')
-            ->where('user_id', $userId)
-            ->whereNotNull('institution')
-            ->whereNotNull('degree')
-            ->exists();
-        if ($education) $poin += 20;
-
-        $portfolio = DB::table('portofolio')
-            ->where('user_id', $userId)
-            ->exists();
-        if ($portfolio) $poin += 15;
-
-        $workExp = DB::table('work_experiences')
-            ->where('user_id', $userId)
-            ->exists();
-        if ($workExp) $poin += 15;
-
-        $sertifikat = DB::table('applicant_skills')
-            ->where('user_id', $userId)
-            ->whereNotNull('cert_file_path')
-            ->exists();
-        if ($sertifikat) $poin += 5;
-
-        return min($poin, 100);
-    }
 
     /**
      * Show applicant's application history & tracking
@@ -102,7 +54,7 @@ class PelamarController extends Controller
     public function statusLamaran()
     {
         $user = Auth::user();
-        $persentase = $this->hitungPersentaseProfil($user->id);
+        $persentase = $user->getProfileCompletionPercentage();
 
         $applications = Application::with(['jobPosting.category', 'interviews' => function($q) {
             $q->orderBy('scheduled_at', 'desc');
@@ -132,6 +84,12 @@ class PelamarController extends Controller
         $oldStatus = $application->status;
         $application->status = 'withdrawn';
         $application->save();
+
+        // Decrement applicant count on job posting
+        $job = \App\Models\JobPosting::find($application->job_id);
+        if ($job && $job->applicant_count > 0) {
+            $job->decrement('applicant_count');
+        }
 
         // Log the status change
         DB::table('application_status_logs')->insert([
@@ -173,6 +131,14 @@ class PelamarController extends Controller
             ], 422);
         }
 
+        // Limit to maximum 30 minutes after the interview start time
+        if ($now->gt($scheduledAt->copy()->addMinutes(30))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Absen sudah ditutup. Batas maksimal konfirmasi kehadiran adalah 30 menit setelah jadwal wawancara dimulai (' . $scheduledAt->copy()->addMinutes(30)->format('H:i') . ' WIB).'
+            ], 422);
+        }
+
         // 2. Photo validation for Offline interviews
         $photoUrl = null;
         if ($interview->interview_type === 'offline') {
@@ -210,7 +176,7 @@ class PelamarController extends Controller
     public function savedJobs()
     {
         $user = Auth::user();
-        $persentase = $this->hitungPersentaseProfil($user->id);
+        $persentase = $user->getProfileCompletionPercentage();
 
         $savedJobs = SavedJob::with(['jobPosting.category'])
             ->where('user_id', $user->id)

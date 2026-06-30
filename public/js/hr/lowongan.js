@@ -120,6 +120,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const ageMin     = activeRow.dataset.ageMin || '';
         const ageMax     = activeRow.dataset.ageMax || '';
         const passingGrade = activeRow.dataset.passingGrade || '70';
+        let salaryMin    = activeRow.dataset.salaryMin || '';
+        let salaryMax    = activeRow.dataset.salaryMax || '';
+        const showSalary = activeRow.dataset.showSalary === '1';
+        const requirements = activeRow.dataset.requirements || '';
+        const benefits   = activeRow.dataset.benefits || '';
+
+        // Format salary min and max with thousands separator
+        if (salaryMin && !isNaN(salaryMin)) {
+            salaryMin = parseInt(salaryMin).toLocaleString('id-ID');
+        }
+        if (salaryMax && !isNaN(salaryMax)) {
+            salaryMax = parseInt(salaryMax).toLocaleString('id-ID');
+        }
 
         document.getElementById('v-title').value    = title;
         document.getElementById('v-category').value = categoryId;
@@ -132,6 +145,11 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('v-age-min').value = ageMin;
         document.getElementById('v-age-max').value = ageMax;
         document.getElementById('v-passing-grade').value = passingGrade;
+        document.getElementById('v-salary-min').value = salaryMin;
+        document.getElementById('v-salary-max').value = salaryMax;
+        document.getElementById('v-show-salary').checked = showSalary;
+        document.getElementById('v-requirements').value = requirements;
+        document.getElementById('v-benefits').value = benefits;
 
         document.querySelector('#modal-vacancy .bg-green-900 h2').textContent = 'Edit Vacancy';
         document.getElementById('btn-save-vacancy').textContent = 'Save Changes';
@@ -154,10 +172,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const openModal  = () => {
         document.querySelector('#modal-vacancy .bg-green-900 h2').textContent = 'Create New Vacancy';
         document.getElementById('btn-save-vacancy').textContent = 'Create Vacancy';
-        ['v-title','v-category','v-location','v-quota','v-deadline','v-desc', 'v-age-min', 'v-age-max'].forEach(id => {
+        ['v-title','v-category','v-location','v-quota','v-deadline','v-desc', 'v-age-min', 'v-age-max', 'v-salary-min', 'v-salary-max', 'v-requirements', 'v-benefits'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.value = '';
         });
+        document.getElementById('v-show-salary').checked = false;
         document.getElementById('v-passing-grade').value = '70';
         document.getElementById('v-status').value = 'DRAFT';
         document.getElementById('v-auto-close').value = 'both';
@@ -182,8 +201,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const ageMin     = document.getElementById('v-age-min').value;
         const ageMax     = document.getElementById('v-age-max').value;
         const passingGrade = document.getElementById('v-passing-grade').value;
+        const salaryMin  = document.getElementById('v-salary-min').value.trim();
+        const salaryMax  = document.getElementById('v-salary-max').value.trim();
+        const showSalary = document.getElementById('v-show-salary').checked ? 1 : 0;
+        const requirements = document.getElementById('v-requirements').value.trim();
+        const benefits   = document.getElementById('v-benefits').value.trim();
 
-        if (!title || !categoryId || !location || !quota) { alert('Position, category, location, dan quota wajib diisi.'); return; }
+        if (!title || !categoryId || !location || !quota || !requirements) { 
+            alert('Position, category, location, quota, dan requirements wajib diisi.'); 
+            return; 
+        }
 
         this.disabled = true;
         const isEditing = this.textContent.includes('Save');
@@ -213,7 +240,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     deadline: deadline || null,
                     status: dbStatus,
                     auto_close_method: autoClose,
-                    description: desc
+                    description: desc,
+                    requirements: requirements,
+                    benefits: benefits,
+                    salary_min: salaryMin || null,
+                    salary_max: salaryMax || null,
+                    show_salary: showSalary
                 })
             })
             .then(response => {
@@ -258,7 +290,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     status: dbStatus,
                     auto_close_method: autoClose,
                     description: desc || 'Brief job description.',
-                    requirements: 'Requirements will be updated soon.'
+                    requirements: requirements,
+                    benefits: benefits || null,
+                    salary_min: salaryMin || null,
+                    salary_max: salaryMax || null,
+                    show_salary: showSalary
                 })
             })
             .then(response => {

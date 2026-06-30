@@ -107,7 +107,35 @@ class ApplicantProfileController extends Controller
                 Storage::disk('public')->delete($profile->avatar_url);
             }
 
-            $profile->delete();
+            $profile->update([
+                'nik' => null,
+                'bio' => null,
+                'address' => null,
+                'city' => null,
+                'province' => null,
+                'birth_place' => null,
+                'birth_date' => null,
+                'gender' => null,
+                'marital_status' => null,
+                'latest_education' => null,
+                'school_name' => null,
+                'education_completed_at' => null,
+                'gpa' => null,
+                'ktp_province' => null,
+                'ktp_city' => null,
+                'ktp_district' => null,
+                'ktp_subdistrict' => null,
+                'ktp_address' => null,
+                'dom_province' => null,
+                'dom_city' => null,
+                'dom_district' => null,
+                'dom_subdistrict' => null,
+                'dom_address' => null,
+                'avatar_url' => null,
+                'linkedin_url' => null,
+                'portfolio_url' => null,
+                'updated_at' => now(),
+            ]);
         }
 
         return back()->with('success', 'Data profil berhasil dihapus. Akun login tetap aktif.');

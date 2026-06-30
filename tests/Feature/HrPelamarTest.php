@@ -160,6 +160,108 @@ class HrPelamarTest extends TestCase
         return [$hr, $application];
     }
 
+    public function test_job_posting_range_validation(): void
+    {
+        $this->prepareDatabase();
+
+        $hr = User::create([
+            'name' => 'Demo HR',
+            'email' => 'hr@example.test',
+            'password_hash' => bcrypt('password123'),
+            'role' => 'hr',
+            'is_active' => true,
+        ]);
+
+        $category = JobCategory::create([
+            'name' => 'Production',
+            'slug' => 'production',
+            'is_active' => true,
+        ]);
+
+        // 1. age_max < age_min must fail
+        $this->actingAs($hr)
+            ->postJson('/hr/lowongan', [
+                'title' => 'Invalid Age Vacancy',
+                'category_id' => $category->id,
+                'location' => 'Batam',
+                'quota' => 5,
+                'age_min' => 30,
+                'age_max' => 25, // invalid
+                'description' => 'Test',
+                'requirements' => 'Test',
+                'status' => 'open',
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['age_max']);
+
+        // 2. salary_max < salary_min must fail
+        $this->actingAs($hr)
+            ->postJson('/hr/lowongan', [
+                'title' => 'Invalid Salary Vacancy',
+                'category_id' => $category->id,
+                'location' => 'Batam',
+                'quota' => 5,
+                'salary_min' => '10.000.000',
+                'salary_max' => '5.000.000', // invalid
+                'description' => 'Test',
+                'requirements' => 'Test',
+                'status' => 'open',
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['salary_max']);
+
+        // 3. valid range must succeed
+        $response = $this->actingAs($hr)
+            ->postJson('/hr/lowongan', [
+                'title' => 'Valid Vacancy',
+                'category_id' => $category->id,
+                'location' => 'Batam',
+                'quota' => 5,
+                'age_min' => 20,
+                'age_max' => 30,
+                'salary_min' => '5.000.000',
+                'salary_max' => '10.000.000',
+                'description' => 'Test',
+                'requirements' => 'Test',
+                'status' => 'open',
+            ]);
+        
+        $response->assertOk()
+            ->assertJsonPath('success', true);
+
+        $jobId = JobPosting::where('title', 'Valid Vacancy')->first()->id;
+
+        // 4. Update with invalid age range must fail
+        $this->actingAs($hr)
+            ->putJson('/hr/lowongan/' . $jobId, [
+                'title' => 'Valid Vacancy',
+                'category_id' => $category->id,
+                'location' => 'Batam',
+                'quota' => 5,
+                'age_min' => 30,
+                'age_max' => 25, // invalid
+                'requirements' => 'Test',
+                'status' => 'open',
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['age_max']);
+
+        // 5. Update with invalid salary range must fail
+        $this->actingAs($hr)
+            ->putJson('/hr/lowongan/' . $jobId, [
+                'title' => 'Valid Vacancy',
+                'category_id' => $category->id,
+                'location' => 'Batam',
+                'quota' => 5,
+                'salary_min' => '10.000.000',
+                'salary_max' => '5.000.000', // invalid
+                'requirements' => 'Test',
+                'status' => 'open',
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['salary_max']);
+    }
+
     private function prepareDatabase(): void
     {
         if (! in_array('sqlite', \PDO::getAvailableDrivers(), true)) {

@@ -96,7 +96,7 @@
                         @if(Auth::check() && Auth::user()->avatar)
                             <img id="navbar-avatar-img" src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
                         @elseif(Auth::check() && Auth::user()->profile && Auth::user()->profile->avatar_url)
-                            <img id="navbar-avatar-img" src="{{ Auth::user()->profile->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
+                            <img id="navbar-avatar-img" src="{{ Str::startsWith(Auth::user()->profile->avatar_url, ['http', '/']) ? Auth::user()->profile->avatar_url : asset('storage/' . Auth::user()->profile->avatar_url) }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
                         @else
                             @php
                                 $words = explode(' ', Auth::user()->name ?? 'HR');

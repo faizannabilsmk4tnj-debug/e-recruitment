@@ -48,7 +48,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col lg:flex-row items-start gap-6 relative">
         {{-- Photo --}}
         <div class="relative">
-            <img src="{{ optional($profile)->avatar_url ?: 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=14532d&color=fff&size=128' }}" alt="{{ $user->name }}" class="w-28 h-28 rounded-xl object-cover shadow-sm">
+            <img src="{{ optional($profile)->avatar_url ? (Str::startsWith($profile->avatar_url, ['http', '/']) ? $profile->avatar_url : asset('storage/' . $profile->avatar_url)) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=14532d&color=fff&size=128' }}" alt="{{ $user->name }}" class="w-28 h-28 rounded-xl object-cover shadow-sm">
             {{-- Verified Badge --}}
             <div class="absolute -bottom-2 -right-2 bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center border-2 border-white">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
@@ -219,10 +219,22 @@
             <section class="bg-white rounded-xl border border-gray-100 p-6">
                 <div class="flex items-center justify-between mb-5">
                     <h3 class="text-lg font-bold text-gray-900">CV Preview</h3>
-                    <a href="/hr/pelamar/{{ $application->id }}/cv-preview" target="_blank" class="text-sm text-green-800 font-bold hover:underline">Open full CV</a>
+                    <div class="flex items-center gap-4">
+                        @if($application->resume_url)
+                            <a href="{{ asset($application->resume_url) }}" target="_blank" class="text-sm text-blue-700 font-bold hover:underline flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                Download Uploaded CV
+                            </a>
+                        @endif
+                        <a href="/hr/pelamar/{{ $application->id }}/cv-preview" target="_blank" class="text-sm text-green-800 font-bold hover:underline">Open full CV</a>
+                    </div>
                 </div>
                 <div class="bg-gray-100 rounded-xl p-4 overflow-hidden">
-                    <iframe src="/hr/pelamar/{{ $application->id }}/cv-preview" title="CV {{ $user->name }}" class="w-full h-[720px] bg-white rounded border border-gray-200"></iframe>
+                    @if($application->resume_url && (Str::endsWith($application->resume_url, '.pdf') || Str::endsWith($application->resume_url, '.PDF')))
+                        <iframe src="{{ asset($application->resume_url) }}" title="CV {{ $user->name }}" class="w-full h-[720px] bg-white rounded border border-gray-200"></iframe>
+                    @else
+                        <iframe src="/hr/pelamar/{{ $application->id }}/cv-preview" title="CV {{ $user->name }}" class="w-full h-[720px] bg-white rounded border border-gray-200"></iframe>
+                    @endif
                 </div>
             </section>
         </div>

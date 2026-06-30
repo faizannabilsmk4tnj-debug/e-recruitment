@@ -158,6 +158,11 @@
                     data-age-min="{{ $v->age_min }}"
                     data-age-max="{{ $v->age_max }}"
                     data-passing-grade="{{ $v->passing_grade }}"
+                    data-salary-min="{{ $v->salary_min }}"
+                    data-salary-max="{{ $v->salary_max }}"
+                    data-show-salary="{{ $v->show_salary }}"
+                    data-requirements="{{ $v->requirements }}"
+                    data-benefits="{{ $v->benefits }}"
                     onclick="if(!event.target.closest('button')) window.location.href='/hr/lowongan/{{ $v->id }}'">
 
                     <td class="py-4 pr-4">
@@ -283,7 +288,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
         </div>
-        <div class="p-6 grid grid-cols-2 gap-4">
+        <div class="p-6 grid grid-cols-2 gap-4 max-h-[70vh] overflow-y-auto">
             <div class="col-span-2">
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Position Title</label>
                 <input type="text" id="v-title" placeholder="e.g. Chemical Process Engineer" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
@@ -341,9 +346,31 @@
                     <option value="manual">Manual Close Only</option>
                 </select>
             </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Show Salary Range</label>
+                <div class="flex items-center h-10 mt-1">
+                    <input type="checkbox" id="v-show-salary" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                    <span class="ml-2 text-xs text-gray-600">Show to applicants</span>
+                </div>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Salary Range (Min / Max)</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="v-salary-min" placeholder="Min" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="text" id="v-salary-max" placeholder="Max" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+            </div>
             <div class="col-span-2">
                 <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Description</label>
                 <textarea id="v-desc" rows="3" placeholder="Brief job description..." class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"></textarea>
+            </div>
+            <div class="col-span-2">
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Requirements</label>
+                <textarea id="v-requirements" rows="3" placeholder="Minimum education, skills, experience..." class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"></textarea>
+            </div>
+            <div class="col-span-2">
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Benefits</label>
+                <input type="text" id="v-benefits" placeholder="e.g. Health Insurance, Meal Allowance, Transport (comma-separated)" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
             </div>
         </div>
         <div class="px-6 pb-6 flex gap-3">

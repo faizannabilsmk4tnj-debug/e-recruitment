@@ -128,7 +128,7 @@ return new class extends Migration
                     SUM(CASE WHEN a.status = 'shortlisted' THEN 1 ELSE 0 END) AS shortlisted,
                     SUM(CASE WHEN a.status = 'interview' THEN 1 ELSE 0 END) AS interview,
                     SUM(CASE WHEN a.status = 'rejected' THEN 1 ELSE 0 END) AS ditolak,
-                    SUM(CASE WHEN a.status = 'hired' THEN 1 ELSE 0 END) AS diterima,
+                    SUM(CASE WHEN a.status = 'accepted' THEN 1 ELSE 0 END) AS diterima,
                     ROUND(AVG(ir.score), 1) AS rata_rata_skor_interview,
                     MIN(ir.score) AS skor_terendah,
                     MAX(ir.score) AS skor_tertinggi
@@ -157,7 +157,7 @@ return new class extends Migration
                     fn_hitung_umur_pelamar(u.id) AS umur,
                     COUNT(a.id) AS total_lamaran,
                     SUM(CASE WHEN a.status IN ('applied', 'shortlisted', 'interview') THEN 1 ELSE 0 END) AS lamaran_aktif,
-                    SUM(CASE WHEN a.status = 'hired' THEN 1 ELSE 0 END) AS diterima,
+                    SUM(CASE WHEN a.status = 'accepted' THEN 1 ELSE 0 END) AS diterima,
                     SUM(CASE WHEN a.status = 'rejected' THEN 1 ELSE 0 END) AS ditolak,
                     (SELECT ROUND(AVG(ir2.score), 1) 
                      FROM interviews i2 

@@ -3,9 +3,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Mail\PasswordResetMail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -30,7 +32,7 @@ class AuthController extends Controller
             ]);
         }
 
-        if (!Hash::check($request->password, $user->password_hash)) {
+        if (!Hash::check($request->password, $user->getAuthPassword())) {
             return response()->json([
                 'success' => false,
                 'message' => 'Password salah'
@@ -71,7 +73,7 @@ class AuthController extends Controller
             ]);
         }
 
-        if (!Hash::check($request->password, $user->password_hash)) {
+        if (!Hash::check($request->password, $user->getAuthPassword())) {
             return response()->json([
                 'success' => false,
                 'message' => 'Password salah'
@@ -90,6 +92,27 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        $validator = \Validator::make($request->all(), [
+            'nama' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ], [
+            'nama.required' => 'Nama lengkap wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.required' => 'Kata sandi wajib diisi.',
+            'password.min' => 'Kata sandi minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi sandi tidak cocok.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
         User::create([
             'name'          => $request->nama,
             'email'         => $request->email,
@@ -131,7 +154,15 @@ class AuthController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        \Log::info("Password Reset Link for {$user->email}: " . url("/reset-password/{$token}"));
+        $resetUrl = url("/reset-password/{$token}");
+
+        // Kirim email reset password
+        try {
+            Mail::to($user->email)->send(new PasswordResetMail($resetUrl, $user->name));
+        } catch (\Exception $e) {
+            \Log::error("Gagal kirim email reset password ke {$user->email}: " . $e->getMessage());
+            // Tetap return success agar tidak bocorkan info user
+        }
 
         return response()->json([
             'success' => true,

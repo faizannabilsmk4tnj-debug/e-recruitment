@@ -351,6 +351,11 @@ class InterviewController extends Controller
 
         if ($request->status === 'cancelled' && $oldStatus !== 'cancelled') {
             NotificationService::notifyInterviewCancelled($interview);
+            
+            $application = $interview->application;
+            if ($application && $application->status === 'interview') {
+                $this->restorePreviousApplicationStatus($application);
+            }
         }
 
         $application = $interview->application;
@@ -393,9 +398,55 @@ class InterviewController extends Controller
         NotificationService::notifyInterviewCancelled($interview);
         $interview->delete();
 
+        if ($application && $application->status === 'interview') {
+            $this->restorePreviousApplicationStatus($application);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Interview session deleted successfully.'
         ]);
+    }
+
+    /**
+     * Revert application status to its previous status if no other scheduled interviews remain.
+     */
+    private function restorePreviousApplicationStatus($application)
+    {
+        if (!$application) return;
+
+        // If there are still active scheduled interviews, do not revert status
+        $hasActiveInterview = Interview::where('application_id', $application->id)
+            ->where('status', 'scheduled')
+            ->exists();
+        if ($hasActiveInterview) return;
+
+        // Find the last status before 'interview' in status logs
+        $lastLog = DB::table('application_status_logs')
+            ->where('application_id', $application->id)
+            ->where('new_status', '!=', 'interview')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        // Fallback status if no log found
+        $restoreStatus = $lastLog ? $lastLog->new_status : 'shortlisted';
+
+        $oldStatus = $application->status;
+        if ($oldStatus !== $restoreStatus) {
+            $application->status = $restoreStatus;
+            $application->save();
+
+            DB::table('application_status_logs')->insert([
+                'application_id' => $application->id,
+                'changed_by' => auth()->id() ?? 1,
+                'old_status' => $oldStatus,
+                'new_status' => $restoreStatus,
+                'reason' => 'Interview cancelled or deleted. Status reverted to ' . $restoreStatus . '.',
+                'created_at' => now(),
+            ]);
+
+            // Notify user about reverting status
+            NotificationService::notifyStatusChange($application, $restoreStatus);
+        }
     }
 }

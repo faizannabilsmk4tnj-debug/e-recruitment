@@ -94,7 +94,7 @@ class SettingController extends Controller
             }
 
             $path = $request->file('avatar')->store('avatars', 'public');
-            $profile->avatar_url = Storage::url($path);
+            $profile->avatar_url = $path;
         }
 
         // Simpan updated_at pada profile
@@ -104,7 +104,7 @@ class SettingController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Profile updated successfully!',
-            'avatar_url' => $profile->avatar_url,
+            'avatar_url' => $profile->avatar_url ? asset('storage/' . $profile->avatar_url) : null,
             'name' => $user->name,
             'job_title' => $user->job_title,
         ]);

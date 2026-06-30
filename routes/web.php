@@ -31,12 +31,14 @@ Route::get('/lowongan',                       [VacancyController::class, 'index'
 Route::get('/lowongan/{id}',                  [VacancyController::class, 'show'])->name('lowongan.show')->where('id', '[0-9]+');
 
 // Route bantu development: akses /logout-now di browser untuk clear sesi
-Route::get('/logout-now', function () {
-    auth()->guard('web')->logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect('/login');
-});
+if (app()->environment('local')) {
+    Route::get('/logout-now', function () {
+        auth()->guard('web')->logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/login');
+    });
+}
 
 // ===== AUTH =====
 Route::get('/login',            fn() => view('auth.login'))->name('login');
