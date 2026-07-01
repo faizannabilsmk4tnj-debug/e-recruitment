@@ -16,6 +16,20 @@ class NotificationController extends Controller
         $user = Auth::user();
         $limit = $request->input('limit', 10);
 
+        // Detect if has_privilege changed directly in the database (e.g., modified by DBA/Database Administrator)
+        $sessionKey = 'last_known_privilege_' . $user->id;
+        $lastKnown = $request->session()->get($sessionKey);
+        $currentPriv = (bool) $user->has_privilege;
+
+        if (is_null($lastKnown)) {
+            $request->session()->put($sessionKey, $currentPriv);
+        } elseif ($lastKnown !== $currentPriv) {
+            // Privilege was changed on the database server. Fire notification.
+            $notificationService = new \App\Services\NotificationService();
+            $notificationService->notifyPrivilegeChange($user, $currentPriv);
+            $request->session()->put($sessionKey, $currentPriv);
+        }
+
         $notifications = Notification::where('user_id', $user->id)
             ->orderByDesc('created_at')
             ->take($limit)

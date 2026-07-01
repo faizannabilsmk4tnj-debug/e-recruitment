@@ -384,6 +384,49 @@
             return div.innerHTML;
         }
 
+        let knownNotifIds = null;
+
+        function showToastPelamar(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border text-sm font-semibold transition-all duration-300 transform translate-y-2 opacity-0`;
+            
+            if (type === 'error') {
+                toast.className += ' bg-red-50 border-red-200 text-red-805';
+                toast.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <span>${escapeHtmlPelamar(message)}</span>
+                `;
+            } else if (type === 'warning') {
+                toast.className += ' bg-amber-50 border-amber-250 text-amber-805';
+                toast.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <span>${escapeHtmlPelamar(message)}</span>
+                `;
+            } else {
+                toast.className += ' bg-green-50 border-green-200 text-green-805';
+                toast.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>${escapeHtmlPelamar(message)}</span>
+                `;
+            }
+
+            container.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            // Animate out
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 4500);
+        }
+
         function fetchNotifPelamar() {
             fetch('/api/notifications?limit=10', {
                 headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
@@ -391,6 +434,24 @@
             .then(r => r.json())
             .then(data => {
                 if (!data.success) return;
+                
+                const currentIds = data.notifications.map(n => n.id);
+                
+                if (knownNotifIds !== null) {
+                    const newNotifs = data.notifications.filter(n => !knownNotifIds.includes(n.id) && n.is_unread);
+                    newNotifs.forEach(n => {
+                        if (n.type === 'privilege_change') {
+                            showToastPelamar(`${n.title}: ${n.message}`, 'warning');
+                            if (window.location.pathname === '/pelamar/dashboard' || window.location.pathname.startsWith('/pelamar/lowongan')) {
+                                setTimeout(() => window.location.reload(), 2000);
+                            }
+                        } else {
+                            showToastPelamar(`${n.title}: ${n.message}`, 'success');
+                        }
+                    });
+                }
+                
+                knownNotifIds = currentIds;
                 renderNotifPelamar(data.notifications, data.unread_count);
             })
             .catch(e => console.error('Failed to fetch notifications:', e));
@@ -468,10 +529,10 @@
             .catch(() => {});
         }
 
-        // Fetch on page load + auto-refresh
+        // Fetch on page load + auto-refresh (5 seconds for video demo)
         document.addEventListener('DOMContentLoaded', () => {
             fetchNotifPelamar();
-            setInterval(fetchNotifPelamar, 60000);
+            setInterval(fetchNotifPelamar, 5000);
         });
 
         // Close dropdown when clicking outside
@@ -534,6 +595,9 @@
             </div>
         </div>
     </div>
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-[200] flex flex-col gap-3"></div>
+
     @yield('scripts')
 </body>
 </html>

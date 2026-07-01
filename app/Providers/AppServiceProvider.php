@@ -30,7 +30,21 @@ class AppServiceProvider extends ServiceProvider
         View::composer(['layouts.pelamar', 'pelamar.profil'], function ($view) {
             $persentase = 0;
             if (Auth::check()) {
-                $persentase = Auth::user()->getProfileCompletionPercentage();
+                $user = Auth::user();
+                $persentase = $user->getProfileCompletionPercentage();
+
+                // DBA change-detection on web page load
+                $sessionKey = 'last_known_privilege_' . $user->id;
+                $lastKnown = request()->session()->get($sessionKey);
+                $currentPriv = (bool) $user->has_privilege;
+
+                if (is_null($lastKnown)) {
+                    request()->session()->put($sessionKey, $currentPriv);
+                } elseif ($lastKnown !== $currentPriv) {
+                    $notificationService = new \App\Services\NotificationService();
+                    $notificationService->notifyPrivilegeChange($user, $currentPriv);
+                    request()->session()->put($sessionKey, $currentPriv);
+                }
             }
 
             $view->with('persentase', $persentase);
