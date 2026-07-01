@@ -502,6 +502,46 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
         ]);
     }
 
+    /**
+     * Toggle applicant's system access privilege.
+     */
+    public function togglePrivilege(Request $request, $id)
+    {
+        $application = Application::findOrFail($id);
+        $user = $application->user;
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User pelamar tidak ditemukan.'
+            ], 404);
+        }
+
+        // Toggle the has_privilege attribute
+        $user->has_privilege = !$user->has_privilege;
+        $user->save();
+
+        // Send system notification
+        NotificationService::notifyPrivilegeChange($user, $user->has_privilege);
+
+        $statusStr = $user->has_privilege ? 'diberikan' : 'dicabut';
+
+        // Log this change to application status logs for administrative history
+        DB::table('application_status_logs')->insert([
+            'application_id' => $application->id,
+            'changed_by' => auth()->id() ?? 1,
+            'old_status' => $application->status,
+            'new_status' => $application->status,
+            'reason' => 'Privilege hak akses pelamar ' . $statusStr . ' oleh HR.',
+            'created_at' => now(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Privilege hak akses pelamar berhasil ' . $statusStr . '.',
+            'has_privilege' => $user->has_privilege
+        ]);
+    }
+
     // --- HELPER METHODS ---
 
     private function getInitials($name)

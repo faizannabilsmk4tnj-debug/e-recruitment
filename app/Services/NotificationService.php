@@ -88,6 +88,28 @@ class NotificationService
     }
 
     /**
+     * Notify applicant when their system privilege is granted or revoked.
+     */
+    public static function notifyPrivilegeChange($user, bool $hasPrivilege): void
+    {
+        $title = $hasPrivilege ? 'Hak Akses Diberikan' : 'Hak Akses Dicabut';
+        $message = $hasPrivilege 
+            ? 'Hak akses sistem rekrutmen Anda telah DIBERIKAN oleh HR. Anda sekarang dapat melakukan pendaftaran lowongan baru.'
+            : 'Hak akses sistem rekrutmen Anda telah DICABUT oleh HR. Anda sementara waktu tidak dapat melakukan pendaftaran lowongan baru.';
+
+        self::create(
+            $user->id,
+            'privilege_change',
+            $title,
+            $message,
+            [
+                'user_id' => $user->id,
+                'has_privilege' => $hasPrivilege,
+            ]
+        );
+    }
+
+    /**
      * Notify applicant when an interview is scheduled for them.
      */
     public static function notifyInterviewScheduled($interview): void

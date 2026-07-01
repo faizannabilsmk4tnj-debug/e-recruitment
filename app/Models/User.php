@@ -25,6 +25,7 @@ class User extends Authenticatable
         'job_title',
         'language',
         'is_active',
+        'has_privilege',
     ];
 
     protected $hidden = [
@@ -43,6 +44,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'is_active'         => 'boolean',
+            'has_privilege'     => 'boolean',
         ];
     }
 

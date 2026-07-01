@@ -262,6 +262,73 @@ class HrPelamarTest extends TestCase
             ->assertJsonValidationErrors(['salary_max']);
     }
 
+    public function test_hr_can_toggle_applicant_privilege_and_prevents_applying(): void
+    {
+        [$hr, $application] = $this->seedApplicantFlow();
+        $applicant = $application->user;
+
+        // Verify initial state
+        $this->assertTrue($applicant->has_privilege);
+
+        // HR revokes privilege
+        $this->actingAs($hr)
+            ->postJson('/hr/pelamar/' . $application->id . '/toggle-privilege')
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('has_privilege', false);
+
+        $applicant->refresh();
+        $this->assertFalse($applicant->has_privilege);
+
+        // Verify applicant receives notification
+        $this->assertDatabaseHas('notifications', [
+            'user_id' => $applicant->id,
+            'type' => 'privilege_change',
+            'title' => 'Hak Akses Dicabut',
+        ]);
+
+        // Verify applicant cannot submit application when privilege is revoked
+        $job2 = JobPosting::create([
+            'hr_user_id' => $hr->id,
+            'category_id' => $application->jobPosting->category_id,
+            'title' => 'Process Engineer II',
+            'description' => 'Role details.',
+            'requirements' => 'Qualifications.',
+            'employment_type' => 'full-time',
+            'location_type' => 'onsite',
+            'location' => 'Batam',
+            'quota' => 5,
+            'status' => 'open',
+            'deadline' => now()->addDays(7)->toDateString(),
+        ]);
+
+        $this->actingAs($applicant)
+            ->postJson('/pelamar/review-lamaran/' . $job2->id, [
+                'cv_source' => 'builder',
+                'cover_letter' => 'My cover letter',
+            ])
+            ->assertStatus(403)
+            ->assertJsonPath('success', false)
+            ->assertJsonPath('message', 'Anda tidak memiliki hak akses (privilege) untuk melamar pekerjaan.');
+
+        // HR grants privilege back
+        $this->actingAs($hr)
+            ->postJson('/hr/pelamar/' . $application->id . '/toggle-privilege')
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('has_privilege', true);
+
+        $applicant->refresh();
+        $this->assertTrue($applicant->has_privilege);
+
+        // Verify applicant receives grant notification
+        $this->assertDatabaseHas('notifications', [
+            'user_id' => $applicant->id,
+            'type' => 'privilege_change',
+            'title' => 'Hak Akses Diberikan',
+        ]);
+    }
+
     private function prepareDatabase(): void
     {
         if (! in_array('sqlite', \PDO::getAvailableDrivers(), true)) {

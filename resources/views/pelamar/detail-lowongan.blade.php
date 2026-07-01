@@ -133,6 +133,12 @@
             <span class="flex items-center justify-center gap-2 w-full bg-gray-150 text-gray-400 font-semibold py-3 rounded-lg text-sm cursor-not-allowed mb-3">
                 Closed / Filled
             </span>
+            @elseif(!auth()->user()->has_privilege)
+            <button disabled class="flex items-center justify-center gap-2 w-full bg-gray-100 border border-gray-200 text-gray-400 font-semibold py-3 rounded-lg text-sm cursor-not-allowed mb-3" title="Hak akses Anda ditangguhkan oleh HR.">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                Apply Suspended
+            </button>
+            <p class="text-[10px] text-red-650 text-center font-semibold mb-3">⚠️ Hak akses melamar ditangguhkan oleh HR.</p>
             @else
             <a href="/pelamar/review-lamaran/{{ $vacancy->id }}" class="flex items-center justify-center gap-2 w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors mb-3">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>

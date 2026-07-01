@@ -102,6 +102,11 @@ class VacancyController extends Controller
             ]);
         }
         
+        if (!$user->has_privilege) {
+            return redirect()->route('pelamar.lowongan.show', $id)
+                ->with('error', 'Anda tidak memiliki hak akses (privilege) untuk melamar pekerjaan.');
+        }
+
         if ($user->getProfileCompletionPercentage() < 75) {
             return redirect()->route('pelamar.profil.edit')
                 ->with('error', 'Kelengkapan profil Anda baru mencapai ' . $user->getProfileCompletionPercentage() . '%. Harap lengkapi data profil Anda minimal hingga 75% sebelum melamar pekerjaan.');
@@ -137,6 +142,13 @@ class VacancyController extends Controller
         $user = auth()->user();
         $userId = $user->id;
         $vacancy = JobPosting::findOrFail($id);
+
+        if (!$user->has_privilege) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki hak akses (privilege) untuk melamar pekerjaan.'
+            ], 403);
+        }
 
         if ($user->getProfileCompletionPercentage() < 75) {
             return response()->json([

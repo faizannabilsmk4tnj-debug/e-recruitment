@@ -23,6 +23,22 @@
 
 @section('content')
 
+@if(!auth()->user()->has_privilege)
+<div class="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3.5 shadow-sm animate-preview">
+    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-700 shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+    </div>
+    <div class="flex-1 min-w-0">
+        <h3 class="text-sm font-bold text-red-950">Hak Akses Sistem Rekrutmen Anda Ditangguhkan</h3>
+        <p class="text-xs text-red-800 leading-relaxed mt-0.5">
+            HR telah menonaktifkan hak akses (privilege) Anda untuk mendaftar lowongan baru pada portal rekrutmen ini. Anda tetap dapat memantau status lamaran yang sudah terkirim, namun Anda tidak dapat mengajukan lamaran pekerjaan baru sampai hak akses Anda diaktifkan kembali.
+        </p>
+    </div>
+</div>
+@endif
+
 <!-- Greeting -->
 <a href="/pelamar/profil" class="block relative rounded-xl mb-6 overflow-hidden cursor-pointer group border border-gray-200 shadow-sm hover:shadow-md transition-shadow" id="greeting-card">
     <!-- Background: white base -->

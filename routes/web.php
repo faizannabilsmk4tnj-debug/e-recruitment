@@ -167,6 +167,7 @@ Route::middleware(['role:hr', 'auth', SetUserLocale::class])->group(function () 
     Route::get('/hr/pelamar/{id}',               [\App\Http\Controllers\HR\PelamarController::class, 'show'])->name('hr.pelamar.show')->where('id', '[0-9]+');
     Route::get('/hr/pelamar/{id}/cv-preview',    [\App\Http\Controllers\HR\PelamarController::class, 'cvPreview'])->name('hr.pelamar.cv-preview')->where('id', '[0-9]+');
     Route::post('/hr/pelamar/{id}/status',       [\App\Http\Controllers\HR\PelamarController::class, 'updateStatus'])->name('hr.pelamar.status')->where('id', '[0-9]+');
+    Route::post('/hr/pelamar/{id}/toggle-privilege', [\App\Http\Controllers\HR\PelamarController::class, 'togglePrivilege'])->name('hr.pelamar.toggle-privilege')->where('id', '[0-9]+');
     Route::post('/hr/pelamar/{id}/note',         [\App\Http\Controllers\HR\PelamarController::class, 'addNote'])->name('hr.pelamar.note')->where('id', '[0-9]+');
     Route::post('/hr/pelamar/{id}/interview',    [\App\Http\Controllers\HR\PelamarController::class, 'scheduleInterview'])->name('hr.pelamar.interview')->where('id', '[0-9]+');
     Route::post('/hr/pelamar/{id}/interview/{interviewId}/evaluate', [\App\Http\Controllers\HR\PelamarController::class, 'evaluateInterview'])->name('hr.pelamar.interview.evaluate')->where(['id' => '[0-9]+', 'interviewId' => '[0-9]+']);
@@ -208,6 +209,15 @@ if (app()->environment('local')) {
             return response('<h3>Output Command:</h3><pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>');
         } catch (\Exception $e) {
             return response('Error executing command: ' . $e->getMessage(), 500);
+        }
+    });
+
+    Route::get('/run-migration', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            return response('<h3>Migration Output:</h3><pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>');
+        } catch (\Exception $e) {
+            return response('Error executing migration: ' . $e->getMessage(), 500);
         }
     });
 }

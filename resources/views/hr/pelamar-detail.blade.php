@@ -339,6 +339,30 @@
                 </div>
             </div>
 
+            {{-- System Privilege Control --}}
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Manajemen Hak Akses</h3>
+                <p class="text-xs text-gray-500 mb-4">Kelola hak akses pelamar untuk melakukan pendaftaran lowongan baru di sistem rekrutmen.</p>
+                
+                <div class="mb-5 flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl p-3.5 shadow-inner">
+                    <span class="text-xs font-bold text-gray-500">Status Hak Akses:</span>
+                    <span id="privilege-status-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-full border uppercase {{ $user->has_privilege ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200' }}">
+                        {{ $user->has_privilege ? 'Aktif (Granted)' : 'Dicabut (Revoked)' }}
+                    </span>
+                </div>
+
+                <button type="button" onclick="togglePrivilegeAccess()" id="btn-toggle-privilege" 
+                        class="w-full flex items-center justify-center gap-2 border {{ $user->has_privilege ? 'border-red-250 bg-red-50 text-red-800 hover:bg-red-100' : 'border-green-250 bg-green-50 text-green-800 hover:bg-green-100' }} text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors shadow-sm">
+                    @if($user->has_privilege)
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                        Cabut Hak Akses (Revoke)
+                    @else
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Berikan Hak Akses (Grant)
+                    @endif
+                </button>
+            </div>
+
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h3 class="text-lg font-bold text-gray-900 mb-5">Internal Note</h3>
                 <form id="form-add-note" class="space-y-4">
@@ -703,6 +727,19 @@ document.addEventListener('DOMContentLoaded', function () {
     window.toggleAdminOverride = function() {
         const box = document.getElementById('admin-override-box');
         box.classList.toggle('hidden');
+    };
+
+    window.togglePrivilegeAccess = async function() {
+        if (!confirm('Apakah Anda yakin ingin mengubah hak akses (privilege) pelamar ini?')) {
+            return;
+        }
+        try {
+            const data = await submitJson(`/hr/pelamar/${applicationId}/toggle-privilege`, {});
+            showToast(data.message || 'Status hak akses berhasil diperbarui.');
+            setTimeout(() => window.location.reload(), 900);
+        } catch (error) {
+            showToast(error.message || 'Terjadi kesalahan.', 'error');
+        }
     };
 
     document.getElementById('form-quick-status').addEventListener('submit', async function (event) {
