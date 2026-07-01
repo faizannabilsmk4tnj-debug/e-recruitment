@@ -5,7 +5,7 @@
 @section('nav-pelamar', 'text-green-800 border-green-800')
 
 @php
-    $empty = 'Belum diisi';
+    $empty = 'Not specified';
     $statusLabels = [
         'applied' => 'Submitted',
         'shortlisted' => 'Shortlisted',
@@ -182,11 +182,11 @@
                         @forelse($workExperiences as $work)
                             <div class="border-b border-gray-100 pb-4 mb-4 last:border-0 last:pb-0 last:mb-0">
                                 <div class="font-bold text-gray-900">{{ $work->position ?? $empty }}</div>
-                                <div class="text-sm text-gray-600">{{ $work->company_name ?? $empty }} | {{ optional($work->start_date)->format('M Y') ?? '?' }} - {{ $work->is_current ? 'Sekarang' : (optional($work->end_date)->format('M Y') ?? '?') }}</div>
+                                <div class="text-sm text-gray-600">{{ $work->company_name ?? $empty }} | {{ optional($work->start_date)->format('M Y') ?? '?' }} - {{ $work->is_current ? 'Present' : (optional($work->end_date)->format('M Y') ?? '?') }}</div>
                                 @if($work->description)<p class="text-sm text-gray-500 mt-2">{{ $work->description }}</p>@endif
                             </div>
                         @empty
-                            <p class="text-sm text-gray-400">Belum ada pengalaman kerja.</p>
+                            <p class="text-sm text-gray-400">No work experience added.</p>
                         @endforelse
                     </div>
 
@@ -195,11 +195,11 @@
                         @forelse($organizationExperiences as $org)
                             <div class="border-b border-gray-100 pb-4 mb-4 last:border-0 last:pb-0 last:mb-0">
                                 <div class="font-bold text-gray-900">{{ $org->position ?? $empty }}</div>
-                                <div class="text-sm text-gray-600">{{ $org->organization_name ?? $empty }} | {{ optional($org->start_date)->format('M Y') ?? '?' }} - {{ optional($org->end_date)->format('M Y') ?? 'Sekarang' }}</div>
+                                <div class="text-sm text-gray-600">{{ $org->organization_name ?? $empty }} | {{ optional($org->start_date)->format('M Y') ?? '?' }} - {{ optional($org->end_date)->format('M Y') ?? 'Present' }}</div>
                                 @if($org->description)<p class="text-sm text-gray-500 mt-2">{{ $org->description }}</p>@endif
                             </div>
                         @empty
-                            <p class="text-sm text-gray-400">Belum ada pengalaman organisasi.</p>
+                            <p class="text-sm text-gray-400">No organization experience added.</p>
                         @endforelse
                     </div>
 
@@ -209,7 +209,7 @@
                             @forelse($skills as $skill)
                                 <span class="text-xs font-semibold text-green-800 bg-green-50 border border-green-200 px-3 py-1 rounded-full">{{ $skill->skill_name }}</span>
                             @empty
-                                <span class="text-sm text-gray-400">Belum ada skill.</span>
+                                <span class="text-sm text-gray-400">No skills added.</span>
                             @endforelse
                         </div>
                     </div>
@@ -341,15 +341,15 @@
 
             {{-- System Privilege Control --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Manajemen Hak Akses</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Access Privilege Control</h3>
                 <p class="text-xs text-gray-500 mb-4">
-                    Hak akses (privilege) pelamar ini dikelola langsung di server database oleh <strong>Pengelola Database Server (DBA)</strong>.
+                    This candidate's application privilege is managed directly on the database server by the <strong>Database Administrator (DBA)</strong>.
                 </p>
                 
                 <div class="mb-5 flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl p-3.5 shadow-inner">
-                    <span class="text-xs font-bold text-gray-500">Status Hak Akses:</span>
+                    <span class="text-xs font-bold text-gray-500">Access Privilege Status:</span>
                     <span id="privilege-status-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-full border uppercase {{ $user->has_privilege ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200' }}">
-                        {{ $user->has_privilege ? 'Aktif (Granted)' : 'Dicabut (Revoked)' }}
+                        {{ $user->has_privilege ? 'Granted' : 'Revoked' }}
                     </span>
                 </div>
 
@@ -358,9 +358,9 @@
                         class="w-full flex items-center justify-center gap-2 border border-dashed {{ $user->has_privilege ? 'border-red-300 bg-red-50/50 text-red-800 hover:bg-red-50' : 'border-green-300 bg-green-50/50 text-green-800 hover:bg-green-50' }} text-xs font-semibold px-5 py-2.5 rounded-lg transition-colors shadow-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     @if($user->has_privilege)
-                        Simulasi Cabut Akses (DBA Revoke)
+                        Simulate Revoke Access (DBA Revoke)
                     @else
-                        Simulasi Beri Akses (DBA Grant)
+                        Simulate Grant Access (DBA Grant)
                     @endif
                 </button>
             </div>
@@ -369,7 +369,7 @@
                 <h3 class="text-lg font-bold text-gray-900 mb-5">Internal Note</h3>
                 <form id="form-add-note" class="space-y-4">
                     @csrf
-                    <textarea name="note" rows="3" required class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Tulis catatan HR..."></textarea>
+                    <textarea name="note" rows="3" required class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Write internal HR note..."></textarea>
                     <button type="submit" class="w-full border border-green-200 bg-green-50 text-green-800 text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-green-100 transition">Add Note</button>
                 </form>
             </div>
@@ -387,17 +387,17 @@
                             @if($log->reason)<div class="text-sm text-gray-700 mt-2 bg-gray-50 rounded-lg p-3">{{ $log->reason }}</div>@endif
                         </div>
                     @empty
-                        <p class="text-sm text-gray-400">Belum ada aktivitas.</p>
+                        <p class="text-sm text-gray-400">No activity logged yet.</p>
                     @endforelse
                 </div>
             </div>
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-6">
                 <h3 class="text-lg font-bold text-gray-900 mb-2">Interview Session</h3>
-                <p class="text-xs text-gray-500 mb-4">Semua hal terkait wawancara (jadwal, reschedule, absensi kehadiran, dan input evaluasi) dikelola sepenuhnya di halaman Wawancara.</p>
+                <p class="text-xs text-gray-500 mb-4">All matters related to the interview (schedule, reschedule, attendance status, and evaluation inputs) are managed on the Interview page.</p>
                 <a href="/hr/wawancara/daftar?search={{ urlencode($user->name) }}" class="inline-flex items-center justify-center w-full bg-green-800 hover:bg-green-950 text-white text-xs font-semibold py-2.5 rounded-lg transition-colors gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                    Kelola Wawancara Pelamar
+                    Manage Candidate Interview
                 </a>
             </div>
         </div>
@@ -463,7 +463,7 @@
                 <div id="interview_booked_timeline" class="hidden text-xs bg-amber-50/60 border border-amber-200 rounded-xl p-3.5 text-amber-900 space-y-1">
                     <p class="font-bold flex items-center gap-1.5">
                         <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                        Jadwal Wawancara Terisi Hari Ini:
+                        Booked Interviews for Today:
                     </p>
                     <ul class="list-disc list-inside space-y-0.5" id="interview_booked_slots_list">
                     </ul>
@@ -486,13 +486,13 @@
                     
                     {{-- Quick Templates for Interview --}}
                     <div id="interview-templates-container" class="mb-3">
-                        <span class="block text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Pilih Template Catatan Wawancara:</span>
+                        <span class="block text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Choose Interview Notes Template:</span>
                         <div class="flex flex-col gap-1.5 max-h-36 overflow-y-auto p-1 bg-gray-50 border border-gray-150 rounded-xl" id="interview-templates-list">
                             <!-- populated by JS -->
                         </div>
                     </div>
 
-                    <textarea name="notes" id="interview-notes-input" rows="3" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Catatan interview..."></textarea>
+                    <textarea name="notes" id="interview-notes-input" rows="3" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Interview notes..."></textarea>
                 </div>
             </div>
             <div class="border-t border-gray-100 px-8 py-4 flex items-center justify-between bg-white">
@@ -523,7 +523,7 @@
                     
                     {{-- Quick Templates Selection --}}
                     <div id="quick-templates-container" class="mb-3 hidden">
-                        <span class="block text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Pilih Template Jawaban:</span>
+                        <span class="block text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Choose Response Template:</span>
                         <div class="flex flex-col gap-1.5 max-h-36 overflow-y-auto p-1 bg-gray-50 border border-gray-150 rounded-xl" id="quick-templates-list">
                             <!-- populated by JS -->
                         </div>
@@ -597,24 +597,24 @@ document.addEventListener('DOMContentLoaded', function () {
     // Predefined feedback templates for HR status changes and scheduling
     const feedbackTemplates = {
         shortlisted: [
-            "Dokumen memenuhi syarat, dijadwalkan untuk tahap wawancara.",
-            "Profil dan portofolio Anda sesuai dengan kualifikasi yang kami butuhkan.",
-            "Kualifikasi sesuai, masuk ke daftar prioritas pemanggilan interview."
+            "Documents meet the requirements, scheduling for the interview phase.",
+            "Your profile and portfolio align with the qualifications we need.",
+            "Qualifications match, added to the priority shortlist for scheduling interviews."
         ],
         interview: [
-            "Wawancara akan dilakukan secara online via Google Meet. Harap siapkan CV dan portofolio Anda.",
-            "Wawancara offline (tatap muka) di kantor pusat Ecogreen. Harap datang 15 menit sebelum jadwal dengan berpakaian rapi profesional.",
-            "Wawancara awal (perkenalan) santai via telpon untuk mencocokkan jadwal dan ekspektasi."
+            "The interview will be conducted online via Google Meet. Please prepare your CV and portfolio.",
+            "Offline (face-to-face) interview at the Ecogreen main office. Please arrive 15 minutes before the scheduled time dressed in professional business attire.",
+            "Initial screening (introductory) chat via phone to align expectations and scheduling."
         ],
         accepted: [
-            "Selamat! Anda dinyatakan lolos seleksi dan bergabung dengan tim kami. Surat penawaran kerja (Offering Letter) akan segera dikirimkan ke email Anda.",
-            "Selamat bergabung! Anda terpilih untuk posisi ini. HR akan menghubungi Anda hari ini untuk membahas Offering Letter dan tanggal mulai kerja (onboarding) secepatnya.",
-            "Berdasarkan hasil wawancara, kami merekomendasikan Anda untuk posisi ini. Tim HR akan segera menghubungi Anda via telepon untuk melakukan diskusi penawaran benefit dan gaji."
+            "Congratulations! You have passed the selection process and are invited to join our team. The Offering Letter will be sent to your email shortly.",
+            "Welcome aboard! You have been selected for this position. HR will contact you today to discuss the Offering Letter and onboarding date.",
+            "Based on the interview results, we highly recommend you for this position. The HR team will contact you via phone shortly to discuss benefits and compensation package."
         ],
         rejected: [
-            "[Tidak Lolos Berkas] Terima kasih telah melamar. Setelah meninjau berkas lamaran Anda, mohon maaf kualifikasi/pengalaman saat ini belum cocok dengan kebutuhan kriteria teknis kami.",
-            "[Tidak Lolos Interview] Terima kasih atas waktu Anda dalam sesi interview kemarin. Kami sangat mengapresiasi profil Anda, namun saat ini kami memilih kandidat lain yang lebih mendekati kriteria posisi ini.",
-            "[Database Talent Pool] Kualifikasi Anda menarik, namun posisi ini telah terisi. Kami akan menyimpan data Anda di talent pool kami dan menghubungi Anda jika ada posisi yang cocok di kemudian hari."
+            "[Document Review Unsuccessful] Thank you for applying. After reviewing your application, we regret to inform you that your qualifications/experience do not match our technical criteria at this time.",
+            "[Interview Unsuccessful] Thank you for your time during the interview session. While we appreciated your profile, we have decided to move forward with another candidate who more closely fits the role requirements.",
+            "[Talent Pool Database] Your qualifications are impressive, but this position has been filled. We will retain your profile in our talent pool and contact you if matching opportunities arise in the future."
         ]
     };
 
@@ -694,13 +694,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 quickTitle.textContent = 'Skip Interview & Accept?';
                 quickDesc.innerHTML = `<div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-800 font-semibold mb-2 flex items-start gap-2 leading-relaxed">
                     <svg class="w-4 h-4 shrink-0 mt-0.5 text-amber-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                    <span>Peringatan: Pelamar ini belum melewati tahap interview. Apakah Anda yakin ingin langsung menerimanya? Silakan berikan alasan melewati tahap interview di bawah ini atau jadwalkan interview terlebih dahulu.</span>
+                    <span>Warning: This candidate has not passed the interview stage yet. Are you sure you want to accept them directly? Please provide your justification below, or schedule an interview first.</span>
                 </div>`;
-                reasonLabel.textContent = 'Alasan melewati tahap interview (Wajib Diisi)';
-                quickReasonInput.placeholder = 'Berikan alasan mengapa Anda melewati tahap interview untuk menerima pelamar ini...';
+                reasonLabel.textContent = 'Reason for skipping interview (Required)';
+                quickReasonInput.placeholder = 'Explain why you are skipping the interview stage to accept this candidate...';
                 quickReasonInput.required = true;
                 quickSubmitBtn.className = 'bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold px-5 py-2.5 rounded-xl shadow-md transition';
-                quickSubmitBtn.textContent = 'Yakin, Terima Pelamar';
+                quickSubmitBtn.textContent = 'Yes, Accept Candidate';
 
                 // Show the "Schedule Interview Instead" button
                 if (scheduleBtnInQuickModal) scheduleBtnInQuickModal.classList.remove('hidden');
@@ -732,15 +732,15 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     window.togglePrivilegeAccess = async function() {
-        if (!confirm('Apakah Anda yakin ingin mengubah hak akses (privilege) pelamar ini?')) {
+        if (!confirm('Are you sure you want to change this applicant\'s application privilege?')) {
             return;
         }
         try {
             const data = await submitJson(`/hr/pelamar/${applicationId}/toggle-privilege`, {});
-            showToast(data.message || 'Status hak akses berhasil diperbarui.');
+            showToast(data.message || 'Access privilege updated successfully.');
             setTimeout(() => window.location.reload(), 900);
         } catch (error) {
-            showToast(error.message || 'Terjadi kesalahan.', 'error');
+            showToast(error.message || 'An error occurred.', 'error');
         }
     };
 
@@ -785,7 +785,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 note: formData.get('note'),
             });
             this.reset();
-            showToast(data.message || 'Catatan berhasil disimpan.');
+            showToast(data.message || 'Note saved successfully.');
         } catch (error) {
             showToast(error.message, 'error');
         }
@@ -866,7 +866,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (isBooked) {
                 opt.disabled = true;
-                opt.title = `Sudah dibooking untuk interview ${booking.candidate} (${booking.job}) pada pukul ${booking.start} - ${booking.end}`;
+                opt.title = `Already booked for interview with ${booking.candidate} (${booking.job}) at ${booking.start} - ${booking.end}`;
                 opt.style.cursor = 'not-allowed';
                 if (!opt.textContent.includes('(Booked)')) {
                     opt.textContent = `${opt.value} (Booked)`;
@@ -895,7 +895,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (isBooked) {
                     opt.disabled = true;
-                    opt.title = `Sudah dibooking untuk interview ${booking.candidate} (${booking.job}) pada pukul ${booking.start} - ${booking.end}`;
+                    opt.title = `Already booked for interview with ${booking.candidate} (${booking.job}) at ${booking.start} - ${booking.end}`;
                     opt.style.cursor = 'not-allowed';
                     if (!opt.textContent.includes('(Booked)')) {
                         opt.textContent = `${opt.value} (Booked)`;
@@ -942,7 +942,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const warning = document.createElement('div');
             warning.className = 'time-conflict-warning text-xs text-red-650 font-bold bg-red-50 border border-red-200 rounded-xl p-3.5 mt-3';
-            warning.innerHTML = `⚠️ Waktu yang dipilih bentrok dengan interview <strong>${booking.candidate}</strong> (${booking.job}) pada pukul <strong>${booking.start} - ${booking.end}</strong>. Silakan pilih jam atau durasi lain.`;
+            warning.innerHTML = `⚠️ Selected time conflicts with interview for <strong>${booking.candidate}</strong> (${booking.job}) at <strong>${booking.start} - ${booking.end}</strong>. Please choose another time or duration.`;
             
             const grid = hourSelect.closest('.grid') || hourSelect.parentElement;
             grid.after(warning);
@@ -1000,7 +1000,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 notes: formData.get('notes'),
             });
             closeModal();
-            showToast(data.message || 'Interview berhasil dijadwalkan.');
+            showToast(data.message || 'Interview scheduled successfully.');
             setTimeout(() => window.location.reload(), 900);
         } catch (error) {
             showToast(error.message, 'error');

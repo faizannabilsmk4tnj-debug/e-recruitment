@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\HR;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\HR\UpdateLanguageRequest;
 use App\Http\Requests\HR\UpdateNotificationPreferenceRequest;
 use App\Http\Requests\HR\UpdatePasswordRequest;
 use App\Http\Requests\HR\UpdateProfileRequest;
@@ -11,7 +10,6 @@ use App\Models\NotificationPreference;
 use App\Models\UserProfile;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -168,27 +166,6 @@ class SettingController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Notification preferences updated successfully!',
-        ]);
-    }
-
-    /**
-     * Update bahasa interface.
-     */
-    public function updateLanguage(UpdateLanguageRequest $request)
-    {
-        $user = Auth::user();
-        $validated = $request->validated();
-
-        $user->update([
-            'language' => $validated['language'],
-        ]);
-
-        App::setLocale($validated['language']);
-        $request->session()->put('locale', $validated['language']);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Language preference updated successfully!',
         ]);
     }
 

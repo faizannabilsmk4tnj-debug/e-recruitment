@@ -23,7 +23,6 @@ class User extends Authenticatable
         'role',
         'phone',
         'job_title',
-        'language',
         'is_active',
         'has_privilege',
     ];
@@ -164,10 +163,7 @@ class User extends Authenticatable
         return $this->hasMany(ApplicantSkill::class, 'user_id');
     }
 
-    public function certificates(): HasMany
-    {
-        return $this->hasMany(Certificate::class);
-    }
+
 
     public function portofolios(): HasMany
     {

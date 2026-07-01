@@ -406,64 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Save Language Preference
-    const languageForm = document.getElementById('language-form');
-    if (languageForm) {
-        languageForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-save-lang');
-            const originalText = btn.innerHTML;
-            
-            const formData = {
-                language: document.getElementById('selected-lang-input').value
-            };
 
-            const promise = sendAjax(routes.language, formData)
-                .then(res => {
-                    setTimeout(() => window.location.reload(), 700);
-                    return res;
-                });
-            showSaving(btn, originalText, promise, 'Bahasa berhasil diubah', 'Halaman akan dimuat ulang untuk menerapkan bahasa.');
-        });
-    }
-
-    // ===== LANGUAGE SELECTOR BUTTONS =====
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            document.querySelectorAll('.lang-btn').forEach(b => {
-                b.classList.remove('border-green-700', 'bg-green-50', 'active-lang');
-                b.classList.add('border-gray-200');
-                const txt = b.querySelector('span.text-sm');
-                if (txt) {
-                    txt.classList.remove('text-green-800');
-                    txt.classList.add('text-gray-600');
-                }
-                const check = b.querySelector('svg');
-                if (check) check.remove();
-            });
-            
-            this.classList.add('border-green-700', 'bg-green-50', 'active-lang');
-            this.classList.remove('border-gray-200');
-            const txt = this.querySelector('span.text-sm');
-            if (txt) {
-                txt.classList.remove('text-gray-600');
-                txt.classList.add('text-green-800');
-            }
-            
-            // Add checkmark
-            const check = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            check.setAttribute("class", "w-4 h-4 text-green-600 ml-auto");
-            check.setAttribute("fill", "none");
-            check.setAttribute("stroke", "currentColor");
-            check.setAttribute("viewBox", "0 0 24 24");
-            check.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>';
-            this.appendChild(check);
-
-            // Update hidden input
-            const lang = this.dataset.lang;
-            document.getElementById('selected-lang-input').value = lang;
-        });
-    });
 
     // ===== UPDATE ALL BUTTON =====
     const btnUpdateAll = document.getElementById('btn-update-all');
@@ -488,12 +431,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     notif_vacancy_deadline: notifForm.querySelector('input[name="notif_vacancy_deadline"]').checked ? 1 : 0
                 };
                 promises.push(sendAjax(routes.notifications, formData));
-            }
-            if (languageForm) {
-                const formData = {
-                    language: document.getElementById('selected-lang-input').value
-                };
-                promises.push(sendAjax(routes.language, formData));
             }
 
             Promise.all(promises)
@@ -526,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
                     btn.innerHTML = '<svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Saved All!';
                     btn.classList.add('bg-green-600');
-                    notify('success', 'Semua pengaturan tersimpan', 'Profil, notifikasi, dan bahasa berhasil diperbarui.');
+                    notify('success', 'Semua pengaturan tersimpan', 'Profil dan notifikasi berhasil diperbarui.');
                     setTimeout(() => {
                         btn.innerHTML = originalText;
                         btn.disabled = false;

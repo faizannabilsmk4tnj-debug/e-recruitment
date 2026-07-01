@@ -32,10 +32,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                     {{ __('hr_setting.tabs.notifications') }}
                 </button>
-                <button data-tab="language" class="setting-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-gray-600 hover:bg-gray-50">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/></svg>
-                    {{ __('hr_setting.tabs.language') }}
-                </button>
+
             </nav>
         </div>
 
@@ -319,37 +316,6 @@
             </form>
         </div>
 
-        {{-- TAB: LANGUAGE --}}
-        <div id="tab-language" class="tab-content hidden">
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-green-900">{{ __('hr_setting.language.heading') }}</h2>
-                <p class="text-sm text-gray-500 mt-1">{{ __('hr_setting.language.description') }}</p>
-            </div>
-            <form id="language-form">
-                <input type="hidden" name="language" id="selected-lang-input" value="{{ $user->language ?: 'id' }}">
-                <div class="bg-white rounded-xl border border-gray-200 p-6">
-                    <div class="grid grid-cols-2 gap-3 max-w-md">
-                        <button type="button" class="lang-btn {{ ($user->language ?: 'id') === 'id' ? 'active-lang border-green-700 bg-green-50' : 'border-gray-200' }} flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all" data-lang="id">
-                            <span class="text-xs font-bold text-green-700 bg-green-100 rounded px-2 py-1">ID</span>
-                            <span class="text-sm font-medium {{ ($user->language ?: 'id') === 'id' ? 'text-green-800' : 'text-gray-600' }}">Indonesia</span>
-                            @if(($user->language ?: 'id') === 'id')
-                            <svg class="w-4 h-4 text-green-600 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                            @endif
-                        </button>
-                        <button type="button" class="lang-btn {{ $user->language === 'en' ? 'active-lang border-green-700 bg-green-50' : 'border-gray-200' }} flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all" data-lang="en">
-                            <span class="text-xs font-bold text-blue-700 bg-blue-100 rounded px-2 py-1">EN</span>
-                            <span class="text-sm font-medium {{ $user->language === 'en' ? 'text-green-800' : 'text-gray-600' }}">English</span>
-                            @if($user->language === 'en')
-                            <svg class="w-4 h-4 text-green-600 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                            @endif
-                        </button>
-                    </div>
-                    <div class="flex justify-end mt-6 pt-4 border-t border-gray-100">
-                        <button type="submit" id="btn-save-lang" class="px-5 py-2 bg-green-900 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors">{{ __('hr_setting.language.save') }}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
 
     </div>
 </div>
@@ -362,7 +328,6 @@
         removeAvatar: @json(route('hr.setting.avatar.remove')),
         password: @json(route('hr.setting.password')),
         notifications: @json(route('hr.setting.notifications')),
-        language: @json(route('hr.setting.language')),
         sessions: @json(route('hr.setting.sessions.destroy')),
         session: @json(url('/hr/setting/session')),
     };

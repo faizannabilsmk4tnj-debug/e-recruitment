@@ -12,7 +12,6 @@ use App\Http\Controllers\HR\SettingController;
 use App\Http\Controllers\HR\JobPostingController;
 use App\Http\Controllers\HR\DashboardController;
 use App\Http\Controllers\VacancyController;
-use App\Http\Middleware\SetUserLocale;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PelamarController;
@@ -136,7 +135,7 @@ Route::middleware(['auth', 'role:applicant'])->group(function () {
 });
 
 // ===== HR — harus login dan role=hr =====
-Route::middleware(['role:hr', 'auth', SetUserLocale::class])->group(function () {
+Route::middleware(['role:hr', 'auth'])->group(function () {
 
     Route::get('/hr/dashboard',                  [DashboardController::class, 'index'])->name('hr.dashboard');
     Route::get('/hr/setting',                    [SettingController::class, 'index'])->name('hr.setting');
@@ -144,7 +143,6 @@ Route::middleware(['role:hr', 'auth', SetUserLocale::class])->group(function () 
     Route::post('/hr/setting/avatar/remove',     [SettingController::class, 'removeAvatar'])->name('hr.setting.avatar.remove');
     Route::post('/hr/setting/password',          [SettingController::class, 'updatePassword'])->name('hr.setting.password');
     Route::post('/hr/setting/notifications',     [SettingController::class, 'updateNotifications'])->name('hr.setting.notifications');
-    Route::post('/hr/setting/language',          [SettingController::class, 'updateLanguage'])->name('hr.setting.language');
     Route::delete('/hr/setting/session/{id}',    [SettingController::class, 'logoutDevice'])->name('hr.setting.session.destroy');
     Route::delete('/hr/setting/sessions',        [SettingController::class, 'logoutAllDevices'])->name('hr.setting.sessions.destroy');
     // HR Team Management (Only accessible by HR Master)
