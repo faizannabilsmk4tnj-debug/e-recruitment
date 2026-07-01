@@ -27,7 +27,14 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Database\QueryException $e) {
+            // Catch MySQL privilege errors (e.g. 1142 SELECT/INSERT/UPDATE command denied to user)
+            if ($e->getCode() === '42000' || str_contains($e->getMessage(), '1142') || str_contains($e->getMessage(), 'command denied')) {
+                return response()->view('errors.db_privilege_denied', [
+                    'exception' => $e
+                ], 403);
+            }
+        });
     })
     ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule): void {
         $schedule->command('app:check-vacancy-deadlines')->daily();
