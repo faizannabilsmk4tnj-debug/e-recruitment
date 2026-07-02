@@ -51,34 +51,43 @@ class ApplicantProfileController extends Controller
             'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ]);
 
-        DB::transaction(function () use ($request, $user, $validated): void {
-            $user->update([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'phone' => $validated['phone'] ?? null,
-            ]);
+        try {
+            DB::transaction(function () use ($request, $user, $validated): void {
+                $user->update([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'phone' => $validated['phone'] ?? null,
+                ]);
 
-            $profileData = collect($validated)
-                ->except(['name', 'email', 'phone', 'avatar'])
-                ->toArray();
+                $profileData = collect($validated)
+                    ->except(['name', 'email', 'phone', 'avatar'])
+                    ->toArray();
 
-            $profileData['address'] = $validated['dom_address'] ?? $validated['ktp_address'] ?? null;
-            $profileData['city'] = $validated['dom_city'] ?? $validated['ktp_city'] ?? null;
-            $profileData['province'] = $validated['dom_province'] ?? $validated['ktp_province'] ?? null;
-            $profileData['updated_at'] = now();
+                $profileData['address'] = $validated['dom_address'] ?? $validated['ktp_address'] ?? null;
+                $profileData['city'] = $validated['dom_city'] ?? $validated['ktp_city'] ?? null;
+                $profileData['province'] = $validated['dom_province'] ?? $validated['ktp_province'] ?? null;
+                $profileData['updated_at'] = now();
 
-            $profile = $user->profile()->firstOrCreate(['user_id' => $user->id]);
+                $profile = $user->profile()->firstOrCreate(['user_id' => $user->id]);
 
-            if ($request->hasFile('avatar')) {
-                if ($profile->avatar_url) {
-                    Storage::disk('public')->delete($profile->avatar_url);
+                if ($request->hasFile('avatar')) {
+                    if ($profile->avatar_url) {
+                        Storage::disk('public')->delete($profile->avatar_url);
+                    }
+
+                    $profileData['avatar_url'] = $request->file('avatar')->store('avatars', 'public');
                 }
 
-                $profileData['avatar_url'] = $request->file('avatar')->store('avatars', 'public');
+                $profile->fill($profileData)->save();
+            });
+        } catch (\Illuminate\Database\QueryException $e) {
+            if (str_contains($e->getMessage(), 'Batas usia minimal')) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['birth_date' => 'Database Constraint: Batas usia minimal pendaftaran adalah 17 tahun.']);
             }
-
-            $profile->fill($profileData)->save();
-        });
+            throw $e;
+        }
 
         return back()->with('success', 'Profil berhasil disimpan.');
     }

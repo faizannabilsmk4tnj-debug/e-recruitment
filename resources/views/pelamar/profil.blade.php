@@ -53,7 +53,7 @@
     @method('DELETE')
 </form>
 
-<form method="POST" action="{{ route('pelamar.profil.update') }}" enctype="multipart/form-data">
+<form method="POST" action="{{ route('pelamar.profil.update') }}" enctype="multipart/form-data" autocomplete="off">
 @csrf
 @method('PUT')
 
@@ -126,7 +126,7 @@
             <label class="block text-sm font-medium text-gray-700 mb-1.5">Place / Date of Birth</label>
             <div class="grid grid-cols-2 gap-3">
                 <input type="text" id="tempat-lahir" name="birth_place" value="{{ old('birth_place', $profile?->birth_place) }}" placeholder="City" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
-                <input type="date" id="tanggal-lahir" name="birth_date" value="{{ old('birth_date', optional($profile?->birth_date)->format('Y-m-d')) }}" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <input type="date" id="tanggal-lahir" name="birth_date" value="{{ old('birth_date', optional($profile?->birth_date)->format('Y-m-d')) }}" autocomplete="off" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
         </div>
         <!-- Umur -->

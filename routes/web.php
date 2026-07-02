@@ -218,5 +218,50 @@ if (app()->environment('local')) {
             return response('Error executing migration: ' . $e->getMessage(), 500);
         }
     });
+
+    Route::get('/run-mail-test', function () {
+        try {
+            $email = request('email', 'ecogreenjobvacancy@gmail.com');
+            
+            $output = "Current Mail Default Driver: " . config('mail.default') . "\n";
+            $output .= "Host: " . config('mail.mailers.smtp.host') . "\n";
+            $output .= "Port: " . config('mail.mailers.smtp.port') . "\n";
+            $output .= "Username: " . config('mail.mailers.smtp.username') . "\n";
+            $output .= "Scheme: " . config('mail.mailers.smtp.scheme') . "\n\n";
+            
+            $output .= "Sending test mail to {$email}...\n";
+            
+            \Illuminate\Support\Facades\Mail::to($email)->send(new \App\Mail\PasswordResetMail('http://localhost/reset-password/test-token-123456', 'User Test SMTP'));
+            
+            $output .= "Success: Mail sent successfully!\n";
+            return response('<h3>Mail Test:</h3><pre>' . $output . '</pre>');
+        } catch (\Exception $e) {
+            return response('<h3>Mail Test Failed:</h3><pre>Error: ' . $e->getMessage() . "\n\n" . $e->getTraceAsString() . '</pre>', 500);
+        }
+    });
+
+    Route::get('/test-register-and-reset', function () {
+        $email = 'nouzenshin@gmail.com';
+        $user = \App\Models\User::where('email', $email)->first();
+        if (!$user) {
+            $user = \App\Models\User::create([
+                'name' => 'Nouzenshin',
+                'email' => $email,
+                'password_hash' => \Illuminate\Support\Facades\Hash::make('password123'),
+                'role' => 'applicant',
+                'is_active' => true,
+            ]);
+            $status = "User {$email} created successfully!";
+        } else {
+            $status = "User {$email} already exists.";
+        }
+
+        // Simulate forgot password request
+        \Illuminate\Support\Facades\Mail::alwaysTo('ecogreenjobvacancy@gmail.com');
+        $request = \Illuminate\Http\Request::create('/forgot-password', 'POST', ['email' => $email]);
+        $response = app(\App\Http\Controllers\AuthController::class)->forgotPassword($request);
+
+        return "<h3>Status:</h3><p>{$status}</p><h3>Forgot Password Response:</h3><pre>" . $response->getContent() . "</pre><p><strong>Email has been redirected and sent to ecogreenjobvacancy@gmail.com</strong></p>";
+    });
 }
 

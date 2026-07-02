@@ -11,6 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withCommands([
+        \App\Console\Commands\CheckVacancyDeadlines::class,
+        \App\Console\Commands\TestMail::class,
+        \App\Console\Commands\FixPasswords::class,
+    ])
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
             \App\Http\Middleware\DetectDeletedUser::class,
