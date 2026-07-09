@@ -141,6 +141,20 @@ body{padding-top:68px}
         return back()->with('success', 'Template berhasil dipublikasikan.');
     }
 
+    public function setDraft(CvTemplate $template): RedirectResponse
+    {
+        if ($template->is_default) {
+            return back()->with('error', 'Template default tidak bisa diubah menjadi Draft. Pilih default lain terlebih dahulu.');
+        }
+
+        $template->update([
+            'status' => 'draft',
+            'is_active' => false,
+        ]);
+
+        return back()->with('success', 'Template berhasil diubah menjadi Draft (Private).');
+    }
+
     public function setDefault(CvTemplate $template): RedirectResponse
     {
         DB::transaction(function () use ($template): void {

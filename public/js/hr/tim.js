@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 console.log("Toggle status response received:", data);
                 if (data.redirect) {
-                    alert(data.message || 'Akun Anda telah dinonaktifkan oleh HR Master.');
+                    alert(data.message || 'Your account has been deactivated by HR Master.');
                     window.location.href = data.redirect;
                     return;
                 }
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(({ status, body }) => {
                 console.log("Edit member response received:", body);
                 if (body && body.redirect) {
-                    alert(body.message || 'Akun Anda telah dinonaktifkan oleh HR Master.');
+                    alert(body.message || 'Your account has been deactivated by HR Master.');
                     window.location.href = body.redirect;
                     return;
                 }
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(({ status, body }) => {
                 console.log("Add member request completed with status:", status, "body:", body);
                 if (body && body.redirect) {
-                    alert(body.message || 'Akun Anda telah dinonaktifkan oleh HR Master.');
+                    alert(body.message || 'Your account has been deactivated by HR Master.');
                     window.location.href = body.redirect;
                     return;
                 }

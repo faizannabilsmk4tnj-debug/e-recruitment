@@ -13,13 +13,58 @@ class NotificationService
      */
     public static function create(int $userId, string $type, string $title, string $message, array $data = []): Notification
     {
-        return Notification::create([
+        $notification = Notification::create([
             'user_id' => $userId,
             'type'    => $type,
             'title'   => $title,
             'message' => $message,
             'data'    => !empty($data) ? $data : null,
         ]);
+
+        try {
+            $user = User::find($userId);
+            if ($user && !empty($user->email)) {
+                $shouldEmail = false;
+                $actionUrl = null;
+                $actionText = null;
+
+                if ($user->role === 'applicant') {
+                    // Send email to applicant for application status changes and interviews
+                    $allowedTypes = [
+                        'status_change',
+                        'interview_scheduled',
+                        'interview_rescheduled',
+                        'interview_cancelled'
+                    ];
+                    if (in_array($type, $allowedTypes)) {
+                        $shouldEmail = true;
+                        $actionUrl = url('/pelamar/status-lamaran');
+                        $actionText = 'Lihat Status Lamaran';
+                    }
+                } elseif (in_array($user->role, ['hr', 'hr_master'])) {
+                    // Send email to HR for vacancy closures and approaching deadlines
+                    $allowedTypes = [
+                        'vacancy_closed_auto',
+                        'vacancy_deadline'
+                    ];
+                    if (in_array($type, $allowedTypes)) {
+                        $shouldEmail = true;
+                        $actionUrl = url('/hr/lowongan');
+                        $actionText = 'Kelola Lowongan';
+                    }
+                }
+
+                if ($shouldEmail) {
+                    \Illuminate\Support\Facades\Mail::to($user->email)->send(
+                        new \App\Mail\NotificationMail($title, $message, $actionUrl, $actionText)
+                    );
+                }
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send notification email: ' . $e->getMessage());
+        }
+
+        return $notification;
     }
 
     /**
@@ -128,7 +173,6 @@ class NotificationService
         $typeLabel = match ($interview->interview_type) {
             'online'  => 'Online',
             'offline' => 'Offline',
-            'phone'   => 'Telepon',
             default   => ucfirst($interview->interview_type),
         };
 
@@ -169,7 +213,6 @@ class NotificationService
         $typeLabel = match ($interview->interview_type) {
             'online'  => 'Online',
             'offline' => 'Offline',
-            'phone'   => 'Telepon',
             default   => ucfirst($interview->interview_type),
         };
 
@@ -208,7 +251,6 @@ class NotificationService
         $typeLabel = match ($interview->interview_type) {
             'online'  => 'Online',
             'offline' => 'Offline',
-            'phone'   => 'Telepon',
             default   => ucfirst($interview->interview_type),
         };
 

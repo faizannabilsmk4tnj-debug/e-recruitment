@@ -21,7 +21,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col bg-gray-200">
+<body class="min-h-screen flex flex-col bg-white">
 
     <!-- Navbar -->
     <nav style="background: #15803d !important; border-bottom: 2px solid #14532d !important; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08) !important;" class="px-16 py-3 flex items-center justify-between relative z-50">
@@ -34,14 +34,29 @@
             <a href="/" class="text-sm transition-colors font-medium @yield('nav-beranda', 'text-green-50 hover:text-white')">Home</a>
             <a href="/tentang-kami" class="text-sm transition-colors font-medium text-green-50 hover:text-white">About Us</a>
             <a href="/lowongan" class="text-sm transition-colors font-medium @yield('nav-lowongan', 'text-green-50 hover:text-white')">Vacancies</a>
-            <div class="flex items-center gap-2">
-                <a href="/login" class="border border-white bg-white text-[#15803d] text-sm font-semibold px-5 py-2 rounded-lg hover:bg-green-50 transition-colors">
-                    Sign In
-                </a>
-                <a href="/register" class="border border-white text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-white hover:text-[#15803d] transition-colors">
-                    Register
-                </a>
-            </div>
+            @guest
+                <div class="flex items-center gap-2">
+                    <a href="/login" class="border border-white bg-white text-[#15803d] text-sm font-semibold px-5 py-2 rounded-lg hover:bg-green-50 transition-colors">
+                        Sign In
+                    </a>
+                    <a href="/register" class="border border-white text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-white hover:text-[#15803d] transition-colors">
+                        Register
+                    </a>
+                </div>
+            @endguest
+            @auth
+                <div class="flex items-center gap-3">
+                    <a href="{{ Auth::user()->role === 'applicant' ? '/pelamar/dashboard' : '/hr/dashboard' }}" class="border border-white bg-white text-[#15803d] text-sm font-semibold px-5 py-2 rounded-lg hover:bg-green-50 transition-colors">
+                        Dashboard
+                    </a>
+                    <form action="/logout" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="border border-white text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-white hover:text-[#15803d] transition-colors cursor-pointer">
+                            Sign Out
+                        </button>
+                    </form>
+                </div>
+            @endauth
         </div>
     </nav>
 
@@ -61,10 +76,10 @@
                 </div>
             </div>
             <div class="flex gap-6 text-sm text-green-50">
-                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
-                <a href="#" class="hover:text-white transition-colors">Cookie Settings</a>
-                <a href="#" class="hover:text-white transition-colors">Sustainability Report</a>
+                <button onclick="showInfoModal('privacy')" class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer focus:outline-none">Privacy Policy</button>
+                <button onclick="showInfoModal('terms')" class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer focus:outline-none">Terms of Service</button>
+                <button onclick="showInfoModal('sustainability')" class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer focus:outline-none">Sustainability Report</button>
+                <button onclick="showInfoModal('support')" class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer focus:outline-none">Contact Support</button>
             </div>
         </div>
     </footer>
@@ -95,6 +110,29 @@
                 <a href="/register" class="block w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg text-sm hover:bg-gray-50 transition-colors">
                     Register
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generic Information Modal -->
+    <div id="info-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-black/50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh]">
+            <!-- Header -->
+            <div class="bg-[#15803d] px-6 py-4 flex items-center justify-between text-white shrink-0">
+                <h3 id="info-modal-title" class="font-bold text-base">Information</h3>
+                <button id="btn-close-info" class="text-green-200 hover:text-white transition-colors focus:outline-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="px-6 py-5 overflow-y-auto text-sm text-gray-600 leading-relaxed" id="info-modal-body">
+                <!-- Dynamic Content -->
+            </div>
+            <!-- Footer -->
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end shrink-0">
+                <button id="btn-close-info-footer" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl text-xs transition-colors focus:outline-none">
+                    Close
+                </button>
             </div>
         </div>
     </div>
@@ -135,6 +173,79 @@
                 });
             }
         });
+
+        // ===== FOOTER MODALS LOGIC =====
+        const infoContent = {
+            privacy: {
+                title: 'Privacy Policy',
+                body: `
+                    <p class="mb-3">PT Ecogreen Oleochemicals is committed to maintaining the confidentiality and security of your personal data as a job applicant.</p>
+                    <p class="mb-3"><strong>1. Data Collection:</strong> We collect personal data that you enter voluntarily, such as your name, email address, telephone number, education history, employment history, as well as CV files and other supporting certificates.</p>
+                    <p class="mb-3"><strong>2. Data Usage:</strong> Your data will only be used for the employee selection process, contacting you regarding interview stages, and professional background verification.</p>
+                    <p class="mb-3"><strong>3. Data Protection:</strong> We implement technical and organizational security standards to protect your personal data from unauthorized access, loss, or manipulation by third parties.</p>
+                    <p>If you have questions regarding your data, please contact our recruitment team through the help menu.</p>
+                `
+            },
+            terms: {
+                title: 'Terms of Service',
+                body: `
+                    <p class="mb-3">Welcome to the PT Ecogreen Oleochemicals E-Recruitment Portal. By accessing and registering on this portal, you agree to comply with the following terms:</p>
+                    <p class="mb-3"><strong>1. Accuracy of Information:</strong> You declare that all data, CVs, job information, and documents you upload are true, accurate, and do not manipulate any information.</p>
+                    <p class="mb-3"><strong>2. Account Security:</strong> You are fully responsible for maintaining the confidentiality of your recruitment account password and the activities that occur under that account.</p>
+                    <p class="mb-3"><strong>3. Prohibition of Misuse:</strong> You are prohibited from using this portal for illegal actions, hacking security systems, spreading spam, or uploading dangerous documents (such as malware).</p>
+                    <p>Violations of these terms and conditions may result in the unilateral cancellation of your application process and account deactivation.</p>
+                `
+            },
+            sustainability: {
+                title: 'Sustainability Report',
+                body: `
+                    <p class="mb-3">As one of the world's leading natural fatty alcohol manufacturers, PT Ecogreen Oleochemicals places sustainability as a main pillar of our operations.</p>
+                    <p class="mb-3"><strong>1. Responsible Sourcing:</strong> We are fully committed to using sustainable palm oil raw materials and complying with RSPO (Roundtable on Sustainable Palm Oil) certification standards.</p>
+                    <p class="mb-3"><strong>2. Environmental Management:</strong> Our plants implement ISO 14001 certified environmental management systems to minimize carbon emissions, optimize water recycling, and manage production waste responsibly.</p>
+                    <p class="mb-3"><strong>3. Social Responsibility:</strong> We support the welfare of local communities around our operational areas through sustainable CSR programs and local workforce empowerment.</p>
+                    <p>The complete Sustainability Report can be accessed officially through our main corporate website at <a href="https://www.ecogreenoleo.com" target="_blank" class="text-green-700 underline font-semibold">www.ecogreenoleo.com</a>.</p>
+                `
+            },
+            support: {
+                title: 'Contact Support',
+                body: `
+                    <p class="mb-3">If you experience technical difficulties (such as difficulty registering, uploading documents, or not receiving a password reset email), our team is ready to help you.</p>
+                    <p class="mb-3"><strong>Contact Us Via:</strong></p>
+                    <ul class="list-style-none mb-3 space-y-1">
+                        <li><strong>HR Team Email:</strong> <a href="mailto:career@ecogreenoleo.com" class="text-green-700 underline font-medium">career@ecogreenoleo.com</a></li>
+                        <li><strong>Phone (Batam Head Office):</strong> +62 778 711 777</li>
+                        <li><strong>Address:</strong> Kavling 1 Kabil, Nongsa, Batam City, Riau Islands, Indonesia</li>
+                    </ul>
+                    <p class="text-xs text-gray-500">Support services are available on business days (Monday - Friday) from 08:00 to 17:00 WIB.</p>
+                `
+            }
+        };
+
+        const infoModal = document.getElementById('info-modal');
+        const infoTitle = document.getElementById('info-modal-title');
+        const infoBody = document.getElementById('info-modal-body');
+        const btnCloseInfo = document.getElementById('btn-close-info');
+        const btnCloseInfoFooter = document.getElementById('btn-close-info-footer');
+
+        window.showInfoModal = function(type) {
+            if (infoContent[type]) {
+                infoTitle.textContent = infoContent[type].title;
+                infoBody.innerHTML = infoContent[type].body;
+                infoModal.classList.remove('hidden');
+            }
+        };
+
+        function closeInfoModal() {
+            infoModal.classList.add('hidden');
+        }
+
+        if (btnCloseInfo) btnCloseInfo.addEventListener('click', closeInfoModal);
+        if (btnCloseInfoFooter) btnCloseInfoFooter.addEventListener('click', closeInfoModal);
+        if (infoModal) {
+            infoModal.addEventListener('click', function(e) {
+                if (e.target === infoModal) closeInfoModal();
+            });
+        }
     </script>
 </body>
 </html>

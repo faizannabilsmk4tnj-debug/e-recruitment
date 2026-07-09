@@ -18,16 +18,16 @@
         </button>
     </div>
 
-    {{-- Flash Messages --}}
+    {{-- Pop-up Toast Notifications --}}
     @if(session('success'))
-    <div class="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm font-semibold flex items-center gap-2">
-        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <div id="toast-flash" class="fixed top-6 right-6 z-[300] bg-green-900 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold transform translate-x-12 opacity-0 transition-all duration-300">
+        <svg class="w-4 h-4 text-green-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0"/></svg>
         {{ session('success') }}
     </div>
     @endif
     @if(session('error'))
-    <div class="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm font-semibold flex items-center gap-2">
-        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    <div id="toast-flash" class="fixed top-6 right-6 z-[300] bg-red-800 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold transform translate-x-12 opacity-0 transition-all duration-300">
+        <svg class="w-4 h-4 text-red-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
         {{ session('error') }}
     </div>
     @endif
@@ -112,40 +112,49 @@
                     </div>
 
                     {{-- Action Buttons --}}
-                    <div class="flex gap-2 mt-auto">
-                        {{-- Edit Layout: always visible --}}
-                        <a href="{{ route('hr.template-cv.editor', $template) }}"
-                           class="flex-1 text-xs font-bold border border-gray-200 text-gray-700 rounded-lg py-2 hover:bg-gray-50 transition-colors text-center">
-                            Edit Layout
-                        </a>
+                    <div class="flex flex-col gap-2 mt-auto">
+                        <div class="flex gap-2">
+                            {{-- Edit Layout: always visible --}}
+                            <a href="{{ route('hr.template-cv.editor', $template) }}"
+                               class="flex-1 text-xs font-bold border border-gray-200 text-gray-700 rounded-lg py-2 hover:bg-gray-50 transition-colors text-center">
+                                Edit Layout
+                            </a>
 
-                        {{-- Secondary action based on status --}}
-                        @if($template->is_default)
-                            {{-- Primary template: show delete option --}}
-                            <form method="POST" action="{{ route('hr.template-cv.destroy', $template) }}" class="flex-1"
-                                  onsubmit="return confirm('Template default tidak bisa dihapus. Pilih default lain dulu.')">
-                                @csrf @method('DELETE')
-                                <button type="submit" disabled
-                                    class="w-full text-xs font-bold border border-gray-200 text-gray-400 rounded-lg py-2 cursor-not-allowed bg-gray-50">
+                            {{-- Secondary action based on status --}}
+                            @if($template->is_default)
+                                {{-- Primary template: show Primary --}}
+                                <button type="button" disabled
+                                    class="flex-1 text-xs font-bold border border-gray-200 text-gray-400 rounded-lg py-2 cursor-not-allowed bg-gray-50 text-center">
                                     Primary ✓
                                 </button>
-                            </form>
-                        @elseif($template->status === 'draft')
-                            {{-- Draft: show Publish button --}}
-                            <form method="POST" action="{{ route('hr.template-cv.publish', $template) }}" class="flex-1">
+                            @elseif($template->status === 'draft')
+                                {{-- Draft: show Publish button --}}
+                                <form method="POST" action="{{ route('hr.template-cv.publish', $template) }}" class="flex-1">
+                                    @csrf @method('PATCH')
+                                    <button type="submit"
+                                        class="w-full text-xs font-bold bg-[#15803d] text-white rounded-lg py-2 hover:bg-[#166534] transition-colors">
+                                        Publish
+                                    </button>
+                                </form>
+                            @else
+                                {{-- Published (non-default): show Set Default --}}
+                                <form method="POST" action="{{ route('hr.template-cv.setDefault', $template) }}" class="flex-1">
+                                    @csrf @method('PATCH')
+                                    <button type="submit"
+                                        class="w-full text-xs font-bold bg-[#15803d] text-white rounded-lg py-2 hover:bg-[#166534] transition-colors">
+                                        Set Default
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+
+                        {{-- If published and not default, show Make Private --}}
+                        @if($template->status === 'published' && !$template->is_default)
+                            <form method="POST" action="{{ route('hr.template-cv.setDraft', $template) }}" class="w-full">
                                 @csrf @method('PATCH')
                                 <button type="submit"
-                                    class="w-full text-xs font-bold bg-[#15803d] text-white rounded-lg py-2 hover:bg-[#166534] transition-colors">
-                                    Publish
-                                </button>
-                            </form>
-                        @else
-                            {{-- Published: show Set as Default --}}
-                            <form method="POST" action="{{ route('hr.template-cv.setDefault', $template) }}" class="flex-1">
-                                @csrf @method('PATCH')
-                                <button type="submit"
-                                    class="w-full text-xs font-bold bg-[#15803d] text-white rounded-lg py-2 hover:bg-[#166534] transition-colors">
-                                    Set as Default
+                                    class="w-full text-xs font-bold border border-amber-200 bg-amber-50/50 text-amber-700 rounded-lg py-1.5 hover:bg-amber-100 hover:border-amber-300 transition-colors">
+                                    Make Private (Draft)
                                 </button>
                             </form>
                         @endif
@@ -154,7 +163,7 @@
                     {{-- Delete button (separate, always shown for non-default) --}}
                     @if(!$template->is_default)
                     <form method="POST" action="{{ route('hr.template-cv.destroy', $template) }}" class="mt-2"
-                          onsubmit="return confirm('Yakin hapus template \'{{ addslashes($template->name) }}\'?')">
+                          onsubmit="return confirm('Are you sure you want to delete template \'{{ addslashes($template->name) }}\'?')">
                         @csrf @method('DELETE')
                         <button type="submit"
                             class="w-full text-xs text-red-400 hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 rounded-lg py-1.5 transition-colors">
@@ -269,6 +278,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Close on Escape key
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ---- Pop-up Toast Slide-in/out Animation ----
+    const toastFlash = document.getElementById('toast-flash');
+    if (toastFlash) {
+        // Slide in
+        setTimeout(() => {
+            toastFlash.classList.remove('translate-x-12', 'opacity-0');
+            toastFlash.classList.add('translate-x-0', 'opacity-100');
+        }, 100);
+        
+        // Slide out and remove
+        setTimeout(() => {
+            toastFlash.classList.remove('translate-x-0', 'opacity-100');
+            toastFlash.classList.add('translate-x-12', 'opacity-0');
+            setTimeout(() => toastFlash.remove(), 300);
+        }, 3500);
+    }
 });
 </script>
 @endsection

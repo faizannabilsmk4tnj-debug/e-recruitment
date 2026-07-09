@@ -10,10 +10,12 @@ class Application extends Model
         'user_id',
         'job_id',
         'cv_id',
+        'resume_title',
         'cover_letter',
         'resume_url',
         'status',
         'hr_notes',
+        'source',
     ];
 
     public function user()

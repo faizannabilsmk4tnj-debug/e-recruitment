@@ -15,6 +15,7 @@ class JobPosting extends Model
         'category_id',
         'title',
         'slug',
+        'banner_image',
         'description',
         'requirements',
         'benefits',

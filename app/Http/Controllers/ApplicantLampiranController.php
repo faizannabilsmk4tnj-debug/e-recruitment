@@ -41,7 +41,8 @@ class ApplicantLampiranController extends Controller
         $certSize = null;
         if ($request->hasFile('cert_file')) {
             $file     = $request->file('cert_file');
-            $certPath = $file->store('certificates/' . auth()->id(), 'public');
+            $filename = 'cert_' . auth()->id() . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $certPath = $file->storeAs('certificates/' . auth()->id(), $filename, 'public');
             $certSize = $file->getSize();
         }
 
@@ -80,7 +81,8 @@ class ApplicantLampiranController extends Controller
                 Storage::disk('public')->delete($skill->cert_file_path);
             }
             $file = $request->file('cert_file');
-            $data['cert_file_path'] = $file->store('certificates/' . auth()->id(), 'public');
+            $filename = 'cert_' . auth()->id() . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $data['cert_file_path'] = $file->storeAs('certificates/' . auth()->id(), $filename, 'public');
             $data['cert_file_size'] = $file->getSize();
         }
 
@@ -118,7 +120,8 @@ class ApplicantLampiranController extends Controller
 
         if ($request->type === 'file' && $request->hasFile('porto_file')) {
             $file     = $request->file('porto_file');
-            $fileUrl  = $file->store('portofolio/' . auth()->id(), 'public');
+            $filename = 'porto_' . auth()->id() . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $fileUrl  = $file->storeAs('portofolio/' . auth()->id(), $filename, 'public');
             $fileSize = $file->getSize();
         }
 
@@ -160,7 +163,8 @@ class ApplicantLampiranController extends Controller
                     Storage::disk('public')->delete($portofolio->file_url);
                 }
                 $file = $request->file('porto_file');
-                $data['file_url'] = $file->store('portofolio/' . auth()->id(), 'public');
+                $filename = 'porto_' . auth()->id() . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $data['file_url'] = $file->storeAs('portofolio/' . auth()->id(), $filename, 'public');
                 $data['file_size'] = $file->getSize();
             }
         }

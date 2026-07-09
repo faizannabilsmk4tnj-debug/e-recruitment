@@ -37,8 +37,6 @@
         <div class="flex items-center gap-6">
 
             {{-- Nav Links --}}
-            <a href="/" class="text-green-200 hover:text-white text-sm transition-colors font-medium hidden md:block">Home</a>
-            <a href="/tentang-kami" class="text-green-200 hover:text-white text-sm transition-colors font-medium hidden md:block">About Us</a>
             @if(Auth::check() && Auth::user()->role === 'hr_master')
                 <a href="/hr/tim" class="text-green-200 hover:text-white text-sm transition-colors font-medium hidden md:block">{{ __('hr_layout.hr_team') }}</a>
             @endif
@@ -57,12 +55,12 @@
                 <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
                     <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                         <h3 class="text-sm font-bold text-gray-800">{{ __('hr_layout.notifications') }}</h3>
-                        <span id="notif-header-count" class="text-[10px] text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded-full">0 baru</span>
+                        <span id="notif-header-count" class="text-[10px] text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded-full">0 new</span>
                     </div>
                     <div id="notif-list" class="max-h-80 overflow-y-auto">
                         <div class="px-4 py-8 text-center text-xs text-gray-400">
                             <svg class="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                            Memuat notifikasi...
+                            Loading notifications...
                         </div>
                     </div>
                     <div class="px-4 py-2 border-t border-gray-100 text-center">
@@ -127,45 +125,42 @@
                 </div>
             </div>
         </div>
-    </header>
-
-    {{-- ============ TAB NAVIGASI ============ --}}
+    </header>    {{-- ============ TAB NAVIGASI ============ --}}
     <nav class="bg-white border-b border-gray-200 fixed top-[72px] left-0 right-0 z-40 shadow-sm">
         <div class="flex items-center px-16 gap-1">
             <a href="/hr/dashboard" id="tab-dashboard"
-               class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
-                      @yield('nav-dashboard', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
+               class="px-4 py-3 text-sm transition-all duration-200 border-b-2 whitespace-nowrap
+                      {{ request()->is('hr') || request()->is('hr/dashboard') || request()->is('/') ? 'text-[#15803d] border-[#15803d] bg-green-50/40 rounded-t-lg font-semibold' : 'text-gray-500 border-transparent hover:text-[#15803d] hover:bg-gray-50/50 hover:border-gray-300 font-medium' }}">
                 {{ __('hr_layout.nav.dashboard') }}
             </a>
             <a href="/hr/lowongan" id="tab-lowongan"
-               class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
-                      @yield('nav-lowongan', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
+               class="px-4 py-3 text-sm transition-all duration-200 border-b-2 whitespace-nowrap
+                      {{ request()->is('hr/lowongan*') ? 'text-[#15803d] border-[#15803d] bg-green-50/40 rounded-t-lg font-semibold' : 'text-gray-500 border-transparent hover:text-[#15803d] hover:bg-gray-50/50 hover:border-gray-300 font-medium' }}">
                 {{ __('hr_layout.nav.vacancies') }}
             </a>
             <a href="/hr/pelamar" id="tab-pelamar"
-               class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
-                      @yield('nav-pelamar', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
+               class="px-4 py-3 text-sm transition-all duration-200 border-b-2 whitespace-nowrap
+                      {{ request()->is('hr/pelamar*') ? 'text-[#15803d] border-[#15803d] bg-green-50/40 rounded-t-lg font-semibold' : 'text-gray-500 border-transparent hover:text-[#15803d] hover:bg-gray-50/50 hover:border-gray-300 font-medium' }}">
                 {{ __('hr_layout.nav.applicants') }}
             </a>
             <a href="/hr/wawancara" id="tab-wawancara"
-               class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
-                      @yield('nav-wawancara', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
+               class="px-4 py-3 text-sm transition-all duration-200 border-b-2 whitespace-nowrap
+                      {{ request()->is('hr/wawancara*') ? 'text-[#15803d] border-[#15803d] bg-green-50/40 rounded-t-lg font-semibold' : 'text-gray-500 border-transparent hover:text-[#15803d] hover:bg-gray-50/50 hover:border-gray-300 font-medium' }}">
                 {{ __('hr_layout.nav.interviews') }}
             </a>
-
+ 
             <a href="/hr/laporan" id="tab-laporan"
-               class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
-                      @yield('nav-laporan', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
+               class="px-4 py-3 text-sm transition-all duration-200 border-b-2 whitespace-nowrap
+                      {{ request()->is('hr/laporan*') ? 'text-[#15803d] border-[#15803d] bg-green-50/40 rounded-t-lg font-semibold' : 'text-gray-500 border-transparent hover:text-[#15803d] hover:bg-gray-50/50 hover:border-gray-300 font-medium' }}">
                 {{ __('hr_layout.nav.reports') }}
             </a>
             <a href="/hr/template-cv" id="tab-template"
-               class="px-4 py-3 text-sm font-medium transition-all border-b-2 whitespace-nowrap
-                      @yield('nav-template', 'text-gray-500 border-transparent hover:text-green-800 hover:border-green-300')">
+               class="px-4 py-3 text-sm transition-all duration-200 border-b-2 whitespace-nowrap
+                      {{ request()->is('hr/template-cv*') ? 'text-[#15803d] border-[#15803d] bg-green-50/40 rounded-t-lg font-semibold' : 'text-gray-500 border-transparent hover:text-[#15803d] hover:bg-gray-50/50 hover:border-gray-300 font-medium' }}">
                 {{ __('hr_layout.nav.cv_templates') }}
             </a>
-
         </div>
-    </nav>
+    </nav>v>
 
     {{-- ============ MAIN CONTENT ============ --}}
     <main class="pt-32 min-h-screen">
@@ -173,48 +168,20 @@
     </main>
 
     {{-- ============ FOOTER ============ --}}
-    <footer style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="text-white mt-16">
-        <div class="px-16 py-10 grid grid-cols-3 gap-8">
-            <div>
-                <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-10 w-auto mb-3">
-                <div class="text-sm font-bold text-white uppercase tracking-wider mb-3">Ecogreen Oleochemicals</div>
-                <p class="text-xs text-green-50 leading-relaxed">
-                    Leading global producer of naturally derived oleochemicals. Dedicated to sustainability, innovation, and excellence in HR management systems.
-                </p>
+    <footer style="background: #15803d !important; border: none !important; box-shadow: none !important;" class="text-white px-16 py-5 mt-16">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo PT Ecogreen" class="h-8 w-auto">
+                <div>
+                    <p class="text-sm font-semibold text-white">Ecogreen Oleochemicals</p>
+                    <p class="text-green-50 text-xs mt-0.5">© 2024 PT Ecogreen Oleochemicals. Sustainable Excellence.</p>
+                </div>
             </div>
-            <div>
-                <div class="text-xs font-bold text-white uppercase tracking-wider mb-3">Resources</div>
-                <ul class="space-y-1.5">
-                    <li><a href="#" class="text-xs text-green-50 hover:text-white transition-colors">Employee Handbook</a></li>
-                    <li><a href="#" class="text-xs text-green-50 hover:text-white transition-colors">Corporate Policy</a></li>
-                    <li><a href="#" class="text-xs text-green-50 hover:text-white transition-colors">Safety Guidelines</a></li>
-                    <li><a href="#" class="text-xs text-green-50 hover:text-white transition-colors">IT Support</a></li>
-                </ul>
-            </div>
-            <div>
-                <div class="text-xs font-bold text-white uppercase tracking-wider mb-3">Security</div>
-                <ul class="space-y-2">
-                    <li class="flex items-center gap-2 text-xs text-green-50">
-                        <svg class="w-3.5 h-3.5 text-green-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                        256-bit AES Encryption
-                    </li>
-                    <li class="flex items-center gap-2 text-xs text-green-50">
-                        <svg class="w-3.5 h-3.5 text-green-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                        ISO 27001 Certified
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="border-t border-green-700/30 px-16 py-3 flex items-center justify-between">
-            <span class="text-xs text-green-50">© 2024 PT Ecogreen Oleochemicals. All rights reserved.</span>
-            <div class="flex gap-4">
-                <a href="#" class="text-xs text-green-50 hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" class="text-xs text-green-50 hover:text-white transition-colors">Terms of Service</a>
-                <a href="#" class="text-xs text-green-50 hover:text-white transition-colors">Cookie Settings</a>
+            <div class="flex gap-6 text-sm text-green-50">
+                <button onclick="showInfoModal('privacy')" class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer focus:outline-none">Privacy Policy</button>
+                <button onclick="showInfoModal('terms')" class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer focus:outline-none">Terms of Service</button>
+                <button onclick="showInfoModal('sustainability')" class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer focus:outline-none">Sustainability Report</button>
+                <button onclick="showInfoModal('support')" class="hover:text-white transition-colors bg-transparent border-none p-0 cursor-pointer focus:outline-none">Contact Support</button>
             </div>
         </div>
     </footer>
@@ -282,6 +249,16 @@
                 bg: 'bg-orange-100', color: 'text-orange-600',
                 svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>',
                 link: '/hr/lowongan'
+            },
+            vacancy_closed_auto: {
+                bg: 'bg-red-100', color: 'text-red-600',
+                svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.36 18.36A9 9 0 115.64 5.64a9 9 0 0112.72 12.72zM12 9v4m0 4h.01"/>',
+                link: '/hr/lowongan'
+            },
+            interview_reschedule_request: {
+                bg: 'bg-amber-100', color: 'text-amber-600',
+                svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>',
+                link: '/hr/wawancara/daftar?status=rescheduled'
             }
         };
         const NOTIF_DEFAULT = {
@@ -316,13 +293,13 @@
             }
 
             // Update header count
-            headerCount.textContent = unreadCount + ' baru';
+            headerCount.textContent = unreadCount + ' new';
 
             // Empty state
             if (!notifications || notifications.length === 0) {
                 list.innerHTML = `<div class="px-4 py-8 text-center text-xs text-gray-400">
                     <svg class="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                    Belum ada notifikasi
+                    No notifications
                 </div>`;
                 return;
             }
@@ -577,6 +554,29 @@
             }
         });
     </script>
+    <!-- Generic Information Modal -->
+    <div id="info-modal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh]">
+            <!-- Header -->
+            <div class="bg-[#15803d] px-6 py-4 flex items-center justify-between text-white shrink-0">
+                <h3 id="info-modal-title" class="font-bold text-base">Information</h3>
+                <button id="btn-close-info" class="text-green-200 hover:text-white transition-colors focus:outline-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="px-6 py-5 overflow-y-auto text-sm text-gray-600 leading-relaxed" id="info-modal-body">
+                <!-- Dynamic Content -->
+            </div>
+            <!-- Footer -->
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end shrink-0">
+                <button id="btn-close-info-footer" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl text-xs transition-colors focus:outline-none">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Deactivated Modal -->
     <div id="deactivated-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl border border-gray-100 transform scale-95 transition-transform duration-300 mx-4">
@@ -589,12 +589,12 @@
                     </svg>
                 </div>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 text-center mb-3">Akun Dinonaktifkan</h3>
+            <h3 class="text-xl font-bold text-gray-900 text-center mb-3">Account Deactivated</h3>
             <p class="text-gray-500 text-sm text-center leading-relaxed mb-6">
-                Akun Anda telah dinonaktifkan oleh <strong>HR Master</strong>. Setelah menutup notifikasi ini, Anda akan otomatis dikeluarkan dari sesi dan kembali ke halaman login. Anda tidak dapat masuk kembali sampai HR Master mengaktifkan kembali akun HR Anda.
+                Your account has been deactivated by <strong>HR Master</strong>. After closing this notification, you will be automatically logged out and returned to the login page. You cannot log back in until HR Master reactivates your HR account.
             </p>
             <button id="btn-confirm-deactivated" class="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold py-3 rounded-xl transition-all duration-200 text-sm shadow-lg shadow-red-100 focus:outline-none">
-                Saya Mengerti & Keluar
+                I Understand & Logout
             </button>
         </div>
     </div>
@@ -647,6 +647,183 @@
             return response;
         };
     </script>
+    <script>
+        // ===== FOOTER MODALS LOGIC =====
+        const infoContent = {
+            privacy: {
+                title: 'Privacy Policy',
+                body: `
+                    <p class="mb-3">PT Ecogreen Oleochemicals is committed to maintaining the confidentiality and security of your personal data as a job applicant.</p>
+                    <p class="mb-3"><strong>1. Data Collection:</strong> We collect personal data that you enter voluntarily, such as your name, email address, telephone number, education history, employment history, as well as CV files and other supporting certificates.</p>
+                    <p class="mb-3"><strong>2. Data Usage:</strong> Your data will only be used for the employee selection process, contacting you regarding interview stages, and professional background verification.</p>
+                    <p class="mb-3"><strong>3. Data Protection:</strong> We implement technical and organizational security standards to protect your personal data from unauthorized access, loss, or manipulation by third parties.</p>
+                    <p>If you have questions regarding your data, please contact our recruitment team through the help menu.</p>
+                `
+            },
+            terms: {
+                title: 'Terms of Service',
+                body: `
+                    <p class="mb-3">Welcome to the PT Ecogreen Oleochemicals E-Recruitment Portal. By accessing and registering on this portal, you agree to comply with the following terms:</p>
+                    <p class="mb-3"><strong>1. Accuracy of Information:</strong> You declare that all data, CVs, job information, and documents you upload are true, accurate, and do not manipulate any information.</p>
+                    <p class="mb-3"><strong>2. Account Security:</strong> You are fully responsible for maintaining the confidentiality of your recruitment account password and the activities that occur under that account.</p>
+                    <p class="mb-3"><strong>3. Prohibition of Misuse:</strong> You are prohibited from using this portal for illegal actions, hacking security systems, spreading spam, or uploading dangerous documents (such as malware).</p>
+                    <p>Violations of these terms and conditions may result in the unilateral cancellation of your application process and account deactivation.</p>
+                `
+            },
+            sustainability: {
+                title: 'Sustainability Report',
+                body: `
+                    <p class="mb-3">As one of the world's leading natural fatty alcohol manufacturers, PT Ecogreen Oleochemicals places sustainability as a main pillar of our operations.</p>
+                    <p class="mb-3"><strong>1. Responsible Sourcing:</strong> We are fully committed to using sustainable palm oil raw materials and complying with RSPO (Roundtable on Sustainable Palm Oil) certification standards.</p>
+                    <p class="mb-3"><strong>2. Environmental Management:</strong> Our plants implement ISO 14001 certified environmental management systems to minimize carbon emissions, optimize water recycling, and manage production waste responsibly.</p>
+                    <p class="mb-3"><strong>3. Social Responsibility:</strong> We support the welfare of local communities around our operational areas through sustainable CSR programs and local workforce empowerment.</p>
+                    <p>The complete Sustainability Report can be accessed officially through our main corporate website at <a href="https://www.ecogreenoleo.com" target="_blank" class="text-green-700 underline font-semibold">www.ecogreenoleo.com</a>.</p>
+                `
+            },
+            support: {
+                title: 'Contact Support',
+                body: `
+                    <p class="mb-3">If you experience technical difficulties (such as difficulty registering, uploading documents, or not receiving a password reset email), our team is ready to help you.</p>
+                    <p class="mb-3"><strong>Contact Us Via:</strong></p>
+                    <ul class="list-style-none mb-3 space-y-1">
+                        <li><strong>HR Team Email:</strong> <a href="mailto:career@ecogreenoleo.com" class="text-green-700 underline font-medium">career@ecogreenoleo.com</a></li>
+                        <li><strong>Phone (Batam Head Office):</strong> +62 778 711 777</li>
+                        <li><strong>Address:</strong> Kavling 1 Kabil, Nongsa, Batam City, Riau Islands, Indonesia</li>
+                    </ul>
+                    <p class="text-xs text-gray-500">Support services are available on business days (Monday - Friday) from 08:00 to 17:00 WIB.</p>
+                `
+            }
+        };
+
+        const infoModal = document.getElementById('info-modal');
+        const infoTitle = document.getElementById('info-modal-title');
+        const infoBody = document.getElementById('info-modal-body');
+        const btnCloseInfo = document.getElementById('btn-close-info');
+        const btnCloseInfoFooter = document.getElementById('btn-close-info-footer');
+
+        window.showInfoModal = function(type) {
+            if (infoContent[type]) {
+                infoTitle.textContent = infoContent[type].title;
+                infoBody.innerHTML = infoContent[type].body;
+                infoModal.classList.remove('hidden');
+            }
+        };
+
+        function closeInfoModal() {
+            infoModal.classList.add('hidden');
+        }
+
+        if (btnCloseInfo) btnCloseInfo.addEventListener('click', closeInfoModal);
+        if (btnCloseInfoFooter) btnCloseInfoFooter.addEventListener('click', closeInfoModal);
+        if (infoModal) {
+            infoModal.addEventListener('click', function(e) {
+                if (e.target === infoModal) closeInfoModal();
+            });
+        }
+    </script>
+
+    <!-- Custom Elegant Alert Modal -->
+    <div id="custom-alert-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-gray-100 transform scale-95 transition-transform duration-300 mx-4">
+            <div class="flex items-center gap-3.5 mb-4">
+                <div id="custom-alert-icon" class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-base font-bold text-gray-900">Notification</h3>
+            </div>
+            <p id="custom-alert-message" class="text-gray-600 text-sm leading-relaxed mb-6"></p>
+            <button id="btn-close-custom-alert" class="w-full bg-[#15803d] hover:bg-[#166534] active:bg-[#14532d] text-white font-semibold py-3 rounded-xl transition-all duration-200 text-xs shadow-lg shadow-green-100 focus:outline-none">
+                OK
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Global override for native window.alert
+        (function() {
+            const originalAlert = window.alert;
+            window._originalAlert = originalAlert;
+
+            window.alert = function(message) {
+                const modal = document.getElementById('custom-alert-modal');
+                const msgEl = document.getElementById('custom-alert-message');
+                const btn = document.getElementById('btn-close-custom-alert');
+                const iconContainer = document.getElementById('custom-alert-icon');
+
+                if (!modal || !msgEl || !btn) {
+                    originalAlert(message);
+                    return;
+                }
+
+                // Dynamic icon logic based on message content
+                if (iconContainer) {
+                    const lowerMsg = message.toLowerCase();
+                    if (lowerMsg.includes('category') || lowerMsg.includes('kategori')) {
+                        // Briefcase / Work Icon
+                        iconContainer.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                            </svg>
+                        `;
+                    } else if (lowerMsg.includes('location') || lowerMsg.includes('lokasi') || lowerMsg.includes('tempat')) {
+                        // Location Pin Icon
+                        iconContainer.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        `;
+                    } else {
+                        // Default Checkmark / Info Icon
+                        iconContainer.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        `;
+                    }
+                }
+
+                msgEl.textContent = message;
+                modal.classList.remove('hidden');
+                
+                // Force reflow
+                modal.offsetHeight;
+                
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                
+                const dialog = modal.querySelector('div');
+                if (dialog) {
+                    dialog.classList.remove('scale-95');
+                    dialog.classList.add('scale-100');
+                }
+
+                // Focus OK button for keyboard navigation
+                setTimeout(() => btn.focus(), 50);
+
+                return new Promise((resolve) => {
+                    const onClose = function() {
+                        modal.classList.remove('opacity-100');
+                        modal.classList.add('opacity-0');
+                        if (dialog) {
+                            dialog.classList.remove('scale-100');
+                            dialog.classList.add('scale-95');
+                        }
+                        setTimeout(() => {
+                            modal.classList.add('hidden');
+                            resolve();
+                        }, 300);
+                        btn.removeEventListener('click', onClose);
+                    };
+                    btn.addEventListener('click', onClose);
+                });
+            };
+        })();
+    </script>
+
     @if(Auth::check() && !Auth::user()->is_active)
     <script>
         window.addEventListener('load', function() {

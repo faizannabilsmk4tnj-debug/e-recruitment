@@ -23,16 +23,25 @@ class PelamarController extends Controller
      */
     public function index()
     {
+        // Auto-run migrations if any columns are missing or if bio column still exists in user_profiles
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('job_postings', 'is_archived') || 
+            !\Illuminate\Support\Facades\Schema::hasColumn('applications', 'is_seen') || 
+            \Illuminate\Support\Facades\Schema::hasColumn('user_profiles', 'bio')) {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        }
+
         // 1. Calculate stats for cards
         $totalApplicants = Application::count();
         $submittedCount  = Application::where('status', 'applied')->count();
         $shortlistedCount = Application::where('status', 'shortlisted')->count();
         $interviewCount  = Application::where('status', 'interview')->count();
         $acceptedCount   = Application::where('status', 'accepted')->count();
+        $rejectedCount   = Application::where('status', 'rejected')->count();
         $decisionCount   = Application::whereIn('status', ['shortlisted'])->count();
 
-        // 2. Fetch active and non-empty job postings
+        // 2. Fetch non-archived job postings
         $jobs = JobPosting::with(['category', 'applications.user.profile'])
+            ->where('is_archived', false)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -81,6 +90,7 @@ class PelamarController extends Controller
                     'score' => $score,
                     'avatar' => $initials,
                     'color' => $color,
+                    'is_seen' => (bool)$app->is_seen,
                 ];
             }
 
@@ -91,6 +101,7 @@ class PelamarController extends Controller
             $lowonganList[] = [
                 'id' => $job->id,
                 'title' => $job->title,
+                'status' => $job->status,
                 'department' => $deptName,
                 'total' => $applications->count(),
                 'posted' => $job->created_at ? $job->created_at->format('d M Y') : 'N/A',
@@ -117,6 +128,7 @@ class PelamarController extends Controller
             'shortlistedCount',
             'interviewCount',
             'acceptedCount',
+            'rejectedCount',
             'decisionCount',
             'lowonganList',
             'deptList'
@@ -707,6 +719,68 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
 
             default:
                 return '';
+        }
+    }
+
+    /**
+     * Mark all applications of a specific vacancy as seen (AJAX).
+     */
+    public function markSeen($id)
+    {
+        try {
+            Application::where('job_posting_id', $id)
+                ->where('is_seen', false)
+                ->update(['is_seen' => true]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'All applications marked as seen.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Archive/hide a job vacancy.
+     */
+    public function archive($id)
+    {
+        try {
+            $job = JobPosting::with('applications')->findOrFail($id);
+
+            // Validation: Cannot archive if vacancy is open
+            if ($job->status === 'open') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cannot archive an active/open vacancy. Please close the vacancy first.'
+                ], 400);
+            }
+
+            // Validation: Cannot archive if there are undecided candidates (applied, shortlisted, interview)
+            $undecidedCount = $job->applications->whereIn('status', ['applied', 'shortlisted', 'interview'])->count();
+            if ($undecidedCount > 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cannot archive vacancy. There are still ' . $undecidedCount . ' undecided candidates.'
+                ], 400);
+            }
+
+            // Update is_archived = true
+            $job->update(['is_archived' => true]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Vacancy archived successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

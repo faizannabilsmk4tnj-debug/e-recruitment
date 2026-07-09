@@ -6,7 +6,9 @@
 @section('css')
 <style>
     .hero-image {
-        background: linear-gradient(135deg, #14532d 0%, #166534 40%, #1a7a4a 70%, #15803d 100%);
+        background: linear-gradient(to bottom, rgba(20, 83, 45, 0.1), rgba(20, 83, 45, 0.8)), url('{{ asset("images/hero-factory.jpg") }}');
+        background-size: cover;
+        background-position: center;
         position: relative;
         overflow: hidden;
     }
@@ -43,6 +45,19 @@
     .modal-overlay { transition: opacity 0.3s; }
     .modal-box { transition: transform 0.3s, opacity 0.3s; }
     .modal-overlay.hidden .modal-box { transform: translateY(20px); opacity: 0; }
+    
+    .about-green-bg {
+        background: radial-gradient(circle at 70% 30%, #166534 0%, #14532d 55%, #0d381e 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    .about-green-bg::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        pointer-events: none;
+    }
 </style>
 @endsection
 
@@ -76,47 +91,46 @@
 </section>
 
 <!-- ========== HERO SECTION ========== -->
-<section class="px-16 py-16 bg-white">
-    <div class="flex items-center justify-between gap-16">
+<section class="px-16 py-20 about-green-bg relative overflow-hidden">
+    <!-- Background Glassmorphic Ornaments -->
+    <div class="absolute -top-24 -right-24 w-[400px] h-[400px] rounded-full bg-white/[0.06] blur-3xl pointer-events-none z-0"></div>
+    <div class="absolute top-12 right-[35%] w-72 h-72 rounded-full bg-green-300/[0.08] blur-2xl pointer-events-none z-0"></div>
+    <div class="absolute -bottom-20 -left-10 w-80 h-80 rounded-full bg-white/[0.04] blur-3xl pointer-events-none z-0"></div>
+    <div class="absolute -top-12 right-24 w-72 h-72 rounded-full border border-white/[0.06] pointer-events-none z-0"></div>
+    <div class="absolute bottom-8 right-[25%] w-48 h-48 rounded-full border border-green-300/[0.04] pointer-events-none z-0"></div>
+    <div class="absolute top-1/3 left-12 w-12 h-12 rounded-full border border-white/[0.03] pointer-events-none z-0"></div>
+
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-16 relative z-10 w-full">
         <div class="max-w-xl flex-1">
-            <div class="flex items-center gap-2 mb-6">
-                <span class="w-2.5 h-2.5 bg-green-600 rounded-full"></span>
-                <span class="text-xs font-bold text-green-800 uppercase tracking-widest">Join Our Green Mission</span>
+            <div class="flex items-center gap-2 mb-2">
+                <span class="w-2.5 h-2.5 bg-green-400 rounded-full"></span>
+                <span class="text-xs font-bold text-green-300 uppercase tracking-widest">Join Our Green Mission</span>
             </div>
-            <h1 class="text-5xl font-extrabold text-gray-900 leading-tight mb-6">Cultivate Your<br>Sustainable Career.</h1>
-            <p class="text-gray-600 text-base leading-relaxed mb-8">Join PT Ecogreen Oleochemicals and lead the transformation towards a greener future. We empower talent to innovate for a cleaner tomorrow.</p>
-            <div class="relative max-w-md">
-                <input id="hero-search" type="text" placeholder="Search roles, skills, or departments..." class="w-full pl-5 pr-12 py-3.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                <button id="btn-hero-search" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-green-700 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                </button>
-            </div>
+            <h1 class="text-[4.25rem] font-black text-white leading-[1.05] mb-4 tracking-tight">Cultivate Your<br>Sustainable Career.</h1>
+            <p class="text-green-100/90 text-lg leading-relaxed max-w-lg">Join PT Ecogreen Oleochemicals and lead the transformation towards a greener future. We empower talent to innovate for a cleaner tomorrow.</p>
         </div>
-        <div class="hero-image w-[480px] h-[380px] rounded-2xl flex flex-col justify-end p-8 shrink-0">
+        <div class="hero-image w-[480px] h-[380px] rounded-2xl flex flex-col justify-end p-8 shrink-0 border border-white/15 shadow-2xl relative">
             <div class="absolute top-5 right-5 z-10 flex items-center gap-2 bg-white/15 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+                <span class="w-2.5 h-2.5 bg-green-400 rounded-full"></span>
                 <span class="text-xs text-white font-medium">Secure Career Portal</span>
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center opacity-20 z-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-48 h-48 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5"><path d="M2 20h20V8l-5 4V8l-5 4V4H2v16z"/><rect x="6" y="14" width="2" height="2"/><rect x="10" y="14" width="2" height="2"/></svg>
             </div>
             <div class="relative z-10">
                 <p class="text-3xl font-extrabold text-white/70 tracking-wider mb-1">SUSTAINABILITY</p>
-                <p class="text-lg font-bold text-white/90 tracking-widest">SAFE FOR WORK</p>
+                <p class="text-lg font-bold text-white/95 tracking-widest">SAFE FOR WORK</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ========== STATS SECTION ========== -->
-<section class="bg-gray-50 px-16 py-14 border-t border-gray-100">
+<section class="bg-gray-50 px-16 pt-14 pb-8 border-t border-gray-100">
     <div class="grid grid-cols-4 gap-8 text-center">
         <div>
-            <p class="text-5xl font-extrabold stat-number">500+</p>
+            <p class="text-5xl font-extrabold stat-number">1300+</p>
             <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mt-2">Global Talents</p>
         </div>
         <div>
-            <p class="text-5xl font-extrabold stat-number">20+</p>
+            <p class="text-5xl font-extrabold stat-number">30+</p>
             <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mt-2">Countries Served</p>
         </div>
         <div>
@@ -124,9 +138,12 @@
             <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mt-2">Sustainable Sourcing</p>
         </div>
         <div>
-            <p class="text-5xl font-extrabold stat-number">40+</p>
+            <p class="text-5xl font-extrabold stat-number">35+</p>
             <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mt-2">Years Excellence</p>
         </div>
+    </div>
+    <div class="text-center mt-16 text-[10px] text-gray-400 font-semibold tracking-wider uppercase opacity-75">
+        Source: PT Ecogreen Oleochemicals Corporate Profile & RSPO Reports
     </div>
 </section>
 
@@ -143,73 +160,50 @@
             </button>
         </div>
 
+        @php
+            if (!function_exists('getCategoryIcon')) {
+                function getCategoryIcon($slug) {
+                    $iconClass = 'w-6 h-6 text-green-700';
+                    $slug = strtolower($slug);
+                    if (str_contains($slug, 'it') || str_contains($slug, 'engineering')) {
+                        return '<svg xmlns="http://www.w3.org/2000/svg" class="'.$iconClass.'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>';
+                    } elseif (str_contains($slug, 'finance') || str_contains($slug, 'accounting')) {
+                        return '<svg xmlns="http://www.w3.org/2000/svg" class="'.$iconClass.'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>';
+                    } elseif (str_contains($slug, 'human') || str_contains($slug, 'hr') || str_contains($slug, 'people')) {
+                        return '<svg xmlns="http://www.w3.org/2000/svg" class="'.$iconClass.'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>';
+                    } elseif (str_contains($slug, 'operations') || str_contains($slug, 'production')) {
+                        return '<svg xmlns="http://www.w3.org/2000/svg" class="'.$iconClass.'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>';
+                    } elseif (str_contains($slug, 'marketing') || str_contains($slug, 'sales')) {
+                        return '<svg xmlns="http://www.w3.org/2000/svg" class="'.$iconClass.'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>';
+                    } elseif (str_contains($slug, 'logistics') || str_contains($slug, 'supply') || str_contains($slug, 'chain')) {
+                        return '<svg xmlns="http://www.w3.org/2000/svg" class="'.$iconClass.'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg>';
+                    } elseif (str_contains($slug, 'quality') || str_contains($slug, 'control') || str_contains($slug, 'qc')) {
+                        return '<svg xmlns="http://www.w3.org/2000/svg" class="'.$iconClass.'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+                    } else {
+                        return '<svg xmlns="http://www.w3.org/2000/svg" class="'.$iconClass.'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/></svg>';
+                    }
+                }
+            }
+        @endphp
+
         <div class="grid grid-cols-4 gap-4 mt-6">
-            <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
-                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            @forelse($categories ?? [] as $category)
+                <div onclick="window.location.href='/lowongan?category={{ urlencode($category->name) }}'" class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
+                    <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
+                        {!! getCategoryIcon($category->slug ?? '') !!}
+                    </div>
+                    <p class="text-xs font-bold text-green-900 uppercase tracking-wider line-clamp-1" title="{{ $category->name }}">{{ $category->name }}</p>
+                    <p class="text-xs text-gray-400 mt-1">{{ $category->job_postings_count }} Vacancies</p>
                 </div>
-                <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Engineering</p>
-                <p class="text-xs text-gray-400 mt-1">124 Vacancies</p>
-            </div>
-            <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
-                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
+            @empty
+                <div class="col-span-4 text-center py-6 text-sm text-gray-500">
+                    No active categories found.
                 </div>
-                <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Finance</p>
-                <p class="text-xs text-gray-400 mt-1">85 Vacancies</p>
-            </div>
-            <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
-                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-                </div>
-                <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Marketing</p>
-                <p class="text-xs text-gray-400 mt-1">92 Vacancies</p>
-            </div>
-            <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
-                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                </div>
-                <p class="text-xs font-bold text-green-900 uppercase tracking-wider">IT & Digital</p>
-                <p class="text-xs text-gray-400 mt-1">156 Vacancies</p>
-            </div>
-            <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
-                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/></svg>
-                </div>
-                <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Research</p>
-                <p class="text-xs text-gray-400 mt-1">43 Vacancies</p>
-            </div>
-            <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
-                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                </div>
-                <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Operations</p>
-                <p class="text-xs text-gray-400 mt-1">210 Vacancies</p>
-            </div>
-            <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
-                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                </div>
-                <p class="text-xs font-bold text-green-900 uppercase tracking-wider">Sustainability</p>
-                <p class="text-xs text-gray-400 mt-1">67 Vacancies</p>
-            </div>
-            <div class="kategori-card border border-gray-200 rounded-xl p-5 text-center hover:border-green-300 hover:shadow-sm transition-all cursor-pointer group">
-                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                </div>
-                <p class="text-xs font-bold text-green-900 uppercase tracking-wider">HR & People</p>
-                <p class="text-xs text-gray-400 mt-1">31 Vacancies</p>
-            </div>
+            @endforelse
         </div>
 
-        <div class="flex items-center justify-between mt-6 pt-5 border-t border-gray-100">
-            <div class="flex items-center gap-2">
-                <span class="w-2 h-2 bg-green-600 rounded-full"></span>
-                <span class="text-xs text-gray-400 uppercase tracking-wider font-medium">Security Pulse: Encrypted Session</span>
-            </div>
-            <div class="flex items-center gap-4">
-                <a href="/lowongan" class="text-sm font-semibold text-green-800 hover:text-green-600 transition-colors">View All Categories</a>
-            </div>
+        <div class="flex items-center justify-end mt-6 pt-5 border-t border-gray-100">
+            <a href="/lowongan?open_categories=1" class="text-sm font-semibold text-green-800 hover:text-green-600 transition-colors">View All Categories</a>
         </div>
     </div>
 </div>
@@ -232,99 +226,47 @@
         </div>
 
         <div class="mt-6 divide-y divide-gray-100">
-            <div class="flex items-center justify-between py-4 hover:bg-gray-50 -mx-4 px-4 rounded-lg transition-colors">
-                <div>
-                    <h3 class="font-bold text-gray-900">Production Engineer</h3>
-                    <div class="flex items-center gap-3 mt-1.5">
-                        <span class="text-xs font-medium text-green-700 bg-green-50 px-2.5 py-0.5 rounded-md flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                            Operations
-                        </span>
-                        <span class="text-xs text-gray-400 flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            2 hours ago
-                        </span>
+            @forelse($latestJobs ?? [] as $job)
+                <div class="flex items-center justify-between py-4 hover:bg-gray-50 -mx-4 px-4 rounded-lg transition-colors">
+                    <div>
+                        <h3 class="font-bold text-gray-900">{{ $job->title }}</h3>
+                        <div class="flex items-center gap-3 mt-1.5">
+                            <span class="text-xs font-medium text-green-700 bg-green-50 px-2.5 py-0.5 rounded-md flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                                {{ $job->category->name ?? 'General' }}
+                            </span>
+                            <span class="text-xs text-gray-400 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                {{ $job->created_at->diffForHumans() }}
+                            </span>
+                        </div>
                     </div>
+                    @auth
+                        @if(Auth::user()->role === 'applicant')
+                            <a href="/pelamar/lowongan/{{ $job->id }}" class="text-sm font-semibold text-green-800 border border-green-800 px-4 py-1.5 rounded-lg hover:bg-green-800 hover:text-white transition-colors flex items-center gap-1">
+                                Apply Now <span>→</span>
+                            </a>
+                        @else
+                            <a href="/hr/lowongan/{{ $job->id }}" class="text-sm font-semibold text-green-800 border border-green-800 px-4 py-1.5 rounded-lg hover:bg-green-800 hover:text-white transition-colors flex items-center gap-1">
+                                View Details <span>→</span>
+                            </a>
+                        @endif
+                    @else
+                        <button data-auth-required class="text-sm font-semibold text-green-800 border border-green-800 px-4 py-1.5 rounded-lg hover:bg-green-800 hover:text-white transition-colors flex items-center gap-1">
+                            Apply Now <span>→</span>
+                        </button>
+                    @endauth
                 </div>
-                <button data-auth-required class="text-sm font-semibold text-green-800 border border-green-800 px-4 py-1.5 rounded-lg hover:bg-green-800 hover:text-white transition-colors flex items-center gap-1">
-                    Apply Now <span>→</span>
-                </a>
-            </div>
-            <div class="flex items-center justify-between py-4 hover:bg-gray-50 -mx-4 px-4 rounded-lg transition-colors">
-                <div>
-                    <h3 class="font-bold text-gray-900">Sustainability Specialist</h3>
-                    <div class="flex items-center gap-3 mt-1.5">
-                        <span class="text-xs font-medium text-green-700 bg-green-50 px-2.5 py-0.5 rounded-md flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                            Environmental
-                        </span>
-                        <span class="text-xs text-gray-400 flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            5 hours ago
-                        </span>
-                    </div>
-                </div>
-                <button data-auth-required class="text-sm font-semibold text-green-800 border border-green-800 px-4 py-1.5 rounded-lg hover:bg-green-800 hover:text-white transition-colors flex items-center gap-1">Apply Now →</button>
-            </div>
-            <div class="flex items-center justify-between py-4 hover:bg-gray-50 -mx-4 px-4 rounded-lg transition-colors">
-                <div>
-                    <h3 class="font-bold text-gray-900">QA/QC Analyst</h3>
-                    <div class="flex items-center gap-3 mt-1.5">
-                        <span class="text-xs font-medium text-green-700 bg-green-50 px-2.5 py-0.5 rounded-md flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/></svg>
-                            Quality Control
-                        </span>
-                        <span class="text-xs text-gray-400 flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            Today
-                        </span>
-                    </div>
-                </div>
-                <button data-auth-required class="text-sm font-semibold text-green-800 border border-green-800 px-4 py-1.5 rounded-lg hover:bg-green-800 hover:text-white transition-colors flex items-center gap-1">Apply Now →</button>
-            </div>
-            <div class="flex items-center justify-between py-4 hover:bg-gray-50 -mx-4 px-4 rounded-lg transition-colors">
-                <div>
-                    <h3 class="font-bold text-gray-900">Human Resources Generalist</h3>
-                    <div class="flex items-center gap-3 mt-1.5">
-                        <span class="text-xs font-medium text-green-700 bg-green-50 px-2.5 py-0.5 rounded-md flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                            Corporate
-                        </span>
-                        <span class="text-xs text-gray-400 flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            Yesterday
-                        </span>
-                    </div>
-                </div>
-                <button data-auth-required class="text-sm font-semibold text-green-800 border border-green-800 px-4 py-1.5 rounded-lg hover:bg-green-800 hover:text-white transition-colors flex items-center gap-1">Apply Now →</button>
-            </div>
-            <div class="flex items-center justify-between py-4 hover:bg-gray-50 -mx-4 px-4 rounded-lg transition-colors">
-                <div>
-                    <h3 class="font-bold text-gray-900">Supply Chain Coordinator</h3>
-                    <div class="flex items-center gap-3 mt-1.5">
-                        <span class="text-xs font-medium text-green-700 bg-green-50 px-2.5 py-0.5 rounded-md flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                            Logistics
-                        </span>
-                        <span class="text-xs text-gray-400 flex items-center gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            Yesterday
-                        </span>
-                    </div>
-                </div>
-                <button data-auth-required class="text-sm font-semibold text-green-800 border border-green-800 px-4 py-1.5 rounded-lg hover:bg-green-800 hover:text-white transition-colors flex items-center gap-1">Apply Now →</button>
-            </div>
+            @empty
+                <p class="text-sm text-gray-500 py-6 text-center">No active vacancies at the moment.</p>
+            @endforelse
         </div>
 
-        <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+        <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-start">
             <button id="btn-lihat-kategori" class="text-sm font-semibold text-gray-700 hover:text-green-700 flex items-center gap-1 transition-colors">
                 View All Vacancies
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </button>
-            <div class="flex items-center gap-2">
-                <span class="w-2 h-2 bg-green-600 rounded-full"></span>
-                <span class="text-xs text-gray-400 uppercase tracking-wider font-medium">Secure Portal</span>
-            </div>
         </div>
     </div>
 </div>
@@ -370,10 +312,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Lihat All Lowongan -> open Kategori modal
+    // View All Vacancies click -> redirect to general vacancies page
     document.getElementById('btn-lihat-kategori').addEventListener('click', function () {
-        closeModal('modal-lowongan');
-        setTimeout(() => openModal('modal-kategori'), 200);
+        window.location.href = '/lowongan';
     });
 
     // Kategori cards -> redirect to lowongan
@@ -383,17 +324,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ===== HERO SEARCH (functional) =====
-    function doHeroSearch() {
-        const q = document.getElementById('hero-search').value.trim();
-        if (q) window.location.href = '/lowongan?q=' + encodeURIComponent(q);
-        else window.location.href = '/lowongan';
-    }
 
-    document.getElementById('btn-hero-search').addEventListener('click', doHeroSearch);
-    document.getElementById('hero-search').addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') doHeroSearch();
-    });
 
     // Close modals on overlay click
     document.querySelectorAll('.modal-overlay').forEach(overlay => {

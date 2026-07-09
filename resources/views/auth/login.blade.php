@@ -117,11 +117,7 @@
                 </div>
             </div>
 
-            <!-- Encrypted Session Badge -->
-            <div class="flex items-center justify-center gap-2 py-1">
-                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Secure Encrypted Session</span>
-            </div>
+
 
             <!-- Submit Button -->
             <button

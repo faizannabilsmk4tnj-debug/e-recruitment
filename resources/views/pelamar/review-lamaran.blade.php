@@ -34,26 +34,17 @@
                     <h2 class="font-bold text-gray-900">Attached Documents</h2>
                 </div>
 
-                <!-- CV Source Options -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <label class="relative flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100/50 transition-colors">
-                        <input type="radio" name="cv_source" value="builder" checked class="w-4 h-4 text-green-700 focus:ring-green-500 border-gray-300">
-                        <div>
-                            <span class="block text-sm font-bold text-gray-900">CV Builder Internal</span>
-                            <span class="block text-xs text-gray-500 mt-0.5">Kirim dengan CV otomatis berdasarkan profil terisi Anda.</span>
-                        </div>
+                <!-- CV Title Input -->
+                <div class="mb-4">
+                    <label for="resume-title" class="block text-sm font-semibold text-gray-700 mb-2">
+                        CV Title / Judul CV <span class="text-red-500">*</span>
                     </label>
-                    <label class="relative flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100/50 transition-colors">
-                        <input type="radio" name="cv_source" value="upload" class="w-4 h-4 text-green-700 focus:ring-green-500 border-gray-300">
-                        <div>
-                            <span class="block text-sm font-bold text-gray-900">Unggah CV Manual</span>
-                            <span class="block text-xs text-gray-500 mt-0.5">Unggah berkas CV kustom Anda sendiri (PDF/DOC/DOCX).</span>
-                        </div>
-                    </label>
+                    <input type="text" id="resume-title" placeholder="Contoh: CV - Web Developer - Ahmad"
+                           class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
                 </div>
 
                 <!-- Manual Upload Container -->
-                <div id="manual-upload-container" class="hidden space-y-4">
+                <div id="manual-upload-container" class="space-y-4">
                     <!-- Upload area (shown when no file) -->
                     <div id="upload-area" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-green-400 transition-colors cursor-pointer" onclick="document.getElementById('file-input').click()">
                         <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -172,19 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const fileName = document.getElementById('file-name');
     const fileMeta = document.getElementById('file-meta');
     const fileRemove = document.getElementById('file-remove');
-
-    const cvSourceRadios = document.querySelectorAll('input[name="cv_source"]');
-    const manualUploadContainer = document.getElementById('manual-upload-container');
-
-    cvSourceRadios.forEach(radio => {
-        radio.addEventListener('change', function () {
-            if (this.value === 'upload') {
-                manualUploadContainer.classList.remove('hidden');
-            } else {
-                manualUploadContainer.classList.add('hidden');
-            }
-        });
-    });
+    const resumeTitleInput = document.getElementById('resume-title');
 
     fileInput.addEventListener('change', function () {
         const file = this.files[0];
@@ -206,6 +185,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         uploadArea.classList.add('hidden');
         fileInfo.classList.remove('hidden');
+
+        // Automatically set file name as resume title if it's empty
+        if (!resumeTitleInput.value.trim()) {
+            const nameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+            resumeTitleInput.value = nameWithoutExt;
+        }
     });
 
     fileRemove.addEventListener('click', function () {
@@ -236,23 +221,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Kirim lamaran
     document.getElementById('btn-kirim').addEventListener('click', function () {
-        const cvSource = document.querySelector('input[name="cv_source"]:checked').value;
-        const fileInput = document.getElementById('file-input');
+        const resumeTitle = resumeTitleInput.value.trim();
         const file = fileInput.files[0];
 
-        if (cvSource === 'upload' && !file) {
+        if (!resumeTitle) {
+            alert('Please enter a CV Title.');
+            resumeTitleInput.focus();
+            return;
+        }
+
+        if (!file) {
             alert('Please upload your CV document.');
             return;
         }
 
         const coverLetter = document.getElementById('cover-letter').value;
         const formData = new FormData();
-        formData.append('cv_source', cvSource);
+        formData.append('resume_title', resumeTitle);
         formData.append('cover_letter', coverLetter);
-        
-        if (cvSource === 'upload' && file) {
-            formData.append('file_cv', file);
-        }
+        formData.append('file_cv', file);
 
         const btn = this;
         btn.disabled = true;

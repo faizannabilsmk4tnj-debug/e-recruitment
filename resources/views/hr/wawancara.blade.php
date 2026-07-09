@@ -116,10 +116,6 @@
                         <div class="w-3 h-3 rounded-full bg-purple-500 shadow-sm border border-white"></div>
                         <span class="text-sm font-semibold text-gray-700">On-site / Offline</span>
                     </li>
-                    <li class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-amber-500 shadow-sm border border-white"></div>
-                        <span class="text-sm font-semibold text-gray-700">Phone Call</span>
-                    </li>
                 </ul>
             </div>
 
@@ -132,12 +128,10 @@
                         $borderClasses = [
                             'online' => 'bg-blue-500',
                             'offline' => 'bg-purple-500',
-                            'phone' => 'bg-amber-500',
                         ];
                         $typeLabels = [
                             'online' => 'Online Meeting',
                             'offline' => 'On-site Office',
-                            'phone' => 'Phone Call',
                         ];
                         $borderClass = $borderClasses[$interview->interview_type] ?? 'bg-gray-500';
                         $typeLabel = $typeLabels[$interview->interview_type] ?? ucfirst($interview->interview_type);
@@ -222,12 +216,10 @@
                             $colorClasses = [
                                 'online' => 'bg-blue-50 border-blue-100 border-l-blue-500 text-blue-700',
                                 'offline' => 'bg-purple-50 border-purple-100 border-l-purple-500 text-purple-700',
-                                'phone' => 'bg-amber-50 border-amber-100 border-l-amber-500 text-amber-700',
                             ];
                             $typeLabels = [
                                 'online' => 'Online',
                                 'offline' => 'Offline',
-                                'phone' => 'Phone',
                             ];
                             $colorClass = $colorClasses[$interview->interview_type] ?? 'bg-gray-50 border-gray-100 border-l-gray-500 text-gray-700';
                             $typeLabel = $typeLabels[$interview->interview_type] ?? ucfirst($interview->interview_type);
@@ -239,16 +231,27 @@
                                 $shortName .= ' ' . substr($nameParts[1], 0, 1) . '.';
                             }
                             $isAccepted = $interview->application && $interview->application->status === 'accepted';
+                            $isCancelled = $interview->status === 'cancelled';
+                            $isRescheduled = $interview->status === 'rescheduled';
+                            $isInactive = $isAccepted || $isCancelled;
+                            $titleText = $candidateName . ' - ' . $typeLabel . ' Interview' . ($isAccepted ? ' (Accepted)' : '') . ($isCancelled ? ' (Cancelled)' : '') . ($isRescheduled ? ' (Rescheduled)' : '');
                         @endphp
-                        <div class="border border-l-2 {{ $isAccepted ? 'opacity-50 grayscale bg-gray-100 text-gray-400 border-gray-300 pointer-events-none' : $colorClass }} text-[10px] px-2 py-1.5 rounded truncate font-semibold" 
-                             title="{{ $candidateName }} - {{ $typeLabel }} Interview {{ $isAccepted ? '(Accepted)' : '' }}"
-                             @if($isAccepted)
+                        <div class="border border-l-2 {{ $isInactive ? 'opacity-50 grayscale bg-gray-100 text-gray-400 border-gray-300 pointer-events-none' : ($isRescheduled ? 'bg-amber-50 border-amber-100 border-l-amber-500 text-amber-750' : $colorClass) }} text-[10px] px-2 py-1.5 rounded truncate font-semibold" 
+                             title="{{ $titleText }}"
+                             @if($isInactive)
                                  onclick="event.stopPropagation();"
                              @else
                                  onclick="event.stopPropagation(); window.location.href='/hr/wawancara/daftar?search={{ urlencode($candidateName) }}'"
                              @endif>
-                            <span class="block text-[9px] mb-0.5 font-bold opacity-60">{{ $interview->scheduled_at->format('H:i') }}</span>
-                            {{ $shortName }} ({{ $typeLabel }})
+                            <span class="block text-[9px] mb-0.5 font-bold opacity-60">
+                                {{ $interview->scheduled_at->format('H:i') }}
+                                @if($isCancelled)
+                                    <span class="text-[8px] text-red-600 uppercase font-bold ml-1">(Cancelled)</span>
+                                @elseif($isRescheduled)
+                                    <span class="text-[8px] text-amber-600 uppercase font-bold ml-1">(Resched)</span>
+                                @endif
+                            </span>
+                            <span class="{{ $isCancelled ? 'line-through' : '' }}">{{ $shortName }} ({{ $typeLabel }})</span>
                         </div>
                         @endforeach
                     </div>

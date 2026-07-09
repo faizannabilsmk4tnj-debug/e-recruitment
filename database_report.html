@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Constraints Report - e-Recruitment</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --bg-tertiary: #334155;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --accent-color: #6366F1;
+            --accent-hover: #4F46E5;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --border-color: #475569;
+            --card-gradient: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+            --glow-color: rgba(99, 102, 241, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 2.5rem;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header Style */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+        }
+
+        .header-title h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #818CF8, #C084FC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .badge-project {
+            background-color: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--accent-color);
+            color: #A5B4FC;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: var(--card-gradient);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--accent-color);
+        }
+
+        .card-pk::before { background-color: #3B82F6; }
+        .card-fk::before { background-color: #8B5CF6; }
+        .card-uq::before { background-color: #EC4899; }
+        .card-tg::before { background-color: #F59E0B; }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--glow-color);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-right: 1.25rem;
+            opacity: 0.85;
+        }
+
+        .card-info h3 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-info .count {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Navigation Tabs */
+        .tabs-container {
+            margin-bottom: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--text-primary);
+            background-color: var(--accent-color);
+        }
+
+        /* Content Sections */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Cards */
+        .content-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .content-card h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.92rem;
+        }
+
+        th {
+            background-color: #1E293B;
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            color: #E2E8F0;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        tr:hover {
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        /* SQL Query Code Style */
+        .sql-code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #0F172A;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            color: #F472B6;
+            font-size: 0.85rem;
+            word-break: break-all;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Buttons & Badges */
+        .btn-copy {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-copy:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-cascade { background-color: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-restrict { background-color: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-new { background-color: rgba(99, 102, 241, 0.2); color: #A5B4FC; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .badge-changed { background-color: rgba(236, 72, 153, 0.15); color: #F472B6; border: 1px solid rgba(236, 72, 153, 0.3); }
+        .badge-removed { background-color: rgba(239, 68, 68, 0.15); color: #FCA5A5; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        /* Search Box */
+        .search-container {
+            margin-bottom: 1.25rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .search-input {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            width: 300px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Business Logic Page Specific */
+        .logic-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .logic-card {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .logic-card h3 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--accent-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logic-card p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .logic-code {
+            background-color: #0F172A;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            color: #38BDF8;
+            max-height: 250px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- HEADER -->
+    <header>
+        <div class="header-title">
+            <h1>Database Schema Report</h1>
+            <p>Dokumentasi dan Audit Key Constraint (PK, FK, Unique) &amp; Database Triggers</p>
+        </div>
+        <div>
+            <span class="badge-project">Proyek e-Recruitment</span>
+        </div>
+    </header>
+
+    <!-- STATS CARDS -->
+    <div class="stats-grid">
+        <div class="card card-pk">
+            <span class="card-icon">🔑</span>
+            <div class="card-info">
+                <h3>Primary Keys</h3>
+                <div class="count">24</div>
+            </div>
+        </div>
+        <div class="card card-fk">
+            <span class="card-icon">🔗</span>
+            <div class="card-info">
+                <h3>Foreign Keys</h3>
+                <div class="count">24</div>
+            </div>
+        </div>
+        <div class="card card-uq">
+            <span class="card-icon">💎</span>
+            <div class="card-info">
+                <h3>Unique Keys</h3>
+                <div class="count">9</div>
+            </div>
+        </div>
+        <div class="card card-tg">
+            <span class="card-icon">⚡</span>
+            <div class="card-info">
+                <h3>DB Triggers</h3>
+                <div class="count">5</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABS NAVIGATION -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('ringkasan')">Ringkasan &amp; Logika FK</button>
+            <button class="tab-btn" onclick="openTab('primary-keys')">Primary Keys (24)</button>
+            <button class="tab-btn" onclick="openTab('foreign-keys')">Foreign Keys (24)</button>
+            <button class="tab-btn" onclick="openTab('unique-keys')">Unique Keys (9)</button>
+            <button class="tab-btn" onclick="openTab('triggers')">Business Triggers (5)</button>
+        </div>
+    </div>
+
+    <!-- TAB 1: RINGKASAN & LOGIKA FK -->
+    <div id="ringkasan" class="tab-content active">
+        
+        <div class="content-card">
+            <h2>Logika Matematika: Mengapa Total FK Berjumlah 24?</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Meskipun terdapat 8 tabel mandiri yang sama sekali tidak memiliki Foreign Key (0 FK), total FK di dalam database tetap berjumlah 24. Hal ini dikarenakan beberapa tabel memiliki multi-relasi (lebih dari 1 FK) seperti tabel <strong>applications</strong> yang memegang 3 FK sekaligus. Berikut adalah rincian perhitungannya:
+            </p>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kategori Tabel</th>
+                            <th>Daftar Nama Tabel</th>
+                            <th style="text-align: center;">Rumus Subtotal</th>
+                            <th style="text-align: center;">Jumlah FK</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Tabel dengan 3 FK</strong></td>
+                            <td><code>applications</code></td>
+                            <td style="text-align: center;">1 tabel &times; 3 FK</td>
+                            <td style="text-align: center; font-weight: bold; color: var(--accent-color);">3</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tabel dengan 2 FK</strong></td>
+                            <td><code>applicant_cvs</code>, <code>job_postings</code>, <code>saved_jobs</code>, <code>application_status_logs</code>, <code>interviews</code>, <code>interview_results</code></td>
+                            <td style="text-align: center;">6 tabel &times; 2 FK</td>
+                            <td style="text-align: center; font-weight: bold; color: var(--accent-color);">12</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tabel dengan 1 FK</strong></td>
+                            <td><code>user_profiles</code>, <code>password_reset_tokens</code>, <code>work_experiences</code>, <code>educations</code>, <code>applicant_skills</code>, <code>notifications</code>, <code>organization_experiences</code>, <code>portofolio</code>, <code>user_notification_preferences</code></td>
+                            <td style="text-align: center;">9 tabel &times; 1 FK</td>
+                            <td style="text-align: center; font-weight: bold; color: var(--accent-color);">9</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tabel Mandiri (0 FK)</strong></td>
+                            <td><code>users</code>, <code>cv_templates</code>, <code>job_categories</code>, <code>work_locations</code>, <code>sessions</code>, <code>cache</code>, <code>cache_locks</code>, <code>migrations</code></td>
+                            <td style="text-align: center;">8 tabel &times; 0 FK</td>
+                            <td style="text-align: center; font-weight: bold; color: var(--text-secondary);">0</td>
+                        </tr>
+                        <tr style="background-color: rgba(99, 102, 241, 0.1); font-size: 1.05rem; font-weight: bold;">
+                            <td colspan="3">TOTAL KESELURUHAN FOREIGN KEY</td>
+                            <td style="text-align: center; color: var(--success-color);">24</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h2>Perubahan &amp; Hasil Audit Skema Database</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kategori Perubahan</th>
+                            <th>Status Aktual</th>
+                            <th>Daftar Constraint terkait &amp; Penjelasan Analitis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-removed">Tabel Dihapus</span></td>
+                            <td><strong>Dihapus Permanen</strong></td>
+                            <td>Tabel <code>login_attempts</code>, <code>job_search_logs</code>, dan <code>certificates</code> telah dibuang dalam migrasi pembersihan proyek.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-changed">Struktur Berubah</span></td>
+                            <td><strong>PK &amp; FK Mismatched</strong></td>
+                            <td>Tabel <code>password_reset_tokens</code> diubah menggunakan PK <code>id</code> (Auto-increment) dan FK <code>user_id</code>. Tidak menggunakan PK <code>email</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-new">Tambahan Baru</span></td>
+                            <td><strong>Belum ada di dokumen lama</strong></td>
+                            <td>
+                                Menambahkan relasi baru:
+                                <ul>
+                                    <li><code>fk_saved_jobs_job</code> (menghubungkan <code>saved_jobs</code> ke <code>job_postings</code>)</li>
+                                    <li><code>fk_password_reset_tokens_user</code> (menghubungkan token ke user)</li>
+                                    <li><code>fk_user_notification_preferences_user</code> (menghubungkan preferensi notifikasi ke user)</li>
+                                    <li><code>password_reset_tokens_token_unique</code> (keamanan enkripsi string token)</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TAB 2: PRIMARY KEYS -->
+    <div id="primary-keys" class="tab-content">
+        <div class="content-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>Daftar Primary Keys (PK)</h2>
+                <input type="text" id="search-pk" class="search-input" placeholder="Cari nama tabel..." onkeyup="filterTable('table-pk', 'search-pk', 1)">
+            </div>
+            
+            <div class="table-responsive">
+                <table id="table-pk">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px; text-align: center;">No</th>
+                            <th>Nama Tabel</th>
+                            <th style="width: 120px;">Kolom PK</th>
+                            <th>Query SQL Pembentukan Constraint (MySQL)</th>
+                            <th style="width: 120px; text-align: center;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop Data PK -->
+                        <tr>
+                            <td style="text-align: center;">1</td>
+                            <td><strong>users</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE users ADD CONSTRAINT pk_users PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE users ADD CONSTRAINT pk_users PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">2</td>
+                            <td><strong>user_profiles</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE user_profiles ADD CONSTRAINT pk_user_profiles PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE user_profiles ADD CONSTRAINT pk_user_profiles PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">3</td>
+                            <td><strong>password_reset_tokens</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE password_reset_tokens ADD CONSTRAINT pk_password_reset_tokens PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE password_reset_tokens ADD CONSTRAINT pk_password_reset_tokens PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">4</td>
+                            <td><strong>cv_templates</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE cv_templates ADD CONSTRAINT pk_cv_templates PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE cv_templates ADD CONSTRAINT pk_cv_templates PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">5</td>
+                            <td><strong>applicant_cvs</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE applicant_cvs ADD CONSTRAINT pk_applicant_cvs PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE applicant_cvs ADD CONSTRAINT pk_applicant_cvs PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">6</td>
+                            <td><strong>work_experiences</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE work_experiences ADD CONSTRAINT pk_work_experiences PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE work_experiences ADD CONSTRAINT pk_work_experiences PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">7</td>
+                            <td><strong>educations</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE educations ADD CONSTRAINT pk_educations PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE educations ADD CONSTRAINT pk_educations PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">8</td>
+                            <td><strong>applicant_skills</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE applicant_skills ADD CONSTRAINT pk_applicant_skills PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE applicant_skills ADD CONSTRAINT pk_applicant_skills PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">9</td>
+                            <td><strong>job_categories</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE job_categories ADD CONSTRAINT pk_job_categories PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE job_categories ADD CONSTRAINT pk_job_categories PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">10</td>
+                            <td><strong>job_postings</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE job_postings ADD CONSTRAINT pk_job_postings PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE job_postings ADD CONSTRAINT pk_job_postings PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">11</td>
+                            <td><strong>saved_jobs</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE saved_jobs ADD CONSTRAINT pk_saved_jobs PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE saved_jobs ADD CONSTRAINT pk_saved_jobs PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">12</td>
+                            <td><strong>applications</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE applications ADD CONSTRAINT pk_applications PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE applications ADD CONSTRAINT pk_applications PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">13</td>
+                            <td><strong>application_status_logs</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE application_status_logs ADD CONSTRAINT pk_application_status_logs PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE application_status_logs ADD CONSTRAINT pk_application_status_logs PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">14</td>
+                            <td><strong>interviews</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE interviews ADD CONSTRAINT pk_interviews PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE interviews ADD CONSTRAINT pk_interviews PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">15</td>
+                            <td><strong>interview_results</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE interview_results ADD CONSTRAINT pk_interview_results PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE interview_results ADD CONSTRAINT pk_interview_results PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">16</td>
+                            <td><strong>notifications</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE notifications ADD CONSTRAINT pk_notifications PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE notifications ADD CONSTRAINT pk_notifications PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">17</td>
+                            <td><strong>organization_experiences</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE organization_experiences ADD CONSTRAINT pk_organization_experiences PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE organization_experiences ADD CONSTRAINT pk_organization_experiences PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">18</td>
+                            <td><strong>portofolio</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE portofolio ADD CONSTRAINT pk_portofolio PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE portofolio ADD CONSTRAINT pk_portofolio PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">19</td>
+                            <td><strong>user_notification_preferences</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE user_notification_preferences ADD CONSTRAINT pk_user_notification_preferences PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE user_notification_preferences ADD CONSTRAINT pk_user_notification_preferences PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">20</td>
+                            <td><strong>work_locations</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE work_locations ADD CONSTRAINT pk_work_locations PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE work_locations ADD CONSTRAINT pk_work_locations PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">21</td>
+                            <td><strong>sessions</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE sessions ADD CONSTRAINT pk_sessions PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE sessions ADD CONSTRAINT pk_sessions PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">22</td>
+                            <td><strong>cache</strong></td>
+                            <td><span class="sql-code">key</span></td>
+                            <td><span class="sql-code">ALTER TABLE cache ADD CONSTRAINT pk_cache PRIMARY KEY (`key`);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE cache ADD CONSTRAINT pk_cache PRIMARY KEY (`key`);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">23</td>
+                            <td><strong>cache_locks</strong></td>
+                            <td><span class="sql-code">key</span></td>
+                            <td><span class="sql-code">ALTER TABLE cache_locks ADD CONSTRAINT pk_cache_locks PRIMARY KEY (`key`);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE cache_locks ADD CONSTRAINT pk_cache_locks PRIMARY KEY (`key`);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">24</td>
+                            <td><strong>migrations</strong></td>
+                            <td><span class="sql-code">id</span></td>
+                            <td><span class="sql-code">ALTER TABLE migrations ADD CONSTRAINT pk_migrations PRIMARY KEY (id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE migrations ADD CONSTRAINT pk_migrations PRIMARY KEY (id);', this)">Salin</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: FOREIGN KEYS -->
+    <div id="foreign-keys" class="tab-content">
+        <div class="content-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>Daftar Foreign Keys (FK)</h2>
+                <input type="text" id="search-fk" class="search-input" placeholder="Cari nama tabel..." onkeyup="filterTable('table-fk', 'search-fk', 1)">
+            </div>
+            
+            <div class="table-responsive">
+                <table id="table-fk">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px; text-align: center;">No</th>
+                            <th style="width: 150px;">Tabel Asal</th>
+                            <th style="width: 120px;">Kolom FK</th>
+                            <th style="width: 180px;">Tabel Referensi</th>
+                            <th>Query SQL Aktual</th>
+                            <th style="width: 100px; text-align: center;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: center;">1</td>
+                            <td><strong>user_profiles</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE user_profiles ADD CONSTRAINT fk_user_profiles_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE user_profiles ADD CONSTRAINT fk_user_profiles_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">2</td>
+                            <td><strong>password_reset_tokens</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE password_reset_tokens ADD CONSTRAINT fk_password_reset_tokens_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE password_reset_tokens ADD CONSTRAINT fk_password_reset_tokens_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">3</td>
+                            <td><strong>applicant_cvs</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE applicant_cvs ADD CONSTRAINT fk_applicant_cvs_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE applicant_cvs ADD CONSTRAINT fk_applicant_cvs_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">4</td>
+                            <td><strong>applicant_cvs</strong></td>
+                            <td><span class="sql-code">template_id</span></td>
+                            <td><code>cv_templates(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE applicant_cvs ADD CONSTRAINT fk_applicant_cvs_template FOREIGN KEY (template_id) REFERENCES cv_templates(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE applicant_cvs ADD CONSTRAINT fk_applicant_cvs_template FOREIGN KEY (template_id) REFERENCES cv_templates(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">5</td>
+                            <td><strong>work_experiences</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE work_experiences ADD CONSTRAINT fk_work_experiences_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE work_experiences ADD CONSTRAINT fk_work_experiences_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">6</td>
+                            <td><strong>educations</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE educations ADD CONSTRAINT fk_educations_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE educations ADD CONSTRAINT fk_educations_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">7</td>
+                            <td><strong>applicant_skills</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE applicant_skills ADD CONSTRAINT fk_applicant_skills_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE applicant_skills ADD CONSTRAINT fk_applicant_skills_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">8</td>
+                            <td><strong>job_postings</strong></td>
+                            <td><span class="sql-code">hr_user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE job_postings ADD CONSTRAINT fk_job_postings_hr_user FOREIGN KEY (hr_user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE job_postings ADD CONSTRAINT fk_job_postings_hr_user FOREIGN KEY (hr_user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">9</td>
+                            <td><strong>job_postings</strong></td>
+                            <td><span class="sql-code">category_id</span></td>
+                            <td><code>job_categories(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE job_postings ADD CONSTRAINT fk_job_postings_category FOREIGN KEY (category_id) REFERENCES job_categories(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE job_postings ADD CONSTRAINT fk_job_postings_category FOREIGN KEY (category_id) REFERENCES job_categories(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">10</td>
+                            <td><strong>saved_jobs</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE saved_jobs ADD CONSTRAINT fk_saved_jobs_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE saved_jobs ADD CONSTRAINT fk_saved_jobs_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">11</td>
+                            <td><strong>saved_jobs</strong></td>
+                            <td><span class="sql-code">job_id</span></td>
+                            <td><code>job_postings(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE saved_jobs ADD CONSTRAINT fk_saved_jobs_job FOREIGN KEY (job_id) REFERENCES job_postings(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE saved_jobs ADD CONSTRAINT fk_saved_jobs_job FOREIGN KEY (job_id) REFERENCES job_postings(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">12</td>
+                            <td><strong>applications</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE applications ADD CONSTRAINT fk_applications_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE applications ADD CONSTRAINT fk_applications_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">13</td>
+                            <td><strong>applications</strong></td>
+                            <td><span class="sql-code">job_id</span></td>
+                            <td><code>job_postings(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE applications ADD CONSTRAINT fk_applications_job FOREIGN KEY (job_id) REFERENCES job_postings(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE applications ADD CONSTRAINT fk_applications_job FOREIGN KEY (job_id) REFERENCES job_postings(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">14</td>
+                            <td><strong>applications</strong></td>
+                            <td><span class="sql-code">cv_id</span></td>
+                            <td><code>applicant_cvs(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE applications ADD CONSTRAINT fk_applications_cv FOREIGN KEY (cv_id) REFERENCES applicant_cvs(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE applications ADD CONSTRAINT fk_applications_cv FOREIGN KEY (cv_id) REFERENCES applicant_cvs(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">15</td>
+                            <td><strong>application_status_logs</strong></td>
+                            <td><span class="sql-code">application_id</span></td>
+                            <td><code>applications(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE application_status_logs ADD CONSTRAINT fk_status_logs_application FOREIGN KEY (application_id) REFERENCES applications(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE application_status_logs ADD CONSTRAINT fk_status_logs_application FOREIGN KEY (application_id) REFERENCES applications(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">16</td>
+                            <td><strong>application_status_logs</strong></td>
+                            <td><span class="sql-code">changed_by</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE application_status_logs ADD CONSTRAINT fk_status_logs_changed_by FOREIGN KEY (changed_by) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE application_status_logs ADD CONSTRAINT fk_status_logs_changed_by FOREIGN KEY (changed_by) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">17</td>
+                            <td><strong>interviews</strong></td>
+                            <td><span class="sql-code">application_id</span></td>
+                            <td><code>applications(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE interviews ADD CONSTRAINT fk_interviews_application FOREIGN KEY (application_id) REFERENCES applications(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE interviews ADD CONSTRAINT fk_interviews_application FOREIGN KEY (application_id) REFERENCES applications(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">18</td>
+                            <td><strong>interviews</strong></td>
+                            <td><span class="sql-code">scheduled_by</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE interviews ADD CONSTRAINT fk_interviews_scheduled_by FOREIGN KEY (scheduled_by) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE interviews ADD CONSTRAINT fk_interviews_scheduled_by FOREIGN KEY (scheduled_by) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">19</td>
+                            <td><strong>interview_results</strong></td>
+                            <td><span class="sql-code">interview_id</span></td>
+                            <td><code>interviews(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE interview_results ADD CONSTRAINT fk_interview_results_interview FOREIGN KEY (interview_id) REFERENCES interviews(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE interview_results ADD CONSTRAINT fk_interview_results_interview FOREIGN KEY (interview_id) REFERENCES interviews(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">20</td>
+                            <td><strong>interview_results</strong></td>
+                            <td><span class="sql-code">reviewed_by</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE interview_results ADD CONSTRAINT fk_interview_results_reviewed_by FOREIGN KEY (reviewed_by) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE interview_results ADD CONSTRAINT fk_interview_results_reviewed_by FOREIGN KEY (reviewed_by) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">21</td>
+                            <td><strong>notifications</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE notifications ADD CONSTRAINT fk_notifications_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE notifications ADD CONSTRAINT fk_notifications_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">22</td>
+                            <td><strong>organization_experiences</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE organization_experiences ADD CONSTRAINT fk_organization_experiences_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE organization_experiences ADD CONSTRAINT fk_organization_experiences_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">23</td>
+                            <td><strong>portofolio</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE portofolio ADD CONSTRAINT fk_portofolio_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE portofolio ADD CONSTRAINT fk_portofolio_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">24</td>
+                            <td><strong>user_notification_preferences</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><code>users(id)</code></td>
+                            <td><span class="sql-code">ALTER TABLE user_notification_preferences ADD CONSTRAINT fk_user_notification_preferences_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE user_notification_preferences ADD CONSTRAINT fk_user_notification_preferences_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;', this)">Salin</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: UNIQUE KEYS -->
+    <div id="unique-keys" class="tab-content">
+        <div class="content-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>Daftar Unique Keys (9)</h2>
+                <input type="text" id="search-uq" class="search-input" placeholder="Cari nama tabel..." onkeyup="filterTable('table-uq', 'search-uq', 1)">
+            </div>
+            
+            <div class="table-responsive">
+                <table id="table-uq">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px; text-align: center;">No</th>
+                            <th style="width: 250px;">Nama Tabel</th>
+                            <th style="width: 200px;">Kolom Unik</th>
+                            <th>Query SQL Aktual</th>
+                            <th style="width: 120px; text-align: center;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: center;">1</td>
+                            <td><strong>users</strong></td>
+                            <td><span class="sql-code">email</span></td>
+                            <td><span class="sql-code">ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE (email);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE (email);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">2</td>
+                            <td><strong>password_reset_tokens</strong></td>
+                            <td><span class="sql-code">token</span></td>
+                            <td><span class="sql-code">ALTER TABLE password_reset_tokens ADD CONSTRAINT password_reset_tokens_token_unique UNIQUE (token);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE password_reset_tokens ADD CONSTRAINT password_reset_tokens_token_unique UNIQUE (token);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">3</td>
+                            <td><strong>job_categories</strong></td>
+                            <td><span class="sql-code">slug</span></td>
+                            <td><span class="sql-code">ALTER TABLE job_categories ADD CONSTRAINT job_categories_slug_unique UNIQUE (slug);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE job_categories ADD CONSTRAINT job_categories_slug_unique UNIQUE (slug);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">4</td>
+                            <td><strong>job_postings</strong></td>
+                            <td><span class="sql-code">slug</span></td>
+                            <td><span class="sql-code">ALTER TABLE job_postings ADD CONSTRAINT job_postings_slug_unique UNIQUE (slug);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE job_postings ADD CONSTRAINT job_postings_slug_unique UNIQUE (slug);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">5</td>
+                            <td><strong>work_locations</strong></td>
+                            <td><span class="sql-code">name</span></td>
+                            <td><span class="sql-code">ALTER TABLE work_locations ADD CONSTRAINT work_locations_name_unique UNIQUE (name);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE work_locations ADD CONSTRAINT work_locations_name_unique UNIQUE (name);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">6</td>
+                            <td><strong>interview_results</strong></td>
+                            <td><span class="sql-code">interview_id</span></td>
+                            <td><span class="sql-code">ALTER TABLE interview_results ADD CONSTRAINT interview_results_interview_id_unique UNIQUE (interview_id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE interview_results ADD CONSTRAINT interview_results_interview_id_unique UNIQUE (interview_id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">7</td>
+                            <td><strong>user_notification_preferences</strong></td>
+                            <td><span class="sql-code">user_id</span></td>
+                            <td><span class="sql-code">ALTER TABLE user_notification_preferences ADD CONSTRAINT user_notification_preferences_user_id_unique UNIQUE (user_id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE user_notification_preferences ADD CONSTRAINT user_notification_preferences_user_id_unique UNIQUE (user_id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">8</td>
+                            <td><strong>saved_jobs</strong></td>
+                            <td><span class="sql-code">[user_id, job_id]</span> (Composite)</td>
+                            <td><span class="sql-code">ALTER TABLE saved_jobs ADD CONSTRAINT saved_jobs_user_id_job_id_unique UNIQUE (user_id, job_id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE saved_jobs ADD CONSTRAINT saved_jobs_user_id_job_id_unique UNIQUE (user_id, job_id);', this)">Salin</button></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">9</td>
+                            <td><strong>applications</strong></td>
+                            <td><span class="sql-code">[user_id, job_id]</span> (Composite)</td>
+                            <td><span class="sql-code">ALTER TABLE applications ADD CONSTRAINT applications_user_id_job_id_unique UNIQUE (user_id, job_id);</span></td>
+                            <td style="text-align: center;"><button class="btn-copy" onclick="copyText('ALTER TABLE applications ADD CONSTRAINT applications_user_id_job_id_unique UNIQUE (user_id, job_id);', this)">Salin</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 5: TRIGGERS -->
+    <div id="triggers" class="tab-content">
+        <div class="content-card">
+            <h2>Database Business Triggers (5)</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                Berikut adalah 5 database triggers yang dipasang untuk memaksa validasi logika bisnis tingkat lanjut pada level database guna menjaga integritas data:
+            </p>
+            
+            <div class="logic-grid">
+                
+                <div class="logic-card">
+                    <h3>1. before_user_profile_insert</h3>
+                    <p>Menolak pengisian profil apabila usia pelamar kurang dari 17 tahun saat baru mendaftar.</p>
+                    <div class="logic-code">
+CREATE TRIGGER before_user_profile_insert
+BEFORE INSERT ON user_profiles FOR EACH ROW
+BEGIN
+    IF NEW.birth_date IS NOT NULL AND TIMESTAMPDIFF(YEAR, NEW.birth_date, CURDATE()) &lt; 17 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Database Trigger Error: Batas usia minimal pendaftaran adalah 17 tahun.';
+    END IF;
+END;
+                    </div>
+                </div>
+
+                <div class="logic-card">
+                    <h3>2. before_user_profile_update</h3>
+                    <p>Mencegah update tanggal lahir profil pelamar menjadi kurang dari 17 tahun.</p>
+                    <div class="logic-code">
+CREATE TRIGGER before_user_profile_update
+BEFORE UPDATE ON user_profiles FOR EACH ROW
+BEGIN
+    IF NEW.birth_date IS NOT NULL AND TIMESTAMPDIFF(YEAR, NEW.birth_date, CURDATE()) &lt; 17 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Database Trigger Error: Batas usia minimal pendaftaran adalah 17 tahun.';
+    END IF;
+END;
+                    </div>
+                </div>
+
+                <div class="logic-card">
+                    <h3>3. before_application_insert</h3>
+                    <p>Membatasi maksimal 3 lamaran aktif secara bersamaan, serta mengecek apakah umur pelamar memenuhi rentang umur lowongan pekerjaan (minimum &amp; maksimum).</p>
+                    <div class="logic-code">
+CREATE TRIGGER before_application_insert
+BEFORE INSERT ON applications FOR EACH ROW
+BEGIN
+    DECLARE v_active_count INT;
+    DECLARE v_age_min INT;
+    DECLARE v_age_max INT;
+    DECLARE v_birth_date DATE;
+    DECLARE v_age INT;
+
+    -- Batas maksimal 3 lamaran aktif
+    SELECT COUNT(*) INTO v_active_count FROM applications WHERE user_id = NEW.user_id AND status IN ('applied', 'shortlisted', 'interview');
+    IF v_active_count &gt;= 3 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Batas maksimal lamaran aktif tercapai (Maksimal 3 lamaran aktif secara bersamaan).';
+    END IF;
+
+    -- Validasi Batas Usia Lowongan
+    SELECT age_min, age_max INTO v_age_min, v_age_max FROM job_postings WHERE id = NEW.job_id;
+    IF v_age_min IS NOT NULL OR v_age_max IS NOT NULL THEN
+        SELECT birth_date INTO v_birth_date FROM user_profiles WHERE user_id = NEW.user_id;
+        IF v_birth_date IS NULL THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Lowongan ini memiliki syarat batas usia. Mohon lengkapi Tanggal Lahir di profil Anda.';
+        ELSE
+            SET v_age = TIMESTAMPDIFF(YEAR, v_birth_date, CURDATE());
+            IF v_age_min IS NOT NULL AND v_age &lt; v_age_min THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usia Anda kurang dari syarat minimum lowongan ini.';
+            END IF;
+            IF v_age_max IS NOT NULL AND v_age &gt; v_age_max THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Usia Anda melebihi batas maksimum syarat lowongan ini.';
+            END IF;
+        END IF;
+    END IF;
+END;
+                    </div>
+                </div>
+
+                <div class="logic-card">
+                    <h3>4. before_interview_result_insert</h3>
+                    <p>Mencegah rekomendasi diset ke 'proceed' jika nilai skor wawancara yang dimasukkan di bawah Kriteria Ketuntasan / Passing Grade lowongan.</p>
+                    <div class="logic-code">
+CREATE TRIGGER before_interview_result_insert
+BEFORE INSERT ON interview_results FOR EACH ROW
+BEGIN
+    DECLARE v_passing_grade INT;
+    DECLARE v_job_id INT;
+
+    SELECT a.job_id INTO v_job_id FROM interviews i JOIN applications a ON i.application_id = a.id WHERE i.id = NEW.interview_id;
+    SELECT passing_grade INTO v_passing_grade FROM job_postings WHERE id = v_job_id;
+
+    IF NEW.recommendation = 'proceed' AND NEW.score &lt; v_passing_grade THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Rekomendasi PROCEED tidak diperbolehkan karena skor kurang dari passing grade.';
+    END IF;
+END;
+                    </div>
+                </div>
+
+                <div class="logic-card">
+                    <h3>5. before_interview_result_update</h3>
+                    <p>Mencegah update hasil wawancara diubah menjadi 'proceed' jika skor di bawah Passing Grade lowongan.</p>
+                    <div class="logic-code">
+CREATE TRIGGER before_interview_result_update
+BEFORE UPDATE ON interview_results FOR EACH ROW
+BEGIN
+    DECLARE v_passing_grade INT;
+    DECLARE v_job_id INT;
+
+    SELECT a.job_id INTO v_job_id FROM interviews i JOIN applications a ON i.application_id = a.id WHERE i.id = NEW.interview_id;
+    SELECT passing_grade INTO v_passing_grade FROM job_postings WHERE id = v_job_id;
+
+    IF NEW.recommendation = 'proceed' AND NEW.score &lt; v_passing_grade THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Rekomendasi PROCEED tidak diperbolehkan karena skor kurang dari passing grade.';
+    END IF;
+END;
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Interactive Tab & Copy Javascript -->
+<script>
+    function openTab(tabId) {
+        // Hide all tabs
+        const tabContents = document.getElementsByClassName('tab-content');
+        for (let i = 0; i < tabContents.length; i++) {
+            tabContents[i].classList.remove('active');
+        }
+
+        // Deactivate all buttons
+        const tabButtons = document.getElementsByClassName('tab-btn');
+        for (let i = 0; i < tabButtons.length; i++) {
+            tabButtons[i].classList.remove('active');
+        }
+
+        // Show selected tab & button
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function copyText(text, btnElement) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = btnElement.innerText;
+            btnElement.innerText = "Tersalin!";
+            btnElement.style.backgroundColor = "var(--success-color)";
+            btnElement.style.borderColor = "var(--success-color)";
+            
+            setTimeout(() => {
+                btnElement.innerText = originalText;
+                btnElement.style.backgroundColor = "var(--bg-tertiary)";
+                btnElement.style.borderColor = "var(--border-color)";
+            }, 1500);
+        }).catch(err => {
+            console.error("Gagal menyalin text: ", err);
+        });
+    }
+
+    function filterTable(tableId, inputId, colIndex) {
+        const input = document.getElementById(inputId);
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById(tableId);
+        const tr = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) {
+            const td = tr[i].getElementsByTagName("td")[colIndex];
+            if (td) {
+                const txtValue = td.textContent || td.innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

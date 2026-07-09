@@ -81,12 +81,23 @@ class InterviewController extends Controller
             ->whereIn('status', ['applied', 'shortlisted', 'interview'])
             ->get();
 
+        // Pending reschedule requests from applicants
+        $rescheduleRequests = Interview::with(['application.user', 'application.job'])
+            ->where('status', 'rescheduled')
+            ->where('reschedule_request_status', 'pending')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $rescheduleCount = $rescheduleRequests->count();
+
         return view('hr.wawancara-daftar', compact(
             'interviews',
             'totalScheduled',
             'attendanceRate',
             'avgDuration',
-            'applications'
+            'applications',
+            'rescheduleRequests',
+            'rescheduleCount'
         ));
     }
 
@@ -228,7 +239,7 @@ class InterviewController extends Controller
             'application_id' => 'required|exists:applications,id',
             'scheduled_at' => 'required|date',
             'duration_minutes' => 'required|integer',
-            'interview_type' => 'required|in:online,offline,phone',
+            'interview_type' => 'required|in:online,offline',
             'location_or_link' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);
@@ -278,6 +289,115 @@ class InterviewController extends Controller
     }
 
     /**
+     * HR decision on an applicant's reschedule request: approve or decline.
+     */
+    public function rescheduleDecision(Request $request, $id)
+    {
+        $request->validate([
+            'decision'        => 'required|in:approved,declined',
+            'scheduled_at'    => 'required_if:decision,approved|nullable|date',
+            'duration_minutes'=> 'required_if:decision,approved|nullable|integer',
+            'interview_type'  => 'required_if:decision,approved|nullable|in:online,offline',
+            'location_or_link'=> 'nullable|string',
+            'decline_reason'  => 'required_if:decision,declined|nullable|string|max:500',
+        ]);
+
+        $interview = Interview::findOrFail($id);
+
+        if ($request->decision === 'approved') {
+            // Check overlap (excluding current interview)
+            $overlap = self::checkOverlap($request->scheduled_at, $request->duration_minutes, $id);
+            if ($overlap['has_overlap']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $overlap['message']
+                ], 422);
+            }
+
+            $oldScheduledAt = $interview->scheduled_at;
+
+            $interview->scheduled_at              = $request->scheduled_at;
+            $interview->duration_minutes          = $request->duration_minutes;
+            $interview->interview_type            = $request->interview_type;
+            $interview->location_or_link          = $request->location_or_link;
+            $interview->status                    = 'scheduled';
+            $interview->reschedule_request_status = 'approved';
+
+            // Update notes with clean info about the approved reschedule
+            $typeLabel = $request->interview_type === 'online' ? 'Online Meeting' : 'Offline (face-to-face)';
+            $newSchedule = Carbon::parse($request->scheduled_at)->translatedFormat('d M Y, H:i');
+            $interview->notes = "Jadwal diperbarui setelah permintaan reschedule disetujui.\n"
+                . "Jadwal baru: {$newSchedule} WIB ({$request->duration_minutes} menit)\n"
+                . "Tipe: {$typeLabel}"
+                . ($request->location_or_link ? "\nLokasi/Link: {$request->location_or_link}" : '');
+
+            $interview->save();
+
+            // Notify applicant: request approved
+            if ($interview->application) {
+                NotificationService::create(
+                    $interview->application->user_id,
+                    'interview_scheduled',
+                    'Permintaan Reschedule Disetujui',
+                    'Permintaan reschedule Anda untuk posisi ' . ($interview->application->job->title ?? 'Pekerjaan') . ' telah disetujui. Jadwal baru: ' . Carbon::parse($request->scheduled_at)->translatedFormat('d M Y, H:i') . '.',
+                    [
+                        'application_id' => $interview->application_id,
+                        'interview_id'   => $interview->id,
+                        'scheduled_at'   => $request->scheduled_at,
+                        'interview_type' => $request->interview_type,
+                    ]
+                );
+
+                DB::table('application_status_logs')->insert([
+                    'application_id' => $interview->application_id,
+                    'changed_by'     => auth()->id() ?? 1,
+                    'old_status'     => $interview->application->status,
+                    'new_status'     => $interview->application->status,
+                    'reason'         => 'HR menyetujui permintaan reschedule. Jadwal baru: ' . Carbon::parse($request->scheduled_at)->translatedFormat('d M Y, H:i'),
+                    'created_at'     => now(),
+                ]);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Permintaan reschedule disetujui. Jadwal baru telah dikonfirmasi.']);
+
+        } else {
+            // Decline: mark request as declined, revert status to scheduled (original schedule still stands)
+            $interview->reschedule_request_status = 'declined';
+            $interview->status                    = 'scheduled';
+            $interview->save();
+
+            // Notify applicant: request declined
+            if ($interview->application) {
+                $declineMsg = $request->decline_reason
+                    ? 'Permintaan reschedule Anda ditolak oleh HR. Alasan: ' . $request->decline_reason . '. Silakan hadir sesuai jadwal semula.'
+                    : 'Permintaan reschedule Anda ditolak oleh HR. Silakan hadir sesuai jadwal semula.';
+
+                NotificationService::create(
+                    $interview->application->user_id,
+                    'interview_scheduled',
+                    'Permintaan Reschedule Ditolak',
+                    $declineMsg,
+                    [
+                        'application_id' => $interview->application_id,
+                        'interview_id'   => $interview->id,
+                    ]
+                );
+
+                DB::table('application_status_logs')->insert([
+                    'application_id' => $interview->application_id,
+                    'changed_by'     => auth()->id() ?? 1,
+                    'old_status'     => $interview->application->status,
+                    'new_status'     => $interview->application->status,
+                    'reason'         => 'HR menolak permintaan reschedule. ' . ($request->decline_reason ? 'Alasan: ' . $request->decline_reason : ''),
+                    'created_at'     => now(),
+                ]);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Permintaan reschedule ditolak. Pelamar akan diberitahu.']);
+        }
+    }
+
+    /**
      * Reschedule an existing interview session.
      */
     public function update(Request $request, $id)
@@ -285,7 +405,7 @@ class InterviewController extends Controller
         $request->validate([
             'scheduled_at' => 'required|date',
             'duration_minutes' => 'required|integer',
-            'interview_type' => 'required|in:online,offline,phone',
+            'interview_type' => 'required|in:online,offline',
             'location_or_link' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);

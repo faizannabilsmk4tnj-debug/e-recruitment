@@ -119,15 +119,73 @@ document.addEventListener('DOMContentLoaded', function () {
     if (modalForgot) modalForgot.addEventListener('click', e => { if (e.target === modalForgot) modalForgot.classList.add('hidden'); });
 
     if (btnSendReset) {
-        btnSendReset.addEventListener('click', function () {
+        btnSendReset.addEventListener('click', async function () {
             const email = document.getElementById('forgot-email').value.trim();
             if (!email) { alert('Masukkan email terlebih dahulu.'); return; }
+            
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Format email tidak valid.');
+                return;
+            }
+
             this.textContent = 'Mengirim...';
             this.disabled = true;
-            setTimeout(() => {
-                this.textContent = '✓ Link dikirim ke ' + email;
-                setTimeout(() => modalForgot.classList.add('hidden'), 2000);
-            }, 1500);
+
+            try {
+                const res = await fetch('/forgot-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify({ email }),
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    btnSendReset.textContent = '✓ Link dikirim ke ' + email;
+                    setTimeout(() => {
+                        modalForgot.classList.add('hidden');
+                        btnSendReset.textContent = 'Send Reset Link';
+                        btnSendReset.disabled = false;
+                        document.getElementById('forgot-email').value = '';
+                    }, 2500);
+                } else {
+                    alert(data.message || 'Terjadi kesalahan. Silakan coba lagi.');
+                    btnSendReset.textContent = 'Send Reset Link';
+                    btnSendReset.disabled = false;
+                }
+            } catch (err) {
+                alert('Gagal terhubung ke server. Periksa koneksi internet Anda.');
+                btnSendReset.textContent = 'Send Reset Link';
+                btnSendReset.disabled = false;
+            }
         });
+    }
+
+    // ===== URL PARAMETERS FOR ALERTS =====
+    const params = new URLSearchParams(window.location.search);
+    const alertSuccess = document.getElementById('alert-success');
+    const alertSuccessTitle = document.getElementById('alert-success-title');
+    const alertSuccessText = document.getElementById('alert-success-text');
+
+    if (alertSuccess) {
+        if (params.get('password_reset') === '1') {
+            alertSuccessTitle.textContent = 'Password berhasil diperbarui!';
+            alertSuccessText.textContent = 'Silakan masuk menggunakan password baru Anda.';
+            alertSuccess.classList.remove('hidden');
+            window.history.replaceState({}, '', '/hr/login');
+        }
+
+        if (params.get('loggedout') === '1') {
+            alertSuccessTitle.textContent = 'Berhasil keluar.';
+            alertSuccessText.textContent = 'Sesi Anda telah diakhiri secara aman.';
+            alertSuccess.classList.remove('hidden');
+            window.history.replaceState({}, '', '/hr/login');
+        }
     }
 });

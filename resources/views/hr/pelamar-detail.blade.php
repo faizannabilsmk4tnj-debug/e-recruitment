@@ -81,19 +81,26 @@
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     <span class="font-semibold text-gray-900">Applied:</span> {{ optional($application->created_at)->format('d M Y H:i') ?? $empty }}
                 </div>
+                <div class="flex items-center gap-2 col-span-1 md:col-span-2 lg:col-span-1">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                    <span class="font-semibold text-gray-900">Source:</span> 
+                    <span class="capitalize bg-green-50 text-green-800 text-xs px-2 py-0.5 rounded-full border border-green-200 font-bold">{{ $application->source ?: 'Website' }}</span>
+                </div>
             </div>
         </div>
 
         <div class="flex flex-col gap-2 w-full lg:w-auto items-stretch lg:items-end">
             <div class="flex items-center gap-2">
-                <a href="/hr/pelamar/{{ $application->id }}/cv-preview" target="_blank"
-                   class="inline-flex justify-center items-center gap-2 border border-green-200 bg-green-50 text-green-800 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-green-100 transition-colors shadow-sm w-full">
+                <button type="button" onclick="openCvPreviewModal('/hr/pelamar/{{ $application->id }}/cv-preview')"
+                   class="inline-flex justify-center items-center gap-2 border border-green-200 bg-green-50 text-green-800 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-green-100 transition-colors shadow-sm w-full cursor-pointer">
                     Open CV
-                </a>
-                <button class="w-10 h-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-gray-500 hover:text-green-800 hover:border-green-800 hover:bg-green-50 transition-colors shadow-sm shrink-0" title="Share Profile">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                 </button>
             </div>
+            @if($application->resume_title)
+                <div class="text-[11px] text-gray-500 font-medium lg:text-right mt-1">
+                    CV File: <span class="text-green-800 font-semibold">{{ $application->resume_title }}</span>
+                </div>
+            @endif
         </div>
         </div>
     </div>
@@ -109,7 +116,6 @@
                     <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Marital Status</div><div class="text-sm font-semibold text-gray-900">{{ optional($profile)->marital_status ? ucfirst($profile->marital_status) : $empty }}</div></div>
                     <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Birth</div><div class="text-sm font-semibold text-gray-900">{{ collect([optional($profile)->birth_place, optional(optional($profile)->birth_date)->format('d M Y')])->filter()->implode(', ') ?: $empty }}</div></div>
                     <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Age</div><div class="text-sm font-semibold text-gray-900">{{ $age }}</div></div>
-                    <div class="md:col-span-2"><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Bio</div><div class="text-sm font-semibold text-gray-900">{{ optional($profile)->bio ?? $empty }}</div></div>
                 </div>
             </section>
 
@@ -474,7 +480,6 @@
                     <select name="interview_type" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
                         <option value="online">Online</option>
                         <option value="offline">Offline</option>
-                        <option value="phone">Phone</option>
                     </select>
                 </div>
                 <div>
@@ -1007,5 +1012,84 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+window.openCvPreviewModal = function(url) {
+    const modal = document.getElementById('cv-preview-modal');
+    const iframe = document.getElementById('modal-cv-iframe');
+    if (modal && iframe) {
+        iframe.src = url;
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+};
+
+window.closeCvPreviewModal = function() {
+    const modal = document.getElementById('cv-preview-modal');
+    const iframe = document.getElementById('modal-cv-iframe');
+    if (modal && iframe) {
+        modal.classList.add('hidden');
+        iframe.src = '';
+        document.body.classList.remove('overflow-hidden');
+    }
+};
 </script>
+
+{{-- CV Preview Modal --}}
+<div id="cv-preview-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6 md:p-10">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="closeCvPreviewModal()"></div>
+    
+    <!-- Modal content wrapper -->
+    <div class="relative bg-white w-full max-w-5xl h-[85vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-150 transition-all transform animate-modal-in">
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-gray-150 flex items-center justify-between bg-white z-10">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-green-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-900 text-base leading-tight">CV Preview - {{ $user->name }}</h3>
+                    <p class="text-xs text-gray-500 font-medium">Previewing applicant document</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <!-- Download Button -->
+                @if($application->resume_url)
+                    <a href="{{ asset($application->resume_url) }}" 
+                       download
+                       target="_blank"
+                       class="inline-flex items-center gap-1.5 bg-green-750 hover:bg-green-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition-colors shadow-sm cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download CV
+                    </a>
+                @else
+                    <a href="/hr/pelamar/{{ $application->id }}/cv-preview" 
+                       target="_blank"
+                       class="inline-flex items-center gap-1.5 bg-green-750 hover:bg-green-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition-colors shadow-sm cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download CV
+                    </a>
+                @endif
+                
+                <!-- Close Button -->
+                <button type="button" onclick="closeCvPreviewModal()" class="w-8 h-8 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 flex items-center justify-center transition-colors cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Modal Body (Iframe) -->
+        <div class="flex-1 bg-gray-50 p-4 relative">
+            <iframe id="modal-cv-iframe" class="w-full h-full bg-white rounded-xl border border-gray-200 shadow-inner" src="" title="CV Preview"></iframe>
+        </div>
+    </div>
+</div>
 @endsection

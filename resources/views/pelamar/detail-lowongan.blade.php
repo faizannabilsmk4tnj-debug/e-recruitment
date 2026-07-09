@@ -21,22 +21,33 @@
     <div class="flex-1 space-y-6 w-full">
 
         <!-- Header Card -->
-        <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
-            <div class="flex items-start gap-5 mb-6">
-                <div class="w-16 h-16 bg-green-800 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
-                    <span class="text-white text-lg font-bold leading-none">E<br>G</span>
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+            @if($vacancy->banner_image)
+            <div class="w-full h-48 relative">
+                <img src="{{ asset($vacancy->banner_image) }}" alt="Cover Banner" class="w-full h-full object-cover">
+            </div>
+            @endif
+
+            <div class="p-8 {{ $vacancy->banner_image ? 'relative -mt-6 rounded-t-3xl bg-white z-10' : '' }}">
+                <!-- Category Badge -->
+                <div class="mb-3">
+                    <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-md uppercase tracking-wider">
+                        {{ $vacancy->category->name ?? 'General' }}
+                    </span>
                 </div>
+
+                <!-- Text content safely on white background -->
                 <div>
                     <div class="flex items-center gap-3">
                         <h1 class="text-2xl font-bold text-gray-900" id="job-title">{{ $vacancy->title }}</h1>
                         @if($vacancy->status === 'open')
-                        <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-0.5 rounded-full uppercase" id="job-badge">Active</span>
+                        <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-0.5 rounded-full uppercase shrink-0" id="job-badge">Active</span>
                         @else
-                        <span class="text-xs font-bold text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full uppercase" id="job-badge">Closed</span>
+                        <span class="text-xs font-bold text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full uppercase shrink-0" id="job-badge">Closed</span>
                         @endif
                     </div>
                     <p class="text-green-700 font-medium mt-1" id="job-company">PT Ecogreen Oleochemicals</p>
-                    <div class="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                    <div class="flex items-center gap-4 mt-4 text-xs text-gray-500">
                         <span class="flex items-center gap-1.5">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                             <span id="job-location">{{ $vacancy->location }}</span>
@@ -49,6 +60,12 @@
                         <span class="flex items-center gap-1.5 text-amber-700 font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                             <span id="job-age">Age: {{ $vacancy->age_min ?? 'Any' }} - {{ $vacancy->age_max ?? 'Any' }} Yrs</span>
+                        </span>
+                        @endif
+                        @if($vacancy->show_salary && $vacancy->salary_min && $vacancy->salary_max)
+                        <span class="flex items-center gap-1.5 text-green-700 font-semibold">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+                            <span>Rp {{ number_format($vacancy->salary_min, 0, ',', '.') }} - {{ number_format($vacancy->salary_max, 0, ',', '.') }}</span>
                         </span>
                         @endif
                         <span class="flex items-center gap-1.5">
@@ -81,21 +98,31 @@
         <!-- Deskripsi -->
         <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Job Description</h2>
-            <div class="text-sm text-gray-600 leading-relaxed space-y-3" id="job-description">
-                {!! nl2br(e($vacancy->description)) !!}
+            <div class="text-sm text-gray-600 leading-relaxed ck-content" id="job-description">
+                @if(str_contains($vacancy->description, '<') && str_contains($vacancy->description, '>'))
+                    {!! $vacancy->description !!}
+                @else
+                    {!! nl2br(e($vacancy->description)) !!}
+                @endif
             </div>
 
             <h2 class="text-lg font-bold text-gray-900 mt-8 mb-4">Qualifications</h2>
-            <ul class="space-y-2.5 text-sm text-gray-600" id="job-qualifications">
-                @foreach(explode("\n", str_replace("\r", "", $vacancy->requirements)) as $req)
-                    @if(trim($req))
-                        <li class="flex items-start gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                            {{ trim($req) }}
-                        </li>
-                    @endif
-                @endforeach
-            </ul>
+            <div class="text-sm text-gray-600 leading-relaxed ck-content" id="job-qualifications">
+                @if(str_contains($vacancy->requirements, '<') && str_contains($vacancy->requirements, '>'))
+                    {!! $vacancy->requirements !!}
+                @else
+                    <ul class="space-y-2.5 text-sm text-gray-600">
+                        @foreach(explode("\n", str_replace("\r", "", $vacancy->requirements)) as $req)
+                            @if(trim($req))
+                                <li class="flex items-start gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                                    {{ trim($req) }}
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
 
             <h2 class="text-lg font-bold text-gray-900 mt-8 mb-4">Benefits & Facilities</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="job-benefits">

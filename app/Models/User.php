@@ -84,16 +84,14 @@ class User extends Authenticatable
 
         if ($profile) {
             if (!empty($profile->avatar_url))   $poin += 5;
-            if (!empty($this->name))            $poin += 3;
-            if (!empty($profile->gender))       $poin += 2;
-            if (!empty($this->phone))           $poin += 3;
-            if (!empty($this->email))           $poin += 2;
+            if (!empty($this->name))            $poin += 5; // +2 points
+            if (!empty($profile->gender))       $poin += 3; // +1 point
+            if (!empty($this->phone))           $poin += 5; // +2 points
+            if (!empty($this->email))           $poin += 3; // +1 point
             if (!empty($profile->birth_date))   $poin += 3;
             if (!empty($profile->address))      $poin += 4;
             if (!empty($profile->city))         $poin += 2;
             if (!empty($profile->province))     $poin += 2;
-            if (!empty($profile->bio))          $poin += 3;
-            if (!empty($profile->linkedin_url)) $poin += 3;
 
             $latestEdu = \Illuminate\Support\Facades\DB::table('educations')->where('user_id', $userId)->exists();
             if ($latestEdu) $poin += 3;

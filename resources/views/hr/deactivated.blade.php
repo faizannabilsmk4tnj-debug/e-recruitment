@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akun Dinonaktifkan - Ecogreen Oleochemicals</title>
+    <title>Account Deactivated - Ecogreen Oleochemicals</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -23,17 +23,17 @@
                 </svg>
             </div>
         </div>
-        <h1 class="text-2xl font-bold text-gray-900 mb-3">Akun Dinonaktifkan</h1>
+        <h1 class="text-2xl font-bold text-gray-900 mb-3">Account Deactivated</h1>
         <p class="text-gray-500 text-sm mb-8 leading-relaxed">
-            Akun Anda telah dinonaktifkan oleh HR Master. Anda tidak lagi memiliki hak akses ke dalam HR Panel PT Ecogreen Oleochemicals.
+            Your account has been deactivated by the HR Master. You no longer have access to the HR Panel of PT Ecogreen Oleochemicals.
         </p>
         <button onclick="handleOk()" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-xl transition-colors duration-200 text-sm shadow-lg shadow-red-100">
-            Kembali ke Login
+            Back to Login
         </button>
     </div>
 
     <script>
-        alert('Akun Anda telah dinonaktifkan oleh HR Master.');
+        alert('Your account has been deactivated by the HR Master.');
         window.location.href = '/hr/login';
 
         function handleOk() {

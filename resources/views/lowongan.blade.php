@@ -324,6 +324,23 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('search-job').value = urlQ;
     }
 
+    // Read ?category= from URL (from popular categories modal on landing)
+    const urlCat = new URLSearchParams(window.location.search).get('category');
+    if (urlCat) {
+        const catCheckbox = [...document.querySelectorAll('.filter-cat')].find(cb => cb.value.toLowerCase() === urlCat.toLowerCase());
+        if (catCheckbox) {
+            catCheckbox.checked = true;
+        }
+    }
+
+    // Read ?open_categories= from URL to automatically open category dropdown
+    if (new URLSearchParams(window.location.search).get('open_categories') === '1') {
+        const catDd = document.getElementById('dropdown-cat');
+        if (catDd) {
+            catDd.classList.remove('hidden');
+        }
+    }
+
     // Trigger backend search on Enter keypress
     document.getElementById('search-job').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {

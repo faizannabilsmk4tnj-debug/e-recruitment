@@ -243,7 +243,7 @@
                     <tr>
                         <th scope="col" class="px-6 py-4 font-bold">Job Title</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Status</th>
-                        <th scope="col" class="px-6 py-4 font-bold text-center">Quota</th>
+                        <th scope="col" class="px-6 py-4 font-bold text-center">Max Applicants</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Passing Grade</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Age Limit</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Total Pelamar</th>

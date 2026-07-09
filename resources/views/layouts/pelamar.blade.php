@@ -190,6 +190,40 @@
 
         <!-- ========== MAIN CONTENT ========== -->
         <main class="flex-1 p-8 content-bg overflow-y-auto">
+            @if(session('error'))
+                <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-600 rounded-r-xl shadow-sm flex items-start gap-3 relative" id="alert-error">
+                    <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-red-900">Permintaan Tidak Dapat Diproses</h4>
+                        <p class="text-xs text-red-700 mt-1">{{ session('error') }}</p>
+                    </div>
+                    <button onclick="document.getElementById('alert-error').remove()" class="text-red-400 hover:text-red-600 transition-colors p-1 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-600 rounded-r-xl shadow-sm flex items-start gap-3 relative" id="alert-success">
+                    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-green-900">Berhasil</h4>
+                        <p class="text-xs text-green-700 mt-1">{{ session('success') }}</p>
+                    </div>
+                    <button onclick="document.getElementById('alert-success').remove()" class="text-green-400 hover:text-green-600 transition-colors p-1 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            @endif
+
             @yield('content')
         </main>
 
@@ -597,6 +631,108 @@
     </div>
     <!-- Toast Container -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-[200] flex flex-col gap-3"></div>
+
+    <!-- Custom Elegant Alert Modal -->
+    <div id="custom-alert-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-gray-100 transform scale-95 transition-transform duration-300 mx-4">
+            <div class="flex items-center gap-3.5 mb-4">
+                <div id="custom-alert-icon" class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-base font-bold text-gray-900">Notification</h3>
+            </div>
+            <p id="custom-alert-message" class="text-gray-600 text-sm leading-relaxed mb-6"></p>
+            <button id="btn-close-custom-alert" class="w-full bg-[#15803d] hover:bg-[#166534] active:bg-[#14532d] text-white font-semibold py-3 rounded-xl transition-all duration-200 text-xs shadow-lg shadow-green-100 focus:outline-none">
+                OK
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Global override for native window.alert
+        (function() {
+            const originalAlert = window.alert;
+            window._originalAlert = originalAlert;
+
+            window.alert = function(message) {
+                const modal = document.getElementById('custom-alert-modal');
+                const msgEl = document.getElementById('custom-alert-message');
+                const btn = document.getElementById('btn-close-custom-alert');
+                const iconContainer = document.getElementById('custom-alert-icon');
+
+                if (!modal || !msgEl || !btn) {
+                    originalAlert(message);
+                    return;
+                }
+
+                // Dynamic icon logic based on message content
+                if (iconContainer) {
+                    const lowerMsg = message.toLowerCase();
+                    if (lowerMsg.includes('category') || lowerMsg.includes('kategori')) {
+                        // Briefcase / Work Icon
+                        iconContainer.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                            </svg>
+                        `;
+                    } else if (lowerMsg.includes('location') || lowerMsg.includes('lokasi') || lowerMsg.includes('tempat')) {
+                        // Location Pin Icon
+                        iconContainer.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        `;
+                    } else {
+                        // Default Checkmark / Info Icon
+                        iconContainer.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        `;
+                    }
+                }
+
+                msgEl.textContent = message;
+                modal.classList.remove('hidden');
+                
+                // Force reflow
+                modal.offsetHeight;
+                
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                
+                const dialog = modal.querySelector('div');
+                if (dialog) {
+                    dialog.classList.remove('scale-95');
+                    dialog.classList.add('scale-100');
+                }
+
+                // Focus OK button for keyboard navigation
+                setTimeout(() => btn.focus(), 50);
+
+                return new Promise((resolve) => {
+                    const onClose = function() {
+                        modal.classList.remove('opacity-100');
+                        modal.classList.add('opacity-0');
+                        if (dialog) {
+                            dialog.classList.remove('scale-100');
+                            dialog.classList.add('scale-95');
+                        }
+                        setTimeout(() => {
+                            modal.classList.add('hidden');
+                            resolve();
+                        }, 300);
+                        btn.removeEventListener('click', onClose);
+                    };
+                    btn.addEventListener('click', onClose);
+                });
+            };
+        })();
+    </script>
 
     @yield('scripts')
 </body>

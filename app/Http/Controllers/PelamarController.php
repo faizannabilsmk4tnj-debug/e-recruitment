@@ -171,6 +171,176 @@ class PelamarController extends Controller
     }
 
     /**
+     * Request a reschedule for an interview session
+     */
+    public function rescheduleInterviewRequest(Request $request, $id)
+    {
+        $user = Auth::user();
+        
+        $interview = \App\Models\Interview::where('id', $id)
+            ->whereHas('application', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })
+            ->firstOrFail();
+
+        $request->validate([
+            'reschedule_reason'   => 'required|string|max:1000',
+            'proposed_date'       => 'required|date|after:now',
+            'proposed_type'       => 'required|in:online,offline',
+        ]);
+
+        // Store the reschedule request data in dedicated columns
+        $interview->reschedule_reason         = $request->reschedule_reason;
+        $interview->proposed_scheduled_at     = $request->proposed_date;
+        $interview->proposed_interview_type   = $request->proposed_type;
+        $interview->reschedule_requested_by   = 'applicant';
+        $interview->reschedule_request_status = 'pending';
+        $interview->status                    = 'rescheduled';
+        $interview->save();
+
+        // Log the status change
+        DB::table('application_status_logs')->insert([
+            'application_id' => $interview->application_id,
+            'changed_by'     => $user->id,
+            'old_status'     => 'interview',
+            'new_status'     => 'interview',
+            'reason'         => 'Pelamar mengajukan reschedule interview. Alasan: ' . $request->reschedule_reason . ' | Usulan: ' . \Carbon\Carbon::parse($request->proposed_date)->translatedFormat('d M Y, H:i'),
+            'created_at'     => now(),
+        ]);
+
+        // Notify HR
+        try {
+            $jobTitle = $interview->application->job->title ?? 'Pekerjaan';
+            \App\Services\NotificationService::create(
+                $interview->scheduled_by,
+                'interview_reschedule_request',
+                'Permintaan Reschedule Interview',
+                $user->name . ' mengajukan reschedule untuk posisi ' . $jobTitle . '. Tinjau dan putuskan di halaman Interviews.',
+                [
+                    'interview_id'   => $interview->id,
+                    'application_id' => $interview->application_id,
+                    'applicant_name' => $user->name,
+                    'reason'         => $request->reschedule_reason,
+                    'proposed_date'  => $request->proposed_date,
+                    'link'           => '/hr/wawancara/daftar?status=rescheduled',
+                ]
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Reschedule Notification failed: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Permintaan reschedule berhasil diajukan ke tim HR.'
+        ]);
+    }
+
+    /**
+     * Decline / Reject an interview session
+     */
+    public function declineInterview(Request $request, $id)
+    {
+        $user = Auth::user();
+        
+        $interview = \App\Models\Interview::where('id', $id)
+            ->whereHas('application', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })
+            ->firstOrFail();
+
+        $request->validate([
+            'decline_reason' => 'required|string|max:500',
+        ]);
+
+        // 1. Cancel the interview session
+        $interview->status = 'cancelled';
+        
+        $declineNote = "[Wawancara Ditolak oleh Pelamar]\nAlasan: " . $request->decline_reason;
+        $interview->notes = $interview->notes 
+            ? $declineNote . "\n\n-------------------\nCatatan HR Sebelumnya:\n" . $interview->notes
+            : $declineNote;
+            
+        $interview->save();
+
+        // 2. Automatically reject/eliminate the application
+        $application = $interview->application;
+        $oldStatus = $application->status;
+        $application->status = 'rejected';
+        $application->save();
+
+        // 3. Log the status change (interview -> rejected)
+        DB::table('application_status_logs')->insert([
+            'application_id' => $application->id,
+            'changed_by' => $user->id,
+            'old_status' => $oldStatus,
+            'new_status' => 'rejected',
+            'reason' => 'Pelamar menolak jadwal interview (Otomatis Tereliminasi). Alasan: ' . $request->decline_reason,
+            'created_at' => now(),
+        ]);
+
+        // 4. Notify HR
+        try {
+            \App\Services\NotificationService::create(
+                $interview->scheduled_by,
+                'interview_declined',
+                'Interview Ditolak Pelamar (Tereliminasi)',
+                $user->name . ' menolak undangan interview untuk posisi ' . ($application->jobPosting->title ?? 'Pekerjaan') . '. Pelamar otomatis dinyatakan gugur/tereliminasi.',
+                [
+                    'interview_id' => $interview->id,
+                    'application_id' => $application->id,
+                    'applicant_name' => $user->name,
+                    'reason' => $request->decline_reason
+                ]
+            );
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Decline Notification failed: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Undangan wawancara telah Anda tolak. Lamaran pekerjaan Anda otomatis dinyatakan gugur (tereliminasi).'
+        ]);
+    }
+
+    /**
+     * API to fetch booked slots on a specific date for applicants.
+     */
+    public function getBookedSlots(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date'
+        ]);
+
+        $date = \Carbon\Carbon::parse($request->get('date'))->toDateString();
+
+        $interviews = \App\Models\Interview::with(['application.user', 'application.job'])
+            ->whereIn('status', ['scheduled', 'completed', 'rescheduled'])
+            ->whereDate('scheduled_at', $date)
+            ->get();
+
+        $slots = $interviews->map(function($interview) {
+            $start = \Carbon\Carbon::parse($interview->scheduled_at);
+            $duration = (int) $interview->duration_minutes;
+            $end = (clone $start)->addMinutes($duration);
+            return [
+                'id' => $interview->id,
+                'candidate' => $interview->application->user->name ?? 'Candidate',
+                'job' => $interview->application->job->title ?? 'Job',
+                'start' => $start->format('H:i'),
+                'end' => $end->format('H:i'),
+                'start_time' => $start->toTimeString(),
+                'end_time' => $end->toTimeString(),
+                'duration' => $duration,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'slots' => $slots
+        ]);
+    }
+
+    /**
      * Show applicant's saved jobs page
      */
     public function savedJobs()

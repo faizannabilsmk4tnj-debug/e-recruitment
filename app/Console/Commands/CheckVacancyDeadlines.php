@@ -37,6 +37,7 @@ class CheckVacancyDeadlines extends Command
 
         $processedCount = 0;
 
+        /** @var \App\Models\JobPosting $job */
         foreach ($jobs as $job) {
             $isClosed = false;
             
@@ -115,10 +116,14 @@ class CheckVacancyDeadlines extends Command
                 ? "Lowongan \"{$job->title}\" telah ditutup otomatis karena kuota pendaftar terpenuhi ({$job->applicant_count}/{$job->quota})."
                 : "Lowongan \"{$job->title}\" telah ditutup otomatis karena telah melewati batas tenggat waktu pendaftaran.";
 
+            $title = $reason === 'quota' 
+                ? 'Lowongan Ditutup (Kuota Penuh)' 
+                : 'Lowongan Ditutup (Deadline Lewat)';
+
             NotificationService::create(
                 $hr->id,
                 'vacancy_closed_auto',
-                'Lowongan Ditutup Otomatis',
+                $title,
                 $message,
                 [
                     'job_id'    => $job->id,

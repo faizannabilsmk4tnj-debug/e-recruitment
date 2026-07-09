@@ -16,48 +16,72 @@ class DashboardController extends Controller
         // 1. Active vacancies count
         $activeVacanciesCount = JobPosting::where('status', 'open')->count();
 
-        // 2. Total applicants today (registered today or applied today)
-        $totalApplicantsToday = Application::whereDate('created_at', now()->toDateString())->count();
-        if ($totalApplicantsToday === 0) {
-            // fallback to total applications for demonstration if none today
-            $totalApplicantsToday = Application::count();
-        }
+        // 2. Total applicants today & overall
+        $applicantsToday = Application::whereDate('created_at', now()->toDateString())->count();
+        $applicantsOverall = Application::count();
 
-        // 3. Interviews this week
-        $interviewsThisWeekCount = Interview::whereBetween('scheduled_at', [
-            now()->startOfWeek()->toDateString(),
-            now()->endOfWeek()->toDateString()
+        // 3. Interviews this week & overall
+        $interviewsThisWeek = Interview::whereBetween('scheduled_at', [
+            now()->startOfWeek()->toDateTimeString(),
+            now()->endOfWeek()->toDateTimeString()
         ])->count();
+        $interviewsOverall = Interview::count();
 
-        if ($interviewsThisWeekCount === 0) {
-            $interviewsThisWeekCount = Interview::count();
-        }
+        // --- CALCULATE ADDED / REMOVED CHANGE INDICATORS ---
+        // Active Vacancies
+        $vacanciesAdded = JobPosting::whereIn('status', ['open', 'closed'])->count();
+        $vacanciesRemoved = JobPosting::where('status', 'closed')->count();
 
-        // 4. Recruitment trends for chart
+        // Applicants (Today)
+        $applicantsTodayAdded = Application::whereDate('created_at', now()->toDateString())->count();
+        $applicantsTodayRemoved = \DB::table('application_status_logs')
+            ->where('new_status', 'withdrawn')
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
+
+        // Applicants (Overall)
+        $applicantsOverallAdded = Application::count();
+        $applicantsOverallRemoved = \DB::table('application_status_logs')
+            ->where('new_status', 'withdrawn')
+            ->count();
+
+        // Interviews (Week)
+        $interviewsWeekAdded = Interview::whereBetween('created_at', [
+            now()->startOfWeek()->toDateTimeString(),
+            now()->endOfWeek()->toDateTimeString()
+        ])->count();
+        $interviewsWeekRemoved = Interview::where('status', 'cancelled')
+            ->whereBetween('updated_at', [
+                now()->startOfWeek()->toDateTimeString(),
+                now()->endOfWeek()->toDateTimeString()
+            ])->count();
+
+        // Interviews (Overall / Scheduled)
+        $interviewsOverallAdded = Interview::count();
+        $interviewsOverallRemoved = Interview::where('status', 'cancelled')->count();
+
+        // 4. Recruitment trends for chart (100% database-driven)
         $monthlyTrends = [];
-        $defaultMonthly = ['JAN' => 55, 'FEB' => 72, 'MAR' => 65, 'APR' => 88, 'MAY' => 78, 'JUN' => 100];
-        
         for ($i = 5; $i >= 0; $i--) {
             $month = now()->subMonths($i);
             $label = strtoupper($month->format('M'));
             $dbCount = Application::whereMonth('created_at', $month->month)
                 ->whereYear('created_at', $month->year)
                 ->count();
-            // If DB is empty, use mockup values for nice visualization
-            $monthlyTrends[$label] = $dbCount > 0 ? $dbCount : ($defaultMonthly[$label] ?? 10);
+            $monthlyTrends[$label] = $dbCount;
         }
 
         $weeklyTrends = [];
-        $defaultWeekly = ['MON' => 40, 'TUE' => 60, 'WED' => 85, 'THU' => 55, 'FRI' => 70, 'SAT' => 45];
         for ($i = 5; $i >= 0; $i--) {
             $day = now()->subDays($i);
             $label = strtoupper($day->format('D'));
             $dbCount = Application::whereDate('created_at', $day->toDateString())->count();
-            $weeklyTrends[$label] = $dbCount > 0 ? $dbCount : ($defaultWeekly[$label] ?? 10);
+            $weeklyTrends[$label] = $dbCount;
         }
 
         // 5. Active vacancies list
         $activeVacancies = JobPosting::with('category')
+            ->withCount('applications')
             ->where('status', 'open')
             ->orderBy('created_at', 'desc')
             ->take(5)
@@ -90,12 +114,24 @@ class DashboardController extends Controller
 
         return view('hr.dashboard', compact(
             'activeVacanciesCount',
-            'totalApplicantsToday',
-            'interviewsThisWeekCount',
+            'applicantsToday',
+            'applicantsOverall',
+            'interviewsThisWeek',
+            'interviewsOverall',
             'monthlyTrends',
             'weeklyTrends',
             'activeVacancies',
-            'wawancaraData'
+            'wawancaraData',
+            'vacanciesAdded',
+            'vacanciesRemoved',
+            'applicantsTodayAdded',
+            'applicantsTodayRemoved',
+            'applicantsOverallAdded',
+            'applicantsOverallRemoved',
+            'interviewsWeekAdded',
+            'interviewsWeekRemoved',
+            'interviewsOverallAdded',
+            'interviewsOverallRemoved'
         ));
     }
 }

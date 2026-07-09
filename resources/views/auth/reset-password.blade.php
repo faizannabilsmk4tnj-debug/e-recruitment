@@ -265,7 +265,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await res.json();
 
             if (data.success) {
-                window.location.href = '/login?password_reset=1';
+                if (data.role === 'hr' || data.role === 'hr_master') {
+                    window.location.href = '/hr/login?password_reset=1';
+                } else {
+                    window.location.href = '/login?password_reset=1';
+                }
             } else {
                 showError(data.message || 'Terjadi kesalahan. Silakan coba lagi.');
                 btn.disabled = false;

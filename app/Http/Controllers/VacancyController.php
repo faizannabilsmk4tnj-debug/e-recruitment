@@ -38,7 +38,7 @@ class VacancyController extends Controller
             $savedJobIds = \App\Models\SavedJob::where('user_id', auth()->id())
                 ->pluck('job_id')
                 ->toArray();
-            $activeNav = $request->get('saved') == '1' ? 'saved-jobs' : 'vacancies';
+            $activeNav = $request->input('saved') == '1' ? 'saved-jobs' : 'vacancies';
             return view('pelamar.lowongan', compact('jobs', 'categories', 'locations', 'savedJobIds', 'activeNav'));
         }
 
@@ -50,6 +50,25 @@ class VacancyController extends Controller
     public function show(Request $request, $id)
     {
         $vacancy = JobPosting::with('category')->findOrFail($id);
+        
+        // Log source traffic if query parameter source exists
+        $source = $request->query('source');
+        if ($source) {
+            // Keep it in session so we can attach to application if they apply
+            session(['job_source_' . $id => $source]);
+
+            try {
+                \Illuminate\Support\Facades\DB::table('job_posting_views')->insert([
+                    'job_posting_id' => $id,
+                    'source' => strtolower($source),
+                    'ip_address' => $request->ip(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to log job posting view: ' . $e->getMessage());
+            }
+        }
         
         if ($request->is('pelamar/*')) {
             $isSaved = false;
@@ -177,9 +196,9 @@ class VacancyController extends Controller
         }
 
         $request->validate([
-            'cv_source' => 'required|in:builder,upload',
+            'resume_title' => 'required|string|max:150',
             'cover_letter' => 'nullable|string',
-            'file_cv' => 'required_if:cv_source,upload|nullable|file|mimes:pdf,doc,docx|max:5120', // Max 5MB
+            'file_cv' => 'required|file|mimes:pdf,doc,docx|max:5120', // Max 5MB
         ]);
 
         // Find CV
@@ -202,13 +221,16 @@ class VacancyController extends Controller
 
         // Create application with try-catch to capture database trigger errors
         try {
+            $source = session('job_source_' . $id) ?: $request->query('source') ?: 'website';
             $application = \App\Models\Application::create([
                 'user_id' => $userId,
                 'job_id' => $id,
                 'cv_id' => $cv->id,
+                'resume_title' => $request->resume_title,
                 'cover_letter' => $request->cover_letter,
                 'resume_url' => $resumeUrl,
                 'status' => 'applied',
+                'source' => strtolower($source),
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == '45000' || str_contains($e->getMessage(), '45000')) {
@@ -252,7 +274,7 @@ class VacancyController extends Controller
                     NotificationService::create(
                         $hr->id,
                         'vacancy_closed_auto',
-                        'Lowongan Ditutup Otomatis',
+                        'Lowongan Ditutup (Kuota Penuh)',
                         "Lowongan \"{$vacancy->title}\" telah ditutup otomatis karena kuota pendaftar terpenuhi ({$vacancy->applicant_count}/{$vacancy->quota}).",
                         [
                             'job_id'    => $vacancy->id,

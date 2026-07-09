@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(close, 4200);
     }
 
-    function getErrorMessage(err, fallback = 'Terjadi kesalahan. Silakan coba lagi.') {
+    function getErrorMessage(err, fallback = 'An error occurred. Please try again.') {
         if (err?.errors) {
             return Object.values(err.errors).flat().join('\n');
         }
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return err?.message || fallback;
     }
 
-    function askConfirm({ title, message, confirmText = 'Ya, lanjutkan', cancelText = 'Batal', variant = 'danger' }) {
+    function askConfirm({ title, message, confirmText = 'Yes, continue', cancelText = 'Cancel', variant = 'danger' }) {
         return new Promise(resolve => {
             const overlay = document.createElement('div');
             const confirmClass = variant === 'danger'
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const file = this.files[0];
         if (!file) return;
         if (file.size > 2 * 1024 * 1024) {
-            notify('warning', 'File terlalu besar', 'Ukuran foto profil maksimal 2MB.');
+            notify('warning', 'File too large', 'Maximum profile photo size is 2MB.');
             return;
         }
         const reader = new FileReader();
@@ -191,10 +191,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('btn-remove-photo').addEventListener('click', async function () {
         const confirmed = await askConfirm({
-            title: 'Hapus foto profil?',
-            message: 'Foto profil akan dihapus dari akun HR kamu.',
-            confirmText: 'Ya, hapus',
-            cancelText: 'Batal',
+            title: 'Remove profile photo?',
+            message: 'Profile photo will be removed from your HR account.',
+            confirmText: 'Yes, remove',
+            cancelText: 'Cancel',
             variant: 'danger',
         });
 
@@ -221,10 +221,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         initials.textContent = initialsText.substring(0, 2);
                         navImg.parentNode.replaceChild(initials, navImg);
                     }
-                    notify('success', 'Foto profil dihapus', 'Avatar akun berhasil dikosongkan.');
+                    notify('success', 'Profile photo removed', 'Account avatar cleared successfully.');
                 })
                 .catch(err => {
-                    notify('error', 'Gagal menghapus foto profil', getErrorMessage(err));
+                    notify('error', 'Failed to remove profile photo', getErrorMessage(err));
                 });
         }
     });
@@ -248,18 +248,18 @@ document.addEventListener('DOMContentLoaded', function () {
             if (/[0-9]/.test(val)) score++;
             if (/[^A-Za-z0-9]/.test(val)) score++;
             const colors = ['', 'bg-red-400', 'bg-yellow-400', 'bg-blue-400', 'bg-green-500'];
-            const labels = ['', 'Lemah', 'Cukup', 'Baik', 'Kuat'];
+            const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
             for (let i = 1; i <= 4; i++) {
                 const bar = document.getElementById('bar' + i);
                 if (bar) bar.className = 'h-1 flex-1 rounded ' + (i <= score ? colors[score] : 'bg-gray-200');
             }
             const lbl = document.getElementById('strength-label');
-            if (lbl) lbl.textContent = val.length ? 'Kekuatan: ' + labels[score] : 'Minimal 8 karakter.';
+            if (lbl) lbl.textContent = val.length ? 'Strength: ' + labels[score] : 'Minimum 8 characters.';
         });
     }
 
     // ===== SAVE BUTTON ANIMATION HELPER =====
-    function showSaving(btn, originalText, callbackPromise, successTitle = 'Perubahan tersimpan', successMessage = '') {
+    function showSaving(btn, originalText, callbackPromise, successTitle = 'Changes saved', successMessage = '') {
         btn.disabled = true;
         const spinner = '<svg class="w-4 h-4 animate-spin inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
         btn.innerHTML = spinner + 'Saving...';
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(err => {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
-                notify('error', 'Gagal menyimpan perubahan', getErrorMessage(err, 'Silakan periksa input lalu coba lagi.'));
+                notify('error', 'Failed to save changes', getErrorMessage(err, 'Please check your inputs and try again.'));
                 throw err;
             });
     }
@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const formData = new FormData(this);
             const promise = sendAjax(routes.profile, formData);
             
-            showSaving(btn, originalText, promise, 'Profil berhasil diubah', 'Data profil HR sudah diperbarui.')
+            showSaving(btn, originalText, promise, 'Profile updated successfully', 'HR profile data has been updated.')
                 .then(res => {
                     // Update layout elements dynamically
                     const navNames = document.querySelectorAll('.text-xs.font-semibold.text-white.leading-none, .text-sm.font-semibold.text-gray-800.truncate');
@@ -329,10 +329,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (btnDiscard) {
         btnDiscard.addEventListener('click', async () => {
             const confirmed = await askConfirm({
-                title: 'Batalkan perubahan?',
-                message: 'Input yang belum disimpan akan dikembalikan ke data terakhir.',
-                confirmText: 'Ya, batalkan',
-                cancelText: 'Tetap edit',
+                title: 'Discard changes?',
+                message: 'Unsaved inputs will be reverted to the last saved state.',
+                confirmText: 'Yes, discard',
+                cancelText: 'Keep editing',
                 variant: 'danger',
             });
 
@@ -351,11 +351,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const np = document.getElementById('new-pass').value;
             const cp = document.getElementById('conf-pass').value;
             if (np !== cp) {
-                notify('warning', 'Konfirmasi password tidak cocok', 'Password baru dan konfirmasi harus sama.');
+                notify('warning', 'Password confirmation does not match', 'New password and confirmation must match.');
                 return;
             }
             if (np.length < 8) {
-                notify('warning', 'Password terlalu pendek', 'Password minimal 8 karakter.');
+                notify('warning', 'Password too short', 'Password must be at least 8 characters.');
                 return;
             }
 
@@ -378,11 +378,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (bar) bar.className = 'h-1 flex-1 rounded bg-gray-200';
                     }
                     const lbl = document.getElementById('strength-label');
-                    if (lbl) lbl.textContent = 'Minimal 8 karakter.';
+                    if (lbl) lbl.textContent = 'Minimum 8 characters.';
                     return res;
                 });
 
-            showSaving(btn, originalText, promise, 'Password berhasil diubah', 'Gunakan password baru saat login berikutnya.');
+            showSaving(btn, originalText, promise, 'Password changed successfully', 'Use your new password for subsequent logins.');
         });
     }
 
@@ -402,7 +402,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             const promise = sendAjax(routes.notifications, formData);
-            showSaving(btn, originalText, promise, 'Preferensi notifikasi tersimpan', 'Pengaturan notifikasi sudah diperbarui.');
+            showSaving(btn, originalText, promise, 'Notification preferences saved', 'Notification settings have been updated.');
         });
     }
 
@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
                     btn.innerHTML = '<svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Saved All!';
                     btn.classList.add('bg-green-600');
-                    notify('success', 'Semua pengaturan tersimpan', 'Profil dan notifikasi berhasil diperbarui.');
+                    notify('success', 'All settings saved', 'Profile and notifications updated successfully.');
                     setTimeout(() => {
                         btn.innerHTML = originalText;
                         btn.disabled = false;
@@ -473,13 +473,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 .catch(err => {
                     btn.innerHTML = originalText;
                     btn.disabled = false;
-                    let msg = 'Gagal menyimpan beberapa pengaturan.';
+                    let msg = 'Failed to save some settings.';
                     if (err.errors) {
                         msg = Object.values(err.errors).flat().join('\n');
                     } else if (err.message) {
                         msg = err.message;
                     }
-                    notify('error', 'Gagal menyimpan semua pengaturan', getErrorMessage(err, 'Beberapa pengaturan belum berhasil disimpan.'));
+                    notify('error', 'Failed to save all settings', getErrorMessage(err, 'Some settings could not be saved.'));
                 });
         });
     }
@@ -515,10 +515,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         }, 300);
                     }
-                    notify('success', 'Device berhasil dikeluarkan', 'Sesi pada perangkat tersebut sudah diputus.');
+                    notify('success', 'Device logged out successfully', 'The session on that device has been terminated.');
                 })
                 .catch(err => {
-                    notify('error', 'Gagal memutuskan sesi device', getErrorMessage(err));
+                    notify('error', 'Failed to terminate device session', getErrorMessage(err));
                 });
         }
         document.getElementById('modal-logout-device').classList.add('hidden');
@@ -545,10 +545,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 });
                 setTimeout(() => document.getElementById('no-sessions').classList.remove('hidden'), 400);
-                notify('success', 'Semua device lain dikeluarkan', 'Sesi selain perangkat ini sudah diputus.');
+                notify('success', 'All other devices logged out', 'Sessions on other devices have been terminated.');
             })
             .catch(err => {
-                notify('error', 'Gagal memutuskan semua sesi', getErrorMessage(err));
+                notify('error', 'Failed to terminate all sessions', getErrorMessage(err));
             });
         document.getElementById('modal-logout-all').classList.add('hidden');
     });
@@ -562,10 +562,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (btnLogout) {
         btnLogout.addEventListener('click', async function () {
             const confirmed = await askConfirm({
-                title: 'Keluar dari HR Panel?',
-                message: 'Kamu perlu login kembali untuk mengakses panel HR.',
-                confirmText: 'Ya, keluar',
-                cancelText: 'Batal',
+                title: 'Logout from HR Panel?',
+                message: 'You will need to log back in to access the HR panel.',
+                confirmText: 'Yes, logout',
+                cancelText: 'Cancel',
                 variant: 'danger',
             });
 

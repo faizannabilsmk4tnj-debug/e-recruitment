@@ -31,6 +31,18 @@
         </div>
         @endif
 
+        <!-- Success Alert — muncul setelah reset-password berhasil atau logout -->
+        <div id="alert-success" class="hidden mb-4 bg-green-50 border border-green-200 rounded-lg px-4 py-3 flex items-start gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="m9 12 2 2 4-4"/>
+            </svg>
+            <div>
+                <p class="text-green-800 text-sm font-semibold" id="alert-success-title">Berhasil!</p>
+                <p class="text-green-700 text-xs mt-0.5" id="alert-success-text"></p>
+            </div>
+        </div>
+
         <!-- Error Alert (hidden by default, shown via JS) -->
         <div id="alert-error" class="hidden mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3 flex items-start gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-500 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -96,16 +108,12 @@
                 </div>
             </div>
 
-            <!-- Remember & Secure Badge -->
-            <div class="flex items-center justify-between py-1">
+            <!-- Remember Me Checkbox -->
+            <div class="flex items-center py-1">
                 <label class="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" id="hr-remember" class="w-4.5 h-4.5 rounded border-gray-300 text-green-700 focus:ring-green-500">
                     <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Remember me</span>
                 </label>
-                <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Secure HR Portal Session</span>
-                </div>
             </div>
 
             <!-- Submit Button -->
@@ -114,7 +122,7 @@
                 id="btn-login"
                 class="w-full bg-[#15803d] hover:bg-[#166534] text-white font-semibold py-3.5 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center gap-2"
             >
-                Masuk ke HR Panel
+                Login to HR Panel
             </button>
         </div>
 
@@ -133,8 +141,8 @@
             </div>
             <div class="pt-2 border-t border-gray-100">
                 <p class="text-center text-xs text-gray-400">
-                    Bukan tim HR?
-                    <a href="/login" class="text-green-700 font-semibold hover:text-green-900 transition-colors">Login sebagai Pelamar</a>
+                    Not HR staff?
+                    <a href="/login" class="text-green-700 font-semibold hover:text-green-900 transition-colors">Login as Applicant</a>
                 </p>
             </div>
         </div>

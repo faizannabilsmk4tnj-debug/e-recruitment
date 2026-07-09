@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('scheduled_by')->constrained('users');
             $table->dateTime('scheduled_at');
             $table->unsignedInteger('duration_minutes')->default(60);
-            $table->enum('interview_type', ['online', 'offline', 'phone']);
+            $table->enum('interview_type', ['online', 'offline']);
             $table->string('location_or_link', 500)->nullable();
             $table->enum('status', ['scheduled', 'completed', 'cancelled', 'rescheduled'])->default('scheduled');
             $table->text('notes')->nullable();

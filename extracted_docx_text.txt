@@ -1,0 +1,4383 @@
+SPESIFIKASI KEBUTUHAN DAN PERANCANGAN
+
+PERANGKAT LUNAK
+
+Rancang Bangun Aplikasi E-Recruitment Berbasis Web Sebagai Sistem Rekrutmen Online Pada PT Eco Green Oleochemicals
+
+Dipersiapkan oleh:
+
+4342501077 Faizal Kahfi Lubis
+
+4342501071 Faiz Annabil
+
+4342501084 Mufti
+
+4342501062 Rasya’ Defiya Putri Salsabila
+
+4342501073 Khayra Sakilla Ramona
+
+Program Studi Teknologi Rekayasa Perangkat Lunak
+
+Politeknik Negeri Batam
+
+Jl. Ahmad Yani, Batam 29461
+
+2026
+
+Daftar Isi
+
+1Pendahuluan3
+
+1.1Tujuan3
+
+1.2Lingkup Masalah3
+
+1.3Definisi, Akronim dan Singkatan3
+
+1.4Aturan Penamaan dan Penomoran3
+
+1.5Referensi3
+
+1.6Ikhtisar Dokumen3
+
+2Deskripsi Umum Perangkat Lunak3
+
+2.1Deskripsi Umum Sistem3
+
+2.2Proses Bisnis Sistem3
+
+2.3Karakteristik Pengguna3
+
+2.4Batasan3
+
+2.5Rancangan Lingkungan Implementasi4
+
+3Deskripsi Rinci Kebutuhan4
+
+3.1Deskripsi Fungsional4
+
+3.1.1Use Case Diagram4
+
+3.1.2Use Case &lt;nama use case&gt;4
+
+3.2Deskripsi Kebutuhan Non Fungsional4
+
+4Deskripsi Kelas-Kelas4
+
+4.1Class Diagram4
+
+4.2Class &lt;nama class&gt;4
+
+4.3Class &lt;nama class&gt; dan seterusnya5
+
+4.4State Machine Diagram5
+
+5Deskripsi Data5
+
+5.1Entity-Relationship Diagram5
+
+5.2Daftar Tabel5
+
+5.3Struktur Tabel &lt;nama tabel&gt;5
+
+5.4Struktur Tabel &lt;nama tabel&gt; dan seterusnya5
+
+5.5Skema Relasi Antar Tabel5
+
+6Perancangan Antarmuka5
+
+6.1Antarmuka &lt;nama antarmuka&gt;5
+
+6.2Antarmuka &lt;nama antarmuka&gt; dan seterusnya5
+
+7Matriks Keterunutan5
+
+DAFTAR GAMBAR
+
+Gambar 2. 1 Deskripsi Umum Sistem E-Recruitment11
+
+Gambar 2. 2 Proses Bisnis Sistem15
+
+Gambar 2. 3 Proses Bisnis Sistem17
+
+Gambar 3. 1 Use Case Diagram21
+
+Gambar 3. 2 Interaksi Objek Melihat Profil Perusahaan22
+
+Gambar 3. 3 Interaksi Objek Melihat Lowongan24
+
+Gambar 3. 4 Interaksi Objek Registrasi Pengguna25
+
+Gambar 3. 5 Interaksi Objek Login Pengguna26
+
+Gambar 3. 6 Interaksi Objek Login Pengguna28
+
+Gambar 3. 7 Interaksi Objek Melamar Pekerjaan30
+
+Gambar 3. 8 Interaksi Objek Melihat Status Lamaran31
+
+Gambar 3. 9 Interaksi Objek Login Admin32
+
+Gambar 3. 10 Interaksi Objek Kelola Lowongan34
+
+Gambar 3. 11 Interaksi Objek Seleksi Pelamar36
+
+Gambar 3. 12 Interaksi Objek Update Status Lamaran38
+
+Gambar 4. 1 Class Diagram42
+
+Gambar 4. 2 State Machine Diagram48
+
+Gambar 5. 1 ER Diagram website Sistem E-Recruitment49
+
+Gambar 5. 2 Skema relasi antar tabel website Sistem E-Recruitment63
+
+Gambar 6. 1 Antarmuka Halaman Utama &lt;Landing Page&gt;65
+
+Gambar 6. 2 Antarmuka &lt;Vacancies&gt;66
+
+Gambar 6. 3 Antarmuka &lt;About Us&gt;67
+
+Gambar 6. 4 Antarmuka &lt;Register dan Login&gt;68
+
+Gambar 6. 5 Antarmuka &lt;Applicant Dashboard&gt;69
+
+Gambar 6. 6 Antarmuka &lt;Profile&gt;70
+
+Gambar 6. 7 Antarmuka &lt;Work Experiences&gt;71
+
+Gambar 6. 8 Antarmuka &lt;Education&gt;72
+
+Gambar 6. 9 Antarmuka &lt;Organization Experience&gt;73
+
+Gambar 6. 10 Antarmuka &lt; Attcahments&gt;74
+
+Gambar 6. 11 Antarmuka &lt; My CV&gt;76
+
+Gambar 6. 12 Antarmuka &lt; Application Status&gt;77
+
+Gambar 6. 13 Antarmuka &lt; Login HR&gt;78
+
+Gambar 6. 14 Antarmuka &lt; Dashboard HR&gt;79
+
+Gambar 6. 15 Antarmuka &lt; Vacancies HR&gt;80
+
+Gambar 6. 16 Antarmuka &lt; Applicant  HR&gt;81
+
+Gambar 6. 17 Antarmuka &lt; Interview Schedule&gt;82
+
+Gambar 6. 18 Antarmuka &lt; Report HR&gt;83
+
+Gambar 6. 19 Antarmuka &lt; Template CV&gt;85
+
+Gambar 6. 20 Antarmuka &lt; Settings&gt;86
+
+DAFTAR TABEL
+
+Tabel 1. 1 Aturan Penamaan dan Penomoran7
+
+Tabel 2. 1 Karakteristik Pengguna19
+
+Tabel 2. 2 Rancangan Lingkungan Implementasi20
+
+Tabel 3. 1 Skenario Melihat Profil Perusahaan23
+
+Tabel 3. 2 Skenario Melihat Lowongan24
+
+Tabel 3. 3 Skenario Registrasi Pengguna25
+
+Tabel 3. 4 Skenario Login Pengguna27
+
+Tabel 3. 5 Skenario Kelola Profil28
+
+Tabel 3. 6 Skenario Melamar Pekerjaan30
+
+Tabel 3. 7 Skenario Melihat Status Lamaran32
+
+Tabel 3. 8 Skenario Login Admin33
+
+Tabel 3. 9 Skenario Kelola Lowongan34
+
+Tabel 3. 10 Skenario Seleksi Pelamar36
+
+Tabel 3. 11 Skenario Update Status Lamaran38
+
+Tabel 3. 12 Deskripsi Kebutuhan Non Fungsional40
+
+Tabel 4. 1 Class Pelamar44
+
+Tabel 4. 2 Class Pelamar (2)44
+
+Tabel 4. 3 Class HRD45
+
+Tabel 4. 4 Class HRD (2)45
+
+Tabel 4. 5 Class Lowongan46
+
+Tabel 4. 6 Class Lowongan (2)46
+
+Tabel 4. 7 Class Lamaran47
+
+Tabel 4. 8 Class Lamaran (2)47
+
+Tabel 4. 9 Class Profil47
+
+Tabel 4. 10 Class Profil (2)48
+
+Tabel 4. 11 Class Dokumen48
+
+Tabel 4. 12 Class Dokumen (2)48
+
+Tabel 5. 1 Daftar Tabel pada ER Diagram52
+
+Tabel 5. 2 Struktur Tabel users53
+
+Tabel 5. 3 Struktur Tabel user_profiles53
+
+Tabel 5. 4 Struktur Tabel password_reset_tokens54
+
+Tabel 5. 5 Struktur Tabel login_attempts55
+
+Tabel 5. 6 Struktur Tabel cv_templates55
+
+Tabel 5. 7 Struktur Tabel applicant_cvs56
+
+Tabel 5. 8 Struktur Tabel work_experiences56
+
+Tabel 5. 9 Struktur Tabel educations57
+
+Tabel 5. 10 Struktur Tabel applicant_skills58
+
+Tabel 5. 11 Struktur Tabel portofolio58
+
+Tabel 5. 12 Struktur Tabel job_categories59
+
+Tabel 5. 13 Struktur Tabel job_postings59
+
+Tabel 5. 14 Struktur Tabel saved_jobs60
+
+Tabel 5. 15 Struktur Tabel applications60
+
+Tabel 5. 16 Struktur Tabel applications_status_logs61
+
+Tabel 5. 17 Struktur Tabel job_search_logs62
+
+Tabel 5. 18 Struktur Tabel interviews62
+
+Tabel 5. 19 Struktur Tabel interviews_results63
+
+Tabel 5. 20 Struktur Tabel notifications63
+
+1    Pendahuluan
+
+1.1Tujuan
+
+Dokumen ini disusun sebagai Spesifikasi Kebutuhan dan Perancangan Perangkat Lunak (SKPPL) untuk pengembangan aplikasi E-Recruitment berbasis web pada PT Eco Green Oleochemicals. Penyusunan dokumen ini bertujuan memberikan gambaran yang komprehensif mengenai perangkat lunak yang akan dikembangkan. Cakupan yang dijelaskan meliputi kebutuhan sistem, fungsi yang disediakan, serta rancangan sistem yang akan diimplementasikan. Dengan adanya dokumen ini, diharapkan seluruh pihak dapat memahami arah pengembangan sistem secara jelas dan terstruktur.
+
+Dokumen SKPPL ini digunakan sebagai acuan utama bagi tim pengembang dalam proses analisis, perancangan, dan implementasi sistem. Acuan ini penting untuk memastikan bahwa sistem yang dikembangkan sesuai dengan kebutuhan yang telah ditentukan sebelumnya. Selain itu, dokumen ini juga ditujukan bagi para stakeholder, termasuk pihak perusahaan dan calon pengguna sistem. Dokumen ini berfungsi sebagai media komunikasi untuk menyamakan persepsi terkait ruang lingkup dan fungsionalitas sistem yang akan dibangun.
+
+Dokumen ini juga berperan sebagai dasar dalam proses evaluasi dan pengendalian selama siklus pengembangan perangkat lunak berlangsung. Dengan adanya dokumentasi yang terstruktur dan sistematis, proses pengembangan dapat berjalan lebih terarah dan terkendali. Hal ini membantu mengurangi ambiguitas dalam memahami kebutuhan sistem. Selain itu, dokumentasi yang baik juga meminimalisir kesalahan interpretasi antar pihak yang terlibat.
+
+Dengan demikian, penyusunan dokumen ini diharapkan dapat memastikan bahwa aplikasi E-Recruitment yang dikembangkan mampu memenuhi kebutuhan perusahaan. Sistem yang dibangun diharapkan dapat mendukung proses rekrutmen karyawan secara lebih efektif dan efisien. Selain itu, sistem juga diharapkan mampu meningkatkan keterpaduan dalam pengelolaan data rekrutmen. Pada akhirnya, sistem ini dapat memberikan manfaat optimal bagi PT Eco Green Oleochemicals.
+
+1.2Lingkup Masalah
+
+Aplikasi E-Recruitment berbasis web pada PT Eco Green Oleochemicals merupakan sistem informasi yang dikembangkan untuk mengatasi berbagai permasalahan dalam proses rekrutmen karyawan yang masih dilakukan secara manual [1]. Proses rekrutmen manual sering menimbulkan kendala dalam pengelolaan data pelamar, seperti data yang tidak terorganisir dengan baik serta kesulitan dalam pencarian informasi pelamar [3]. Selain itu, penggunaan dokumen fisik dalam proses rekrutmen dinilai kurang efisien dan berpotensi menyebabkan keterlambatan dalam proses seleksi [5]. Oleh karena itu, diperlukan suatu sistem berbasis web yang mampu meningkatkan efisiensi dan efektivitas dalam proses rekrutmen [2].
+
+Dari sisi pelamar, proses rekrutmen manual menyebabkan keterbatasan dalam memperoleh informasi lowongan kerja secara cepat dan akurat [2]. Pelamar juga mengalami kesulitan dalam melakukan pemantauan terhadap status lamaran yang telah dikirimkan [4]. Hal ini menimbulkan ketidakpastian serta menurunkan tingkat kepuasan pelamar terhadap proses rekrutmen [4]. Dengan adanya sistem E-Recruitment, pelamar dapat mengakses informasi lowongan serta melakukan proses lamaran secara online dengan lebih mudah [1].
+
+Sementara itu, dari sisi perusahaan, khususnya bagian Human Resource Development (HRD), pengelolaan data pelamar secara manual berpotensi menimbulkan penumpukan data dan kesalahan pencatatan [3]. Proses seleksi juga menjadi kurang efektif karena memerlukan waktu yang lebih lama dalam melakukan penyaringan data pelamar [5]. Selain itu, keterbatasan sistem manual menyulitkan HRD dalam melakukan monitoring terhadap proses rekrutmen secara keseluruhan [2]. Oleh karena itu, dibutuhkan sistem yang mampu mengelola data secara terpusat dan terintegrasi [1].
+
+Berdasarkan permasalahan tersebut, sistem E-Recruitment dikembangkan untuk menyediakan platform rekrutmen yang terstruktur, terintegrasi, dan mudah diakses secara online [2]. Sistem ini mencakup fitur seperti penyediaan informasi lowongan kerja, registrasi dan login pengguna, pengelolaan profil pelamar, serta pengunggahan dokumen pendukung seperti curriculum vitae (CV) [1]. Selain itu, sistem juga mendukung proses pengiriman lamaran kerja secara online serta pengelolaan data pelamar oleh pihak HRD [3]. Dengan adanya sistem ini, proses rekrutmen diharapkan menjadi lebih cepat, transparan, dan efisien [4].
+
+Namun demikian, sistem ini memiliki beberapa batasan dalam implementasinya [5]. Sistem yang dikembangkan tidak mencakup proses wawancara secara langsung dan tidak terintegrasi dengan sistem lain seperti payroll atau manajemen karyawan [3]. Selain itu, sistem ini tidak menyediakan fitur penilaian otomatis terhadap pelamar [5]. Sistem hanya berfokus pada proses rekrutmen karyawan berbasis web [2]. Dengan adanya batasan tersebut, pengembangan sistem diharapkan tetap terarah dan sesuai dengan kebutuhan utama perusahaan [1].
+
+1.3Definisi, Akronim dan Singkatan
+
+Berikut adalah definisi istilah yang digunakan dalam dokumen ini:
+
+Recruitment : Sistem rekrutmen karyawan secara online.
+
+Website : Kumpulan halaman yang dapat diakses melalui internet.
+
+HRD (Human Resource Development) : Pihak yang mengelola proses rekrutmen.
+
+Pelamar : Pengguna yang melamar pekerjaan melalui system.
+
+Frontend : Bagian tampilan yang dilihat oleh pengguna.
+
+Backend : Bagian sistem yang mengelola proses dan data.
+
+Database : Tempat penyimpanan data dalam system.
+
+UML (Unified Modeling Language) : Bahasa pemodelan untuk merancang sistem.
+
+ERD (Entity Relationship Diagram) : Diagram untuk menggambarkan hubungan antar data.
+
+UI (User Interface) : Tampilan antarmuka pengguna.
+
+UX (User Experience) : Pengalaman pengguna saat menggunakan system.
+
+SKPPL : Spesifikasi Kebutuhan dan Perancangan Perangkat Lunak
+
+1.4Aturan Penamaan dan Penomoran
+
+Penulisan dokumen SKPPL ini menggunakan aturan penamaan dan penomoran yang bertujuan untuk menjaga konsistensi dalam penyusunan dokumen. Aturan ini juga membantu pembaca dalam memahami struktur isi dokumen secara lebih sistematis. Dengan adanya penamaan dan penomoran yang jelas, setiap bagian dokumen dapat dengan mudah diidentifikasi dan dirujuk kembali. Hal ini sangat penting terutama dalam dokumen teknis yang memiliki banyak bagian dan subbagian. Aturan yang digunakan dalam dokumen ini disajikan pada Tabel 1 sebagai acuan utama.
+
+Tabel 1. 1 Aturan Penamaan dan Penomoran
+
+Bagian
+
+Aturan Penamaan / Penomoran
+
+Bab
+
+Menggunakan angka utama: 1, 2, 3, dan seterusnya
+
+Subbab
+
+Menggunakan format desimal: 1.1, 1.2, 1.3, dan seterusnya
+
+Kebutuhan Fungsional
+
+Menggunakan kode: F001, F002, F003, dan seterusnya
+
+Kebutuhan Non-Fungsional
+
+Menggunakan kode: NF001, NF002, NF003, dan seterusnya
+
+Use Case
+
+Menggunakan kode: UC-001, UC-002, UC-003, dan seterusnya
+
+Diagram
+
+Menggunakan penamaan sesuai jenis diagram (Use Case Diagram, Class Diagram, ERD, dll)
+
+Tabel
+
+Menggunakan format: Tabel X.Y (contoh: Tabel 1.1, Tabel 2.1)
+
+Gambar
+
+Menggunakan format: Gambar X.Y (contoh: Gambar 1.1, Gambar 2.1)
+
+1.5Referensi
+
+Referensi yang digunakan dalam penyusunan dokumen ini adalah sebagai berikut:
+
+[1] I. R. Hutabarat dan J. I. Sihotang, “Analisa dan Perancangan Sistem Rekrutmen Online (E-Recruitment) Berbasis Web pada PT Bravo Security Indonesia,” TeIKa, vol. 7, no. 2, pp. 25–36, 2017.[Online]. Available: https://jurnal.unai.edu/index.php/teika/article/view/827
+
+[2] R. Fernandi dan E. Dewayani, “Sistem Informasi E-Rekrutmen Berbasis Web pada PT Pharos Indonesia,” Jurnal Ilmu Komputer dan Sistem Informasi, vol. 11, no. 1, 2023.[Online]. Available: https://journal.untar.ac.id/index.php/jiksi/article/view/24109
+
+[3] A. Gunawan, S. Ningsih, dan D. A. Lantana, “Analisis dan Perancangan Sistem Informasi Rekrutmen Karyawan Berbasis Web,” Jurnal Ilmiah Komputasi, vol. 21, no. 4, pp. 483–494, 2022.[Online]. Available: https://ejournal.jak-stik.ac.id/index.php/komputasi/article/view/3319
+
+[4] A. Hasanah et al., “Efektivitas Sistem Rekrutmen Online dalam Efisiensi Proses Seleksi,” JGK (Jurnal Guru Kita), vol. 10, no. 1, 2025.[Online]. Available: https://jurnal.unimed.ac.id/2012/index.php/jgkp/article/view/70915
+
+[5] E. Nurmiati dan M. S. Khatami, “Rancang Bangun Sistem Informasi Rekrutmen Karyawan Baru Berbasis Web,” Jurnal Teknologi Informasi dan Komputer, 2024.[Online]. Available: https://jurnal.undhirabali.ac.id/index.php/jutik/article/view/3758
+
+1.6Ikhtisar Dokumen
+
+Dokumen Spesifikasi Kebutuhan dan Perancangan Perangkat Lunak (SKPPL) ini disusun secara sistematis untuk memberikan gambaran menyeluruh mengenai pengembangan aplikasi E-Recruitment berbasis web pada PT Eco Green Oleochemicals. Penyusunan dokumen ini dibagi ke dalam beberapa bab yang saling berkaitan satu sama lain. Setiap bab memiliki fokus pembahasan yang berbeda namun tetap terintegrasi dalam satu kesatuan dokumen. Hal ini bertujuan untuk memudahkan pembaca dalam memahami isi dokumen secara terstruktur. Dengan sistematika yang jelas, pembaca dapat mengikuti alur pembahasan dengan lebih baik.
+
+Adapun sistematika pembahasan dalam dokumen SKPPL ini terdiri dari beberapa bab utama yang menjelaskan berbagai aspek pengembangan sistem. Setiap bab disusun secara berurutan untuk memberikan pemahaman yang bertahap dan komprehensif. Bab pertama hingga bab terakhir saling melengkapi dalam menjelaskan kebutuhan dan perancangan sistem. Dengan demikian, seluruh aspek penting dalam pengembangan perangkat lunak dapat terdokumentasi dengan baik. Berikut merupakan rincian isi dari masing-masing bab dalam dokumen ini.
+
+Bab 1 Pendahuluan, berisi penjelasan mengenai tujuan penyusunan dokumen, lingkup permasalahan, definisi istilah, aturan penamaan dan penomoran, referensi, serta gambaran umum isi dokumen. Bab ini menjadi dasar awal dalam memahami latar belakang pengembangan sistem. Selain itu, bab ini juga memberikan arah dan tujuan dari perangkat lunak yang akan dibangun. Informasi yang disajikan membantu pembaca memahami konteks dokumen secara keseluruhan. Oleh karena itu, bab ini memiliki peran yang sangat penting dalam keseluruhan dokumen.
+
+Bab 2 Deskripsi Umum Perangkat Lunak, menjelaskan gambaran umum sistem yang akan dikembangkan. Pembahasan meliputi deskripsi sistem, proses bisnis, karakteristik pengguna, batasan sistem, serta lingkungan implementasi. Bab ini memberikan pemahaman mengenai bagaimana sistem akan beroperasi dalam konteks organisasi. Selain itu, pembaca juga dapat mengetahui siapa saja yang akan menggunakan sistem. Dengan demikian, gambaran sistem menjadi lebih jelas dan terarah.
+
+Bab 3 Deskripsi Rinci Kebutuhan, menguraikan kebutuhan sistem secara detail, baik kebutuhan fungsional maupun non-fungsional. Kebutuhan fungsional menjelaskan fitur yang harus disediakan oleh sistem. Sementara itu, kebutuhan non-fungsional mencakup aspek kinerja, keamanan, dan keandalan sistem. Bab ini menjadi dasar dalam proses perancangan dan implementasi sistem. Oleh karena itu, penjelasan pada bab ini harus disusun secara jelas dan terperinci.
+
+Bab 4 Deskripsi Kelas-Kelas, menjelaskan struktur kelas dalam sistem yang dirancang menggunakan class diagram. Setiap kelas memiliki atribut dan metode yang dijelaskan secara rinci. Selain itu, hubungan antar kelas juga digambarkan untuk menunjukkan keterkaitan dalam sistem. Bab ini membantu dalam memahami struktur logika dari perangkat lunak. Dengan adanya perancangan ini, proses pengembangan menjadi lebih terarah.
+
+Bab 5 Deskripsi Data, membahas perancangan basis data yang digunakan dalam sistem. Pembahasan mencakup struktur tabel, atribut, serta relasi antar tabel. Relasi tersebut biasanya digambarkan menggunakan Entity Relationship Diagram (ERD). Bab ini penting untuk memastikan data dapat dikelola dengan baik dan terstruktur. Selain itu, perancangan basis data juga berpengaruh terhadap performa sistem.
+
+Bab 6 Perancangan Antarmuka, menjelaskan rancangan tampilan antarmuka pengguna atau User Interface (UI). Rancangan ini memberikan gambaran mengenai interaksi antara pengguna dengan sistem. Setiap tampilan dirancang agar mudah digunakan dan dipahami oleh pengguna. Selain itu, aspek kenyamanan dan kemudahan akses juga menjadi perhatian utama. Dengan demikian, pengalaman pengguna dapat ditingkatkan.
+
+Bab 7 Matriks Keterunutan, menyajikan hubungan antara kebutuhan sistem dengan elemen perancangan yang telah dibuat. Matriks ini bertujuan untuk memastikan bahwa setiap kebutuhan dapat ditelusuri hingga tahap implementasi. Dengan adanya matriks ini, proses verifikasi dan validasi sistem menjadi lebih mudah dilakukan. Hal ini juga membantu dalam memastikan tidak ada kebutuhan yang terlewat. Oleh karena itu, matriks keterunutan menjadi bagian penting dalam dokumen ini.
+
+Dengan struktur penyusunan seperti ini, dokumen SKPPL diharapkan dapat menjadi acuan yang jelas dan terarah. Dokumen ini juga diharapkan mampu memberikan gambaran yang lengkap mengenai sistem yang akan dikembangkan. Selain itu, dokumen ini dapat digunakan sebagai pedoman dalam setiap tahapan pengembangan perangkat lunak. Dengan adanya dokumentasi yang baik, proses pengembangan dapat berjalan lebih efektif. Pada akhirnya, sistem yang dihasilkan diharapkan sesuai dengan kebutuhan pengguna.
+
+2.Deskripsi Umum Perangkat Lunak
+
+2.1   Deskripsi Umum Sistem
+
+Aplikasi E-Recruitment berbasis web pada PT Eco Green Oleochemicals merupakan sistem informasi yang dirancang untuk mendukung proses rekrutmen karyawan secara digital. Sistem ini dikembangkan agar proses rekrutmen menjadi lebih terstruktur dan efisien. Selain itu, sistem ini juga berfungsi sebagai media penghubung antara pelamar kerja dengan pihak perusahaan. Khususnya, sistem ini membantu bagian Human Resource Development (HRD) dalam mengelola proses perekrutan secara online. Dengan demikian, seluruh proses dapat dilakukan secara terintegrasi dalam satu platform.
+
+Sistem ini memungkinkan pelamar untuk mencari informasi lowongan pekerjaan dengan mudah. Pelamar juga dapat melakukan registrasi akun dan mengelola data pribadi secara mandiri. Selain itu, pelamar dapat mengirimkan lamaran kerja tanpa harus datang langsung ke perusahaan. Di sisi lain, pihak HRD dapat mengelola data lowongan dan memantau data pelamar. Proses seleksi juga dapat dilakukan secara terpusat melalui sistem ini.
+
+Berikut merupakan gambaran umum sistem E-Recruitment:
+
+Gambar 2. 1 Deskripsi Umum Sistem E-Recruitment
+
+Berdasarkan gambar di atas, sistem E-Recruitment terdiri dari beberapa komponen utama, yaitu:
+
+Pelamar Pelamar merupakan pengguna yang memanfaatkan sistem untuk mencari informasi lowongan pekerjaan dan mengirimkan lamaran. Pelamar dapat mengakses sistem melalui website yang telah disediakan. Melalui sistem tersebut, pelamar dapat melakukan registrasi dan login akun. Selain itu, pelamar juga dapat melihat daftar lowongan serta mengunggah dokumen seperti curriculum vitae (CV). Dengan adanya fitur ini, proses melamar kerja menjadi lebih praktis dan efisien.
+
+SistemE-RecruitmentSistem E-Recruitment berfungsi sebagai pusat pengolahan data dalam proses rekrutmen. Sistem ini menghubungkan pelamar dengan pihak HRD dalam satu platform yang terintegrasi. Setiap aktivitas pengguna akan diproses oleh sistem, seperti penyimpanan data dan pengelolaan lamaran. Selain itu, sistem juga bertanggung jawab dalam menyajikan informasi lowongan pekerjaan. Dengan demikian, seluruh proses dapat berjalan secara otomatis dan terorganisir.
+
+HR/AdminHR atau admin merupakan pihak yang bertanggung jawab dalam mengelola proses rekrutmen. HR memiliki akses untuk membuat dan mengelola lowongan pekerjaan yang tersedia. Selain itu, HR juga dapat melihat dan memeriksa data pelamar yang masuk. Proses seleksi dilakukan oleh HR dengan menentukan status lamaran, seperti diterima atau ditolak. Dengan adanya sistem ini, pekerjaan HR menjadi lebih terstruktur dan efisien.
+
+DatabaseDatabase digunakan sebagai tempat penyimpanan seluruh data yang berkaitan dengan sistem. Data yang disimpan meliputi data pengguna, data lowongan pekerjaan, data lamaran, serta dokumen pelamar seperti CV. Database berperan penting dalam menjaga integritas dan keamanan data. Selain itu, database juga memastikan data dapat diakses dengan cepat dan akurat. Oleh karena itu, pengelolaan database harus dilakukan dengan baik.
+
+Alur kerja sistem dimulai dari pelamar yang mengakses website untuk melihat lowongan pekerjaan. Setelah itu, pelamar dapat melakukan registrasi dan login untuk mengirimkan lamaran. Data lamaran yang dikirimkan akan disimpan ke dalam database sistem. Selanjutnya, HR dapat mengakses data tersebut untuk melakukan proses seleksi. Hasil seleksi kemudian diperbarui dalam sistem dan dapat dilihat kembali oleh pelamar.
+
+Dengan adanya sistem ini, proses rekrutmen menjadi lebih cepat dan efisien. Sistem juga meningkatkan transparansi dalam proses seleksi karyawan. Selain itu, penggunaan dokumen fisik dapat dikurangi secara signifikan. Hal ini membantu perusahaan dalam mengelola data secara lebih rapi dan terstruktur. Dengan demikian, sistem E-Recruitment memberikan manfaat yang optimal bagi perusahaan.
+
+2.2   Proses Bisnis Sistem
+
+Proses bisnis pada aplikasi E-Recruitment menggambarkan alur aktivitas yang terjadi dalam sistem secara menyeluruh. Proses ini dimulai dari pelamar yang mengakses sistem untuk mencari informasi lowongan pekerjaan. Selanjutnya, pelamar melakukan registrasi dan login untuk dapat mengirimkan lamaran. Data lamaran yang masuk kemudian diproses dan disimpan dalam sistem. Setelah itu, pihak HRD melakukan seleksi terhadap pelamar sesuai dengan kriteria yang telah ditentukan. Secara umum, proses bisnis sistem adalah sebagai berikut:
+
+Pelamar mengakses websitePelamar membuka website E-Recruitment untuk melihat informasi lowongan pekerjaan yang tersedia.
+
+Pelamar melakukan registrasi akunPelamar membuat akun dengan mengisi data seperti nama, email, dan password.
+
+Pelamar login ke sistemSetelah registrasi, pelamar masuk ke sistem menggunakan akun yang telah dibuat.
+
+Pelamar melihat lowongan kerjaSistem menampilkan daftar lowongan pekerjaan yang tersedia beserta detailnya.
+
+Pelamar mengirim lamaranPelamar memilih posisi yang diinginkan, mengisi data yang diperlukan, serta mengunggah dokumen seperti CV.
+
+Sistem menyimpan data lamaranData lamaran yang dikirim akan disimpan ke dalam database.
+
+HRD login ke sistemHRD mengakses sistem melalui halaman admin untuk mengelola proses rekrutmen.
+
+HRD melihat data pelamarHRD dapat melihat seluruh data pelamar yang masuk ke dalam sistem.
+
+HRD melakukan seleksiHRD melakukan penilaian terhadap pelamar dan menentukan status lamaran (diterima atau ditolak).
+
+Sistem memperbarui status lamaranHasil seleksi disimpan dalam sistem dan dapat dilihat oleh pelamar melalui akun masing-masing.
+
+Activity Diagram:
+
+Gambar 2. 2 Proses Bisnis Sistem
+
+Activity Diagram (To Be):
+
+Gambar 2. 3 Proses Bisnis Sistem
+
+2.3  Karakteristik Pengguna
+
+Pengguna sistem pada aplikasi E-Recruitment berbasis web ini dibagi menjadi dua kategori utama, yaitu HRD dan pelamar. Masing-masing pengguna memiliki peran dan hak akses yang berbeda dalam sistem. Perbedaan ini bertujuan untuk menjaga keamanan dan keteraturan dalam pengelolaan data. Selain itu, pembagian peran ini juga membantu sistem berjalan lebih efektif. Dengan demikian, setiap pengguna dapat menjalankan fungsinya sesuai kebutuhan.
+
+HRD merupakan pihak yang bertanggung jawab dalam mengelola proses rekrutmen pada sistem. HRD memiliki akses untuk menambahkan dan mengelola lowongan pekerjaan yang tersedia. Selain itu, HRD juga dapat melihat data pelamar yang masuk ke dalam sistem. HRD bertugas menentukan status lamaran, seperti diterima atau ditolak. Oleh karena itu, HRD diharapkan memiliki pemahaman dasar mengenai penggunaan komputer dan internet.
+
+Pelamar merupakan pengguna yang memanfaatkan sistem untuk mencari informasi lowongan pekerjaan. Pelamar dapat mengakses website untuk melakukan registrasi dan login akun. Selain itu, pelamar juga dapat mengisi data diri dan mengunggah dokumen yang diperlukan. Pelamar dapat memilih pekerjaan yang tersedia dan mengirimkan lamaran secara online. Pengguna dalam kategori ini dapat berasal dari berbagai kalangan yang ingin melamar pekerjaan.
+
+Sistem ini dibuat berbasis web sehingga dapat diakses melalui berbagai perangkat. Pengguna dapat menggunakan browser pada komputer maupun smartphone untuk mengakses sistem. Akses sistem memerlukan koneksi internet agar dapat berjalan dengan baik. Hal ini memberikan kemudahan bagi pengguna dalam mengakses sistem kapan saja dan di mana saja. Dengan demikian, fleksibilitas penggunaan sistem dapat meningkat.
+
+Tabel 2. 1 Karakteristik Pengguna
+
+Pengguna
+
+Tanggung Jawab
+
+Hak Akses Aplikasi
+
+Kemampuan Yang Harus Dimiliki
+
+HRD
+
+Mengelola data lowongan kerja, memeriksa data pelamar, menentukan status lamaran, serta mengelola sistem rekrutmen.
+
+Login ke sistem, menambah lowongan, mengubah lowongan, menghapus lowongan, melihat data pelamar, dan mengubah status lamaran.
+
+Memahami penggunaan komputer, internet, serta mampu mengoperasikan sistem berbasis web.
+
+Pelamar
+
+Mengakses website untuk melihat lowongan kerja, melakukan registrasi, login, dan mengirim lamaran pekerjaan.
+
+Registrasi akun, login, melihat lowongan kerja, mengirim lamaran, serta mengedit profil pelamar.
+
+Memiliki kemampuan dasar menggunakan komputer atau smartphone serta dapat mengakses internet.
+
+2.4   Batasan
+
+Sistem yang dikembangkan hanya berbasis web .
+
+Sistem Membutuhkan koneksi intenet untuk dapat diakses.
+
+Sistem tidak terintegrasi dengan sistem lain seperti payroll atau manajemen  karyawan.
+
+Sistem mendukung penjadwalan tes dan wawancara, namun pelaksanaannya dilakukan secara offline.
+
+Sistem hanya berfokus pada proses rekrutmen.
+
+Sistem hanya memiliki dua aktor utama, yaitu pelamar dan HRD.
+
+2.5   Rancangan Lingkungan Implementasi
+
+Rancangan lingkungan implementasi pada sistem E-Recruitment PT Eco Green Oleochemicals mencakup kebutuhan perangkat keras dan perangkat lunak. Kebutuhan ini diperlukan untuk mendukung proses pengembangan, pengujian, dan operasional sistem. Perangkat keras meliputi komputer atau server yang digunakan untuk menjalankan sistem. Sementara itu, perangkat lunak mencakup sistem operasi, database, serta tools pengembangan yang digunakan. Rincian kebutuhan tersebut disajikan dalam tabel sebagai acuan implementasi sistem.
+
+Tabel 2. 2 Rancangan Lingkungan Implementasi
+
+No
+
+Jenis Perangkat
+
+Nama Perangkat
+
+Fungsi/Keterangan
+
+1
+
+Perangkat Keras
+
+Laptop/PC
+
+Digunakan oleh admin/HRD untuk mengelola sistem e-recruitment
+
+2
+
+Perangkat Keras
+
+Jaringan Internet
+
+Koneksi internet untuk mengakses sistem secara online
+
+3
+
+Perangkat Lunak (Backend)
+
+PHP (Laravel)
+
+Bahasa pemrograman dan framework yang digunakan dalam pengembangan backend
+
+4
+
+Perangkat Lunak (Backend)
+
+MySQL
+
+Sistem manajemen basis data untuk menyimpan data pelamar dan lowongan
+
+5
+
+Perangkat Lunak (Backend)
+
+Apache / Nginx
+
+Web server untuk menjalankan aplikasi berbasis web
+
+6
+
+Perangkat Lunak (Backend)
+
+Laravel (MVC)
+
+Framework backend dengan arsitektur Model-View-Controller
+
+7
+
+Perangkat Lunak (Frontend)
+
+HTML, CSS, JavaScript
+
+Bahasa pemrograman untuk membangun antarmuka pengguna
+
+8
+
+Perangkat Lunak (Frontend)
+
+Tailwind CSS
+
+Framework CSS untuk desain dan styling antarmuka pengguna
+
+9
+
+Tools Pendukung
+
+Git, GitHub, Figma
+
+Version control, kolaborasi pengembangan, dan perancangan desain UI
+
+10
+
+Tools Pendukung
+
+GitHub
+
+Penyimpanan repository project dan manajemen source code
+
+3.Deskripsi Rinci Kebutuhan
+
+3.1Deskripsi Fungsional
+
+Kebutuhan fungsional merupakan kebutuhan yang menjelaskan fitur-fitur yang harus tersedia pada sistem E-Recruitment. Fitur-fitur ini dirancang untuk mendukung seluruh proses rekrutmen secara online. Sistem memiliki dua aktor utama, yaitu pelamar dan HRD. Masing-masing aktor memiliki fungsi yang berbeda sesuai dengan hak akses yang dimiliki. Dengan adanya pembagian fungsi ini, sistem dapat berjalan secara terstruktur dan sesuai dengan kebutuhan pengguna.
+
+F001 – Pengguna dapat melihat profil perusahaan PT Eco Green Oleochemicals.
+
+F002 – Pengguna dapat melihat daftar dan detail lowongan pekerjaan.
+
+F003 – Pengguna dapat melakukan registrasi.
+
+F004 – Pengguna dapat melakukan login akun.
+
+F005 – Pengguna dapat mengelola profil.
+
+F006 – Pengguna dapat mengunggah CV/Dokumen.
+
+F007 – Pengguna dapat melamar pekerjaan.
+
+F008 – Pengguna dapat melihat status lamaran.
+
+F009 – Admin dapat login ke dalam sistem.
+
+F010 – Admin dapat mengelola lowongan pekerjaan.
+
+F011 – Admin dapat melihat dan menyeleksi pelamar.
+
+F012 – Admin dapat mengubah status lamaran dan memberi notifikasi.
+
+3.1.1Use Case Diagram
+
+Gambar 3. 1 Use Case Diagram
+
+3.1.2Use Case F001 – Pengguna dapat melihat profil perussahaan Pt Eco        Green Oleochemicals
+
+3.1.2.1     Skenario
+
+Tabel 3. 1 Skenario Melihat Profil Perusahaan
+
+Identifikasi
+
+Nomor
+
+UC - F001
+
+Nama
+
+Melihat Profil Perusahaan
+
+Tujuan
+
+Memberikan informasi tentang PT Eco Green Oleochemicals kepada pengguna.
+
+Deskripsi
+
+Pengguna mengakses halaman profil perusahaan untuk mengetahui informasi umum perusahaan
+
+Aktor
+
+Pengguna
+
+Skenario Utama
+
+Kondisi Awal
+
+Pengguna berada di halaman utama aplikasi e-recruitment.
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Klik menu “Profil Perusahaan”
+
+2. Sistem memproses permintaan
+
+3. Pengguna mengakses halaman profil
+
+4.Sistem menampilkan profil perusahaan
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Koneksi internet bermasalah
+
+2. Sistem menampilkan pesan error
+
+Kondisi Akhir
+
+Pengguna berhasil melihat profil perusahaan
+
+3.1.2.2   Interaksi Objek
+
+Gambar 3. 2 Interaksi Objek Melihat Profil Perusahaan
+
+3.1.3Use Case F002 – Pengguna dapat melihat daftar dan detail lowongan pekerjaan
+
+3.1.3.1     Skenario
+
+Tabel 3. 2 Skenario Melihat Lowongan
+
+Identifikasi
+
+Nomor
+
+UC - F002
+
+Nama
+
+Melihat Lowongan
+
+Tujuan
+
+Memberikan informasi lowongan kerja yang tersedia
+
+Deskripsi
+
+Pengguna melihat daftar dan detail lowongan kerja
+
+Aktor
+
+Pengguna
+
+Skenario Utama
+
+Kondisi Awal
+
+Pengguna membuka aplikasi
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Klik menu “Lowongan”
+
+2. Sistem memproses permintaan
+
+3. Sistem mengambil data lowongan
+
+4. Sistem menampilkan daftar lowongan
+
+5. Pengguna memilih salah satu lowongan
+
+6. Sistem menampilkan detail lowongan
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Data lowongan kosong
+
+2. Sistem menampilkan pesan “Lowongan belum tersedia”
+
+1. Koneksi internet terputus
+
+2. Sistem menampilkan pesan error
+
+Kondisi Akhir
+
+Pengguna berhasil melihat daftar dan detail lowongan pekerjaan
+
+3.1.3.2   Interaksi Objek
+
+Gambar 3. 3 Interaksi Objek Melihat Lowongan
+
+3.1.4Use Case F003 - Pengguna dapat melakukan registrasi
+
+3.1.4.1     Skenario
+
+Tabel 3. 3 Skenario Registrasi Pengguna
+
+Identifikasi
+
+Nomor
+
+UC - F003
+
+Nama
+
+Registrasi Pengguna
+
+Tujuan
+
+Memungkinkan pengguna membuat akun pada sistem e-recruitment
+
+Deskripsi
+
+Pengguna melakukan pendaftaran akun dengan mengisi data yang diperlukan
+
+Aktor
+
+Pengguna
+
+Skenario Utama
+
+Kondisi Awal
+
+Pengguna belum memiliki akun
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Pengguna klik menu “Daftar”
+
+2. Sistem menampilkan form registrasi
+
+3. Pengguna mengisi data (nama, email, password, dll)
+
+4. Sistem memvalidasi data
+
+5. Pengguna klik tombol “Submit/Daftar”
+
+6. Sistem menyimpan data pengguna
+
+7. Registrasi berhasil
+
+8. Sistem menampilkan notifikasi berhasil / redirect ke halaman login
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Data tidak lengkap
+
+2. Sistem menampilkan pesan error
+
+1. Email sudah terdaftar
+
+2.Sistem menolak registrasi dan menampilkan peringatan
+
+1. Format email tidak valid
+
+2. Sistem meminta perbaikan data
+
+Kondisi Akhir
+
+Akun pengguna berhasil dibuat dan tersimpan di sistem
+
+3.1.4.2   Interaksi Objek
+
+Gambar 3. 4 Interaksi Objek Registrasi Pengguna
+
+3.1.5 Use Case F004 – Pengguna dapat melakukan login akun
+
+3.1.5.1      Skenario
+
+Tabel 3. 4 Skenario Login Pengguna
+
+Identifikasi
+
+Nomor
+
+UC - F004
+
+Nama
+
+Login Pengguna
+
+Tujuan
+
+Memungkinkan pengguna mengakses system e-recruitment
+
+Deskripsi
+
+Pengguna masuk ke sistem menggunakan email dan password
+
+Aktor
+
+Pengguna
+
+Skenario Utama
+
+Kondisi Awal
+
+Pengguna sudah memiliki akun
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Pengguna klik menu “Login”
+
+2. Sistem menampilkan form login
+
+3.Pengguna memasukkan email dan password
+
+4. Sistem memvalidasi kredensial
+
+5. Pengguna klik tombol “Login”
+
+6. Sistem memverifikasi data
+
+7. Login berhasil
+
+8. Sistem menampilkan dashboard/halaman utama e-recruitment
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Email atau password salah
+
+2. Sistem menampilkan pesan “Login gagal”
+
+1. Akun belum terdaftar
+
+2. Sistem menyarankan registrasi
+
+1. Field kosong
+
+2. Sistem menampilkan peringatan
+
+Kondisi Akhir
+
+Pengguna berhasil masuk ke dalam sistem
+
+3.1.5.2   Interaksi Objek
+
+Gambar 3. 5 Interaksi Objek Login Pengguna
+
+3.1.6Use Case F005 – Pengguna dapat mengelola profil
+
+3.1.6.1     Skenario
+
+Tabel 3. 5 Skenario Kelola Profil
+
+Identifikasi
+
+Nomor
+
+UC - F005
+
+Nama
+
+Kelola Profil
+
+Tujuan
+
+Memperbarui data diri pengguna.
+
+Deskripsi
+
+Pengguna mengelola profil.
+
+Aktor
+
+Pengguna
+
+Skenario Utama
+
+Kondisi Awal
+
+Pengguna sudah login.
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Masuk ke menu profil
+
+2. Sistem menampilkan data profil
+
+3. Mengubah data profil
+
+4. Sistem memvalidasi data
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. File tidak sesuai format
+
+2. Sistem menolak upload
+
+1. Ukuran file terlalu besar
+
+2. Sistem menampilkan peringatan
+
+1. Data tidak lengkap
+
+2. Sistem tidak menyimpan perubahan
+
+Kondisi Akhir
+
+Data profil berhasil diperbarui.
+
+3.1.6.2   Interaksi Objek
+
+Gambar 3. 6 Interaksi Objek Login Pengguna
+
+3.1.7Use Case F006 – Pengguna dapat mengunggah CV/dokumen
+
+3.1.7.1     Skenario
+
+Tabel 3. 6 Skenario Mengunggah CV/Dokumen
+
+Identifikasi
+
+Nomor
+
+UC - F006
+
+Nama
+
+Unggah CV/Dokumen.
+
+Tujuan
+
+Mengunggah Cv atau dokumen pendukung ke sistem.
+
+Deskripsi
+
+Pengguna mengunggah CV atau dokumen yang diperlukan untuk proses rekrutmen.
+
+Aktor
+
+Pengguna
+
+Skenario Utama
+
+Kondisi Awal
+
+Pengguna sudah login.
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Masuk ke menu unggah dokumen
+
+2. Sistem menampilkan halaman unggah dokumen
+
+3. Memilih file CV/dokumen
+
+4. Sistem memeriksa format dan ukuran file
+
+5. Mengunggah file
+
+6. Sistem menyimpan file ke server
+
+7. Klik simpan
+
+8. Sistem menyimpan data
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. File tidak sesuai format
+
+2. Sistem menolak upload
+
+1. Ukuran file terlalu besar
+
+2. Sistem menampilkan peringatan
+
+1. Tidak memilih file
+
+2. Sistem meminta pengguna memilih file terlebih dahulu
+
+1. Koneksi terputus saat unggah
+
+2. Sistem membatalkan proses  unggah
+
+Kondisi Akhir
+
+Data CV berhasil diperbarui.
+
+3.1.7.2   Interaksi Objek
+
+Gambar 3. 7 Skenario Mengunggah CV/Dokumen
+
+3.1.8Use Case F007 – Pengguna dapat melamar pekerjaan
+
+3.1.8.1     Skenario
+
+Tabel 3. 7 Skenario Melamar Pekerjaan
+
+Identifikasi
+
+Nomor
+
+UC - F007
+
+Nama
+
+Melamar Pekerjaan
+
+Tujuan
+
+Mengirim lamaran pekerjaan
+
+Deskripsi
+
+Pengguna melamar pekerjaan yang tersedia
+
+Aktor
+
+Pengguna
+
+Skenario Utama
+
+Kondisi Awal
+
+Pengguna sudah login dan memiliki CV
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Memilih lowongan
+
+2. Sistem menampilkan detail lowongan
+
+3. Klik tombol “Lamar”
+
+4. Sistem memproses data lamaran
+
+5. Sistem menyimpan data lamaran
+
+6. Sistem menampilkan notifikasi berhasil
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Belum login
+
+2. Sistem mengarahkan ke halaman login
+
+1. CV belum di upload
+
+2. Sistem meminta upload CV
+
+1. Sudah pernah melamar
+
+2. Sistem menampilkan notifikasi
+
+Kondisi Akhir
+
+Lamaran berhasil dikirim dan tersimpan
+
+3.1.8.2    Interaksi Objek
+
+Gambar 3. 8 Interaksi Objek Melamar Pekerjaan
+
+3.1.9Use Case F008 – Pengguna dapat melihat status lamaran
+
+3.1.9.1     Skenario
+
+Tabel 3. 8 Skenario Melihat Status Lamaran
+
+Identifikasi
+
+Nomor
+
+UC - F008
+
+Nama
+
+Melihat Status Lamaran
+
+Tujuan
+
+Mengetahui perkembangan lamaran
+
+Deskripsi
+
+Pengguna melihat status lamaran pekerjaan
+
+Aktor
+
+Pengguna
+
+Skenario Utama
+
+Kondisi Awal
+
+Pengguna sudah login
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Masuk ke menu status lamaran
+
+2. Sistem mengambil data lamaran
+
+3. Sistem menampilkan status lamaran
+
+4. Pengguna melihat hasil
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Belum ada lamaran
+
+2. Sistem menampilkan “Belum ada data”
+
+1. Koneksi bermasalah
+
+2. Sistem menampilkan error
+
+Kondisi Akhir
+
+Pengguna mengetahui status lamaran
+
+3.1.9.2   Interaksi Objek
+
+Gambar 3. 9 Interaksi Objek Melihat Status Lamaran
+
+3.1.10Use Case F009 – Admin dapat login ke dalam system
+
+3.1.10.1     Skenario
+
+Tabel 3. 9 Skenario Login Admin
+
+Identifikasi
+
+Nomor
+
+UC - F009
+
+Nama
+
+Login admin
+
+Tujuan
+
+Memberikan akses ke sistem admin
+
+Deskripsi
+
+Admin masuk ke sistem backend
+
+Aktor
+
+Admin
+
+Skenario Utama
+
+Kondisi Awal
+
+Admin belum login
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Input username &amp; password
+
+2. Sistem memvalidasi
+
+3. Klik login
+
+4. Sistem menampilkan dashboard admin
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Data salah
+
+2. Sistem menolak login
+
+1. Akun tidak terdaftar
+
+2. Sistem menampilkan error
+
+Kondisi Akhir
+
+Admin berhasil masuk ke sistem
+
+3.1.10.2   Interaksi Objek
+
+Gambar 3. 10 Interaksi Objek Login Admin
+
+3.1.11   Use Case F010 – Admin dapat mengelola lowongan pekerjaan
+
+3.1.11.1      Skenario
+
+Tabel 3. 10 Skenario Kelola Lowongan
+
+Identifikasi
+
+Nomor
+
+UC - F010
+
+Nama
+
+Kelola Lowongan
+
+Tujuan
+
+Mengatur data lowongan pekerjaan
+
+Deskripsi
+
+Admin dapat menambah, mengubah, dan menghapus data lowongan pekerjaan yang tersedia pada sistem e-recruitment
+
+Aktor
+
+Admin
+
+Skenario Utama
+
+Kondisi Awal
+
+Admin sudah login.
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Membuka menu lowongan
+
+2. Sistem menampilkan data
+
+3. Menambah/edit/hapus data
+
+4. Sistem memproses perubahan
+
+5. Sistem menyimpan data
+
+6. Sistem menampilkan notifikasi
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Data tidak lengkap
+
+2. Sistem menolak penyimpanan
+
+1. Gagal koneksi
+
+2. Sistem menampilkan error
+
+1. Hapus data
+
+2. Sistem meminta konfirmasi
+
+Kondisi Akhir
+
+Data lowongan berhasil diperbarui
+
+3.1.11.2 Interaksi Objek
+
+Gambar 3. 11 Interaksi Objek Kelola Lowongan
+
+3.1.12  Use Case F011 – Admin dapat melihat dan menyeleksi pelamar
+
+3.1.12.1     Skenario
+
+Tabel 3. 11 Skenario Seleksi Pelamar
+
+Identifikasi
+
+Nomor
+
+UC - F011
+
+Nama
+
+Seleksi Pelamar
+
+Tujuan
+
+Menilai dan menyeleksi pelamar pekerjaan
+
+Deskripsi
+
+Admin melakukan proses seleksi terhadap pelamar berdasarkan data yang telah dikirimkan seperti CV dan dokumen pendukung.
+
+Aktor
+
+Admin
+
+Skenario Utama
+
+Kondisi Awal
+
+Admin sudah login dan terdapat data pelamar
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Membuka menu pelamar
+
+2. Sistem menampilkan daftar pelamar
+
+3. Memilih salah satu pelamar
+
+4. Sistem menampilkan detail pelamr
+
+5. Melakukan penilaian
+
+6. Sistem menyimpan hasil seleksi
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Data pelamar kosong
+
+2. Sistem menampilkan “Tidak ada data”
+
+1. File tidak dapat dibuka
+
+2. Sistem menampilkan error
+
+Kondisi Akhir
+
+Hasil seleksi pelamar tersimpan dalam sistem
+
+3.1.12.2   Interaksi Objek
+
+Gambar 3. 12 Interaksi Objek Seleksi Pelamar
+
+3.1.13Use Case F012 – Admin dapat mengubah status lamaran dan           memberi notifikasi
+
+3.1.13.1        Skenario
+
+Tabel 3. 12 Skenario Update Status Lamaran
+
+Identifikasi
+
+Nomor
+
+UC - F012
+
+Nama
+
+Update Status Lamaran
+
+Tujuan
+
+Memberikan hasil seleksi kepada pelamar
+
+Deskripsi
+
+Admin mengubah status lamaran (diterima, ditolak, atau diproses) dan sistem akan mengirimkan notifikasi kepada pengguna.
+
+Aktor
+
+Admin
+
+Skenario Utama
+
+Kondisi Awal
+
+Admin telah melakukan proses seleksi pelamar
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Memilih pelamar
+
+2. Sistem menampilkan data pelamar
+
+3. Mengubah status lamaran
+
+4. Sistem menyimpan perubahan
+
+5. Sistem mengirim notifikasi
+
+6. Pengguna menerima informasi
+
+Skenario Alternatif
+
+Aksi Aktor
+
+Reaksi Sistem
+
+1. Gagal mengubah status
+
+2. Sistem menampilkan error
+
+1. Notifikasi gagal dikirim
+
+2. Sistem menampilkan peringatan
+
+Kondisi Akhir
+
+Status lamaran diperbarui dan notifikasi terkirim
+
+3.1.13.2   Interaksi Objek
+
+Gambar 3. 13 Interaksi Objek Update Status Lamaran
+
+3.2Deskripsi Kebutuhan Non Fungsional
+
+Tabel 3. 13 Deskripsi Kebutuhan Non Fungsional
+
+SKPPL-Id
+
+Parameter
+
+Kebutuhan
+
+SKPPL-N01
+
+Portability
+
+Aplikasi E-Recruitment harus dapat diakses melalui berbagai perangkat seperti komputer, laptop, tablet, dan smartphone. Sistem juga harus dapat berjalan pada berbagai browser seperti Google Chrome, Mozilla Firefox, Microsoft Edge, dan Safari tanpa mengalami kendala tampilan maupun fungsi.
+
+SKPPL-N02
+
+Response Time
+
+Sistem harus mampu menampilkan halaman dengan waktu respon maksimal 3 detik pada kondisi jaringan normal agar pengguna dapat mengakses informasi lowongan dan proses lamaran dengan cepat.
+
+SKPPL-N03
+
+Reliability
+
+Sistem harus dapat berjalan dengan stabil tanpa mengalami crash atau error selama digunakan oleh pelamar maupun HRD, terutama saat proses login, pengisian data, dan pengiriman lamaran.
+
+SKPPL-N04
+
+Security
+
+Sistem harus menyediakan fitur autentikasi login menggunakan email/username dan password. Data pelamar harus disimpan secara aman dan hanya dapat diakses oleh pihak yang memiliki hak akses (HRD).
+
+SKPPL-N05
+
+Safety
+
+Sistem harus memiliki mekanisme penyimpanan dan pencadangan (backup) data secara berkala untuk mencegah kehilangan data pelamar dan lowongan kerja.
+
+SKPPL-N06
+
+Usability
+
+Sistem harus memiliki tampilan antarmuka yang mudah dipahami dan digunakan oleh pengguna, baik pelamar maupun HRD, sehingga tidak memerlukan pelatihan khusus dalam penggunaannya.
+
+SKPPL-N07
+
+Availability
+
+Sistem harus dapat diakses selama 24 jam selama terdapat koneksi internet, sehingga pelamar dapat melamar pekerjaan kapan saja.
+
+SKPPL-N08
+
+Bahasa Komunikasi
+
+Sistem menggunakan bahasa Inggris sebagai bahasa utama untuk mendukung penggunaan secara global, mempermudah komunikasi, serta meningkatkan konsistensi dan kemudahan pemahaman bagi seluruh pengguna.
+
+4.Deskripsi Kelas-Kelas
+
+4.1Class Diagram
+
+Class diagram pada sistem E-recruitment digunakan untuk menggambarkan struktur sistem yang terdiri dari beberapa kelas utama beserta atribut dan metode yang dimiliki.
+
+Kelas utama dalam sistem ini adalah:
+
+Pelamar
+
+HRD
+
+Lowongan
+
+Lamaran
+
+Profil
+
+Dokumen
+
+Hubungan antar kelas menggambarkan bahwa HRD memiliki hak akses untuk mengelola data lowongan dan lamaran, sedangkan Pelamar hanya dapat melihat informasi lowongan serta mengirimkan lamaran melalui sistem.
+
+Class Diagram:
+
+Gambar 4. 1 Class Diagram
+
+4.2 Class Pelamar
+
+Class Pelamar merupakan kelas yang merepresentasikan pengguna yang melamar pekerjaan pada sistem E-Recruitment.
+
+Nama kelas: pelamar
+
+Tabel 4. 1 Class Pelamar
+
+Nama Atribut
+
+Visibility (private, public)
+
+Tipe Data
+
+id_pelamar
+
+Private
+
+Int
+
+Nama
+
+Private
+
+String
+
+Email
+
+Private
+
+String
+
+Password
+
+Private
+
+String
+
+no_hp
+
+Private
+
+String
+
+Tabel 4. 2 Class Pelamar (2)
+
+Nama Operasi
+
+Visibility (private, public)
+
+Keterangan
+
+registrasi()
+
+Public
+
+Membuat akun baru pelamar
+
+login()
+
+Public
+
+Proses masuk ke sistem
+
+editProfil()
+
+Public
+
+Mengubah data pelamar
+
+logout()
+
+Public
+
+Keluar dari sistem
+
+Class HRD
+
+Class HRD merupakan kelas yang merepresentasikan pengguna yang mengelola sistem rekrutmen.
+
+Nama kelas: hrd
+
+Tabel 4. 3 Class HRD
+
+Nama Atribut
+
+Visibility (private, public)
+
+Tipe Data
+
+id_hrd
+
+Private
+
+Int
+
+username
+
+Private
+
+String
+
+Password
+
+Private
+
+String
+
+Nama Operasi
+
+Visibility (private, public)
+
+Keterangan
+
+login()
+
+Public
+
+Masuk ke dashboard HRD
+
+tambahLowongan()
+
+Public
+
+Menambah data lowongan
+
+editLowongan()
+
+Public
+
+Mengubah data lowongan
+
+hapusLowongan()
+
+Public
+
+Menghapus lowongan
+
+lihatPelamar()
+
+Public
+
+Melihat data pelamar
+
+ubahStatus()
+
+Public
+
+Mengubah status lamaran
+
+logout()
+
+Public
+
+Keluar dari sistem
+
+Tabel 4. 4 Class HRD (2)
+
+Class Lowongan
+
+Class Lowongan digunakan untuk mengelola data lowongan pekerjaan.
+
+Nama kelas: lowongan
+
+Tabel 4. 5 Class Lowongan
+
+Nama Atribut
+
+Visibility (private, public)
+
+Tipe Data
+
+id_lowongan
+
+Private
+
+Int
+
+id_hrd
+
+Private
+
+Int
+
+judul
+
+Private
+
+String
+
+deskripsi
+
+Private
+
+String
+
+tanggal
+
+Private
+
+Date
+
+Tabel 4. 6 Class Lowongan (2)
+
+Nama Operasi
+
+Visibility (private, public)
+
+Keterangan
+
+tambahLowongan()
+
+Public
+
+Menambahkan lowongan baru
+
+editLowongan()
+
+Public
+
+Mengubah data lowongan
+
+hapusLowongan()
+
+Public
+
+Menghapus lowongan
+
+tampilLowongan()
+
+Public
+
+Menampilkan daftar lowongan
+
+4.5    Class Lamaran
+
+Class Lamaran digunakan untuk menyimpan data lamaran pekerjaan.
+
+Nama kelas: lamaran
+
+Tabel 4. 7 Class Lamaran
+
+Nama Atribut
+
+Visibility (private, public)
+
+Tipe Data
+
+id_lamaran
+
+Private
+
+Int
+
+id_pelamar
+
+Private
+
+Int
+
+id_lowongan
+
+Private
+
+Int
+
+tanggal_lamar
+
+Private
+
+Date
+
+status
+
+Private
+
+String
+
+Tabel 4. 8 Class Lamaran (2)
+
+Nama Operasi
+
+Visibility (Private, Public)
+
+Keterangan
+
+kirimLamaran()
+
+Public
+
+Mengirim lamaran pekerjaan
+
+lihatStatus()
+
+Public
+
+Melihat status lamaran
+
+4.6   Class Profil
+
+Class Profil digunakan untuk menyimpan data detail pelamar.
+
+Nama kelas: profil
+
+Tabel 4. 9 Class Profil
+
+Nama Atribut
+
+Visibility (private, public)
+
+Tipe Data
+
+id_profil
+
+Private
+
+Int
+
+id_pelamar
+
+Private
+
+Int
+
+pendidikan
+
+Private
+
+String
+
+pengalaman
+
+Private
+
+String
+
+Tabel 4. 10 Class Profil (2)
+
+Nama Operasi
+
+Visibility (private, public)
+
+Keterangan
+
+tampilProfil()
+
+Public
+
+Menampilkan data profil
+
+editProfil()
+
+Public
+
+Mengubah data profil
+
+4.7    Class Dokumen
+
+Class Dokumen digunakan untuk menyimpan file yang diunggah oleh pelamar sebagai persyaratan lamaran.
+
+Nama Kelas: Dokumen
+
+Tabel 4. 11 Class Dokumen
+
+Nama Atribut
+
+Visibility (private, public)
+
+Tipe Data
+
+id_dokumen
+
+Private
+
+Int
+
+id_lamaran
+
+Private
+
+Int
+
+nama_file
+
+Private
+
+String
+
+tipe
+
+Private
+
+String
+
+ukuran
+
+Private
+
+Int
+
+path
+
+Private
+
+String
+
+Tabel 4. 12 Class Dokumen (2)
+
+Nama Operasi
+
+Visibility (private, public)
+
+Keterangan
+
+uploadDokumen()
+
+Public
+
+Mengunggah dokumen
+
+hapusDokumen()
+
+Public
+
+Menghapus dokumen
+
+lihatDokumen()
+
+Public
+
+Menampilkan dokumen
+
+4.8    State Machine Diagram
+
+Gambar 4. 2 State Machine Diagram
+
+Deskripsi Data
+
+5.1   Entity-Relationship Diagram
+
+Gambar 5. 1 ER Diagram website Sistem E-Recruitment
+
+5.2   Daftar Tabel
+
+Tabel 5. 1 Daftar Tabel pada ER Diagram
+
+Kode
+
+Nama Tabel
+
+Deskripsi
+
+TBL01
+
+users
+
+Menyimpan data akun pengguna (HR dan pelamar) yang terdaftar dalam sistem
+
+TBL02
+
+user_profiles
+
+Menyimpan data profil lengkap pengguna seperti foto, alamat, dan bio
+
+TBL03
+
+password_reset_tokens
+
+Menyimpan token untuk proses reset password pengguna
+
+TBL04
+
+login_attempts
+
+Menyimpan log percobaan login untuk keperluan keamanan sistem
+
+TBL05
+
+cv_templates
+
+Menyimpan daftar template CV yang tersedia untuk digunakan pelamar
+
+TBL06
+
+applicant_cvs
+
+Menyimpan data CV yang dibuat oleh pelamar
+
+TBL07
+
+work_experiences
+
+Menyimpan data riwayat pengalaman kerja pelamar
+
+TBL08
+
+educations
+
+Menyimpan data riwayat pendidikan pelamar
+
+TBL09
+
+applicant_skills
+
+Menyimpan data keahlian atau skill yang dimiliki pelamar
+
+TBL10
+
+portofolio
+
+Menyimpan data portofolio pelamar berupa proyek, karya, sertifikat, atau dokumen pendukung yang dapat digunakan sebagai bukti kompetensi dan pengalaman pelamar.
+
+TBL11
+
+job_categories
+
+Menyimpan kategori-kategori lowongan pekerjaan
+
+TBL12
+
+job_postings
+
+Menyimpan data lowongan pekerjaan yang diposting oleh HR
+
+TBL13
+
+saved_jobs
+
+Menyimpan data lowongan yang disimpan/difavoritkan oleh pelamar
+
+TBL14
+
+applications
+
+Menyimpan data lamaran pekerjaan yang dikirim pelamar
+
+TBL15
+
+application_status_logs
+
+Menyimpan log riwayat perubahan status lamaran pekerjaan
+
+TBL16
+
+job_search_logs
+
+Menyimpan log pencarian lowongan lowongan yang dilakukan pengguna
+
+TBL17
+
+interviews
+
+Menyimpan data jadwal wawancara pelamar
+
+TBL18
+
+interviews_result
+
+Menyimpan hasil dan penilaian wawancara pelamar
+
+TBL19
+
+notifications
+
+Menyimpan notifikasi yang dikirimkan kepada pengguna sistem
+
+5.3   Struktur Tabel TBL01 users
+
+Nama tabel: users
+
+Primary key: id
+
+Tabel 5. 2 Struktur Tabel users
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik pengguna(auto increment)
+
+name
+
+Varchar
+
+100
+
+-
+
+Nama lengkap pengguna
+
+Email
+
+Varchar
+
+150
+
+Unique
+
+Alamat email pengguna
+
+password_hash
+
+Varchar
+
+255
+
+-
+
+Hash password pengguna
+
+role
+
+Enum
+
+-
+
+-
+
+Peran pengguna: hr/applicant
+
+phone
+
+Varchar
+
+20
+
+-
+
+Nomor telepon pengguna
+
+is_active
+
+Tinyint
+
+1
+
+-
+
+Status aktif akun (1=aktif)
+
+email_verified_at
+
+Timestamp
+
+-
+
+-
+
+Waktu verifikasi email
+
+remember_token
+
+Varchar
+
+100
+
+-
+
+Token remember me untuk sesi
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data dibuat
+
+updated at
+
+Timestamp
+
+-
+
+-
+
+Waktu data diperbarui
+
+5.4   Struktur Tabel TBL02 user_profiles
+
+Nama tabel: user_profiles
+
+Primary key: id
+
+Tabel 5. 3 Struktur Tabel user_profiles
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+Id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik pengguna
+
+user_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensin  ke  tabel users
+
+bio
+
+Text
+
+-
+
+-
+
+Deskripsi  singkat tentang diri
+
+address
+
+Varchar
+
+255
+
+-
+
+Alamat lengkap pengguna
+
+city
+
+Varchar
+
+100
+
+-
+
+Kota domisili pengguna
+
+province
+
+Varchar
+
+100
+
+-
+
+Provinsi domisili pengguna
+
+birth_date
+
+Date
+
+-
+
+-
+
+Tanggal lahir pengguna
+
+gender
+
+Enum
+
+-
+
+-
+
+Jenis kelamin: male/female
+
+avatar_url
+
+Varchar
+
+500
+
+-
+
+URL foto/avatar profil
+
+linkedin_url
+
+Varchar
+
+500
+
+-
+
+URL profil Linkedin
+
+portofolio_url
+
+Varchar
+
+500
+
+-
+
+URL portofolio  online
+
+updated at
+
+Timestamp
+
+-
+
+-
+
+Waktu data diperbarui
+
+5.5   Struktur Tabel TBL03 password_reset_tokens
+
+Nama tabel: password_reset_tokens
+
+Primary key: id
+
+Tabel 5. 4 Struktur Tabel password_reset_tokens
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik token reset password
+
+user_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel users
+
+Token
+
+Varchar
+
+255
+
+-
+
+Token reset password
+
+expires_at
+
+Timestamp
+
+-
+
+-
+
+Waktu kedaluwarsa token
+
+is_used
+
+Tinyint
+
+1
+
+-
+
+Status penggunaan token (1=sudah digunakan)
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu token dibuat
+
+5.6   Struktur Tabel TBL04 login_attempts
+
+Nama tabel: login_attempts
+
+Primary key: id
+
+Tabel 5. 5 Struktur Tabel login_attempts
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+PK
+
+ID unik percobaan login
+
+email
+
+Varchar
+
+150
+
+-
+
+Email yang digunakan saat percobaan login
+
+ip_address
+
+Varchar
+
+45
+
+-
+
+Alamat IP perangkat pengguna
+
+is_success
+
+Tinyint
+
+1
+
+-
+
+Status keberhasilan login (1=berhasil)
+
+attempted_at
+
+Timestamp
+
+-
+
+-
+
+Waktu percobaan login dilakukan
+
+5.7   Struktur Tabel TBL05 cv_templates
+
+Nama tabel: cv_templates
+
+Primary key: id
+
+Tabel 5. 6 Struktur Tabel cv_templates
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+PK
+
+ID unik template CV
+
+name
+
+Varchar
+
+100
+
+-
+
+Nama template CV
+
+preview_url
+
+Varchar
+
+500
+
+-
+
+URL gambar preview template
+
+is_active
+
+Tinyint
+
+1
+
+-
+
+Status aktif template (1=aktif)
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data dibuat
+
+5.8   Struktur Tabel TBL06 applicant_cvs
+
+Nama tabel: applicant_cvs
+
+Primary key: id
+
+Tabel 5. 7 Struktur Tabel applicant_cvs
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik CV pelamar
+
+user_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel users
+
+template_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel cv_templates
+
+title
+
+Varchar
+
+150
+
+-
+
+Judul CV pelamar
+
+cv_data
+
+Longtext
+
+-
+
+-
+
+Data isi CV dalam format JSON
+
+pdf_url
+
+Varchar
+
+500
+
+-
+
+URL file PDF hasil generate CV
+
+is_primary
+
+Tinyint
+
+1
+
+-
+
+Status CV utama (1=utama)
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data dibuat
+
+updated_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data diperbarui
+
+5.9   Struktur Tabel TBL07 work_experiences
+
+Nama tabel: work_experiences
+
+Primary key: id
+
+Tabel 5. 8 Struktur Tabel work_experiences
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik pengalaman kerja
+
+user_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel users
+
+companny_name
+
+Varchar
+
+150
+
+-
+
+Nama perusahaan tempat bekerja
+
+position
+
+Varchar
+
+150
+
+-
+
+Jabatan/posisi pekerjaan
+
+start_date
+
+Date
+
+-
+
+-
+
+Tanggal mulai bekerja
+
+end_date
+
+Date
+
+-
+
+-
+
+Tanggal selesai bekerja(nullable)
+
+is_current
+
+Tinyint
+
+1
+
+-
+
+Status pekerjaan saat ini  (1=masih bekerja)
+
+description
+
+Text
+
+-
+
+-
+
+Deskripsi tugas dan tanggung jawab
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data dibuat
+
+5.10   Struktur Tabel TBL08 educations
+
+Nama tabel: educations
+
+Primary key: id
+
+Tabel 5. 9 Struktur Tabel educations
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik riwayat pendidikan
+
+user_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel users
+
+institution
+
+Varchar
+
+200
+
+-
+
+Nama institusi pendidikan
+
+degree
+
+Enum
+
+-
+
+-
+
+Jenjang pendidikan: SMA/D3/S1/S2/S3
+
+major
+
+Varchar
+
+150
+
+-
+
+Program studi atau jurusan
+
+gpa
+
+Decimal
+
+3,2
+
+-
+
+Nilai IPK (skala 4.00)
+
+start_year
+
+Year
+
+-
+
+-
+
+Tahun mulai pendidikan
+
+end_year
+
+Year
+
+-
+
+-
+
+Tahun selesai pendidikan (nullable)
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data dibuat
+
+5.11   Struktur Tabel TBL09 applicant_skills
+
+Nama tabel: applicant_skills
+
+Primary key: id
+
+Tabel 5. 10 Struktur Tabel applicant_skills
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik keahlian pelamar
+
+user_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel users
+
+skill_name
+
+Varchar
+
+100
+
+-
+
+Nama keahlian
+
+category
+
+Enum
+
+-
+
+-
+
+Kategori: technical/soft/language
+
+Level
+
+Enum
+
+-
+
+-
+
+Tingkat: beginner/intermediate/expert
+
+cert_name
+
+Varchar
+
+200
+
+-
+
+Nama sertifikasi pendukung (opsional)
+
+cert_url
+
+Varchar
+
+500
+
+-
+
+URL sertifikasi pendukung (opsional)
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data dibuat
+
+5.11   Struktur Tabel TBL10 portofolio
+
+Nama tabel: portofolio
+
+Primary key: id
+
+Tabel 5. 11 Struktur Tabel portofolio
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik keahlian pelamar
+
+user_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel users
+
+title
+
+Varchar
+
+200
+
+-
+
+Nama keahlian
+
+description
+
+Text
+
+-
+
+-
+
+Kategori: technical/soft/language
+
+type
+
+Varchar
+
+50
+
+-
+
+Tingkat: beginner/intermediate/expert
+
+link_url
+
+Varchar
+
+500
+
+-
+
+Nama sertifikasi pendukung (opsional)
+
+file_url
+
+Varchar
+
+500
+
+-
+
+URL sertifikasi pendukung (opsional)
+
+file_size
+
+Bigint
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data dibuat
+
+updated_at
+
+Timestamp
+
+5.12   Struktur Tabel TBL11 job_categories
+
+Nama tabel: job_categories
+
+Primary key: id
+
+Tabel 5. 12 Struktur Tabel job_categories
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik kategori pekerjaan
+
+name
+
+Varchar
+
+100
+
+-
+
+Nama kategori pekerjaan
+
+slug
+
+Varchar
+
+120
+
+Unique
+
+Slug URL kategori
+
+icon
+
+Varchar
+
+100
+
+-
+
+Nama ikon kategori (opsional)
+
+is_active
+
+Tinyint
+
+1
+
+-
+
+Status aktif ketegori (1=aktif)
+
+5.13   Struktur Tabel TBL12 job_postings
+
+Nama tabel: job_postings
+
+Primary key: id
+
+Tabel 5. 13 Struktur Tabel job_postings
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik lowongan pekerjaan
+
+hr_user_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke users (HR yang memposting)
+
+category_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke job_categories
+
+title
+
+Varchar
+
+200
+
+-
+
+Judul lowongan pekerjaan
+
+slug
+
+Varchar
+
+220
+
+Unique
+
+Slug URL lowongan pekerjaan
+
+description
+
+Text
+
+-
+
+-
+
+Deskripsi lengkap pekerjaan
+
+requirements
+
+Text
+
+-
+
+-
+
+Persyaratan yang dibutuhkan
+
+benefits
+
+Text
+
+-
+
+-
+
+Keuntungan/benefit yang ditawarkan
+
+employment_type
+
+Enum
+
+-
+
+-
+
+Tipe: full-time/part-time/contract/internship
+
+location_type
+
+Enum
+
+-
+
+-
+
+Tipe lokasi: onsite/remote/hybrid
+
+location
+
+Varchar
+
+200
+
+-
+
+Lokasi pekerjaan
+
+salary_min
+
+Decimal
+
+12,2
+
+-
+
+Gaji minimum yang ditawarkan
+
+salary_max
+
+Decimal
+
+12,2
+
+-
+
+Gaji maksimum yang ditawarkan
+
+show_salary
+
+Tinyint
+
+1
+
+-
+
+Status tampilkan gaji (1=tampil)
+
+Quota
+
+Int
+
+-
+
+-
+
+Kuota pelamar yang dibutuhkan
+
+applicant_count
+
+Int
+
+-
+
+-
+
+Jumlah pelamar yang masuk
+
+Status
+
+Enum
+
+-
+
+-
+
+Status: draft/open/closed/expired
+
+Deadline
+
+Date
+
+-
+
+-
+
+Batas akhir pengiriman lamaran
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu lowongan dibuat
+
+updated_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data diperbarui
+
+closed_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data lowongan ditutup(nullable)
+
+5.14   Struktur Tabel TBL13 saved_jobs
+
+Nama tabel: saved_jobs
+
+Primary key: id
+
+Tabel 5. 14 Struktur Tabel saved_jobs
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik lowongan tersimpan
+
+user_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel users
+
+job_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke job_postings
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu lowongan disimpan
+
+5.15   Struktur Tabel TBL14 applications
+
+Nama tabel: applications
+
+Primary key: id
+
+Tabel 5. 15 Struktur Tabel applications
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik data lamaran
+
+user_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel users (pelamar)
+
+job_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi le job_postings
+
+cv_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke applicant_cvs
+
+cover_letter
+
+Text
+
+-
+
+-
+
+Isi surat lamaran pelamar
+
+resume_url
+
+Varchar
+
+500
+
+-
+
+URL berkas resume (opsional)
+
+status
+
+Enum
+
+-
+
+-
+
+Status: applied/reviewed/shortlisted/interview/offered/rejected/withdrawn
+
+hr_notes
+
+Text
+
+-
+
+-
+
+Catatan HR terhadap lamaran
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu lamaran dikirim
+
+updated_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data diperbarui
+
+5.16   Struktur Tabel TBL15 application_status_logs
+
+Nama tabel: application_status_logs
+
+Primary key: id
+
+Tabel 5. 16 Struktur Tabel applications_status_logs
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary  key
+
+ID unik log perubahan status
+
+application_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel applications
+
+changed_by
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke users (yang mengubah)
+
+old_status
+
+Enum
+
+-
+
+-
+
+Status lamaran sebelum perubahan
+
+New_status
+
+Enum
+
+-
+
+-
+
+Status lamaran setelah perubahan
+
+reason
+
+Text
+
+-
+
+-
+
+Alasan perubahan status (opsional)
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu perubahan status dicatat
+
+5.17   Struktur Tabel TBL16 job_search_logs
+
+Nama tabel: job_search_logs
+
+Primary key: id
+
+Tabel 5. 17 Struktur Tabel job_search_logs
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik log pencarian
+
+user_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke users(nullable)
+
+keyword
+
+Varchar
+
+255
+
+-
+
+Kata kunci yang dicari
+
+result_count
+
+Int
+
+-
+
+-
+
+Jumlah hasil yang ditemukan
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu pencarian dilakukan
+
+5.18   Struktur Tabel TBL17 interviews
+
+Nama tabel: interviews
+
+Primary key: id
+
+Tabel 5. 18 Struktur Tabel interviews
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik jadwal wawancara
+
+application_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel  applications
+
+scheduled_by
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke users (HR penjadwal)
+
+scheduled_at
+
+Datetime
+
+-
+
+-
+
+Tanggal dan waktu pelaksanaan wawancara
+
+duration_minutes
+
+Int
+
+-
+
+-
+
+Durasi wawancara dalam menit
+
+Interview_type
+
+Enum
+
+-
+
+-
+
+Tipe wawancara: online/offline/phone
+
+location_or_link
+
+Varchar
+
+500
+
+-
+
+Lokasi tempat atau link meeting online
+
+Status
+
+Enum
+
+-
+
+-
+
+Status: scheduled/completed/cancelled/rescheduled
+
+notes
+
+Text
+
+-
+
+-
+
+Catatan tambahan wawancara
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data dibuat
+
+updated_at
+
+Timestamp
+
+-
+
+-
+
+Waktu data diperbarui
+
+5.19   Struktur Tabel TBL18 interview_results
+
+Nama tabel: interview_results
+
+Primary key: id
+
+Tabel 5. 19 Struktur Tabel interviews_results
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Bigint
+
+-
+
+Primary key
+
+ID unik hasil wawancara
+
+interview_id
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke tabel interviews
+
+reviewed_by
+
+Bigint
+
+-
+
+Foreign key
+
+Referensi ke users(penilai)
+
+score
+
+Tinyint
+
+-
+
+-
+
+Nilai/skor wawancara (0-100)
+
+Feedback
+
+Text
+
+-
+
+-
+
+Umpan balik hasil wawancara
+
+Recommendation
+
+Enum
+
+-
+
+-
+
+Rekomendasi: proceed/hold/reject
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu penilaian dibuat
+
+5.20   Struktur Tabel TBL19 notifications
+
+Nama tabel: notifications
+
+Primary key: id
+
+Tabel 5. 20 Struktur Tabel notifications
+
+Field
+
+Tipe data
+
+Ukuran
+
+Key
+
+keterangan
+
+id
+
+Brigint
+
+-
+
+Primary key
+
+ID unik notifikasi
+
+user_id
+
+Brigint
+
+-
+
+Foreign key
+
+Referensi ke tabel users
+
+type
+
+Varchar
+
+100
+
+-
+
+Tipe notifikasi (misal: status_changed)
+
+title
+
+Varchar
+
+255
+
+-
+
+Judul notifikasi
+
+message
+
+Text
+
+-
+
+-
+
+Isi pesan notifikasi
+
+data
+
+Longtext
+
+-
+
+-
+
+Data tambahan dalam format JSON
+
+read_at
+
+Timestamp
+
+-
+
+-
+
+Waktu notikasi dibaca(nullable)
+
+created_at
+
+Timestamp
+
+-
+
+-
+
+Waktu notifikasi dibuat
+
+5.21   Skema Relasi Antar Tabel
+
+Gambar 5. 2 Skema relasi antar tabel website Sistem E-Recruitment
+
+6 Perancangan Antarmuka
+
+6.1 Antarmuka Halaman Utama &lt;Landing Page&gt;
+
+Halaman Landing Page merupakan tampilan awal yang muncul saat pengguna mengakses aplikasi. Pada bagian atas halaman, terdapat navigasi utama header yang memuat logo perusahaan di sisi kiri dan tautan menu di bagian tengah untuk memudahkan pengguna mengakses halaman lain. Di bawah header, terdapat banner utama yang menampilkan informasi singkat mengenai profil perusahaan. Selanjutnya, terdapat bagian sertifikat diikuti dengan sejarah serta visi dan misi perusahaan. Pada bagian bawahnya, disematkan fitur ulasan review yang dapat diisi oleh pengguna. Halaman ini diakhiri dengan bagian kaki halaman footer yang memuat informasi kontak, hak cipta, tautan tambahan, serta logo perusahaan.
+
+Selanjutnya, halaman menampilkan beberapa fitur unggulan seperti kategori populer dan lowongan terbaru yang memberikan informasi cepat terkait peluang karier yang tersedia. Di sisi kanan juga terdapat banner visual yang merepresentasikan komitmen perusahaan terhadap keberlanjutan dan lingkungan kerja yang aman. Pada bagian berikutnya, ditampilkan statistik perusahaan seperti jumlah talenta global, negara operasional, tingkat sustainable sourcing, dan pengalaman perusahaan sebagai bentuk informasi profil perusahaan kepada pengguna. Halaman ini diakhiri dengan footer yang berisi informasi hak cipta, kebijakan privasi, ketentuan layanan, pengaturan cookie, serta tautan tambahan terkait perusahaan dan keberlanjutan.
+
+Gambar 6. 1 Antarmuka Halaman Utama &lt;Landing Page&gt;
+
+6.2 Antarmuka &lt;Vacancies&gt;
+
+Halaman Vacancies digunakan untuk menampilkan daftar posisi pekerjaan yang tersedia pada perusahaan. Pada halaman ini, pengguna dapat melihat berbagai informasi terkait lowongan seperti nama posisi, lokasi penempatan, kategori pekerjaan, jenis pekerjaan, serta batas waktu pendaftaran. Pengguna dapat menggunakan fitur pencarian dan filter untuk mempermudah pencarian lowongan sesuai minat dan kualifikasi yang dimiliki. Tombol “Lihat Detail” atau “Lamar” digunakan untuk membuka informasi lengkap mengenai lowongan yang dipilih.
+
+Sistem akan mengambil data lowongan dari database dan menampilkannya secara realtime kepada pengguna. Ketika pengguna memilih tombol “Lamar”, sistem akan mengarahkan pengguna ke halaman pengisian data pelamar atau login terlebih dahulu jika belum memiliki akun.
+
+Gambar 6. 2 Antarmuka &lt;Vacancies&gt;
+
+6.3 Antarmuka &lt;About Us&gt;
+
+Halaman Tentang Kami berfungsi untuk memberikan informasi mengenai profil perusahaan PT Ecogreen Oleochemicals kepada pengguna. Pada halaman ini ditampilkan sejarah perusahaan, visi dan misi, budaya kerja, serta informasi mengenai komitmen perusahaan terhadap keberlanjutan. Selain itu, halaman ini juga menampilkan informasi pendukung seperti nilai perusahaan, bidang operasional, dan gambaran lingkungan kerja perusahaan. Informasi yang ditampilkan pada halaman ini diambil dari database dan dapat diperbarui oleh admin atau HR melalui sistem. Halaman ini membantu pelamar untuk mengenal perusahaan lebih jauh sebelum melakukan proses pendaftaran lowongan kerja.
+
+Gambar 6. 3 Antarmuka &lt;About Us&gt;
+
+6.4 Antarmuka &lt;Register dan Login&gt;
+
+Halaman Register dan Login digunakan oleh pengguna untuk membuat akun baru pada sistem E-Recruitment. Pada halaman ini terdapat form pendaftaran yang harus diisi oleh pengguna seperti nama lengkap, email, nomor telepon, password, dan konfirmasi password. Tombol “Daftar” digunakan untuk mengirim data registrasi ke sistem. Sistem akan melakukan validasi terhadap data yang dimasukkan seperti memastikan email belum pernah digunakan dan memastikan password sesuai ketentuan keamanan. Apabila proses registrasi berhasil, sistem akan menyimpan data akun pengguna ke dalam database dan mengarahkan pengguna ke halaman login atau dashboard pelamar.
+
+Gambar 6. 4 Antarmuka &lt;Register dan Login&gt;
+
+6.5 Antarmuka &lt;Applicant Dashboard&gt;
+
+Halaman Applicant Dashboard merupakan halaman utama yang ditampilkan setelah pelamar berhasil login ke dalam sistem. Pada halaman ini ditampilkan ringkasan informasi akun pelamar, status lamaran pekerjaan, informasi lowongan terbaru, serta progres kelengkapan profil pelamar. Menu navigasi pada dashboard memudahkan pengguna untuk mengakses fitur seperti profil, pengalaman kerja, pendidikan, lampiran dokumen, CV saya, dan status lamaran. Sistem akan menampilkan data berdasarkan akun pelamar yang sedang aktif. Seluruh aktivitas yang dilakukan pelamar pada dashboard akan tersimpan pada database sehingga data dapat diakses kembali pada sesi berikutnya.
+
+Gambar 6. 5 Antarmuka &lt;Applicant Dashboard&gt;
+
+6.6 Antarmuka &lt;Profile&gt;
+
+Halaman Profile digunakan oleh pelamar untuk mengelola data pribadi yang digunakan dalam proses rekrutmen. Informasi yang dapat diisi meliputi nama lengkap, tempat dan tanggal lahir, alamat, nomor telepon, email, serta deskripsi singkat mengenai diri pelamar. Tombol “Simpan” digunakan untuk memperbarui informasi profil pelamar. Sistem akan melakukan validasi data sebelum menyimpannya ke database. Data profil yang telah disimpan akan digunakan sebagai informasi utama pada proses seleksi dan pembuatan CV pelamar.
+
+Gambar 6. 6 Antarmuka &lt;Profile&gt;
+
+6.7 Antarmuka &lt;Work Experiences&gt;
+
+Halaman Work Experiences digunakan untuk mengelola riwayat pekerjaan pelamar. Pada halaman ini, pelamar dapat menambahkan, mengubah, maupun menghapus data pengalaman kerja seperti nama perusahaan, jabatan, periode kerja, dan deskripsi pekerjaan. Tombol “Tambah Pengalaman” digunakan untuk menambahkan data baru, sedangkan tombol “Edit” dan “Hapus” digunakan untuk memperbarui atau menghapus data yang telah tersimpan. Sistem akan menyimpan seluruh data pengalaman kerja ke database dan menampilkannya kembali pada profil maupun CV pelamar.
+
+Gambar 6. 7 Antarmuka &lt;Work Experiences&gt;
+
+6.8 Antarmuka &lt;Education&gt;
+
+Halaman Education digunakan oleh pelamar untuk mengisi riwayat pendidikan yang dimiliki. Informasi yang dapat dimasukkan meliputi nama institusi, jenjang pendidikan, jurusan, tahun masuk, dan tahun lulus. Pelamar dapat menambahkan lebih dari satu riwayat pendidikan menggunakan tombol “Tambah Pendidikan”. Data yang telah dimasukkan dapat diperbarui melalui tombol “Edit” atau dihapus melalui tombol “Hapus”. Sistem akan menyimpan data pendidikan ke database dan menggunakan informasi tersebut sebagai bahan pertimbangan dalam proses seleksi pelamar.
+
+Gambar 6. 8 Antarmuka &lt;Education&gt;
+
+6.9 Antarmuka &lt;Organization Experience&gt;
+
+Halaman Organization Experience digunakan untuk mencatat aktivitas organisasi yang pernah diikuti oleh pelamar. Informasi yang dimasukkan meliputi nama organisasi, jabatan, periode kegiatan, dan deskripsi aktivitas. Tombol “Tambah Organisasi” digunakan untuk menambahkan data organisasi baru ke dalam sistem. Data yang telah disimpan dapat diedit maupun dihapus sesuai kebutuhan pengguna. Sistem akan menyimpan informasi pengalaman organisasi ke database sebagai data pendukung profil pelamar.
+
+Gambar 6. 9 Antarmuka &lt;Organization Experience&gt;
+
+6.10 Antarmuka &lt;Attachments&gt;
+
+Halaman Attachments digunakan oleh pelamar untuk mengunggah dokumen pendukung yang dibutuhkan dalam proses rekrutmen. Dokumen yang dapat diunggah meliputi CV, ijazah, transkrip nilai, sertifikat, dan dokumen pendukung lainnya. Tombol “Upload” digunakan untuk mengunggah file dari perangkat pengguna ke server sistem. Sistem akan memvalidasi format dan ukuran file sebelum menyimpannya. Dokumen yang berhasil diunggah akan disimpan pada server dan dicatat pada database sehingga dapat diakses oleh HR selama proses seleksi berlangsung.
+
+Gambar 6. 10 Antarmuka &lt; Attcahments&gt;
+
+6.11 Antarmuka &lt;My CV&gt;
+
+Halaman My CV digunakan untuk menampilkan dan mengelola curriculum vitae pelamar berdasarkan data yang telah diisi sebelumnya. Sistem secara otomatis menyusun informasi profil, pendidikan, pengalaman kerja, organisasi, dan lampiran menjadi format CV digital. Pelamar dapat melihat preview CV serta menggunakan tombol “Unduh CV” untuk menyimpan CV dalam format PDF. Sistem akan menghasilkan file CV berdasarkan data yang tersimpan di database. Fitur ini membantu pelamar dalam menyiapkan dokumen lamaran secara lebih praktis dan terstruktur.
+
+Gambar 6. 11 Antarmuka &lt; My CV&gt;
+
+6.12 Antarmuka &lt;Application Status&gt;
+
+Halaman Application Status digunakan untuk memantau perkembangan proses rekrutmen yang diikuti oleh pelamar. Pada halaman ini ditampilkan informasi posisi yang dilamar, tanggal melamar, serta status seleksi seperti Diproses, Interview, Diterima, atau Ditolak. Sistem akan memperbarui status lamaran secara otomatis berdasarkan perubahan data yang dilakukan oleh HR. Pelamar dapat melihat detail tahapan seleksi yang sedang berlangsung melalui halaman ini. Seluruh data status lamaran disimpan di database dan ditampilkan sesuai akun pelamar yang sedang login.
+
+Gambar 6. 12 Antarmuka &lt; Application Status&gt;
+
+6.13 Antarmuka &lt;Login HR&gt;
+
+Halaman Login HR digunakan oleh admin atau staf Human Resource untuk masuk ke dalam sistem pengelolaan rekrutmen. Form login terdiri dari email dan password yang harus diisi dengan benar. Tombol “Login” digunakan untuk memverifikasi akun HR ke sistem. Sistem akan melakukan autentikasi data pengguna dan mengarahkan pengguna ke dashboard HR apabila data valid. Apabila terjadi kesalahan login, sistem akan menampilkan pesan error dan meminta pengguna untuk memeriksa kembali email atau password yang dimasukkan.
+
+Gambar 6. 13 Antarmuka &lt; Login HR&gt;
+
+6.14 Antarmuka &lt;Dashboard HR&gt;
+
+Halaman Dashboard HR merupakan pusat pengelolaan data rekrutmen oleh admin atau staf HR. Pada halaman ini ditampilkan ringkasan data seperti jumlah lowongan aktif, jumlah pelamar, jadwal wawancara, dan laporan proses seleksi. Menu navigasi yang tersedia memudahkan HR dalam mengakses fitur pengelolaan lowongan, data pelamar, laporan, jadwal wawancara, dan pengaturan sistem. Sistem akan mengambil seluruh data dari database dan menampilkannya dalam bentuk statistik maupun tabel informasi.
+
+Gambar 6. 14 Antarmuka &lt; Dashboard HR&gt;
+
+6.15 Antarmuka &lt;Vacancies HR&gt;
+
+Halaman Vacancies HR digunakan untuk mengelola data lowongan pekerjaan yang tersedia di perusahaan. HR dapat menambahkan lowongan baru, mengubah informasi lowongan, maupun menghapus lowongan yang sudah tidak aktif. Tombol “Tambah Lowongan” digunakan untuk membuat data lowongan baru, sedangkan tombol “Edit” dan “Hapus” digunakan untuk memperbarui atau menghapus data lowongan. Sistem akan menyimpan seluruh perubahan data lowongan ke database dan menampilkan informasi terbaru pada halaman lowongan publik.
+
+Gambar 6. 15 Antarmuka &lt; Vacancies HR&gt;
+
+6.16 Antarmuka &lt;Applicant HR&gt;
+
+Halaman Applicant HR digunakan untuk melihat dan mengelola data pelamar yang masuk ke sistem rekrutmen. Pada halaman ini HR dapat melihat identitas pelamar, posisi yang dilamar, dokumen pendukung, serta status seleksi. HR dapat menggunakan tombol “Lihat Detail”, “Terima”, “Tolak”, atau “Jadwalkan Interview” untuk melakukan tindakan terhadap pelamar tertentu. Setiap perubahan status yang dilakukan oleh HR akan disimpan ke database dan secara otomatis diperbarui pada halaman status lamaran milik pelamar.
+
+Gambar 6. 16 Antarmuka &lt; Applicant  HR&gt;
+
+6.17 Antarmuka &lt;Interviews Schedule&gt;
+
+Halaman Interviews Schedule digunakan untuk mengatur jadwal interview antara HR dan pelamar. Informasi yang dapat diatur meliputi tanggal wawancara, waktu, lokasi, metode interview, dan catatan tambahan. Tombol “Tambah Jadwal” digunakan untuk membuat jadwal baru, sedangkan tombol “Edit” digunakan untuk memperbarui jadwal yang sudah ada. Sistem akan menyimpan jadwal wawancara ke database dan mengirimkan informasi jadwal kepada pelamar melalui sistem notifikasi.
+
+Gambar 6. 17 Antarmuka &lt; Interview Schedule&gt;
+
+6.18 Antarmuka &lt;Report HR &gt;
+
+Halaman Report HR digunakan untuk melihat rekap data proses rekrutmen. Pada halaman ini ditampilkan laporan jumlah pelamar, posisi yang paling banyak dilamar, status seleksi, dan statistik penerimaan. HR dapat menggunakan tombol “Export PDF” atau “Export Excel” untuk mengunduh laporan dalam format dokumen tertentu. Sistem akan mengambil data dari database dan menghasilkan laporan secara otomatis sesuai periode yang dipilih.
+
+Gambar 6. 18 Antarmuka &lt; Report HR&gt;
+
+6.19 Antarmuka &lt;Template CV &gt;
+
+Halaman Template CV digunakan untuk memilih desain curriculum vitae yang akan digunakan oleh pelamar. Sistem menyediakan beberapa template CV dengan tampilan yang berbeda. Pelamar dapat memilih template yang diinginkan melalui tombol “Gunakan Template”. Setelah dipilih, sistem akan menerapkan template tersebut pada data CV pelamar. Pilihan template yang digunakan akan disimpan pada database dan digunakan ketika pengguna melakukan preview atau download CV.
+
+Gambar 6. 19 Antarmuka &lt; Template CV&gt;
+
+6.20 Antarmuka &lt;Settings &gt;
+
+Halaman Settings digunakan untuk mengatur preferensi akun dan sistem. Pada halaman ini pengguna dapat mengubah informasi akun, password, foto profil, maupun pengaturan lainnya yang tersedia. Tombol “Simpan Perubahan” digunakan untuk menyimpan konfigurasi terbaru yang dilakukan pengguna. Sistem akan melakukan validasi data sebelum memperbarui informasi pada database. Pengaturan yang berhasil disimpan akan langsung diterapkan pada akun pengguna dan digunakan pada sesi penggunaan berikutnya.
+
+Gambar 6. 20 Antarmuka &lt; Settings&gt;
+
+7. Matriks Keterunutan
+
+Tabel 7. 1 Matriks Keterunutan
+
+Id Kebutuhan Fungsional
+
+Id Use Case
+
+Nama Class
+
+Nama Tabel
+
+Nama Antarmuka
+
+SKPPL-F001
+
+UC-F001
+
+Profil
+
+user_profiles
+
+Antarmuka Halaman Profil Perusahaan (About Us)
+
+SKPPL-F002
+
+UC-F002
+
+Lowongan
+
+job_postings, job_categories
+
+Antarmuka Halaman Lowongan (Vacancies)
+
+SKPPL-F003
+
+UC-F003
+
+Pelamar
+
+users
+
+Antarmuka Registrasi Pengguna
+
+SKPPL-F004
+
+UC-F004
+
+Pelamar
+
+users, login_attempts
+
+Antarmuka Login Pengguna
+
+SKPPL-F005
+
+UC-F005
+
+Pelamar, Profil
+
+user_profiles, work_experiences, educations, applicant_skills, portofolio
+
+Antarmuka Kelola Profil
+
+SKPPL-F006
+
+UC-F006
+
+Pelamar, Dokumen
+
+applicant_cvs
+
+Antarmuka Upload CV/Dokumen (Attachments &amp; My CV)
+
+SKPPL-F007
+
+UC-F007
+
+Lamaran, Lowongan, Dokumen
+
+applications, applicant_cvs, job_postings
+
+Antarmuka Melamar Pekerjaan
+
+SKPPL-F008
+
+UC-F008
+
+Lamaran
+
+applications, application_status_logs
+
+Antarmuka Status Lamaran (Application Status)
+
+SKPPL-F009
+
+UC-F009
+
+HRD
+
+users, login_attempts
+
+Antarmuka Login Admin
+
+SKPPL-F010
+
+UC-F010
+
+HRD, Lowongan
+
+job_postings, job_categories
+
+Antarmuka Dashboard Kelola Lowongan
+
+SKPPL-F011
+
+UC-F011
+
+HRD, Lamaran, Dokumen
+
+applications, applicant_cvs, interview_results
+
+Antarmuka Seleksi Pelamar
+
+SKPPL-F012
+
+UC-F012
+
+HRD, Lamaran
+
+applications, application_status_logs, notifications
+
+Antarmuka Update Status Lamaran &amp; Notifikasi

@@ -1,0 +1,95 @@
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class NotificationMail extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    public $title;
+    public $messageText;
+    public $actionUrl;
+    public $actionText;
+
+    /**
+     * Create a new message instance.
+     */
+    public function __construct(string $title, string $messageText, string $actionUrl = null, string $actionText = null)
+    {
+        $this->title = $title;
+        $this->messageText = $messageText;
+        $this->actionUrl = $actionUrl;
+        $this->actionText = $actionText;
+    }
+
+    /**
+     * Build the message.
+     */
+    public function build()
+    {
+        return $this->subject($this->title)
+            ->html($this->getEmailHtml());
+    }
+
+    protected function getEmailHtml()
+    {
+        $buttonHtml = '';
+        if ($this->actionUrl && $this->actionText) {
+            $buttonHtml = '
+            <div style="margin: 30px 0; text-align: center;">
+                <a href="' . htmlspecialchars($this->actionUrl) . '" style="background-color: #15803d; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; display: inline-block;">
+                    ' . htmlspecialchars($this->actionText) . '
+                </a>
+            </div>';
+        }
+
+        return '
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>' . htmlspecialchars($this->title) . '</title>
+        </head>
+        <body style="font-family: \'Plus Jakarta Sans\', \'Inter\', Helvetica, Arial, sans-serif; background-color: #f4f5f7; margin: 0; padding: 0; -webkit-font-smoothing: antialiased;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f5f7; padding: 40px 0;">
+                <tr>
+                    <td align="center">
+                        <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
+                            <!-- Header -->
+                            <tr>
+                                <td style="background-color: #15803d; padding: 30px; text-align: center;">
+                                    <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.5px;">Ecogreen Oleochemicals</h1>
+                                    <p style="color: #d1fae5; margin: 5px 0 0 0; font-size: 13px;">Sistem Informasi Rekrutmen Online</p>
+                                </td>
+                            </tr>
+                            <!-- Content -->
+                            <tr>
+                                <td style="padding: 40px; color: #1e293b;">
+                                    <h2 style="margin-top: 0; font-size: 18px; color: #0f172a; font-weight: 700;">' . htmlspecialchars($this->title) . '</h2>
+                                    <p style="font-size: 15px; line-height: 1.6; color: #475569; margin: 20px 0;">' . nl2br(htmlspecialchars($this->messageText)) . '</p>
+                                    ' . $buttonHtml . '
+                                    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+                                    <p style="font-size: 12px; line-height: 1.5; color: #94a3b8; margin: 0;">
+                                        Email ini dikirimkan secara otomatis oleh sistem rekrutmen PT Ecogreen Oleochemicals. Mohon untuk tidak membalas email ini secara langsung.
+                                    </p>
+                                </td>
+                            </tr>
+                            <!-- Footer -->
+                            <tr>
+                                <td style="background-color: #f8fafc; padding: 20px 40px; text-align: center; border-top: 1px solid #e2e8f0;">
+                                    <p style="margin: 0; font-size: 12px; color: #64748b;">&copy; ' . date('Y') . ' PT Ecogreen Oleochemicals. All rights reserved.</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>';
+    }
+}

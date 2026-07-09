@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOCX Reader</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        #output { border: 1px solid #ccc; padding: 20px; margin-top: 20px; white-space: pre-wrap; max-height: 600px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <h2>Upload and Read DOCX</h2>
+    <input type="file" id="upload" />
+    <div id="output"></div>
+
+    <script>
+        document.getElementById('upload').addEventListener('change', function(event) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var arrayBuffer = reader.result;
+                mammoth.extractRawText({arrayBuffer: arrayBuffer})
+                    .then(function(result) {
+                        var text = result.value; // The raw text
+                        document.getElementById('output').textContent = text;
+                        console.log("Extraction complete!");
+                    })
+                    .catch(function(err) {
+                        document.getElementById('output').textContent = "Error: " + err;
+                    });
+            };
+            reader.readAsArrayBuffer(this.files[0]);
+        });
+    </script>
+</body>
+</html>

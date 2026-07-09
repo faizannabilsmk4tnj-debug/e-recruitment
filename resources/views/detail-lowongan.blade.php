@@ -26,35 +26,45 @@
         <div class="flex-1 space-y-6">
 
             <!-- Header Card -->
-            <div class="bg-white rounded-xl border border-gray-200 p-8">
-                <div class="flex items-start gap-5 mb-6">
-                    <div class="w-16 h-16 bg-green-800 rounded-xl flex items-center justify-center shrink-0">
-                        <span class="text-white text-lg font-bold leading-none">E<br>G</span>
+            <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                @if($vacancy->banner_image)
+                <div class="w-full h-48 relative">
+                    <img src="{{ asset($vacancy->banner_image) }}" alt="Cover Banner" class="w-full h-full object-cover">
+                </div>
+                @endif
+
+                <div class="p-8 {{ $vacancy->banner_image ? 'relative -mt-6 rounded-t-3xl bg-white z-10' : '' }}">
+                    <!-- Category Badge -->
+                    <div class="mb-3">
+                        <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-md uppercase tracking-wider">
+                            {{ $vacancy->category->name ?? 'General' }}
+                        </span>
                     </div>
-                    <div>
-                        <div class="flex items-center gap-3">
-                            <h1 class="text-2xl font-bold text-gray-900" id="job-title">{{ $vacancy->title }}</h1>
-                            @if($vacancy->status === 'open')
-                            <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-0.5 rounded-full uppercase" id="job-badge">Active</span>
-                            @else
-                            <span class="text-xs font-bold text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full uppercase" id="job-badge">Closed</span>
-                            @endif
-                        </div>
-                        <p class="text-green-700 font-medium mt-1" id="job-company">PT Ecogreen Oleochemicals</p>
-                        <div class="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                            <span class="flex items-center gap-1.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                                <span id="job-location">{{ $vacancy->location }}</span>
-                            </span>
-                            <span class="flex items-center gap-1.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <span id="job-type">{{ ucfirst($vacancy->employment_type) }}</span>
-                            </span>
-                            <span class="flex items-center gap-1.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                                <span id="job-posted">Posted {{ $vacancy->created_at->diffForHumans() }}</span>
-                            </span>
-                        </div>
+
+                    <!-- Title & Status -->
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-2xl font-bold text-gray-900" id="job-title">{{ $vacancy->title }}</h1>
+                        @if($vacancy->status === 'open')
+                        <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-0.5 rounded-full uppercase shrink-0" id="job-badge">Active</span>
+                        @else
+                        <span class="text-xs font-bold text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full uppercase shrink-0" id="job-badge">Closed</span>
+                        @endif
+                    </div>
+                    <p class="text-green-700 font-medium mt-1" id="job-company">PT Ecogreen Oleochemicals</p>
+                    
+                    <div class="flex items-center gap-4 mt-4 text-sm text-gray-500">
+                        <span class="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span id="job-location">{{ $vacancy->location }}</span>
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span id="job-type">{{ ucfirst($vacancy->employment_type) }}</span>
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                            <span id="job-posted">Posted {{ $vacancy->created_at->diffForHumans() }}</span>
+                        </span>
                     </div>
                 </div>
 

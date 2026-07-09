@@ -150,189 +150,404 @@
                 <div class="relative pl-6 space-y-6">
                     <div class="absolute left-[7px] top-2 bottom-8 w-0.5 bg-gray-200"></div>
 
-                    <!-- Step 1: Submitted ✓ (Always Completed) -->
-                    <div class="relative">
-                        <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
-                        <p class="font-bold text-sm text-gray-900">Application Submitted</p>
-                        <p class="text-xs text-gray-400 mt-0.5">{{ $submittedDate->format('d M Y, H:i') }} WIB</p>
-                        <p class="text-xs text-gray-500 mt-1 font-medium">Documents successfully uploaded and verified by the system.</p>
-                    </div>
+                    @php
+                        $isWithdrawn = $app->status === 'withdrawn';
+                        $isDeclinedByApplicant = $latestInterview && $latestInterview->status === 'cancelled' && !empty($latestInterview->notes) && str_contains($latestInterview->notes, '[Wawancara Ditolak oleh Pelamar]');
+                        
+                        $declineReason = 'No reason provided';
+                        if ($isDeclinedByApplicant && !empty($latestInterview->notes)) {
+                            $parts = explode('Alasan:', $latestInterview->notes);
+                            if (isset($parts[1])) {
+                                $reasonPart = explode('---', $parts[1])[0];
+                                $declineReason = trim($reasonPart);
+                            }
+                        }
+                    @endphp
 
-                    <!-- Step 2: Shortlisted -->
-                    @if(in_array($app->status, ['applied']))
-                        <!-- Pending state -->
+                    @if($isWithdrawn)
+                        <!-- ==================== FLOW: WITHDRAWN ==================== -->
+                        <!-- Step 1: Submitted ✓ -->
                         <div class="relative">
-                            <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
-                            <p class="font-bold text-sm text-gray-500">Shortlisted</p>
-                            <p class="text-xs text-gray-400 mt-0.5 italic">Awaiting shortlist selection by HR.</p>
+                            <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
+                            <p class="font-bold text-sm text-gray-900">Application Submitted</p>
+                            <p class="text-xs text-gray-400 mt-0.5">{{ $submittedDate->format('d M Y, H:i') }} WIB</p>
+                            <p class="text-xs text-gray-500 mt-1 font-medium">Documents successfully uploaded and verified by the system.</p>
                         </div>
-                    @else
-                        <!-- Completed state -->
+
+                        <!-- Step 2: Shortlisted (Only if they actually got shortlisted before withdrawing) -->
+                        @if($reviewedLog)
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
+                                <p class="font-bold text-sm text-gray-900">Shortlisted</p>
+                                <p class="text-xs text-gray-400 mt-0.5">
+                                    {{ $reviewedDate ? $reviewedDate->format('d M Y, H:i') : '' }} WIB
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1 font-medium">
+                                    {{ $reviewedLog->reason ?? 'Your application has been shortlisted by the recruitment team.' }}
+                                </p>
+                            </div>
+                        @endif
+
+                        <!-- Step 3: Application Withdrawn -->
+                        <div class="relative">
+                            <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-500 rounded-full border-2 border-white ring-4 ring-gray-100"></div>
+                            <p class="font-bold text-sm text-gray-600">Application Withdrawn</p>
+                            <p class="text-xs text-gray-400 mt-0.5">
+                                {{ $finalDate ? $finalDate->format('d M Y, H:i') : '' }} WIB
+                            </p>
+                            <p class="text-xs text-gray-500 mt-1 font-medium bg-gray-50 border border-gray-100 rounded-lg p-3">
+                                You have withdrawn this application from the recruitment portal.
+                            </p>
+                        </div>
+
+                    @elseif($isDeclinedByApplicant)
+                        <!-- ==================== FLOW: DECLINED INTERVIEW ==================== -->
+                        <!-- Step 1: Submitted ✓ -->
+                        <div class="relative">
+                            <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
+                            <p class="font-bold text-sm text-gray-900">Application Submitted</p>
+                            <p class="text-xs text-gray-400 mt-0.5">{{ $submittedDate->format('d M Y, H:i') }} WIB</p>
+                            <p class="text-xs text-gray-500 mt-1 font-medium">Documents successfully uploaded and verified by the system.</p>
+                        </div>
+
+                        <!-- Step 2: Shortlisted ✓ -->
                         <div class="relative">
                             <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
                             <p class="font-bold text-sm text-gray-900">Shortlisted</p>
                             <p class="text-xs text-gray-400 mt-0.5">
-                                {{ $reviewedDate ? $reviewedDate->format('d M Y, H:i') : $submittedDate->addDay()->format('d M Y, H:i') }} WIB
+                                {{ $reviewedDate ? $reviewedDate->format('d M Y, H:i') : '' }} WIB
                             </p>
                             <p class="text-xs text-gray-500 mt-1 font-medium">
                                 {{ $reviewedLog->reason ?? 'Your application has been shortlisted by the recruitment team.' }}
                             </p>
                         </div>
-                    @endif
 
-                    <!-- Step 3: Interview -->
-                    @if($app->status === 'interview' || $latestInterview)
-                        <!-- Active/Scheduled state -->
-                        <div class="relative">
-                            <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white ring-4 ring-blue-100 animate-pulse"></div>
-                            <p class="font-bold text-sm text-blue-800">Interview Session</p>
-                            <p class="text-xs text-gray-400 mt-0.5">
-                                {{ $interviewLogDate ? $interviewLogDate->format('d M Y') : $submittedDate->addDays(2)->format('d M Y') }}
-                            </p>
-
-                            @if($latestInterview)
-                                <!-- Interview Detail Card -->
-                                <div class="mt-3 bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-2.5 shadow-sm">
-                                    <div class="flex items-center gap-2.5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                                        <span class="text-xs font-bold text-gray-700">
-                                            {{ $latestInterview->scheduled_at->format('d M Y • H:i') }} WIB ({{ $latestInterview->duration_minutes }} Min)
-                                        </span>
-                                    </div>
-                                    <div class="flex items-center gap-2.5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                                        <div>
-                                            <span class="text-xs font-bold text-gray-700 block">
-                                                {{ $latestInterview->interview_type === 'online' ? 'Google Meet / Online Link' : 'Office Location' }}
-                                            </span>
-                                            @if($latestInterview->interview_type === 'online')
-                                                <a href="{{ $latestInterview->location_or_link ?? '#' }}" target="_blank" class="text-xs text-green-700 hover:text-green-800 font-semibold underline truncate max-w-[200px] block">
-                                                    {{ $latestInterview->location_or_link ?? 'Click to join meeting' }}
-                                                </a>
-                                            @else
-                                                <span class="text-xs text-gray-600 font-medium block">
-                                                    {{ $latestInterview->location_or_link ?? 'PT Ecogreen Head Office, Kabil, Batam' }}
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    @if($latestInterview->notes)
-                                        <div class="bg-amber-50/50 border border-amber-100 rounded-lg p-3 text-xs text-amber-800 font-semibold">
-                                            <strong>Notes from HR:</strong> {{ $latestInterview->notes }}
-                                        </div>
-                                    @endif
-                                    
-                                     <!-- Confirmation Badge/Button Container -->
-                                     <div class="pt-1 confirmation-container" data-interview-id="{{ $latestInterview->id }}">
-                                         @if($latestInterview->attendance_status === 'present')
-                                             <div class="flex flex-col gap-1 items-center justify-center py-2.5 px-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-lg shadow-sm">
-                                                 <div class="flex items-center gap-1.5">
-                                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                                                     Attendance Confirmed ✓
-                                                 </div>
-                                                 <span class="text-[10px] text-emerald-600 font-medium">
-                                                     Arrived at: {{ $latestInterview->attendance_confirmed_at ? $latestInterview->attendance_confirmed_at->setTimezone('Asia/Jakarta')->format('H:i') : '' }} WIB
-                                                 </span>
-                                                 @if($latestInterview->attendance_photo)
-                                                     <a href="{{ $latestInterview->attendance_photo }}" target="_blank" class="mt-1 text-[10px] text-green-700 hover:text-green-800 underline font-semibold flex items-center gap-1">
-                                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                                                         View Selfie Photo
-                                                     </a>
-                                                 @endif
-                                             </div>
-                                         @else
-                                             <button class="btn-konfirmasi w-full bg-green-800 hover:bg-green-900 text-white font-bold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm"
-                                                     onclick="triggerHadirConfirmation(
-                                                         {{ $latestInterview->id }},
-                                                         '{{ $latestInterview->scheduled_at->format('d F Y \a\t H:i') }} WIB',
-                                                         '{{ $latestInterview->interview_type }}',
-                                                         '{{ addslashes($latestInterview->location_or_link) }}',
-                                                         '{{ addslashes($app->jobPosting->title ?? 'Position') }}'
-                                                     )">
-                                                 Confirm Attendance
-                                             </button>
-                                         @endif
-                                     </div>
-                                </div>
-                            @else
-                                <p class="text-xs text-gray-500 mt-1 font-medium">Selected for interview stage. Scheduled details will be released shortly.</p>
-                            @endif
-                        </div>
-                    @elseif(in_array($app->status, ['accepted', 'rejected', 'withdrawn']))
-                        <!-- Done/Not needed state -->
-                        <div class="relative">
-                            <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
-                            <p class="font-bold text-sm text-gray-900">Interview Stage</p>
-                            <p class="text-xs text-gray-500 mt-0.5 font-medium">Stage passed or completed.</p>
-                        </div>
-                    @else
-                        <!-- Pending state -->
-                        <div class="relative">
-                            <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
-                            <p class="font-bold text-sm text-gray-400">Interview Stage</p>
-                            <p class="text-xs text-gray-400 mt-0.5 italic">Awaiting shortlist approval.</p>
-                        </div>
-                    @endif
-
-                    <!-- Step 4: Final Decision -->
-                    @if($app->status === 'accepted')
-                        <!-- Accepted state -->
-                        <div class="relative">
-                            <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white ring-4 ring-emerald-100"></div>
-                            <p class="font-bold text-sm text-emerald-800">Congratulations! You are Accepted</p>
-                            <p class="text-xs text-gray-400 mt-0.5">
-                                {{ $finalDate ? $finalDate->format('d M Y, H:i') : '' }}
-                            </p>
-                            <p class="text-xs text-gray-600 mt-1 bg-emerald-50/50 border border-emerald-100 rounded-lg p-3 font-semibold">
-                                {{ $app->hr_notes ?? 'Welcome to PT Ecogreen Oleochemicals. Our HR team will contact you shortly for onboarding details.' }}
-                            </p>
-                        </div>
-                    @elseif($app->status === 'rejected')
-                        <!-- Rejected state -->
+                        <!-- Step 3: Interview Declined (Eliminated) -->
                         <div class="relative">
                             <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-white ring-4 ring-red-100"></div>
-                            <p class="font-bold text-sm text-red-700">Application Unsuccessful</p>
+                            <p class="font-bold text-sm text-red-700">Interview Declined (Eliminated)</p>
                             <p class="text-xs text-gray-400 mt-0.5">
-                                {{ $finalDate ? $finalDate->format('d M Y, H:i') : '' }}
+                                {{ $latestInterview->updated_at ? $latestInterview->updated_at->setTimezone('Asia/Jakarta')->format('d M Y, H:i') : '' }} WIB
                             </p>
-                            <p class="text-xs text-gray-600 mt-1 bg-red-50/50 border border-red-100 rounded-lg p-3 font-semibold">
-                                {{ $app->hr_notes ?? 'Thank you for your interest. Unfortunately, we have decided to proceed with other candidates at this time.' }}
-                            </p>
+                            <div class="mt-2 bg-red-50/50 border border-red-100 rounded-xl p-3.5 space-y-2">
+                                <p class="text-xs font-bold text-red-800">You declined the interview invitation</p>
+                                <p class="text-[11px] text-red-600/80 leading-relaxed">
+                                    <strong>Reason:</strong> {{ $declineReason }}
+                                </p>
+                                <p class="text-[11px] text-red-700 font-semibold leading-relaxed">
+                                    As a result, your application has been automatically eliminated from PT Ecogreen Oleochemicals recruitment process.
+                                </p>
+                            </div>
                         </div>
-                    @elseif($app->status === 'withdrawn')
-                        <!-- Withdrawn state -->
-                        <div class="relative">
-                            <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-500 rounded-full border-2 border-white"></div>
-                            <p class="font-bold text-sm text-gray-600">Application Withdrawn</p>
-                            <p class="text-xs text-gray-400 mt-0.5">
-                                {{ $finalDate ? $finalDate->format('d M Y, H:i') : '' }}
-                            </p>
-                            <p class="text-xs text-gray-500 mt-1 font-medium">You have withdrawn this application from the portal.</p>
-                        </div>
+
                     @else
-                        <!-- Pending state -->
+                        <!-- ==================== FLOW: STANDARD FLOW ==================== -->
+                        <!-- Step 1: Submitted ✓ (Always Completed) -->
                         <div class="relative">
-                            <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
-                            <p class="font-bold text-sm text-gray-400">Final Decision</p>
-                            <p class="text-xs text-gray-400 mt-0.5 italic">Awaiting interview and final review.</p>
+                            <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
+                            <p class="font-bold text-sm text-gray-900">Application Submitted</p>
+                            <p class="text-xs text-gray-400 mt-0.5">{{ $submittedDate->format('d M Y, H:i') }} WIB</p>
+                            <p class="text-xs text-gray-500 mt-1 font-medium">Documents successfully uploaded and verified by the system.</p>
                         </div>
+
+                        <!-- Step 2: Shortlisted -->
+                        @if(in_array($app->status, ['applied']))
+                            <!-- Pending state -->
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
+                                <p class="font-bold text-sm text-gray-500">Shortlisted</p>
+                                <p class="text-xs text-gray-400 mt-0.5 italic">Awaiting shortlist selection by HR.</p>
+                            </div>
+                        @else
+                            <!-- Completed state -->
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
+                                <p class="font-bold text-sm text-gray-900">Shortlisted</p>
+                                <p class="text-xs text-gray-400 mt-0.5">
+                                    {{ $reviewedDate ? $reviewedDate->format('d M Y, H:i') : $submittedDate->addDay()->format('d M Y, H:i') }} WIB
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1 font-medium">
+                                    {{ $reviewedLog->reason ?? 'Your application has been shortlisted by the recruitment team.' }}
+                                </p>
+                            </div>
+                        @endif
+
+                        <!-- Step 3: Interview -->
+                        @if(($app->status === 'interview' || $latestInterview) && !in_array($app->status, ['accepted', 'rejected', 'withdrawn']))
+                            <!-- Active/Scheduled state -->
+                            <div class="relative">
+                                @if($latestInterview && $latestInterview->status === 'completed')
+                                    <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
+                                    <p class="font-bold text-sm text-gray-900">Interview Session</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">
+                                        {{ $latestInterview->scheduled_at->format('d M Y') }}
+                                    </p>
+                                    <p class="text-xs text-gray-500 mt-1 font-medium">Interview session has been completed.</p>
+                                @else
+                                    <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white ring-4 ring-blue-100 animate-pulse"></div>
+                                    <p class="font-bold text-sm text-blue-800">Interview Session</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">
+                                        {{ $interviewLogDate ? $interviewLogDate->format('d M Y') : $submittedDate->addDays(2)->format('d M Y') }}
+                                    </p>
+
+                                    @if($latestInterview)
+                                        <!-- Interview Detail Card -->
+                                        <div class="mt-3 bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-2.5 shadow-sm">
+                                            <div class="flex items-center gap-2.5">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                                                <span class="text-xs font-bold text-gray-700">
+                                                    {{ $latestInterview->scheduled_at->format('d M Y • H:i') }} WIB ({{ $latestInterview->duration_minutes }} Min)
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center gap-2.5">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                <div>
+                                                    <span class="text-xs font-bold text-gray-700 block">
+                                                        {{ $latestInterview->interview_type === 'online' ? 'Google Meet / Online Link' : 'Office Location' }}
+                                                    </span>
+                                                    @if($latestInterview->interview_type === 'online')
+                                                        <a href="{{ $latestInterview->location_or_link ?? '#' }}" target="_blank" class="text-xs text-green-700 hover:text-green-800 font-semibold underline truncate max-w-[200px] block">
+                                                            {{ $latestInterview->location_or_link ?? 'Click to join meeting' }}
+                                                        </a>
+                                                    @else
+                                                        <span class="text-xs text-gray-600 font-medium block">
+                                                            {{ $latestInterview->location_or_link ?? 'PT Ecogreen Head Office, Kabil, Batam' }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            @php
+                                                // Clean notes: strip old-format reschedule prefix if present
+                                                $cleanNotes = $latestInterview->notes;
+                                                if ($cleanNotes && (str_contains($cleanNotes, '[Permintaan Reschedule oleh Pelamar]') || str_contains($cleanNotes, 'Permintaan Reschedule'))) {
+                                                    // Handle both literal \n and real newlines
+                                                    $normalized = str_replace(['\\n', '\n'], "\n", $cleanNotes);
+                                                    if (str_contains($normalized, 'Catatan HR Sebelumnya:')) {
+                                                        $cleanNotes = trim(substr($normalized, strpos($normalized, 'Catatan HR Sebelumnya:') + strlen('Catatan HR Sebelumnya:')));
+                                                    } elseif (preg_match('/---+/', $normalized)) {
+                                                        // Fallback: grab everything after the dashed separator
+                                                        $parts = preg_split('/---+/', $normalized);
+                                                        $cleanNotes = isset($parts[1]) ? trim($parts[1]) : null;
+                                                    } else {
+                                                        $cleanNotes = null;
+                                                    }
+                                                }
+                                            @endphp
+                                            @if($cleanNotes)
+                                                <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-xs text-gray-700">
+                                                    <strong class="text-gray-800">Catatan HR:</strong> {{ $cleanNotes }}
+                                                </div>
+                                            @endif
+                                            
+                                             <!-- Confirmation Badge/Button Container -->
+                                             <div class="pt-1 confirmation-container" data-interview-id="{{ $latestInterview->id }}">
+                                                 @if($latestInterview->status === 'cancelled')
+                                                     <div class="flex flex-col gap-1 items-center justify-center py-2.5 px-3 bg-red-50 border border-red-200 text-red-800 text-xs font-bold rounded-lg shadow-sm">
+                                                         <div class="flex items-center gap-1.5">
+                                                             <svg class="w-4 h-4 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                                             Interview Declined / Cancelled
+                                                         </div>
+                                                     </div>
+                                                 @elseif($latestInterview->status === 'rescheduled')
+                                                     <div class="flex flex-col gap-1 items-center justify-center py-2.5 px-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold rounded-lg shadow-sm">
+                                                         <div class="flex items-center gap-1.5">
+                                                             <svg class="w-4 h-4 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                                                             Reschedule Requested
+                                                         </div>
+                                                         <span class="text-[10px] text-amber-600 font-medium">Menunggu keputusan HR</span>
+                                                     </div>
+                                                 @elseif($latestInterview->reschedule_request_status === 'approved')
+                                                     <div class="flex flex-col gap-1 items-center justify-center py-2.5 px-3 bg-green-50 border border-green-200 text-green-800 text-xs font-bold rounded-lg shadow-sm">
+                                                         <div class="flex items-center gap-1.5">
+                                                             <svg class="w-4 h-4 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                                             Reschedule Disetujui ✓
+                                                         </div>
+                                                         <span class="text-[10px] text-green-600 font-medium">Jadwal baru telah dikonfirmasi oleh HR</span>
+                                                     </div>
+                                                 @elseif($latestInterview->reschedule_request_status === 'declined')
+                                                     <div class="flex flex-col gap-1 items-center justify-center py-2.5 px-3 bg-red-50 border border-red-200 text-red-800 text-xs font-bold rounded-lg shadow-sm">
+                                                         <div class="flex items-center gap-1.5">
+                                                             <svg class="w-4 h-4 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                                             Reschedule Ditolak
+                                                         </div>
+                                                         <span class="text-[10px] text-red-600 font-medium">Silakan hadir sesuai jadwal semula</span>
+                                                     </div>
+                                                 @elseif($latestInterview->attendance_status === 'present')
+                                                     <div class="flex flex-col gap-1 items-center justify-center py-2.5 px-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-lg shadow-sm">
+                                                         <div class="flex items-center gap-1.5">
+                                                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                                             Attendance Confirmed ✓
+                                                         </div>
+                                                         <span class="text-[10px] text-emerald-600 font-medium">
+                                                             Arrived at: {{ $latestInterview->attendance_confirmed_at ? $latestInterview->attendance_confirmed_at->setTimezone('Asia/Jakarta')->format('H:i') : '' }} WIB
+                                                         </span>
+                                                         @if($latestInterview->attendance_photo)
+                                                             <a href="{{ $latestInterview->attendance_photo }}" target="_blank" class="mt-1 text-[10px] text-green-700 hover:text-green-800 underline font-semibold flex items-center gap-1">
+                                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                                                 View Selfie Photo
+                                                             </a>
+                                                         @endif
+                                                     </div>
+                                                 @else
+                                                     <div class="space-y-2">
+                                                         <button class="btn-konfirmasi w-full bg-green-800 hover:bg-green-900 text-white font-bold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                                                                 onclick="triggerHadirConfirmation(
+                                                                     {{ $latestInterview->id }},
+                                                                     '{{ $latestInterview->scheduled_at->format('d F Y \a\t H:i') }} WIB',
+                                                                     '{{ $latestInterview->interview_type }}',
+                                                                     '{{ addslashes($latestInterview->location_or_link) }}',
+                                                                     '{{ addslashes($app->jobPosting->title ?? 'Position') }}'
+                                                                 )">
+                                                             Confirm Attendance
+                                                         </button>
+                                                         <div class="grid grid-cols-2 gap-2">
+                                                             <button class="w-full bg-white hover:bg-amber-50 text-amber-800 border border-amber-200 font-bold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-1 shadow-sm"
+                                                                     onclick="triggerRescheduleModal(
+                                                                          {{ $latestInterview->id }}, 
+                                                                          '{{ addslashes($app->jobPosting->title ?? 'Position') }}',
+                                                                          '{{ $latestInterview->interview_type }}'
+                                                                      )">
+                                                                 Reschedule
+                                                             </button>
+                                                             <button class="w-full bg-white hover:bg-red-50 text-red-800 border border-red-200 font-bold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-1 shadow-sm"
+                                                                     onclick="triggerDeclineModal({{ $latestInterview->id }}, '{{ addslashes($app->jobPosting->title ?? 'Position') }}')">
+                                                                 Decline
+                                                             </button>
+                                                         </div>
+                                                     </div>
+                                                 @endif
+                                             </div>
+                                        </div>
+                                    @else
+                                        <p class="text-xs text-gray-500 mt-1 font-medium">Selected for interview stage. Scheduled details will be released shortly.</p>
+                                    @endif
+                                @endif
+                            </div>
+                        @elseif(in_array($app->status, ['accepted', 'rejected', 'withdrawn']))
+                            <!-- Done/Not needed state -->
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
+                                <p class="font-bold text-sm text-gray-900">Interview Session</p>
+                                @if($latestInterview)
+                                    <p class="text-xs text-gray-400 mt-0.5">
+                                        {{ $latestInterview->scheduled_at->format('d M Y') }}
+                                    </p>
+                                    <p class="text-xs text-gray-500 mt-1 font-medium">Interview session has been completed.</p>
+                                @else
+                                    <p class="text-xs text-gray-500 mt-0.5 font-medium">Stage passed or completed.</p>
+                                @endif
+                            </div>
+                        @else
+                            <!-- Pending state -->
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
+                                <p class="font-bold text-sm text-gray-400">Interview Session</p>
+                                <p class="text-xs text-gray-400 mt-0.5 italic">Awaiting shortlist approval.</p>
+                            </div>
+                        @endif
+
+                        <!-- Step 3.5: Interview Under Review -->
+                        @if($latestInterview && $latestInterview->status === 'completed' && in_array($app->status, ['interview']))
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-indigo-500 rounded-full border-2 border-white ring-4 ring-indigo-100 animate-pulse"></div>
+                                <p class="font-bold text-sm text-indigo-800">Interview Under Review</p>
+                                <p class="text-xs text-gray-400 mt-0.5">
+                                    {{ $latestInterview->updated_at ? $latestInterview->updated_at->format('d M Y') : '' }}
+                                </p>
+                                <div class="mt-2 bg-indigo-50/50 border border-indigo-100 rounded-xl p-3.5">
+                                    <div class="flex items-start gap-2.5">
+                                        <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold text-indigo-800">Your interview session has been completed</p>
+                                            <p class="text-[11px] text-indigo-600/80 mt-1 leading-relaxed">
+                                                The HR team is currently evaluating your interview results. The final decision will be updated here and via notification shortly.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($latestInterview && $latestInterview->status === 'completed' && in_array($app->status, ['accepted', 'rejected']))
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
+                                <p class="font-bold text-sm text-gray-900">Interview Under Review</p>
+                                <p class="text-xs text-gray-500 mt-0.5 font-medium">Interview evaluation completed.</p>
+                            </div>
+                        @elseif($app->status === 'interview' || in_array($app->status, ['shortlisted', 'applied']))
+                            {{-- Not reached this stage yet --}}
+                        @else
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-green-800 rounded-full border-2 border-white"></div>
+                                <p class="font-bold text-sm text-gray-900">Interview Under Review</p>
+                                <p class="text-xs text-gray-500 mt-0.5 font-medium">Interview evaluation completed.</p>
+                            </div>
+                        @endif
+
+                        <!-- Step 4: Final Decision -->
+                        @if($app->status === 'accepted')
+                            <!-- Accepted state -->
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white ring-4 ring-emerald-100"></div>
+                                <p class="font-bold text-sm text-emerald-800">Congratulations! You are Accepted</p>
+                                <p class="text-xs text-gray-400 mt-0.5">
+                                    {{ $finalDate ? $finalDate->format('d M Y, H:i') : '' }}
+                                </p>
+                                <p class="text-xs text-gray-600 mt-1 bg-emerald-50/50 border border-emerald-100 rounded-lg p-3 font-semibold">
+                                    {{ $app->hr_notes ?? 'Welcome to PT Ecogreen Oleochemicals. Our HR team will contact you shortly for onboarding details.' }}
+                                </p>
+                            </div>
+                        @elseif($app->status === 'rejected')
+                            <!-- Rejected state -->
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-white ring-4 ring-red-100"></div>
+                                <p class="font-bold text-sm text-red-700">Application Unsuccessful</p>
+                                <p class="text-xs text-gray-400 mt-0.5">
+                                    {{ $finalDate ? $finalDate->format('d M Y, H:i') : '' }}
+                                </p>
+                                <p class="text-xs text-gray-600 mt-1 bg-red-50/50 border border-red-100 rounded-lg p-3 font-semibold">
+                                    {{ $app->hr_notes ?? 'Thank you for your interest. Unfortunately, we have decided to proceed with other candidates at this time.' }}
+                                </p>
+                            </div>
+                        @elseif($app->status === 'withdrawn')
+                            <!-- Withdrawn state -->
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-500 rounded-full border-2 border-white"></div>
+                                <p class="font-bold text-sm text-gray-600">Application Withdrawn</p>
+                                <p class="text-xs text-gray-400 mt-0.5">
+                                    {{ $finalDate ? $finalDate->format('d M Y, H:i') : '' }}
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1 font-medium">You have withdrawn this application from the portal.</p>
+                            </div>
+                        @else
+                            <!-- Pending state -->
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
+                                <p class="font-bold text-sm text-gray-400">Final Decision</p>
+                                <p class="text-xs text-gray-400 mt-0.5 italic">Awaiting interview and final review.</p>
+                            </div>
+                        @endif
                     @endif
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="mt-8 space-y-2.5">
-                    @if($app->status === 'applied')
-                        <button onclick="openWithdrawModal({{ $app->id }})" class="btn-tarik-trigger w-full border border-red-300 text-red-600 font-bold py-2.5 rounded-lg text-sm hover:bg-red-50 transition-colors shadow-sm">
-                            Withdraw Application
-                        </button>
-                        <p class="text-xs text-gray-400 text-center mt-2">Withdrawal of application is permanent.</p>
-                    @else
-                        <button disabled class="w-full border border-gray-200 text-gray-400 font-bold py-2.5 rounded-lg text-sm cursor-not-allowed bg-gray-50">
-                            Withdraw Application
-                        </button>
-                        <p class="text-xs text-gray-400 text-center">Application cannot be withdrawn after the shortlist stage.</p>
-                    @endif
-                </div>
+                @if(!in_array($app->status, ['accepted', 'rejected', 'withdrawn']))
+                    <div class="mt-8 space-y-2.5">
+                        @if($app->status === 'applied')
+                            <button onclick="openWithdrawModal({{ $app->id }})" class="btn-tarik-trigger w-full border border-red-300 text-red-600 font-bold py-2.5 rounded-lg text-sm hover:bg-red-50 transition-colors shadow-sm">
+                                Withdraw Application
+                            </button>
+                            <p class="text-xs text-gray-400 text-center mt-2">Withdrawal of application is permanent.</p>
+                        @else
+                            <button disabled class="w-full border border-gray-200 text-gray-400 font-bold py-2.5 rounded-lg text-sm cursor-not-allowed bg-gray-50">
+                                Withdraw Application
+                            </button>
+                            <p class="text-xs text-gray-400 text-center">Application cannot be withdrawn after the shortlist stage.</p>
+                        @endif
+                    </div>
+                @endif
             </div>
         @endforeach
     </div>
@@ -464,6 +679,139 @@
             <button onclick="closeHadirModal()" class="w-full bg-green-800 hover:bg-green-700 text-white font-bold py-2.5 rounded-lg text-sm transition-colors shadow-md">
                 Close
             </button>
+        </div>
+    </div>
+</div>
+
+<!-- ========== MODAL: Reschedule Interview ========== -->
+<div id="modal-reschedule" class="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl w-full max-w-md mx-4 overflow-hidden relative shadow-2xl border border-gray-100">
+        <button onclick="closeRescheduleModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+
+        <!-- Header -->
+        <div class="bg-amber-600 px-6 py-5 text-white">
+            <p class="text-xs uppercase tracking-widest text-amber-200 font-bold mb-1">Ajukan Perubahan Jadwal</p>
+            <h2 class="text-lg font-extrabold" id="reschedule-job-title">Reschedule Interview</h2>
+        </div>
+
+        <div class="p-6 space-y-4">
+            <input type="hidden" id="reschedule-interview-id">
+            
+            <!-- Current interview details block -->
+            <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 space-y-1">
+                <div class="flex items-center gap-1.5 font-bold mb-0.5">
+                    <svg class="w-4 h-4 text-amber-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.086 1.086L12.5 12.5l.04.02a.75.75 0 11-1.086-1.086l.046-.02a.75.75 0 00-.25-.164zM12 21.75c-5.385 0-9.75-4.365-9.75-9.75S6.615 2.25 12 2.25s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75z"/></svg>
+                    Tipe Interview Saat Ini:
+                </div>
+                <div class="flex items-center gap-2 pl-5.5">
+                    <span id="reschedule-current-type" class="uppercase font-bold text-gray-800">Online</span>
+                </div>
+            </div>
+            
+            <div>
+                <label for="reschedule-reason" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Alasan Reschedule <span class="text-red-500">*</span></label>
+                <textarea id="reschedule-reason" rows="2" placeholder="Sebutkan alasan Anda meminta perubahan jadwal (misal: bentrok dengan ujian, sakit, dll.)" 
+                          class="w-full bg-gray-50 rounded-lg p-3 text-xs text-gray-700 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"></textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label for="reschedule-date" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Tanggal Baru <span class="text-red-500">*</span></label>
+                    <input type="date" id="reschedule-date" required 
+                           class="w-full bg-gray-50 rounded-lg p-3 text-xs text-gray-700 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Waktu (24h) <span class="text-red-500">*</span></label>
+                    <div class="flex items-center gap-1.5">
+                        <select id="reschedule-hour" class="w-full bg-gray-50 rounded-lg p-2.5 text-xs text-gray-700 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white text-center">
+                            <option value="">Hour</option>
+                            @for($i = 8; $i <= 18; $i++)
+                                @php $h = sprintf('%02d', $i); @endphp
+                                <option value="{{ $h }}">{{ $h }}</option>
+                            @endfor
+                        </select>
+                        <span class="text-gray-400 font-bold">:</span>
+                        <select id="reschedule-minute" class="w-full bg-gray-50 rounded-lg p-2.5 text-xs text-gray-700 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white text-center">
+                            <option value="">Min</option>
+                            @for($i = 0; $i < 60; $i += 10)
+                                @php $m = sprintf('%02d', $i); @endphp
+                                <option value="{{ $m }}">{{ $m }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label for="reschedule-proposed-type" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Usulan Tipe Baru <span class="text-red-500">*</span></label>
+                <select id="reschedule-proposed-type" required
+                        class="w-full bg-gray-50 rounded-lg p-3 text-xs text-gray-700 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white">
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                </select>
+            </div>
+
+            <!-- Duration input -->
+            <input type="hidden" id="reschedule-duration" value="60">
+
+            {{-- Booked slots timeline container --}}
+            <div id="reschedule_booked_timeline" class="hidden text-xs bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-900 space-y-1">
+                <p class="font-bold flex items-center gap-1.5 text-[11px]">
+                    <svg class="w-3.5 h-3.5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    Jadwal Terbooking Hari Ini:
+                </p>
+                <ul class="list-disc list-inside space-y-0.5 text-[10px]" id="reschedule_booked_slots_list">
+                </ul>
+            </div>
+
+            <div class="pt-2 space-y-2">
+                <button id="btn-submit-reschedule" onclick="submitReschedule()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2 shadow-md">
+                    Ajukan Reschedule
+                </button>
+                <button onclick="closeRescheduleModal()" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">
+                    Kembali
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== MODAL: Decline Interview ========== -->
+<div id="modal-decline" class="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl w-full max-w-md mx-4 overflow-hidden relative shadow-2xl border border-gray-100">
+        <button onclick="closeDeclineModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+
+        <!-- Header -->
+        <div class="bg-red-600 px-6 py-5 text-white">
+            <p class="text-xs uppercase tracking-widest text-red-200 font-bold mb-1">Tolak Undangan Wawancara</p>
+            <h2 class="text-lg font-extrabold" id="decline-job-title">Decline Interview</h2>
+        </div>
+
+        <div class="p-6 space-y-4">
+            <input type="hidden" id="decline-interview-id">
+            
+            <div class="bg-red-50 rounded-lg p-3 border border-red-100">
+                <p class="text-xs text-red-600 font-bold leading-relaxed">Peringatan: Dengan menolak undangan wawancara ini, lamaran pekerjaan Anda akan otomatis dinyatakan gugur (tereliminasi) dari proses seleksi. Tindakan ini bersifat permanen.</p>
+            </div>
+
+            <div>
+                <label for="decline-reason" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Alasan Penolakan <span class="text-red-500">*</span></label>
+                <textarea id="decline-reason" rows="3" placeholder="Sebutkan alasan Anda menolak undangan wawancara ini" 
+                          class="w-full bg-gray-50 rounded-lg p-3 text-xs text-gray-700 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"></textarea>
+            </div>
+
+            <div class="pt-2 space-y-2">
+                <button id="btn-submit-decline" onclick="submitDecline()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-2 shadow-md">
+                    Ya, Tolak Undangan
+                </button>
+                <button onclick="closeDeclineModal()" class="w-full border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors">
+                    Kembali
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -781,6 +1129,404 @@ document.addEventListener('DOMContentLoaded', function () {
         } finally {
             btn.disabled = false;
             btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Confirm Attendance';
+        }
+    };
+    // ===== RESCHEDULE MODAL HANDLERS =====
+    function timeToMinutes(timeStr) {
+        const parts = timeStr.split(':');
+        return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+    }
+
+    async function fetchRescheduleBookedSlots() {
+        const dateInput = document.getElementById('reschedule-date');
+        const hourSelect = document.getElementById('reschedule-hour');
+        const minuteSelect = document.getElementById('reschedule-minute');
+        const durationSelect = document.getElementById('reschedule-duration');
+        const timelineDiv = document.getElementById('reschedule_booked_timeline');
+        const listUl = document.getElementById('reschedule_booked_slots_list');
+
+        const dateVal = dateInput.value;
+        if (!dateVal) {
+            timelineDiv.classList.add('hidden');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/pelamar/status-lamaran/interview/booked-slots?date=${dateVal}`);
+            const data = await response.json();
+            if (!data.success) return;
+
+            const slots = data.slots || [];
+
+            // Render Timeline list
+            listUl.innerHTML = '';
+            if (slots.length > 0) {
+                slots.forEach(s => {
+                    const li = document.createElement('li');
+                    li.className = 'font-semibold text-[11px] text-amber-900 list-disc';
+                    li.textContent = `${s.start} - ${s.end} : Interview Terjadwal`;
+                    listUl.appendChild(li);
+                });
+                timelineDiv.classList.remove('hidden');
+            } else {
+                timelineDiv.classList.add('hidden');
+            }
+
+            // Cache slots on the hourSelect dataset
+            hourSelect.dataset.slots = JSON.stringify(slots);
+
+            // Trigger updates on Hour and Minute options
+            updateRescheduleOptionsAvailability(hourSelect, minuteSelect, durationSelect, slots);
+
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function updateRescheduleOptionsAvailability(hourSelect, minuteSelect, durationSelect, slots) {
+        const selectedHour = hourSelect.value;
+        const duration = parseInt(durationSelect.value, 10);
+
+        // 1. Update Hour Options
+        Array.from(hourSelect.options).forEach(opt => {
+            if (!opt.value) return;
+            const hVal = parseInt(opt.value, 10);
+            const hStart = hVal * 60;
+            const hEnd = hStart + 60;
+
+            const isBooked = slots.some(s => {
+                const start = timeToMinutes(s.start);
+                const end = timeToMinutes(s.end);
+                return hStart < end && hEnd > start;
+            });
+
+            if (isBooked) {
+                opt.disabled = true;
+                opt.style.cursor = 'not-allowed';
+                if (!opt.textContent.includes('(Booked)')) {
+                    opt.textContent = `${opt.value} (Booked)`;
+                }
+            } else {
+                opt.disabled = false;
+                opt.style.cursor = 'default';
+                opt.textContent = opt.value;
+            }
+        });
+
+        // 2. Update Minute Options based on currently selected Hour
+        if (selectedHour !== '') {
+            const hVal = parseInt(selectedHour, 10);
+            Array.from(minuteSelect.options).forEach(opt => {
+                if (!opt.value) return;
+                const mVal = parseInt(opt.value, 10);
+                const timeMin = hVal * 60 + mVal;
+
+                const isBooked = slots.some(s => {
+                    const start = timeToMinutes(s.start);
+                    const end = timeToMinutes(s.end);
+                    return timeMin >= start && timeMin < end;
+                });
+
+                if (isBooked) {
+                    opt.disabled = true;
+                    opt.style.cursor = 'not-allowed';
+                    if (!opt.textContent.includes('(Booked)')) {
+                        opt.textContent = `${opt.value} (Booked)`;
+                    }
+                } else {
+                    opt.disabled = false;
+                    opt.style.cursor = 'default';
+                    opt.textContent = opt.value;
+                }
+            });
+        }
+
+        // 3. Overall validation warning
+        validateRescheduleSelectedTime(hourSelect, minuteSelect, durationSelect, slots);
+    }
+
+    function validateRescheduleSelectedTime(hourSelect, minuteSelect, durationSelect, slots) {
+        const hVal = hourSelect.value;
+        const mVal = minuteSelect.value;
+        const duration = parseInt(durationSelect.value, 10);
+        const submitBtn = document.getElementById('btn-submit-reschedule');
+
+        if (!hVal || !mVal) return;
+
+        // Past date-time check
+        const dateInput = document.getElementById('reschedule-date');
+        const dateVal = dateInput.value;
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        // Remove existing warning
+        const oldWarning = document.getElementById('reschedule-time-conflict-warning');
+        if (oldWarning) oldWarning.remove();
+
+        if (dateVal === todayStr) {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const selHour = parseInt(hVal, 10);
+            const selMin = parseInt(mVal, 10);
+
+            if (selHour < currentHour || (selHour === currentHour && selMin <= currentMinute)) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                const warning = document.createElement('div');
+                warning.id = 'reschedule-time-conflict-warning';
+                warning.className = 'text-xs text-red-600 font-bold bg-red-50 border border-red-200 rounded-xl p-3.5 mt-3';
+                warning.innerHTML = `⚠️ Waktu yang Anda pilih berada di masa lalu. Harap pilih waktu lain.`;
+                hourSelect.closest('.grid').after(warning);
+                return;
+            }
+        }
+
+        const selStart = parseInt(hVal, 10) * 60 + parseInt(mVal, 10);
+        const selEnd = selStart + duration;
+
+        let booking = null;
+        const isConflict = slots.some(s => {
+            const start = timeToMinutes(s.start);
+            const end = timeToMinutes(s.end);
+            return selStart < end && selEnd > start && (booking = s, true);
+        });
+
+        if (isConflict) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            const warning = document.createElement('div');
+            warning.id = 'reschedule-time-conflict-warning';
+            warning.className = 'text-xs text-red-600 font-bold bg-red-55 border border-red-200 rounded-xl p-3.5 mt-3';
+            warning.innerHTML = `⚠️ Waktu yang dipilih bentrok dengan jadwal interview lain pada <strong>${booking.start} - ${booking.end}</strong>. Silakan pilih waktu lain.`;
+            hourSelect.closest('.grid').after(warning);
+        } else {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    }
+
+    // Set min date and event listeners on DOM load
+    const rDateInput = document.getElementById('reschedule-date');
+    if (rDateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        rDateInput.setAttribute('min', today);
+        rDateInput.addEventListener('change', fetchRescheduleBookedSlots);
+    }
+
+    const rHourSelect = document.getElementById('reschedule-hour');
+    if (rHourSelect) {
+        rHourSelect.addEventListener('change', () => {
+            const hourSelect = document.getElementById('reschedule-hour');
+            const minuteSelect = document.getElementById('reschedule-minute');
+            const durationSelect = document.getElementById('reschedule-duration');
+            const slots = JSON.parse(hourSelect.dataset.slots || '[]');
+            updateRescheduleOptionsAvailability(hourSelect, minuteSelect, durationSelect, slots);
+        });
+    }
+
+    const rMinSelect = document.getElementById('reschedule-minute');
+    if (rMinSelect) {
+        rMinSelect.addEventListener('change', () => {
+            const hourSelect = document.getElementById('reschedule-hour');
+            const minuteSelect = document.getElementById('reschedule-minute');
+            const durationSelect = document.getElementById('reschedule-duration');
+            const slots = JSON.parse(hourSelect.dataset.slots || '[]');
+            updateRescheduleOptionsAvailability(hourSelect, minuteSelect, durationSelect, slots);
+        });
+    }
+
+    window.triggerRescheduleModal = function(interviewId, jobTitle, interviewType) {
+        document.getElementById('reschedule-interview-id').value = interviewId;
+        document.getElementById('reschedule-job-title').textContent = 'Reschedule: ' + jobTitle;
+        document.getElementById('reschedule-reason').value = '';
+        
+        // Show current interview details
+        const typeEl = document.getElementById('reschedule-current-type');
+        if (typeEl) {
+            typeEl.textContent = interviewType || 'online';
+        }
+        
+        const propTypeSelect = document.getElementById('reschedule-proposed-type');
+        if (propTypeSelect) {
+            propTypeSelect.value = (interviewType === 'offline') ? 'offline' : 'online';
+        }
+
+        const dateInput = document.getElementById('reschedule-date');
+        if (dateInput) {
+            dateInput.value = '';
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.setAttribute('min', today);
+        }
+        
+        const hourSelect = document.getElementById('reschedule-hour');
+        if (hourSelect) {
+            hourSelect.value = '';
+            hourSelect.dataset.slots = '[]';
+            Array.from(hourSelect.options).forEach(opt => {
+                if (opt.value) {
+                    opt.disabled = false;
+                    opt.textContent = opt.value;
+                }
+            });
+        }
+        
+        const minuteSelect = document.getElementById('reschedule-minute');
+        if (minuteSelect) {
+            minuteSelect.value = '';
+            Array.from(minuteSelect.options).forEach(opt => {
+                if (opt.value) {
+                    opt.disabled = false;
+                    opt.textContent = opt.value;
+                }
+            });
+        }
+        
+        const timelineDiv = document.getElementById('reschedule_booked_timeline');
+        if (timelineDiv) timelineDiv.classList.add('hidden');
+
+        const oldWarning = document.getElementById('reschedule-time-conflict-warning');
+        if (oldWarning) oldWarning.remove();
+
+        const btn = document.getElementById('btn-submit-reschedule');
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+        document.getElementById('modal-reschedule').classList.remove('hidden');
+        if (typeof event !== 'undefined') {
+            event.stopPropagation();
+        }
+    };
+
+    window.closeRescheduleModal = function() {
+        document.getElementById('modal-reschedule').classList.add('hidden');
+    };
+
+    document.getElementById('modal-reschedule').addEventListener('click', function(e) {
+        if (e.target === this) closeRescheduleModal();
+    });
+
+    window.submitReschedule = async function() {
+        const btn = document.getElementById('btn-submit-reschedule');
+        const interviewId = document.getElementById('reschedule-interview-id').value;
+        const reason = document.getElementById('reschedule-reason').value.trim();
+        
+        const dateVal = document.getElementById('reschedule-date').value;
+        const hourVal = document.getElementById('reschedule-hour').value;
+        const minVal = document.getElementById('reschedule-minute').value;
+        const propTypeVal = document.getElementById('reschedule-proposed-type').value;
+
+        if (!reason) {
+            alert('Silakan isi alasan reschedule.');
+            document.getElementById('reschedule-reason').focus();
+            return;
+        }
+
+        if (!dateVal || !hourVal || !minVal) {
+            alert('Silakan tentukan usulan tanggal & waktu baru dengan lengkap.');
+            return;
+        }
+
+        // Format to Indonesian readable datetime string
+        const parts = dateVal.split('-');
+        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = dateObj.toLocaleDateString('id-ID', options);
+        const proposedDate = `${formattedDate} pukul ${hourVal}:${minVal} WIB (${propTypeVal.toUpperCase()})`;
+
+        btn.disabled = true;
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
+
+        try {
+            // Build ISO datetime string for proposed date
+            const proposedIso = `${dateVal}T${hourVal}:${minVal}:00`;
+
+            const response = await fetch(`/pelamar/status-lamaran/interview/${interviewId}/reschedule`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    reschedule_reason: reason,
+                    proposed_date: proposedIso,
+                    proposed_type: propTypeVal,
+                })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Gagal mengajukan reschedule.');
+
+            closeRescheduleModal();
+            alert(data.message || 'Reschedule berhasil diajukan.');
+            window.location.reload();
+        } catch (err) {
+            alert(err.message);
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+        }
+    };
+
+    // ===== DECLINE MODAL HANDLERS =====
+    window.triggerDeclineModal = function(interviewId, jobTitle) {
+        document.getElementById('decline-interview-id').value = interviewId;
+        document.getElementById('decline-job-title').textContent = 'Decline: ' + jobTitle;
+        document.getElementById('decline-reason').value = '';
+        document.getElementById('modal-decline').classList.remove('hidden');
+        if (typeof event !== 'undefined') {
+            event.stopPropagation();
+        }
+    };
+
+    window.closeDeclineModal = function() {
+        document.getElementById('modal-decline').classList.add('hidden');
+    };
+
+    document.getElementById('modal-decline').addEventListener('click', function(e) {
+        if (e.target === this) closeDeclineModal();
+    });
+
+    window.submitDecline = async function() {
+        const btn = document.getElementById('btn-submit-decline');
+        const interviewId = document.getElementById('decline-interview-id').value;
+        const reason = document.getElementById('decline-reason').value.trim();
+
+        if (!reason) {
+            alert('Silakan isi alasan penolakan.');
+            document.getElementById('decline-reason').focus();
+            return;
+        }
+
+        btn.disabled = true;
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
+
+        try {
+            const response = await fetch(`/pelamar/status-lamaran/interview/${interviewId}/decline`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    decline_reason: reason
+                })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Gagal menolak interview.');
+
+            closeDeclineModal();
+            alert(data.message || 'Undangan wawancara berhasil ditolak.');
+            window.location.reload();
+        } catch (err) {
+            alert(err.message);
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
         }
     };
 

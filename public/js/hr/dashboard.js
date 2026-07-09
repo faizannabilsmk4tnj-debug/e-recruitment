@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ===== CHART UPDATE =====
     function updateChart(mode) {
         const data   = chartData[mode];
-        const maxVal = Math.max(...data.values);
+        const maxVal = Math.max(...data.values) || 1;
 
         bars.forEach((bar, i) => {
             const height = Math.round((data.values[i] / maxVal) * MAX_HEIGHT);
@@ -149,8 +149,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     
                     const dailyHtml = `
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Pelamar Masuk</span>
-                            <span class="text-lg font-bold text-green-700">${total} Orang</span>
+                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Incoming Applicants</span>
+                            <span class="text-lg font-bold text-green-700">${total} ${total === 1 ? 'Applicant' : 'Applicants'}</span>
                         </div>
                         <div class="space-y-2.5 border-t border-gray-200 pt-4 mt-1">
                             <div class="flex justify-between items-center text-sm text-gray-600"><span>Monday</span><span class="font-semibold text-gray-800">${v1}</span></div>
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const dailyHtml = `
                         <div class="flex justify-between items-center mb-3">
                             <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Incoming Applicants</span>
-                            <span class="text-lg font-bold text-green-700">${total} People</span>
+                            <span class="text-lg font-bold text-green-700">${total} ${total === 1 ? 'Applicant' : 'Applicants'}</span>
                         </div>
                         <div class="space-y-2.5 border-t border-gray-200 pt-4 mt-1">
                             <div class="flex justify-between items-center text-sm text-gray-600">
@@ -219,15 +219,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('tbody button').forEach(btn => {
         btn.closest('td').style.position = 'relative';
-        btn.closest('td').appendChild(lowonganDropdown);
 
         btn.addEventListener('click', function (e) {
             e.stopPropagation();
-            this.closest('td').appendChild(lowonganDropdown);
+            const parent = this.closest('td');
+            const isCurrentlyHere = lowonganDropdown.parentNode === parent;
+            
+            parent.appendChild(lowonganDropdown);
             lowonganDropdown.style.top   = '100%';
             lowonganDropdown.style.right = '0';
             lowonganDropdown.style.left  = 'auto';
-            lowonganDropdown.classList.toggle('hidden');
+            
+            if (isCurrentlyHere) {
+                lowonganDropdown.classList.toggle('hidden');
+            } else {
+                lowonganDropdown.classList.remove('hidden');
+            }
         });
     });
 
@@ -235,7 +242,8 @@ document.addEventListener('DOMContentLoaded', function () {
     lowonganDropdown.addEventListener('click', e => e.stopPropagation());
 
     // ===== JADWAL WAWANCARA =====
-    const wawancaraData = (window.dbChartData && window.dbChartData.wawancara) || {
+    const hasWawancara = window.dbChartData && window.dbChartData.wawancara && Object.keys(window.dbChartData.wawancara).length > 0;
+    const wawancaraData = hasWawancara ? window.dbChartData.wawancara : {
         '2026-04-30': [
             { time: '09:00', name: 'Budi Santoso', role: 'Technical Lead - R&D', location: 'Google Meet', isOnline: true, statusClass: 'border-green-700' },
             { time: '11:30', name: 'Siska Wijaya', role: 'Finance Supervisor', location: 'Ruang Meeting A2', isOnline: false, statusClass: 'border-gray-300' },
@@ -273,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             wawancaraList.classList.remove('hidden');
             wawancaraEmpty.classList.add('hidden');
-            wawancaraCount.textContent = data.length + ' Sessions';
+            wawancaraCount.textContent = data.length === 1 ? '1 Session' : data.length + ' Sessions';
             wawancaraCount.className = 'text-xs font-bold text-green-700 bg-green-50 px-2 py-1 rounded-full';
             
             const visibleData = data.slice(0, 3);
@@ -311,6 +319,138 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // ===== CARD TOGGLES =====
+    const btnAppToday   = document.getElementById('btn-applicants-today');
+    const btnAppOverall = document.getElementById('btn-applicants-overall');
+    const lblApplicants = document.getElementById('label-applicants');
+    const valApplicants = document.getElementById('value-applicants');
+    const changeApplicants = document.getElementById('change-applicants');
+    const infoApplicantsTooltip = document.getElementById('info-applicants-tooltip');
+
+    function renderApplicantsChange(mode) {
+        if (!changeApplicants) return;
+        const added = parseInt(changeApplicants.getAttribute(`data-${mode}-added`)) || 0;
+        const removed = parseInt(changeApplicants.getAttribute(`data-${mode}-removed`)) || 0;
+        let html = '';
+        if (added > 0) html += `<span class="text-green-600">+${added}</span>`;
+        if (removed > 0) html += `<span class="text-red-500">-${removed}</span>`;
+        changeApplicants.innerHTML = html;
+
+        if (infoApplicantsTooltip) {
+            if (mode === 'today') {
+                infoApplicantsTooltip.innerHTML = '<p class="text-green-400 mb-1">+ : applied today</p><p class="text-red-400">- : withdrawn today</p>';
+            } else {
+                infoApplicantsTooltip.innerHTML = '<p class="text-green-400 mb-1">+ : total applied</p><p class="text-red-400">- : total withdrawn</p>';
+            }
+        }
+    }
+
+    if (btnAppToday && btnAppOverall && lblApplicants && valApplicants) {
+        btnAppToday.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            valApplicants.textContent = valApplicants.getAttribute('data-today');
+            lblApplicants.textContent = "Total Applicants Today";
+            renderApplicantsChange('today');
+            
+            btnAppToday.classList.add('bg-white', 'text-gray-800', 'shadow-sm');
+            btnAppToday.classList.remove('text-gray-500');
+            btnAppOverall.classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
+            btnAppOverall.classList.add('text-gray-500');
+        });
+
+        btnAppOverall.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            valApplicants.textContent = valApplicants.getAttribute('data-overall');
+            lblApplicants.textContent = "Total Applicants Overall";
+            renderApplicantsChange('overall');
+            
+            btnAppOverall.classList.add('bg-white', 'text-gray-800', 'shadow-sm');
+            btnAppOverall.classList.remove('text-gray-500');
+            btnAppToday.classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
+            btnAppToday.classList.add('text-gray-500');
+        });
+    }
+
+    const btnIntWeek    = document.getElementById('btn-interviews-week');
+    const btnIntOverall = document.getElementById('btn-interviews-overall');
+    const lblInterviews = document.getElementById('label-interviews');
+    const valInterviews = document.getElementById('value-interviews');
+    const changeInterviews = document.getElementById('change-interviews');
+    const infoInterviewsTooltip = document.getElementById('info-interviews-tooltip');
+
+    function renderInterviewsChange(mode) {
+        if (!changeInterviews) return;
+        const added = parseInt(changeInterviews.getAttribute(`data-${mode}-added`)) || 0;
+        const removed = parseInt(changeInterviews.getAttribute(`data-${mode}-removed`)) || 0;
+        let html = '';
+        if (added > 0) html += `<span class="text-green-600">+${added}</span>`;
+        if (removed > 0) html += `<span class="text-red-500">-${removed}</span>`;
+        changeInterviews.innerHTML = html;
+
+        if (infoInterviewsTooltip) {
+            if (mode === 'week') {
+                infoInterviewsTooltip.innerHTML = '<p class="text-green-400 mb-1">+ : scheduled this week</p><p class="text-red-400">- : cancelled this week</p>';
+            } else {
+                infoInterviewsTooltip.innerHTML = '<p class="text-green-400 mb-1">+ : total scheduled</p><p class="text-red-400">- : total cancelled</p>';
+            }
+        }
+    }
+
+    if (btnIntWeek && btnIntOverall && lblInterviews && valInterviews) {
+        btnIntWeek.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            valInterviews.textContent = valInterviews.getAttribute('data-week');
+            lblInterviews.textContent = "Interviews This Week";
+            renderInterviewsChange('week');
+            
+            btnIntWeek.classList.add('bg-white', 'text-gray-800', 'shadow-sm');
+            btnIntWeek.classList.remove('text-gray-500');
+            btnIntOverall.classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
+            btnIntOverall.classList.add('text-gray-500');
+        });
+
+        btnIntOverall.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            valInterviews.textContent = valInterviews.getAttribute('data-overall');
+            lblInterviews.textContent = "Total Scheduled Interviews";
+            renderInterviewsChange('overall');
+            
+            btnIntOverall.classList.add('bg-white', 'text-gray-800', 'shadow-sm');
+            btnIntOverall.classList.remove('text-gray-500');
+            btnIntWeek.classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
+            btnIntWeek.classList.add('text-gray-500');
+        });
+    }
+
+    // Initial render for changes
+    renderApplicantsChange('today');
+    renderInterviewsChange('week');
+
+    // Click/Hover logic for the new custom styled tooltips
+    document.querySelectorAll('.relative.inline-block').forEach(wrapper => {
+        const btn = wrapper.querySelector('.info-btn');
+        const tooltip = wrapper.querySelector('.info-tooltip');
+        if (btn && tooltip) {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Close any other open info tooltips first
+                document.querySelectorAll('.info-tooltip').forEach(t => {
+                    if (t !== tooltip) t.classList.add('hidden');
+                });
+                tooltip.classList.toggle('hidden');
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+                tooltip.classList.add('hidden');
+            });
+        }
+    });
+
     if (wawancaraDateSelect) {
         wawancaraDateSelect.addEventListener('change', (e) => {
             renderWawancara(e.target.value);
@@ -318,4 +458,5 @@ document.addEventListener('DOMContentLoaded', function () {
         // Initial render
         renderWawancara(wawancaraDateSelect.value);
     }
+
 });

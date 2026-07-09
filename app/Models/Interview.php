@@ -18,10 +18,16 @@ class Interview extends Model
         'attendance_status',
         'attendance_confirmed_at',
         'attendance_photo',
+        'reschedule_reason',
+        'reschedule_requested_by',
+        'reschedule_request_status',
+        'proposed_scheduled_at',
+        'proposed_interview_type',
     ];
 
     protected $casts = [
         'scheduled_at' => 'datetime',
+        'proposed_scheduled_at' => 'datetime',
         'attendance_confirmed_at' => 'datetime',
         'duration_minutes' => 'integer',
     ];

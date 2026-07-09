@@ -219,15 +219,16 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
+            'role'    => $user->role,
             'message' => 'Password Anda berhasil diperbarui.'
         ]);
     }
 
     public function logout(Request $request)
     {
-        $redirectUrl = '/login';
+        $redirectUrl = '/login?loggedout=1';
         if (Auth::check() && (Auth::user()->role === 'hr' || Auth::user()->role === 'hr_master')) {
-            $redirectUrl = '/hr/login';
+            $redirectUrl = '/hr/login?loggedout=1';
         }
 
         Auth::logout();

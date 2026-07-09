@@ -24,7 +24,20 @@ use App\Http\Controllers\NotificationController;
 */
 
 // ===== PUBLIK (tanpa login) =====
-Route::get('/', function () { return view('landing'); });
+Route::get('/', function () {
+    $categories = \App\Models\JobCategory::where('is_active', true)
+        ->withCount('jobPostings')
+        ->take(8)
+        ->get();
+
+    $latestJobs = \App\Models\JobPosting::where('status', 'open')
+        ->with('category')
+        ->latest()
+        ->take(5)
+        ->get();
+
+    return view('landing', compact('categories', 'latestJobs'));
+});
 Route::get('/tentang-kami', function () { return view('tentang-kami'); });
 Route::get('/lowongan',                       [VacancyController::class, 'index'])->name('lowongan.index');
 Route::get('/lowongan/{id}',                  [VacancyController::class, 'show'])->name('lowongan.show')->where('id', '[0-9]+');
@@ -120,15 +133,18 @@ Route::middleware(['auth', 'role:applicant'])->group(function () {
     Route::delete('/pelamar/lampiran/portofolio/{portofolio}',[ApplicantLampiranController::class, 'portofolioDestroy'])->name('pelamar.portofolio.destroy');
     Route::get('/pelamar/cv',                        [ApplicantCvController::class, 'index'])->name('pelamar.cv');
     Route::get('/pelamar/cv/{template}/generate',    [ApplicantCvController::class, 'generate'])->name('pelamar.cv.generate');
-    Route::get('/pelamar/status-lamaran',               [\App\Http\Controllers\PelamarController::class, 'statusLamaran'])->name('pelamar.status-lamaran');
-    Route::post('/pelamar/status-lamaran/{id}/withdraw', [\App\Http\Controllers\PelamarController::class, 'withdrawApplication'])->name('pelamar.status-lamaran.withdraw');
-    Route::post('/pelamar/status-lamaran/interview/{id}/confirm', [\App\Http\Controllers\PelamarController::class, 'confirmInterviewAttendance'])->name('pelamar.status-lamaran.confirm-attendance');
+    Route::get('/pelamar/status-lamaran',               [PelamarController::class, 'statusLamaran'])->name('pelamar.status-lamaran');
+    Route::post('/pelamar/status-lamaran/{id}/withdraw', [PelamarController::class, 'withdrawApplication'])->name('pelamar.status-lamaran.withdraw');
+    Route::post('/pelamar/status-lamaran/interview/{id}/confirm', [PelamarController::class, 'confirmInterviewAttendance'])->name('pelamar.status-lamaran.confirm-attendance');
+    Route::get('/pelamar/status-lamaran/interview/booked-slots', [PelamarController::class, 'getBookedSlots'])->name('pelamar.status-lamaran.booked-slots');
+    Route::post('/pelamar/status-lamaran/interview/{id}/reschedule', [PelamarController::class, 'rescheduleInterviewRequest'])->name('pelamar.status-lamaran.reschedule-interview');
+    Route::post('/pelamar/status-lamaran/interview/{id}/decline', [PelamarController::class, 'declineInterview'])->name('pelamar.status-lamaran.decline-interview');
     Route::get('/pelamar/lowongan',            [VacancyController::class, 'index'])->name('pelamar.lowongan.index');
     Route::get('/pelamar/lowongan/{id}',       [VacancyController::class, 'show'])->name('pelamar.lowongan.show')->where('id', '[0-9]+');
     Route::get('/pelamar/review-lamaran/{id}',    [VacancyController::class, 'showReview'])->name('pelamar.review-lamaran');
     Route::post('/pelamar/review-lamaran/{id}',   [VacancyController::class, 'submitApplication'])->name('pelamar.review-lamaran.submit');
-    Route::get('/pelamar/lowongan-tersimpan', [\App\Http\Controllers\PelamarController::class, 'savedJobs'])->name('pelamar.lowongan-tersimpan');
-    Route::post('/pelamar/lowongan/{id}/toggle-save', [\App\Http\Controllers\PelamarController::class, 'toggleSaveJob'])->name('pelamar.lowongan.toggle-save');
+    Route::get('/pelamar/lowongan-tersimpan', [PelamarController::class, 'savedJobs'])->name('pelamar.lowongan-tersimpan');
+    Route::post('/pelamar/lowongan/{id}/toggle-save', [PelamarController::class, 'toggleSaveJob'])->name('pelamar.lowongan.toggle-save');
     Route::get('/pelamar/lamaran-terkirim',    fn() => view('pelamar.lamaran-terkirim'));
 
 
@@ -157,7 +173,9 @@ Route::middleware(['role:hr', 'auth'])->group(function () {
     Route::get('/hr/lowongan/buat',              [JobPostingController::class, 'create'])->name('hr.lowongan.create');
     Route::post('/hr/lowongan',                  [JobPostingController::class, 'store'])->name('hr.lowongan.store');
     Route::post('/hr/lowongan/kategori',         [JobPostingController::class, 'storeCategory'])->name('hr.lowongan.store-category');
+    Route::delete('/hr/lowongan/kategori/{id}',  [JobPostingController::class, 'destroyCategory'])->name('hr.lowongan.destroy-category')->where('id', '[0-9]+');
     Route::post('/hr/lowongan/lokasi',           [JobPostingController::class, 'storeLocation'])->name('hr.lowongan.store-location');
+    Route::delete('/hr/lowongan/lokasi/{id}',    [JobPostingController::class, 'destroyLocation'])->name('hr.lowongan.destroy-location')->where('id', '[0-9]+');
     Route::get('/hr/lowongan/{id}',              [JobPostingController::class, 'show'])->name('hr.lowongan.show')->where('id', '[0-9]+');
     Route::put('/hr/lowongan/{id}',              [JobPostingController::class, 'update'])->name('hr.lowongan.update')->where('id', '[0-9]+');
     Route::post('/hr/lowongan/{id}/status',      [JobPostingController::class, 'updateStatus'])->name('hr.lowongan.status')->where('id', '[0-9]+');
@@ -165,17 +183,20 @@ Route::middleware(['role:hr', 'auth'])->group(function () {
     Route::get('/hr/pelamar/{id}',               [\App\Http\Controllers\HR\PelamarController::class, 'show'])->name('hr.pelamar.show')->where('id', '[0-9]+');
     Route::get('/hr/pelamar/{id}/cv-preview',    [\App\Http\Controllers\HR\PelamarController::class, 'cvPreview'])->name('hr.pelamar.cv-preview')->where('id', '[0-9]+');
     Route::post('/hr/pelamar/{id}/status',       [\App\Http\Controllers\HR\PelamarController::class, 'updateStatus'])->name('hr.pelamar.status')->where('id', '[0-9]+');
+    Route::post('/hr/pelamar/lowongan/{id}/mark-seen', [\App\Http\Controllers\HR\PelamarController::class, 'markSeen'])->name('hr.pelamar.mark-seen')->where('id', '[0-9]+');
+    Route::post('/hr/pelamar/lowongan/{id}/archive',   [\App\Http\Controllers\HR\PelamarController::class, 'archive'])->name('hr.pelamar.archive')->where('id', '[0-9]+');
     Route::post('/hr/pelamar/{id}/toggle-privilege', [\App\Http\Controllers\HR\PelamarController::class, 'togglePrivilege'])->name('hr.pelamar.toggle-privilege')->where('id', '[0-9]+');
     Route::post('/hr/pelamar/{id}/note',         [\App\Http\Controllers\HR\PelamarController::class, 'addNote'])->name('hr.pelamar.note')->where('id', '[0-9]+');
     Route::post('/hr/pelamar/{id}/interview',    [\App\Http\Controllers\HR\PelamarController::class, 'scheduleInterview'])->name('hr.pelamar.interview')->where('id', '[0-9]+');
     Route::post('/hr/pelamar/{id}/interview/{interviewId}/evaluate', [\App\Http\Controllers\HR\PelamarController::class, 'evaluateInterview'])->name('hr.pelamar.interview.evaluate')->where(['id' => '[0-9]+', 'interviewId' => '[0-9]+']);
-    Route::get('/hr/wawancara/booked-slots',     [\App\Http\Controllers\HR\InterviewController::class, 'getBookedSlots'])->name('hr.wawancara.booked-slots');
-    Route::get('/hr/wawancara',                  [\App\Http\Controllers\HR\InterviewController::class, 'calendar'])->name('hr.wawancara.calendar');
-    Route::get('/hr/wawancara/daftar',           [\App\Http\Controllers\HR\InterviewController::class, 'index'])->name('hr.wawancara.index');
-    Route::post('/hr/wawancara/buat',            [\App\Http\Controllers\HR\InterviewController::class, 'store'])->name('hr.wawancara.store');
-    Route::put('/hr/wawancara/{id}',             [\App\Http\Controllers\HR\InterviewController::class, 'update'])->name('hr.wawancara.update');
-    Route::post('/hr/wawancara/{id}/status',     [\App\Http\Controllers\HR\InterviewController::class, 'updateStatus'])->name('hr.wawancara.update-status');
-    Route::delete('/hr/wawancara/{id}',          [\App\Http\Controllers\HR\InterviewController::class, 'destroy'])->name('hr.wawancara.destroy');
+    Route::get('/hr/wawancara/booked-slots',          [\App\Http\Controllers\HR\InterviewController::class, 'getBookedSlots'])->name('hr.wawancara.booked-slots');
+    Route::get('/hr/wawancara',                        [\App\Http\Controllers\HR\InterviewController::class, 'calendar'])->name('hr.wawancara.calendar');
+    Route::get('/hr/wawancara/daftar',                [\App\Http\Controllers\HR\InterviewController::class, 'index'])->name('hr.wawancara.index');
+    Route::post('/hr/wawancara/buat',                  [\App\Http\Controllers\HR\InterviewController::class, 'store'])->name('hr.wawancara.store');
+    Route::put('/hr/wawancara/{id}',                   [\App\Http\Controllers\HR\InterviewController::class, 'update'])->name('hr.wawancara.update');
+    Route::post('/hr/wawancara/{id}/status',           [\App\Http\Controllers\HR\InterviewController::class, 'updateStatus'])->name('hr.wawancara.update-status');
+    Route::post('/hr/wawancara/{id}/reschedule-decision', [\App\Http\Controllers\HR\InterviewController::class, 'rescheduleDecision'])->name('hr.wawancara.reschedule-decision');
+    Route::delete('/hr/wawancara/{id}',                [\App\Http\Controllers\HR\InterviewController::class, 'destroy'])->name('hr.wawancara.destroy');
     Route::get('/hr/laporan',                    [\App\Http\Controllers\HR\LaporanController::class, 'index'])->name('hr.laporan');
     // HR CV Template Management (CRUD via HrCvTemplateController)
     Route::get('/hr/template-cv',                           [HrCvTemplateController::class, 'index'])->name('hr.template-cv.index');
@@ -185,6 +206,7 @@ Route::middleware(['role:hr', 'auth'])->group(function () {
     Route::get('/hr/template-cv/{template}/preview',        [HrCvTemplateController::class, 'preview'])->name('hr.template-cv.preview');
     Route::put('/hr/template-cv/{template}',                [HrCvTemplateController::class, 'update'])->name('hr.template-cv.update');
     Route::patch('/hr/template-cv/{template}/publish',      [HrCvTemplateController::class, 'publish'])->name('hr.template-cv.publish');
+    Route::patch('/hr/template-cv/{template}/draft',        [HrCvTemplateController::class, 'setDraft'])->name('hr.template-cv.setDraft');
     Route::patch('/hr/template-cv/{template}/default',      [HrCvTemplateController::class, 'setDefault'])->name('hr.template-cv.setDefault');
     Route::delete('/hr/template-cv/{template}',             [HrCvTemplateController::class, 'destroy'])->name('hr.template-cv.destroy');
 });
@@ -259,9 +281,159 @@ if (app()->environment('local')) {
         // Simulate forgot password request
         \Illuminate\Support\Facades\Mail::alwaysTo('ecogreenjobvacancy@gmail.com');
         $request = \Illuminate\Http\Request::create('/forgot-password', 'POST', ['email' => $email]);
-        $response = app(\App\Http\Controllers\AuthController::class)->forgotPassword($request);
+        $response = app(AuthController::class)->forgotPassword($request);
 
         return "<h3>Status:</h3><p>{$status}</p><h3>Forgot Password Response:</h3><pre>" . $response->getContent() . "</pre><p><strong>Email has been redirected and sent to ecogreenjobvacancy@gmail.com</strong></p>";
     });
+
+    Route::get('/trigger-test-notif', function() {
+        $hrUsers = \App\Models\User::whereIn('role', ['hr', 'hr_master'])->where('is_active', true)->get();
+        if ($hrUsers->isEmpty()) return "No HR found";
+        
+        foreach ($hrUsers as $hr) {
+            // Clear notifications first
+            \App\Models\Notification::where('user_id', $hr->id)->where('type', 'vacancy_closed_auto')->delete();
+            
+            // Trigger Quota
+            \App\Services\NotificationService::create(
+                $hr->id,
+                'vacancy_closed_auto',
+                'Lowongan Ditutup (Kuota Penuh)',
+                'Lowongan "Accounting Supervisor" telah ditutup otomatis karena kuota pendaftar terpenuhi (5/5).',
+                [
+                    'job_id' => 1,
+                    'job_title' => 'Accounting Supervisor',
+                    'reason' => 'quota'
+                ]
+            );
+
+            // Trigger Deadline
+            \App\Services\NotificationService::create(
+                $hr->id,
+                'vacancy_closed_auto',
+                'Lowongan Ditutup (Deadline Lewat)',
+                'Lowongan "HR Officer" telah ditutup otomatis karena telah melewati batas tenggat waktu pendaftaran.',
+                [
+                    'job_id' => 2,
+                    'job_title' => 'HR Officer',
+                    'reason' => 'deadline'
+                ]
+            );
+        }
+
+        return "<h3>Success!</h3><p>Notifications triggered successfully for all " . $hrUsers->count() . " HR users.</p>";
+    });
+
+    Route::get('/test-all-notifications', function() {
+        $applicant = \App\Models\User::where('role', 'applicant')->where('email', 'nouzenshin@gmail.com')->first();
+        $hr = \App\Models\User::where('role', 'hr_master')->where('email', 'shinnouzen@gmail.com')->first();
+        
+        if (!$applicant || !$hr) {
+            return "Error: Test users not found. Make sure seeds are run.";
+        }
+
+        $results = [];
+
+        // 1. Status change (applicant)
+        try {
+            \App\Services\NotificationService::create(
+                $applicant->id,
+                'status_change',
+                'Status Lamaran Berubah',
+                'Lamaran Anda untuk posisi Backend Developer Laravel telah diperbarui ke status: Shortlisted.',
+                ['job_id' => 1]
+            );
+            $results[] = "SUCCESS: Status change notification created & emailed to {$applicant->email}.";
+        } catch (\Exception $e) {
+            $results[] = "ERROR (Status Change): " . $e->getMessage();
+        }
+
+        // 2. Interview scheduled (applicant)
+        try {
+            \App\Services\NotificationService::create(
+                $applicant->id,
+                'interview_scheduled',
+                'Jadwal Interview',
+                'Interview Online untuk posisi Backend Developer Laravel dijadwalkan pada 15 Jul 2026, 10:00.',
+                ['job_id' => 1]
+            );
+            $results[] = "SUCCESS: Interview scheduled notification created & emailed to {$applicant->email}.";
+        } catch (\Exception $e) {
+            $results[] = "ERROR (Interview Scheduled): " . $e->getMessage();
+        }
+
+        // 3. Interview rescheduled (applicant)
+        try {
+            \App\Services\NotificationService::create(
+                $applicant->id,
+                'interview_rescheduled',
+                'Jadwal Interview Diperbarui',
+                'Jadwal interview Online untuk posisi Backend Developer Laravel diubah menjadi 16 Jul 2026, 11:00.',
+                ['job_id' => 1]
+            );
+            $results[] = "SUCCESS: Interview rescheduled notification created & emailed to {$applicant->email}.";
+        } catch (\Exception $e) {
+            $results[] = "ERROR (Interview Rescheduled): " . $e->getMessage();
+        }
+
+        // 4. Interview cancelled (applicant)
+        try {
+            \App\Services\NotificationService::create(
+                $applicant->id,
+                'interview_cancelled',
+                'Interview Dibatalkan',
+                'Interview Online untuk posisi Backend Developer Laravel pada 16 Jul 2026 telah dibatalkan.',
+                ['job_id' => 1]
+            );
+            $results[] = "SUCCESS: Interview cancelled notification created & emailed to {$applicant->email}.";
+        } catch (\Exception $e) {
+            $results[] = "ERROR (Interview Cancelled): " . $e->getMessage();
+        }
+
+        // 5. Vacancy approaching deadline (HR)
+        try {
+            \App\Services\NotificationService::create(
+                $hr->id,
+                'vacancy_deadline',
+                'Lowongan Segera Berakhir',
+                'Lowongan "DevOps Engineer" akan berakhir dalam 3 hari.',
+                ['job_id' => 2]
+            );
+            $results[] = "SUCCESS: Vacancy deadline notification created & emailed to {$hr->email}.";
+        } catch (\Exception $e) {
+            $results[] = "ERROR (Vacancy Deadline): " . $e->getMessage();
+        }
+
+        // 6. Vacancy closed auto (HR)
+        try {
+            \App\Services\NotificationService::create(
+                $hr->id,
+                'vacancy_closed_auto',
+                'Lowongan Ditutup (Kuota Penuh)',
+                'Lowongan "Social Media Specialist" telah ditutup otomatis karena kuota pendaftar terpenuhi (1/1).',
+                ['job_id' => 3]
+            );
+            $results[] = "SUCCESS: Vacancy closed auto notification created & emailed to {$hr->email}.";
+        } catch (\Exception $e) {
+            $results[] = "ERROR (Vacancy Closed): " . $e->getMessage();
+        }
+
+        // 7. New applicant (HR) -> should NOT email!
+        try {
+            \App\Services\NotificationService::create(
+                $hr->id,
+                'new_applicant',
+                'Pelamar Baru',
+                'Shin melamar posisi Backend Developer Laravel.',
+                ['job_id' => 1]
+            );
+            $results[] = "SUCCESS: New applicant notification created in app for {$hr->email} (No email dispatched, as requested).";
+        } catch (\Exception $e) {
+            $results[] = "ERROR (New Applicant): " . $e->getMessage();
+        }
+
+        return "<h2>Notification and Email Dispatch Test Results</h2><ul><li>" . implode("</li><li>", $results) . "</li></ul>";
+    });
 }
+
 
