@@ -18,9 +18,9 @@
         </div>
 
         <!-- Title -->
-        <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">Buat Password Baru</h1>
+        <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">Create New Password</h1>
         <p class="text-center text-gray-500 text-sm mb-8">
-            Masukkan password baru Anda. Pastikan minimal 8 karakter.
+            Enter your new password. Make sure it is at least 8 characters long.
         </p>
 
         <!-- Error Alert -->
@@ -29,7 +29,7 @@
                 <circle cx="12" cy="12" r="10"/>
                 <path d="m15 9-6 6"/><path d="m9 9 6 6"/>
             </svg>
-            <p class="text-red-700 text-sm font-medium" id="alert-error-text">Terjadi kesalahan.</p>
+            <p class="text-red-700 text-sm font-medium" id="alert-error-text">An error occurred.</p>
         </div>
 
         <!-- Token Expired Alert -->
@@ -50,7 +50,7 @@
 
             <!-- Email -->
             <div>
-                <label for="email" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Alamat Email</label>
+                <label for="email" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Email Address</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -69,7 +69,7 @@
 
             <!-- Password Baru -->
             <div>
-                <label for="password" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Password Baru</label>
+                <label for="password" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">New Password</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -80,7 +80,7 @@
                     <input
                         type="password"
                         id="password"
-                        placeholder="Minimal 8 karakter"
+                        placeholder="At least 8 characters"
                         class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent transition-all"
                     >
                     <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
@@ -105,7 +105,7 @@
 
             <!-- Konfirmasi Password -->
             <div>
-                <label for="password_confirmation" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Konfirmasi Password</label>
+                <label for="password_confirmation" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Confirm Password</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -116,7 +116,7 @@
                     <input
                         type="password"
                         id="password_confirmation"
-                        placeholder="Ulangi password baru"
+                        placeholder="Repeat new password"
                         class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent transition-all"
                     >
                     <button type="button" id="toggle-confirm" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
@@ -145,7 +145,7 @@
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     <path d="m9 12 2 2 4-4"/>
                 </svg>
-                Simpan Password Baru
+                Save New Password
             </button>
         </div>
 
@@ -154,8 +154,8 @@
 
         <!-- Back to Login -->
         <p class="text-center text-sm text-gray-600">
-            Ingat password?
-            <a href="/login" class="font-bold text-green-900 hover:text-green-700 transition-colors">Kembali ke Login</a>
+            Remember password?
+            <a href="/login" class="font-bold text-green-900 hover:text-green-700 transition-colors">Back to Login</a>
         </p>
     </div>
 </div>
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (/[^A-Za-z0-9]/.test(val)) score++;
 
         const colors = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-green-500'];
-        const labels = ['', 'Lemah', 'Sedang', 'Kuat', 'Sangat Kuat'];
+        const labels = ['', 'Weak', 'Medium', 'Strong', 'Very Strong'];
         const widths = ['0%', '25%', '50%', '75%', '100%'];
 
         strengthBar.className = 'h-full rounded-full transition-all duration-300 ' + (colors[score - 1] || '');
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const match = pwInput.value === pwConfirm.value;
         matchLabel.classList.remove('hidden');
-        matchLabel.textContent  = match ? '✓ Password cocok' : '✗ Password tidak cocok';
+        matchLabel.textContent  = match ? '✓ Passwords match' : '✗ Passwords do not match';
         matchLabel.className    = 'text-xs mt-1 ' + (match ? 'text-green-600' : 'text-red-500');
     });
 
@@ -236,10 +236,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const confirm  = pwConfirm.value;
         const token    = tokenInput.value;
 
-        if (!email) { showError('Alamat email wajib diisi.'); return; }
-        if (!password) { showError('Password baru wajib diisi.'); return; }
-        if (password.length < 8) { showError('Password minimal 8 karakter.'); return; }
-        if (password !== confirm) { showError('Konfirmasi password tidak cocok.'); return; }
+        if (!email) { showError('Email address is required.'); return; }
+        if (!password) { showError('New password is required.'); return; }
+        if (password.length < 8) { showError('Password must be at least 8 characters.'); return; }
+        if (password !== confirm) { showError('Passwords do not match.'); return; }
 
         // Loading state
         btn.disabled = true;
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
             </svg>
-            Menyimpan...
+            Saving...
         `;
 
         try {
@@ -271,25 +271,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     window.location.href = '/login?password_reset=1';
                 }
             } else {
-                showError(data.message || 'Terjadi kesalahan. Silakan coba lagi.');
+                showError(data.message || 'An error occurred. Please try again.');
                 btn.disabled = false;
                 btn.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                         <path d="m9 12 2 2 4-4"/>
                     </svg>
-                    Simpan Password Baru
+                    Save New Password
                 `;
             }
         } catch (err) {
-            showError('Gagal terhubung ke server. Periksa koneksi internet Anda.');
+            showError('Failed to connect to the server. Check your internet connection.');
             btn.disabled = false;
             btn.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     <path d="m9 12 2 2 4-4"/>
                 </svg>
-                Simpan Password Baru
+                Save New Password
             `;
         }
     });

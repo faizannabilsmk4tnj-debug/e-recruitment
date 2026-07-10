@@ -194,7 +194,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Certificate File <span class="text-xs text-gray-400">(optional, PDF/JPG/PNG, max 5MB)</span></label>
                 <input type="file" name="cert_file" id="skill-cert-file" accept="application/pdf,image/jpeg,image/png"
                     class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
-                <p id="skill-cert-current" class="hidden mt-1 text-xs text-gray-400">File saat ini tersimpan. Pilih file baru untuk menggantinya.</p>
+                <p id="skill-cert-current" class="hidden mt-1 text-xs text-gray-400">Current file is saved. Choose a new file to replace it.</p>
             </div>
             <div class="flex gap-3 pt-2">
                 <button type="submit" class="flex-1 bg-green-800 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">Save</button>
@@ -371,13 +371,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert(Object.values(data.errors).flat().join('\n'));
             }
         })
-        .catch(() => alert('Gagal menyimpan. Coba lagi.'));
+        .catch(() => alert('Failed to save. Try again.'));
     });
 
     // Delete skill (AJAX)
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('.btn-delete-skill');
-        if (!btn || !confirm('Hapus skill ini?')) return;
+        if (!btn || !confirm('Delete this skill?')) return;
         const card = btn.closest('.skill-card');
         fetch(btn.dataset.url, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' } })
             .then(r => { if (r.ok) { card.style.opacity='0'; card.style.transition='opacity .3s'; setTimeout(()=>card.remove(),300); } });
@@ -509,14 +509,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 modalPorto.classList.add('hidden');
             }
         })
-        .catch(() => alert('Gagal menyimpan. Coba lagi.'));
+        .catch(() => alert('Failed to save. Try again.'));
     });
-
 
     // Delete porto (AJAX)
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('.btn-delete-porto');
-        if (!btn || !confirm('Hapus portofolio ini?')) return;
+        if (!btn || !confirm('Delete this portfolio?')) return;
         const card = btn.closest('.porto-card');
         fetch(btn.dataset.url, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' } })
             .then(r => { if (r.ok) { card.style.opacity='0'; card.style.transition='opacity .3s'; setTimeout(()=>card.remove(),300); } });

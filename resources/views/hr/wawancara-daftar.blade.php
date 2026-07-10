@@ -87,8 +87,8 @@
                         <span class="text-[10px] font-extrabold text-amber-700 uppercase tracking-widest">Action Required</span>
                         <span class="bg-amber-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full">{{ $rescheduleCount }} Pending</span>
                     </div>
-                    <h3 class="text-base font-extrabold text-amber-900">Permintaan Reschedule Menunggu Keputusan</h3>
-                    <p class="text-sm text-amber-700 mt-0.5">{{ $rescheduleCount }} pelamar mengajukan perubahan jadwal interview. Tinjau dan putuskan segera.</p>
+                    <h3 class="text-base font-extrabold text-amber-900">Reschedule Requests Awaiting Decision</h3>
+                    <p class="text-sm text-amber-700 mt-0.5">{{ $rescheduleCount }} applicants requested interview rescheduling. Review and decide promptly.</p>
                 </div>
             </div>
         </div>
@@ -98,11 +98,11 @@
             <table class="w-full text-sm">
                 <thead class="bg-amber-50 border-b border-amber-100">
                     <tr>
-                        <th class="px-4 py-2.5 text-left text-[10px] font-extrabold text-amber-700 uppercase tracking-widest">Pelamar</th>
-                        <th class="px-4 py-2.5 text-left text-[10px] font-extrabold text-amber-700 uppercase tracking-widest">Posisi</th>
-                        <th class="px-4 py-2.5 text-left text-[10px] font-extrabold text-amber-700 uppercase tracking-widest">Jadwal Semula</th>
-                        <th class="px-4 py-2.5 text-left text-[10px] font-extrabold text-amber-700 uppercase tracking-widest">Usulan Jadwal Baru</th>
-                        <th class="px-4 py-2.5 text-left text-[10px] font-extrabold text-amber-700 uppercase tracking-widest">Tindak Lanjut</th>
+                        <th class="px-4 py-2.5 text-left text-[10px] font-extrabold text-amber-700 uppercase tracking-widest">Applicant</th>
+                        <th class="px-4 py-2.5 text-left text-[10px] font-extrabold text-amber-700 uppercase tracking-widest">Position</th>
+                        <th class="px-4 py-2.5 text-left text-[10px] font-extrabold text-amber-700 uppercase tracking-widest">Original Schedule</th>
+                        <th class="px-4 py-2.5 text-left text-[10px] font-extrabold text-amber-700 uppercase tracking-widest">Proposed New Schedule</th>
+                        <th class="px-4 py-2.5 text-left text-[10px] font-extrabold text-amber-700 uppercase tracking-widest">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-amber-50">
@@ -152,9 +152,9 @@
                                 <p class="text-xs font-bold text-amber-700">{{ $req->proposed_scheduled_at->format('d M Y') }}</p>
                                 <p class="text-[10px] text-amber-600">{{ $req->proposed_scheduled_at->format('H:i') }} &mdash; {{ $req->proposed_interview_type ? ucfirst($req->proposed_interview_type) : '' }}</p>
                             @elseif($req->reschedule_reason)
-                                <span class="text-xs text-amber-600 italic">Lihat alasan di modal</span>
+                                <span class="text-xs text-amber-600 italic">View reason in modal</span>
                             @else
-                                <span class="text-xs text-gray-400">Tidak ada usulan waktu</span>
+                                <span class="text-xs text-gray-400">No proposed time</span>
                             @endif
                         </td>
                         <td class="px-4 py-3">
@@ -163,7 +163,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                 </svg>
-                                Review & Putuskan
+                                Review & Decide
                             </button>
                         </td>
                     </tr>
@@ -181,7 +181,7 @@
                 $selectedDate = \Carbon\Carbon::parse(request('date'));
                 $prevDate = (clone $selectedDate)->subDay()->toDateString();
                 $nextDate = (clone $selectedDate)->addDay()->toDateString();
-                $formattedSelected = $selectedDate->translatedFormat('d F Y');
+                $formattedSelected = $selectedDate->format('d F Y');
                 $isValidDate = true;
             } catch(\Exception $e) {
                 $isValidDate = false;
@@ -381,8 +381,8 @@
                                 <button onclick='openRescheduleModal(@json($interview))' class="text-blue-800 hover:text-blue-950 font-semibold text-xs bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded transition-colors" title="Reschedule">
                                     Reschedule
                                 </button>
-                                <button onclick='openStatusModal(@json($interview))' class="text-amber-800 hover:text-amber-950 font-semibold text-xs bg-amber-50 hover:bg-amber-100 px-2 py-1 rounded transition-colors" title="Status & Evaluasi">
-                                    Status / Evaluasi
+                                <button onclick='openStatusModal(@json($interview))' class="text-amber-800 hover:text-amber-950 font-semibold text-xs bg-amber-50 hover:bg-amber-100 px-2 py-1 rounded transition-colors" title="Status & Evaluation">
+                                    Status / Evaluate
                                 </button>
                                 <button onclick="deleteInterview({{ $interview->id }})" class="text-red-800 hover:text-red-950 font-semibold text-xs bg-red-50 hover:bg-red-100 px-2 py-1 rounded transition-colors" title="Delete">
                                     Delete
@@ -1210,7 +1210,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-xl font-extrabold text-amber-900">Review Permintaan Reschedule</h2>
+                    <h2 class="text-xl font-extrabold text-amber-900">Review Reschedule Request</h2>
                     <p class="text-xs text-amber-600 mt-0.5" id="rr-candidate-subtitle">—</p>
                 </div>
             </div>
@@ -1224,13 +1224,13 @@
             {{-- Comparison: Current vs Proposed --}}
             <div class="grid grid-cols-2 gap-4">
                 <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                    <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">Jadwal Semula (HR)</p>
+                    <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">Original Schedule (HR)</p>
                     <p class="text-lg font-extrabold text-gray-900" id="rr-old-date">—</p>
                     <p class="text-sm text-gray-500" id="rr-old-time">—</p>
                     <span class="inline-block mt-2 text-[10px] font-bold px-2 py-0.5 rounded-full border bg-blue-50 text-blue-700 border-blue-200" id="rr-old-type">—</span>
                 </div>
                 <div class="bg-amber-50 border-2 border-amber-300 rounded-xl p-4">
-                    <p class="text-[10px] font-extrabold text-amber-600 uppercase tracking-widest mb-2">Usulan Pelamar</p>
+                    <p class="text-[10px] font-extrabold text-amber-600 uppercase tracking-widest mb-2">Applicant Proposed</p>
                     <p class="text-lg font-extrabold text-amber-900" id="rr-proposed-date">—</p>
                     <p class="text-sm text-amber-700" id="rr-proposed-time">—</p>
                     <span class="inline-block mt-2 text-[10px] font-bold px-2 py-0.5 rounded-full border bg-amber-100 text-amber-700 border-amber-200" id="rr-proposed-type">—</span>
@@ -1239,13 +1239,13 @@
 
             {{-- Alasan dari Pelamar --}}
             <div>
-                <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">Alasan Reschedule dari Pelamar</p>
+                <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">Reschedule Reason from Applicant</p>
                 <div class="bg-orange-50 border border-orange-100 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-line" id="rr-reason">—</div>
             </div>
 
             {{-- Conflict Check Status --}}
             <div id="rr-conflict-status" class="hidden">
-                <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">Status Konflik Jadwal</p>
+                <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2">Schedule Conflict Status</p>
                 <div id="rr-conflict-box" class="rounded-xl p-3 text-sm font-semibold flex items-center gap-2"></div>
             </div>
 
@@ -1253,32 +1253,32 @@
 
             {{-- Decision Tabs --}}
             <div>
-                <p class="text-sm font-extrabold text-gray-800 mb-4">Pilih Keputusan:</p>
+                <p class="text-sm font-extrabold text-gray-800 mb-4">Select Decision:</p>
                 <div class="flex gap-3 mb-6">
                     <button id="btn-decision-approve" onclick="switchDecision('approve')"
                             class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-green-200 bg-green-50 text-green-800 font-bold text-sm hover:bg-green-100 transition-all">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                        Setujui Reschedule
+                        Approve Reschedule
                     </button>
                     <button id="btn-decision-decline" onclick="switchDecision('decline')"
                             class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-red-200 bg-red-50 text-red-800 font-bold text-sm hover:bg-red-100 transition-all">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                        Tolak Permintaan
+                        Decline Request
                     </button>
                 </div>
 
                 {{-- Approve: edit schedule form --}}
                 <div id="panel-approve" class="hidden space-y-4">
                     <p class="text-xs text-gray-500 bg-green-50 border border-green-100 rounded-lg p-3">
-                        ✅ <strong>Jadwal Baru</strong> akan dikonfirmasi ke pelamar. Anda bisa menyesuaikan dengan jadwal yang diusulkan pelamar atau menggunakan jadwal lain. Sistem akan memeriksa konflik otomatis.
+                        ✅ <strong>New Schedule</strong> will be confirmed with the applicant. You can adjust the proposed schedule or use a different time slot. The system will auto-check for conflicts.
                     </p>
                     <div class="grid grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Tanggal</label>
+                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Date</label>
                             <input type="date" id="rr-new-date" min="{{ date('Y-m-d', strtotime('+1 day')) }}" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Jam</label>
+                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Hour</label>
                             <select id="rr-new-hour" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
                                 @for($i = 7; $i <= 18; $i++)
                                     <option value="{{ sprintf('%02d', $i) }}">{{ sprintf('%02d', $i) }}</option>
@@ -1286,7 +1286,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Menit</label>
+                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Minute</label>
                             <select id="rr-new-minute" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
                                 @for($i = 0; $i < 60; $i += 5)
                                     <option value="{{ sprintf('%02d', $i) }}">{{ sprintf('%02d', $i) }}</option>
@@ -1296,17 +1296,17 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Durasi (menit)</label>
+                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Duration (minutes)</label>
                             <select id="rr-new-duration" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
-                                <option value="30">30 menit</option>
-                                <option value="45">45 menit</option>
-                                <option value="60" selected>60 menit</option>
-                                <option value="90">90 menit</option>
-                                <option value="120">120 menit</option>
+                                <option value="30">30 minutes</option>
+                                <option value="45">45 minutes</option>
+                                <option value="60" selected>60 minutes</option>
+                                <option value="90">90 minutes</option>
+                                <option value="120">120 minutes</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Tipe Interview</label>
+                            <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Interview Type</label>
                             <select id="rr-new-type" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
                                 <option value="online">Online Meeting</option>
                                 <option value="offline">On-site / Offline</option>
@@ -1320,18 +1320,18 @@
                     {{-- Conflict live check --}}
                     <div id="rr-live-conflict" class="text-xs text-gray-400 italic flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-                        Pilih tanggal untuk cek konflik jadwal otomatis.
+                        Select a date to check for schedule conflicts automatically.
                     </div>
                 </div>
 
                 {{-- Decline: reason form --}}
                 <div id="panel-decline" class="hidden space-y-4">
                     <p class="text-xs text-gray-500 bg-red-50 border border-red-100 rounded-lg p-3">
-                        ❌ <strong>Jadwal semula tetap berlaku.</strong> Pelamar akan diberitahu bahwa permintaan reschedule-nya ditolak dan harus hadir sesuai jadwal yang sudah ada.
+                        ❌ <strong>Original schedule remains active.</strong> The applicant will be notified that their reschedule request was declined and must attend the scheduled session.
                     </p>
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Alasan Penolakan (opsional)</label>
-                        <textarea id="rr-decline-reason" rows="3" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-400" placeholder="Contoh: Jadwal yang diusulkan tidak tersedia. Harap hadir sesuai jadwal awal."></textarea>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Reason for Rejection (optional)</label>
+                        <textarea id="rr-decline-reason" rows="3" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-400" placeholder="Example: The proposed schedule is not available. Please attend the original session."></textarea>
                     </div>
                 </div>
             </div>
@@ -1340,11 +1340,11 @@
         {{-- Footer Action Buttons --}}
         <div class="shrink-0 px-8 py-5 border-t border-gray-100 bg-gray-50 flex items-center justify-end gap-3">
             <button onclick="closeRescheduleReviewModal()" class="px-5 py-2.5 bg-white border border-gray-200 text-gray-600 font-semibold rounded-xl text-sm hover:bg-gray-100 transition-colors">
-                Batal
+                Cancel
             </button>
             <button id="btn-submit-reschedule-review" onclick="submitRescheduleDecision()"
                     class="px-6 py-2.5 font-bold rounded-xl text-sm transition-colors flex items-center gap-2 bg-gray-200 text-gray-400 cursor-not-allowed" disabled>
-                Konfirmasi Keputusan
+                Confirm Decision
             </button>
         </div>
     </div>
@@ -1360,22 +1360,22 @@
         rrCurrentDecision = null;
 
         // Fill header
-        const candidateName = interview.application?.user?.name ?? 'Kandidat';
-        const jobTitle = interview.application?.job?.title ?? 'Posisi';
+        const candidateName = interview.application?.user?.name ?? 'Candidate';
+        const jobTitle = interview.application?.job?.title ?? 'Position';
         document.getElementById('rr-candidate-subtitle').textContent = candidateName + ' — ' + jobTitle;
 
         // Fill comparison panel
         if (interview.scheduled_at) {
             const oldDate = new Date(interview.scheduled_at);
-            document.getElementById('rr-old-date').textContent = oldDate.toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
-            document.getElementById('rr-old-time').textContent = oldDate.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) + ' (' + interview.duration_minutes + ' menit)';
+            document.getElementById('rr-old-date').textContent = oldDate.toLocaleDateString('en-US', {day:'2-digit', month:'long', year:'numeric'});
+            document.getElementById('rr-old-time').textContent = oldDate.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'}) + ' (' + interview.duration_minutes + ' minutes)';
         }
         document.getElementById('rr-old-type').textContent = interview.interview_type ? (interview.interview_type.charAt(0).toUpperCase() + interview.interview_type.slice(1)) : '—';
 
         if (interview.proposed_scheduled_at) {
             const propDate = new Date(interview.proposed_scheduled_at);
-            document.getElementById('rr-proposed-date').textContent = propDate.toLocaleDateString('id-ID', {day:'2-digit', month:'long', year:'numeric'});
-            document.getElementById('rr-proposed-time').textContent = propDate.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('rr-proposed-date').textContent = propDate.toLocaleDateString('en-US', {day:'2-digit', month:'long', year:'numeric'});
+            document.getElementById('rr-proposed-time').textContent = propDate.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
 
             // Pre-fill the approve form with proposed values
             const yyyy = propDate.getFullYear();
@@ -1385,7 +1385,7 @@
             document.getElementById('rr-new-hour').value = String(propDate.getHours()).padStart(2,'0');
             document.getElementById('rr-new-minute').value = String(Math.floor(propDate.getMinutes()/5)*5).padStart(2,'0');
         } else {
-            document.getElementById('rr-proposed-date').textContent = 'Tidak ada usulan';
+            document.getElementById('rr-proposed-date').textContent = 'No proposal';
             document.getElementById('rr-proposed-time').textContent = '—';
         }
 
@@ -1403,14 +1403,14 @@
         document.getElementById('rr-new-duration').value = interview.duration_minutes || 60;
 
         // Reason
-        document.getElementById('rr-reason').textContent = interview.reschedule_reason || 'Tidak ada alasan yang diberikan.';
+        document.getElementById('rr-reason').textContent = interview.reschedule_reason || 'No reason provided.';
 
         // Reset UI state
         document.getElementById('rr-conflict-status').classList.add('hidden');
         document.getElementById('panel-approve').classList.add('hidden');
         document.getElementById('panel-decline').classList.add('hidden');
         document.getElementById('rr-decline-reason').value = '';
-        document.getElementById('rr-live-conflict').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Pilih tanggal untuk cek konflik jadwal otomatis.';
+        document.getElementById('rr-live-conflict').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Select a date to check for schedule conflicts automatically.';
         resetDecisionButtons();
 
         // Add change listeners for conflict check
@@ -1449,7 +1449,7 @@
             btnDecline.className = 'flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-red-200 bg-red-50 text-red-800 font-bold text-sm hover:bg-red-100 transition-all';
             submitBtn.className = 'px-6 py-2.5 font-bold rounded-xl text-sm transition-colors flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white cursor-pointer';
             submitBtn.disabled = false;
-            submitBtn.textContent = '✓ Setujui & Konfirmasi Jadwal Baru';
+            submitBtn.textContent = '✓ Approve & Confirm New Schedule';
         } else {
             declinePanel.classList.remove('hidden');
             approvePanel.classList.add('hidden');
@@ -1457,7 +1457,7 @@
             btnApprove.className = 'flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-green-200 bg-green-50 text-green-800 font-bold text-sm hover:bg-green-100 transition-all';
             submitBtn.className = 'px-6 py-2.5 font-bold rounded-xl text-sm transition-colors flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white cursor-pointer';
             submitBtn.disabled = false;
-            submitBtn.textContent = '✕ Tolak Permintaan Reschedule';
+            submitBtn.textContent = '✕ Decline Reschedule Request';
         }
     }
 
@@ -1465,7 +1465,7 @@
         const submitBtn = document.getElementById('btn-submit-reschedule-review');
         submitBtn.className = 'px-6 py-2.5 font-bold rounded-xl text-sm transition-colors flex items-center gap-2 bg-gray-200 text-gray-400 cursor-not-allowed';
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Konfirmasi Keputusan';
+        submitBtn.textContent = 'Confirm Decision';
         document.getElementById('btn-decision-approve').className = 'flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-green-200 bg-green-50 text-green-800 font-bold text-sm hover:bg-green-100 transition-all';
         document.getElementById('btn-decision-decline').className = 'flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-red-200 bg-red-50 text-red-800 font-bold text-sm hover:bg-red-100 transition-all';
     }
@@ -1480,7 +1480,7 @@
 
         const scheduledAt = `${date} ${hour}:${minute}:00`;
         const liveEl = document.getElementById('rr-live-conflict');
-        liveEl.innerHTML = '<span class="animate-pulse text-gray-400">Memeriksa konflik jadwal...</span>';
+        liveEl.innerHTML = '<span class="animate-pulse text-gray-400">Checking schedule conflicts...</span>';
 
         try {
             const resp = await fetch(`/hr/wawancara/booked-slots?date=${date}`, {
@@ -1489,7 +1489,7 @@
             const data = await resp.json();
 
             if (!data.success) {
-                liveEl.innerHTML = '<span class="text-gray-400">Tidak bisa memeriksa konflik.</span>';
+                liveEl.innerHTML = '<span class="text-gray-400">Unable to check conflict.</span>';
                 return;
             }
 
@@ -1511,16 +1511,16 @@
             if (hasConflict) {
                 liveEl.innerHTML = `<span class="text-red-600 font-semibold flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>⚠️ Konflik dengan jadwal: <strong>${conflictWith}</strong>. Silakan pilih waktu lain.</span>
+                    <span>⚠️ Conflict with schedule: <strong>${conflictWith}</strong>. Please select another time.</span>
                 </span>`;
             } else {
                 liveEl.innerHTML = `<span class="text-green-700 font-semibold flex items-center gap-1.5">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>Jadwal aman — tidak ada konflik pada waktu ini.</span>
+                    <span>Schedule safe — no conflict at this time.</span>
                 </span>`;
             }
         } catch(e) {
-            liveEl.innerHTML = '<span class="text-gray-400">Gagal memeriksa konflik.</span>';
+            liveEl.innerHTML = '<span class="text-gray-400">Failed to check conflict.</span>';
         }
     }
 
@@ -1529,7 +1529,7 @@
 
         const submitBtn = document.getElementById('btn-submit-reschedule-review');
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Memproses...';
+        submitBtn.textContent = 'Processing...';
 
         // Map JS values ('approve'/'decline') to controller values ('approved'/'declined')
         const decisionMap = { approve: 'approved', decline: 'declined' };
@@ -1545,7 +1545,7 @@
             const hour = document.getElementById('rr-new-hour').value;
             const minute = document.getElementById('rr-new-minute').value;
             if (!date || !hour) {
-                showToast('Lengkapi tanggal dan jam jadwal baru.', 'error');
+                showToast('Complete date and time of the new schedule.', 'error');
                 submitBtn.disabled = false;
                 switchDecision('approve');
                 return;
@@ -1569,7 +1569,7 @@
                 body: JSON.stringify(payload),
             });
             const data = await resp.json();
-            if (!data.success) throw new Error(data.message || 'Gagal memproses.');
+            if (!data.success) throw new Error(data.message || 'Failed to process.');
             closeRescheduleReviewModal();
             showToast(data.message, 'success');
             setTimeout(() => window.location.reload(), 1200);
@@ -1577,9 +1577,9 @@
             showToast(err.message, 'error');
             submitBtn.disabled = false;
             if (rrCurrentDecision === 'approve') {
-                submitBtn.textContent = '✓ Setujui & Konfirmasi Jadwal Baru';
+                submitBtn.textContent = '✓ Approve & Confirm New Schedule';
             } else {
-                submitBtn.textContent = '✕ Tolak Permintaan Reschedule';
+                submitBtn.textContent = '✕ Decline Reschedule Request';
             }
         }
     }

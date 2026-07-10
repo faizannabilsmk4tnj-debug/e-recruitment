@@ -84,12 +84,12 @@ class ApplicantProfileController extends Controller
             if (str_contains($e->getMessage(), 'Batas usia minimal')) {
                 return back()
                     ->withInput()
-                    ->withErrors(['birth_date' => 'Database Constraint: Batas usia minimal pendaftaran adalah 17 tahun.']);
+                    ->withErrors(['birth_date' => 'Database Constraint: The minimum age for registration is 17 years.']);
             }
             throw $e;
         }
 
-        return back()->with('success', 'Profil berhasil disimpan.');
+        return back()->with('success', 'Profile saved successfully.');
     }
 
     public function destroyAvatar(Request $request): RedirectResponse
@@ -104,7 +104,7 @@ class ApplicantProfileController extends Controller
             ])->save();
         }
 
-        return back()->with('success', 'Foto profil berhasil dihapus.');
+        return back()->with('success', 'Profile photo deleted successfully.');
     }
 
     public function destroy(Request $request): RedirectResponse
@@ -118,7 +118,6 @@ class ApplicantProfileController extends Controller
 
             $profile->update([
                 'nik' => null,
-                'bio' => null,
                 'address' => null,
                 'city' => null,
                 'province' => null,
@@ -141,12 +140,11 @@ class ApplicantProfileController extends Controller
                 'dom_subdistrict' => null,
                 'dom_address' => null,
                 'avatar_url' => null,
-                'linkedin_url' => null,
                 'portfolio_url' => null,
                 'updated_at' => now(),
             ]);
         }
 
-        return back()->with('success', 'Data profil berhasil dihapus. Akun login tetap aktif.');
+        return back()->with('success', 'Profile data deleted successfully. The login account remains active.');
     }
 }

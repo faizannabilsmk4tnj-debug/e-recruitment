@@ -78,8 +78,8 @@ class PelamarController extends Controller
                 $score += ($skillsCount * 2) + ($expCount * 3);
                 $score = min(98, max(50, $score)); // Caps between 50 and 98
 
-                // Map database status 'applied' to view status 'terkirim'
-                $viewStatus = $app->status === 'applied' ? 'terkirim' : $app->status;
+                // Map database status 'applied' to view status 'submitted'
+                $viewStatus = $app->status === 'applied' ? 'submitted' : $app->status;
 
                 $pelamarData[] = [
                     'id' => $app->id,
@@ -108,7 +108,7 @@ class PelamarController extends Controller
                 'days_since' => $job->created_at ? $job->created_at->diffInDays(now()) : 30,
                 'deadline_days' => $job->deadline ? now()->diffInDays($job->deadline, false) : 30,
                 'counts' => [
-                    'terkirim' => $applications->where('status', 'applied')->count(),
+                    'submitted' => $applications->where('status', 'applied')->count(),
                     'shortlisted' => $applications->where('status', 'shortlisted')->count(),
                     'interview' => $applications->where('status', 'interview')->count(),
                     'accepted' => $applications->where('status', 'accepted')->count(),
@@ -260,7 +260,7 @@ class PelamarController extends Controller
             );
         }
 
-        $html = '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
+        $html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <title>CV — ' . $name . '</title>
 <style>
 *{box-sizing:border-box}
@@ -300,8 +300,8 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
             $request->validate([
                 'reason' => 'required|string|min:5',
             ], [
-                'reason.required' => 'Alasan melewati tahap interview wajib diisi.',
-                'reason.min' => 'Alasan harus diisi minimal 5 karakter.',
+                'reason.required' => 'Reason for skipping the interview stage is required.',
+                'reason.min' => 'The reason must be at least 5 characters.',
             ]);
         } else {
             $request->validate([
@@ -458,7 +458,7 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
         if ($request->recommendation === 'proceed' && $request->score < $passingGrade) {
             return response()->json([
                 'success' => false,
-                'message' => "Rekomendasi 'PROCEED' tidak diperbolehkan karena skor ({$request->score}) kurang dari passing grade lowongan ini ({$passingGrade})."
+                'message' => "The 'PROCEED' recommendation is not allowed because the score ({$request->score}) is less than this vacancy's passing grade ({$passingGrade})."
             ], 422);
         }
 
@@ -524,7 +524,7 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'User pelamar tidak ditemukan.'
+                'message' => 'Applicant user not found.'
             ], 404);
         }
 
@@ -535,7 +535,7 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
         // Send system notification
         NotificationService::notifyPrivilegeChange($user, $user->has_privilege);
 
-        $statusStr = $user->has_privilege ? 'diberikan' : 'dicabut';
+        $statusStr = $user->has_privilege ? 'granted' : 'revoked';
 
         // Log this change to application status logs for administrative history
         DB::table('application_status_logs')->insert([
@@ -543,13 +543,13 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
             'changed_by' => auth()->id() ?? 1,
             'old_status' => $application->status,
             'new_status' => $application->status,
-            'reason' => 'Privilege hak akses pelamar ' . $statusStr . ' oleh HR.',
+            'reason' => 'Applicant access privilege ' . $statusStr . ' by HR.',
             'created_at' => now(),
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Privilege hak akses pelamar berhasil ' . $statusStr . '.',
+            'message' => 'Applicant access privilege successfully ' . $statusStr . '.',
             'has_privilege' => $user->has_privilege
         ]);
     }
@@ -614,7 +614,7 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
                 return '<div class="blk" data-type="summary">
                     <div style="padding:16px 28px">
                         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
-                             color:' . $accent . ';margin-bottom:8px">Ringkasan Profil</div>
+                             color:' . $accent . ';margin-bottom:8px">Profile Summary</div>
                         <p style="font-size:11px;line-height:1.7;color:#374151;margin:0;
                            border-left:3px solid ' . $accent . ';padding-left:10px">' . $bio . '</p>
                     </div>
@@ -625,7 +625,7 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
                 if ($works->count()) {
                     foreach ($works as $w) {
                         $s   = $w->start_date ? $w->start_date->format('M Y') : '';
-                        $end = $w->is_current ? 'Sekarang' : ($w->end_date ? $w->end_date->format('M Y') : '');
+                        $end = $w->is_current ? 'Present' : ($w->end_date ? $w->end_date->format('M Y') : '');
                         $inner .= '<div style="margin-bottom:12px">
                             <div style="display:flex;justify-content:space-between;align-items:flex-start">
                                 <div>
@@ -638,12 +638,12 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
                         </div>';
                     }
                 } else {
-                    $inner = '<p style="font-size:11px;color:#9ca3af">Belum ada pengalaman kerja.</p>';
+                    $inner = '<p style="font-size:11px;color:#9ca3af">No work experience recorded.</p>';
                 }
                 return '<div class="blk" data-type="exp">
                     <div style="padding:16px 28px">
                         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
-                             color:' . $accent . ';margin-bottom:10px">Pengalaman Kerja</div>
+                             color:' . $accent . ';margin-bottom:10px">Work Experience</div>
                         ' . $inner . '
                     </div>
                 </div>';
@@ -662,12 +662,12 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
                         </div>';
                     }
                 } else {
-                    $inner = '<p style="font-size:11px;color:#9ca3af">Belum ada data pendidikan.</p>';
+                    $inner = '<p style="font-size:11px;color:#9ca3af">No education data recorded.</p>';
                 }
                 return '<div class="blk" data-type="edu">
                     <div style="padding:16px 28px">
                         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
-                             color:' . $accent . ';margin-bottom:10px">Pendidikan</div>
+                             color:' . $accent . ';margin-bottom:10px">Education</div>
                         ' . $inner . '
                     </div>
                 </div>';
@@ -677,7 +677,7 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
                 if ($organizations->isEmpty()) return '';
                 $inner = '';
                 foreach ($organizations as $org) {
-                    $e   = $org->end_date ? $org->end_date->format('Y') : 'Sekarang';
+                    $e   = $org->end_date ? $org->end_date->format('Y') : 'Present';
                     $inner .= '<div style="margin-bottom:8px">
                         <div style="font-size:12px;font-weight:700;color:#111">' . e($org->position) . '</div>
                         <div style="font-size:11px;color:#6b7280">' . e($org->organization_name) . ' &bull; ' . ($org->start_date ? $org->start_date->format('Y') : '') . '&ndash;' . $e . '</div>
@@ -686,7 +686,7 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
                 return '<div class="blk" data-type="org">
                     <div style="padding:16px 28px">
                         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
-                             color:' . $accent . ';margin-bottom:10px">Organisasi</div>
+                             color:' . $accent . ';margin-bottom:10px">Organization</div>
                         ' . $inner . '
                     </div>
                 </div>';
@@ -700,12 +700,12 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
                                  . e($s->skill_name) . '</span>';
                     }
                 } else {
-                    $inner = '<span style="font-size:11px;color:#9ca3af">Belum ada keahlian.</span>';
+                    $inner = '<span style="font-size:11px;color:#9ca3af">No skills recorded.</span>';
                 }
                 return '<div class="blk" data-type="skills">
                     <div style="padding:16px 28px">
                         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
-                             color:' . $accent . ';margin-bottom:8px">Keahlian</div>
+                             color:' . $accent . ';margin-bottom:8px">Skills</div>
                         <div style="display:flex;flex-wrap:wrap;gap:4px">' . $inner . '</div>
                     </div>
                 </div>';
@@ -728,7 +728,7 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
     public function markSeen($id)
     {
         try {
-            Application::where('job_posting_id', $id)
+            Application::where('job_id', $id)
                 ->where('is_seen', false)
                 ->update(['is_seen' => true]);
 

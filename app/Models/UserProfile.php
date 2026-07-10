@@ -12,7 +12,6 @@ class UserProfile extends Model
     protected $fillable = [
         'user_id',
         'nik',
-        'bio',
         'address',
         'city',
         'province',
@@ -35,7 +34,6 @@ class UserProfile extends Model
         'dom_subdistrict',
         'dom_address',
         'avatar_url',
-        'linkedin_url',
         'portfolio_url',
         'updated_at',
     ];

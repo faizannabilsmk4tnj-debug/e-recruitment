@@ -1,6 +1,6 @@
 @extends('layouts.pelamar')
 
-@section('title', $workExperience->exists ? 'Edit Pengalaman Kerja' : 'Tambah Pengalaman Kerja')
+@section('title', $workExperience->exists ? 'Edit Work Experience' : 'Add Work Experience')
 @section('nav-pengalaman', 'active')
 
 @section('content')
@@ -22,7 +22,7 @@
 
 @if ($errors->any())
     <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-        <p class="font-semibold">Periksa kembali data pengalaman kerja.</p>
+        <p class="font-semibold">Please check the work experience data.</p>
         <ul class="mt-1 list-disc pl-5">
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -41,11 +41,11 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <label for="position" class="block text-sm font-medium text-gray-700 mb-1.5">Position / Job Title <span class="text-red-500">*</span></label>
-                <input type="text" id="position" name="position" value="{{ old('position', $workExperience->position) }}" placeholder="Contoh: Chemical Engineer" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
+                <input type="text" id="position" name="position" value="{{ old('position', $workExperience->position) }}" placeholder="Example: Chemical Engineer" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
             </div>
             <div>
                 <label for="company_name" class="block text-sm font-medium text-gray-700 mb-1.5">Company Name <span class="text-red-500">*</span></label>
-                <input type="text" id="company_name" name="company_name" value="{{ old('company_name', $workExperience->company_name) }}" placeholder="Contoh: PT Ecogreen Oleochemicals" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
+                <input type="text" id="company_name" name="company_name" value="{{ old('company_name', $workExperience->company_name) }}" placeholder="Example: PT Ecogreen Oleochemicals" class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
             </div>
         </div>
 

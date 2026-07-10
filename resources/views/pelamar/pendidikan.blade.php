@@ -1,6 +1,6 @@
 @extends('layouts.pelamar')
 
-@section('title', 'Pendidikan')
+@section('title', 'Education')
 @section('nav-pendidikan', 'active')
 
 @section('content')
@@ -54,7 +54,7 @@
                             <div>
                                 <p class="font-semibold text-sm text-gray-900">{{ $education->institution }}</p>
                                 @if ($education->certificate_number)
-                                    <p class="text-xs text-gray-400">No. Ijazah: {{ $education->certificate_number }}</p>
+                                    <p class="text-xs text-gray-400">Cert. No.: {{ $education->certificate_number }}</p>
                                 @endif
                             </div>
                         </div>
@@ -68,14 +68,14 @@
                         @endif
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-500">
-                        {{ $education->start_year }} - {{ $education->end_year ?? 'Sekarang' }}
+                        {{ $education->start_year }} - {{ $education->end_year ?? 'Present' }}
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex flex-col gap-1">
                             @if ($education->diploma_file)
                                 <a href="{{ asset('storage/' . $education->diploma_file) }}" target="_blank" class="text-xs text-green-700 hover:underline flex items-center gap-1 font-medium">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-                                    Ijazah
+                                    Certificate / Diploma
                                 </a>
                             @endif
                             @if ($education->skhu_file)
@@ -97,7 +97,7 @@
                             <form action="{{ route('pelamar.pendidikan.destroy', $education) }}" method="POST" class="inline delete-education-form" onsubmit="return confirm('Are you sure you want to delete this education record?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors" title="Hapus">
+                                <button type="submit" class="w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors" title="Delete">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                                 </button>
                             </form>

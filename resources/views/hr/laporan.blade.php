@@ -246,7 +246,7 @@
                         <th scope="col" class="px-6 py-4 font-bold text-center">Max Applicants</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Passing Grade</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Age Limit</th>
-                        <th scope="col" class="px-6 py-4 font-bold text-center">Total Pelamar</th>
+                        <th scope="col" class="px-6 py-4 font-bold text-center">Total Applicants</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Funnel (W/S/I/R/A)</th>
                         <th scope="col" class="px-6 py-4 font-bold text-center">Avg Score</th>
                     </tr>
@@ -272,17 +272,17 @@
                                 @if($report->age_min || $report->age_max)
                                     {{ $report->age_min ?: 0 }} - {{ $report->age_max ?: '∞' }}
                                 @else
-                                    Bebas
+                                    Any
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center font-bold text-[#15803d]">{{ $report->total_pelamar }}</td>
                             <td class="px-6 py-4 text-center">
                                 <span class="inline-flex items-center gap-1">
-                                    <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs" title="Menunggu Review">{{ $report->menunggu }}</span>
+                                    <span class="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs" title="Awaiting Review">{{ $report->menunggu }}</span>
                                     <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs" title="Shortlisted">{{ $report->shortlisted }}</span>
                                     <span class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-xs" title="Interview">{{ $report->interview }}</span>
-                                    <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs" title="Ditolak">{{ $report->ditolak }}</span>
-                                    <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs" title="Diterima">{{ $report->diterima }}</span>
+                                    <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs" title="Rejected">{{ $report->ditolak }}</span>
+                                    <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs" title="Accepted">{{ $report->diterima }}</span>
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-center font-bold text-gray-900">
@@ -295,7 +295,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-8 text-center text-gray-400 font-medium">Belum ada data laporan pekerjaan.</td>
+                            <td colspan="8" class="px-6 py-8 text-center text-gray-400 font-medium">No job report data available.</td>
                         </tr>
                     @endforelse
                 </tbody>

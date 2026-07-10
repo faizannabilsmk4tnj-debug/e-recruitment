@@ -51,7 +51,7 @@ class ApplicantCvController extends Controller
                     'pos'  => $w->position,
                     'co'   => $w->company_name,
                     's'    => $w->start_date->format('Y'),
-                    'e'    => $w->is_current ? 'Sekarang' : ($w->end_date ? $w->end_date->format('Y') : ''),
+                    'e'    => $w->is_current ? 'Present' : ($w->end_date ? $w->end_date->format('Y') : ''),
                     'desc' => $w->description ?? '',
                 ];
             })->values()->all(),
@@ -70,7 +70,7 @@ class ApplicantCvController extends Controller
                     'pos' => $o->position,
                     'org' => $o->organization_name,
                     's'   => $o->start_date ? $o->start_date->format('Y') : '',
-                    'e'   => $o->end_date ? $o->end_date->format('Y') : 'Sekarang',
+                    'e'   => $o->end_date ? $o->end_date->format('Y') : 'Present',
                 ];
             })->values()->all(),
             'skills'   => $skills->map(function ($s) {
@@ -149,7 +149,7 @@ class ApplicantCvController extends Controller
         }
 
         // Bungkus dengan page wrapper yang sama seperti editor
-        $html = '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
+        $html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <title>CV — ' . $name . '</title>
 <style>
 *{box-sizing:border-box}
@@ -201,7 +201,7 @@ body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:
                 if ($phone)    $parts[] = '&#128222; ' . $phone;
                 if ($city)     $parts[] = '&#128205; ' . $city . ($province ? ', ' . $province : '');
                 if ($linkedin) $parts[] = '&#128279; ' . $linkedin;
-                $contactHtml = implode('&nbsp;&nbsp;•&nbsp;&nbsp;', $parts) ?: '<span style="color:#9ca3af">Belum ada kontak</span>';
+                $contactHtml = implode('&nbsp;&nbsp;•&nbsp;&nbsp;', $parts) ?: '<span style="color:#9ca3af">No contact details</span>';
                 return '<div class="blk" data-type="contact">
                     <div style="padding:10px 28px;background:#f9fafb;font-size:11px;color:#374151;
                          display:flex;flex-wrap:wrap;gap:6px 20px">
@@ -214,7 +214,7 @@ body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:
                 return '<div class="blk" data-type="summary">
                     <div style="padding:16px 28px">
                         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
-                             color:' . $accent . ';margin-bottom:8px">Ringkasan Profil</div>
+                             color:' . $accent . ';margin-bottom:8px">Profile Summary</div>
                         <p style="font-size:11px;line-height:1.7;color:#374151;margin:0;
                            border-left:3px solid ' . $accent . ';padding-left:10px">' . $bio . '</p>
                     </div>
@@ -225,7 +225,7 @@ body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:
                 if ($works->count()) {
                     foreach ($works as $w) {
                         $s   = $w->start_date->format('M Y');
-                        $end = $w->is_current ? 'Sekarang' : ($w->end_date ? $w->end_date->format('M Y') : '');
+                        $end = $w->is_current ? 'Present' : ($w->end_date ? $w->end_date->format('M Y') : '');
                         $inner .= '<div style="margin-bottom:12px">
                             <div style="display:flex;justify-content:space-between;align-items:flex-start">
                                 <div>
@@ -238,12 +238,12 @@ body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:
                         </div>';
                     }
                 } else {
-                    $inner = '<p style="font-size:11px;color:#9ca3af">Belum ada pengalaman kerja.</p>';
+                    $inner = '<p style="font-size:11px;color:#9ca3af">No work experience recorded.</p>';
                 }
                 return '<div class="blk" data-type="exp">
                     <div style="padding:16px 28px">
                         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
-                             color:' . $accent . ';margin-bottom:10px">Pengalaman Kerja</div>
+                             color:' . $accent . ';margin-bottom:10px">Work Experience</div>
                         ' . $inner . '
                     </div>
                 </div>';
@@ -262,12 +262,12 @@ body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:
                         </div>';
                     }
                 } else {
-                    $inner = '<p style="font-size:11px;color:#9ca3af">Belum ada data pendidikan.</p>';
+                    $inner = '<p style="font-size:11px;color:#9ca3af">No education data recorded.</p>';
                 }
                 return '<div class="blk" data-type="edu">
                     <div style="padding:16px 28px">
                         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
-                             color:' . $accent . ';margin-bottom:10px">Pendidikan</div>
+                             color:' . $accent . ';margin-bottom:10px">Education</div>
                         ' . $inner . '
                     </div>
                 </div>';
@@ -278,7 +278,7 @@ body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:
                 $inner = '';
                 foreach ($organizations as $org) {
                     $s   = $org->start_date ? $org->start_date->format('Y') : '';
-                    $e   = $org->end_date ? $org->end_date->format('Y') : 'Sekarang';
+                    $e   = $org->end_date ? $org->end_date->format('Y') : 'Present';
                     $inner .= '<div style="margin-bottom:8px">
                         <div style="font-size:12px;font-weight:700;color:#111">' . e($org->position) . '</div>
                         <div style="font-size:11px;color:#6b7280">' . e($org->organization_name) . ' &bull; ' . $s . '&ndash;' . $e . '</div>
@@ -287,7 +287,7 @@ body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:
                 return '<div class="blk" data-type="org">
                     <div style="padding:16px 28px">
                         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
-                             color:' . $accent . ';margin-bottom:10px">Organisasi</div>
+                             color:' . $accent . ';margin-bottom:10px">Organization</div>
                         ' . $inner . '
                     </div>
                 </div>';
@@ -301,12 +301,12 @@ body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:
                                  . e($s->skill_name) . '</span>';
                     }
                 } else {
-                    $inner = '<span style="font-size:11px;color:#9ca3af">Belum ada keahlian.</span>';
+                    $inner = '<span style="font-size:11px;color:#9ca3af">No skills recorded.</span>';
                 }
                 return '<div class="blk" data-type="skills">
                     <div style="padding:16px 28px">
                         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
-                             color:' . $accent . ';margin-bottom:8px">Keahlian</div>
+                             color:' . $accent . ';margin-bottom:8px">Skills</div>
                         <div style="display:flex;flex-wrap:wrap;gap:4px">' . $inner . '</div>
                     </div>
                 </div>';

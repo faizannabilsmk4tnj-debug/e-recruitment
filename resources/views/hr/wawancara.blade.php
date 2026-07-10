@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <!-- Bulan Dropdown -->
+            <!-- Month Dropdown -->
             <div class="relative">
                 <button id="btn-bulan" class="bg-white border border-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors shadow-sm flex items-center gap-2">
                     <span id="label-bulan-btn">This Month</span>
@@ -305,7 +305,7 @@
 
         document.addEventListener('click', closeAllDropdowns);
 
-        // Handle "Bulan Ini" Dropdown Selection
+        // Handle "This Month" Dropdown Selection
         document.querySelectorAll('.dropdown-item-bulan').forEach(item => {
             item.addEventListener('click', function() {
                 document.querySelectorAll('.dropdown-item-bulan').forEach(el => {

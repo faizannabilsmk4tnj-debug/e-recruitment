@@ -35,7 +35,7 @@ class ApplicantOrganizationExperienceController extends Controller
 
         return redirect()
             ->route('pelamar.organisasi.index')
-            ->with('success', 'Pengalaman organisasi berhasil ditambahkan.');
+            ->with('success', 'Organization experience added successfully.');
     }
 
     public function edit(OrganizationExperience $organizationExperience): View
@@ -53,7 +53,7 @@ class ApplicantOrganizationExperienceController extends Controller
 
         return redirect()
             ->route('pelamar.organisasi.index')
-            ->with('success', 'Pengalaman organisasi berhasil diperbarui.');
+            ->with('success', 'Organization experience updated successfully.');
     }
 
     public function destroy(OrganizationExperience $organizationExperience): RedirectResponse
@@ -64,7 +64,7 @@ class ApplicantOrganizationExperienceController extends Controller
 
         return redirect()
             ->route('pelamar.organisasi.index')
-            ->with('success', 'Pengalaman organisasi berhasil dihapus.');
+            ->with('success', 'Organization experience deleted successfully.');
     }
 
     private function validatedData(Request $request): array

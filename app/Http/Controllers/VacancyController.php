@@ -104,7 +104,7 @@ class VacancyController extends Controller
                 ?: \App\Models\CvTemplate::first();
             if (!$template) {
                 $template = \App\Models\CvTemplate::create([
-                    'name' => 'Template Standar',
+                    'name' => 'Standard Template',
                     'is_active' => true,
                     'status' => 'published',
                 ]);
@@ -112,9 +112,9 @@ class VacancyController extends Controller
             $cv = \App\Models\ApplicantCv::create([
                 'user_id' => $userId,
                 'template_id' => $template->id,
-                'title' => 'CV Utama ' . $user->name,
+                'title' => 'Primary CV ' . $user->name,
                 'cv_data' => [
-                    'objective' => 'Mencari posisi yang sesuai dengan kemampuan saya.',
+                    'objective' => 'Seeking a position that matches my skills.',
                     'sections' => ['experience', 'education', 'skills']
                 ],
                 'is_primary' => true,
@@ -123,12 +123,12 @@ class VacancyController extends Controller
         
         if (!$user->has_privilege) {
             return redirect()->route('pelamar.lowongan.show', $id)
-                ->with('error', 'Anda tidak memiliki hak akses (privilege) untuk melamar pekerjaan.');
+                ->with('error', 'You do not have access privilege to apply for jobs.');
         }
 
         if ($user->getProfileCompletionPercentage() < 75) {
             return redirect()->route('pelamar.profil.edit')
-                ->with('error', 'Kelengkapan profil Anda baru mencapai ' . $user->getProfileCompletionPercentage() . '%. Harap lengkapi data profil Anda minimal hingga 75% sebelum melamar pekerjaan.');
+                ->with('error', 'Your profile completion is only ' . $user->getProfileCompletionPercentage() . '%. Please complete your profile data to at least 75% before applying for jobs.');
         }
 
         // Check eligibility via Stored Function (fn_cek_kelayakan_melamar)
@@ -136,12 +136,12 @@ class VacancyController extends Controller
         
         if ($eligibility !== 'ELIGIBLE') {
             $errorMsg = match($eligibility) {
-                'SUDAH_MELAMAR' => 'Anda sudah melamar pekerjaan ini.',
-                'MELEBIHI_BATAS_AKTIF' => 'Anda tidak dapat memiliki lebih dari 3 lamaran aktif secara bersamaan.',
-                'TANGGAL_LAHIR_KOSONG' => 'Lowongan ini memiliki syarat batas usia. Mohon lengkapi Tanggal Lahir di profil Anda terlebih dahulu.',
-                'USIA_KURANG' => "Usia Anda kurang dari syarat minimum lowongan ini ({$vacancy->age_min} tahun).",
-                'USIA_MELEBIHI' => "Usia Anda melebihi batas maksimum syarat lowongan ini ({$vacancy->age_max} tahun).",
-                default => 'Anda tidak memenuhi syarat untuk melamar pekerjaan ini.'
+                'SUDAH_MELAMAR' => 'You have already applied for this job.',
+                'MELEBIHI_BATAS_AKTIF' => 'You cannot have more than 3 active applications at the same time.',
+                'TANGGAL_LAHIR_KOSONG' => 'This vacancy has age limit requirements. Please complete the Birth Date in your profile first.',
+                'USIA_KURANG' => "Your age is less than the minimum requirement for this vacancy ({$vacancy->age_min} years old).",
+                'USIA_MELEBIHI' => "Your age exceeds the maximum limit requirement for this vacancy ({$vacancy->age_max} years old).",
+                default => 'You do not meet the requirements to apply for this job.'
             };
             
             if ($eligibility === 'TANGGAL_LAHIR_KOSONG') {
@@ -165,14 +165,14 @@ class VacancyController extends Controller
         if (!$user->has_privilege) {
             return response()->json([
                 'success' => false,
-                'message' => 'Anda tidak memiliki hak akses (privilege) untuk melamar pekerjaan.'
+                'message' => 'You do not have access privilege to apply for jobs.'
             ], 403);
         }
 
         if ($user->getProfileCompletionPercentage() < 75) {
             return response()->json([
                 'success' => false,
-                'message' => 'Kelengkapan profil Anda baru mencapai ' . $user->getProfileCompletionPercentage() . '%. Harap lengkapi data profil Anda minimal hingga 75% sebelum melamar pekerjaan.'
+                'message' => 'Your profile completion is only ' . $user->getProfileCompletionPercentage() . '%. Please complete your profile data to at least 75% before applying for jobs.'
             ], 422);
         }
 
@@ -181,12 +181,12 @@ class VacancyController extends Controller
         
         if ($eligibility !== 'ELIGIBLE') {
             $errorMsg = match($eligibility) {
-                'SUDAH_MELAMAR' => 'Anda sudah mengirimkan lamaran untuk loker ini.',
-                'MELEBIHI_BATAS_AKTIF' => 'Anda tidak dapat memiliki lebih dari 3 lamaran aktif secara bersamaan.',
-                'TANGGAL_LAHIR_KOSONG' => 'Lowongan ini memiliki syarat batas usia. Mohon lengkapi Tanggal Lahir di profil Anda terlebih dahulu.',
-                'USIA_KURANG' => "Usia Anda kurang dari syarat minimum lowongan ini ({$vacancy->age_min} tahun).",
-                'USIA_MELEBIHI' => "Usia Anda melebihi batas maksimum syarat lowongan ini ({$vacancy->age_max} tahun).",
-                default => 'Anda tidak memenuhi syarat untuk melamar pekerjaan ini.'
+                'SUDAH_MELAMAR' => 'You have already submitted an application for this job.',
+                'MELEBIHI_BATAS_AKTIF' => 'You cannot have more than 3 active applications at the same time.',
+                'TANGGAL_LAHIR_KOSONG' => 'This vacancy has age limit requirements. Please complete the Birth Date in your profile first.',
+                'USIA_KURANG' => "Your age is less than the minimum requirement for this vacancy ({$vacancy->age_min} years old).",
+                'USIA_MELEBIHI' => "Your age exceeds the maximum limit requirement for this vacancy ({$vacancy->age_max} years old).",
+                default => 'You do not meet the requirements to apply for this job.'
             };
             
             return response()->json([
@@ -206,7 +206,7 @@ class VacancyController extends Controller
         if (!$cv) {
             return response()->json([
                 'success' => false,
-                'message' => 'CV utama tidak ditemukan.'
+                'message' => 'Primary CV not found.'
             ], 422);
         }
 
@@ -274,8 +274,8 @@ class VacancyController extends Controller
                     NotificationService::create(
                         $hr->id,
                         'vacancy_closed_auto',
-                        'Lowongan Ditutup (Kuota Penuh)',
-                        "Lowongan \"{$vacancy->title}\" telah ditutup otomatis karena kuota pendaftar terpenuhi ({$vacancy->applicant_count}/{$vacancy->quota}).",
+                        'Vacancy Closed (Quota Full)',
+                        "Vacancy \"{$vacancy->title}\" has been automatically closed because the applicant quota is full ({$vacancy->applicant_count}/{$vacancy->quota}).",
                         [
                             'job_id'    => $vacancy->id,
                             'job_title' => $vacancy->title,
@@ -293,8 +293,8 @@ class VacancyController extends Controller
         // Create log entry if needed, but not strictly required
         return response()->json([
             'success' => true,
-            'message' => 'Lamaran berhasil terkirim!',
-            'redirect_url' => '/pelamar/lamaran-terkirim'
+            'message' => 'Application successfully submitted!',
+            'redirect_url' => '/pelamar/application-submitted'
         ]);
     }
 }

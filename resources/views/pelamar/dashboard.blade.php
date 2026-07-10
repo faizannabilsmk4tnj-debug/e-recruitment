@@ -31,9 +31,9 @@
         </svg>
     </div>
     <div class="flex-1 min-w-0">
-        <h3 class="text-sm font-bold text-red-950">Hak Akses Sistem Rekrutmen Anda Ditangguhkan</h3>
+        <h3 class="text-sm font-bold text-red-950">Your Recruitment System Access Privilege is Suspended</h3>
         <p class="text-xs text-red-800 leading-relaxed mt-0.5">
-            HR telah menonaktifkan hak akses (privilege) Anda untuk mendaftar lowongan baru pada portal rekrutmen ini. Anda tetap dapat memantau status lamaran yang sudah terkirim, namun Anda tidak dapat mengajukan lamaran pekerjaan baru sampai hak akses Anda diaktifkan kembali.
+            HR has disabled your access rights (privilege) to apply for new vacancies on this recruitment portal. You can still monitor the status of submitted applications, but you cannot submit new job applications until your access rights are reactivated.
         </p>
     </div>
 </div>
@@ -176,7 +176,7 @@
         </td>
     </tr>
     @empty
-    <tr><td colspan="3" class="px-6 py-8 text-center text-gray-400 text-sm">Belum ada lamaran</td></tr>
+    <tr><td colspan="3" class="px-6 py-8 text-center text-gray-400 text-sm">No applications yet</td></tr>
     @endforelse
 </tbody>
             </table>
@@ -207,7 +207,7 @@
                     </div>
                 </div>
                 @empty
-                <p class="text-sm text-gray-400 px-5 py-4">Belum ada lowongan tersimpan</p>
+                <p class="text-sm text-gray-400 px-5 py-4">No saved vacancies yet</p>
                 @endforelse
             </div>
         </div>
@@ -235,7 +235,7 @@
                     </div>
                 </div>
                 @empty
-                <p class="text-sm text-gray-400 px-5 py-4">Tidak ada notifikasi</p>
+                <p class="text-sm text-gray-400 px-5 py-4">No notifications</p>
                 @endforelse
             </div>
             <div class="px-5 py-3 border-t border-gray-100 bg-gray-50/50">

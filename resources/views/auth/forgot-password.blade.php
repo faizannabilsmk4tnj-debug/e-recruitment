@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Lupa Password')
+@section('title', 'Forgot Password')
 
 @section('content')
 <div class="w-full max-w-md">
@@ -17,9 +17,9 @@
         </div>
 
         <!-- Title -->
-        <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">Lupa Password?</h1>
+        <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">Forgot Password?</h1>
         <p class="text-center text-gray-500 text-sm mb-8">
-            Masukkan email yang terdaftar. Kami akan mengirimkan link untuk mereset password Anda.
+            Enter your registered email. We will send you a link to reset your password.
         </p>
 
         <!-- Success Alert (hidden by default) -->
@@ -30,8 +30,8 @@
                     <path d="m9 11 3 3L22 4"/>
                 </svg>
                 <div>
-                    <p class="text-green-800 text-sm font-semibold">Link reset berhasil dikirim!</p>
-                    <p class="text-green-700 text-xs mt-0.5" id="success-detail">Jika email Anda terdaftar, tautan reset password telah dikirimkan. Silakan cek kotak masuk email Anda.</p>
+                    <p class="text-green-800 text-sm font-semibold">Reset link sent successfully!</p>
+                    <p class="text-green-700 text-xs mt-0.5" id="success-detail">If your email is registered, the password reset link has been sent. Please check your email inbox.</p>
                 </div>
             </div>
         </div>
@@ -42,14 +42,14 @@
                 <circle cx="12" cy="12" r="10"/>
                 <path d="m15 9-6 6"/><path d="m9 9 6 6"/>
             </svg>
-            <p class="text-red-700 text-sm font-medium" id="alert-error-text">Terjadi kesalahan. Silakan coba lagi.</p>
+            <p class="text-red-700 text-sm font-medium" id="alert-error-text">An error occurred. Please try again.</p>
         </div>
 
         <!-- Form -->
         <div id="form-wrapper" class="space-y-5">
             <!-- Email -->
             <div>
-                <label for="email" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Alamat Email</label>
+                <label for="email" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Email Address</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -60,7 +60,7 @@
                     <input
                         type="email"
                         id="email"
-                        placeholder="nama@email.com"
+                        placeholder="name@email.com"
                         class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent transition-all"
                     >
                 </div>
@@ -75,7 +75,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
                 </svg>
-                Kirim Link Reset
+                Send Reset Link
             </button>
         </div>
 
@@ -84,14 +84,14 @@
 
         <!-- Back to Login -->
         <p class="text-center text-sm text-gray-600">
-            Ingat password?
-            <a href="/login" class="font-bold text-green-900 hover:text-green-700 transition-colors">Kembali ke Login</a>
+            Remember your password?
+            <a href="/login" class="font-bold text-green-900 hover:text-green-700 transition-colors">Back to Login</a>
         </p>
     </div>
 
     <!-- Terms Text -->
     <p class="text-center text-xs text-gray-400 mt-6 px-4">
-        Butuh bantuan? Hubungi tim HR PT Ecogreen Oleochemicals.
+        Need help? Contact PT Ecogreen Oleochemicals HR team.
     </p>
 </div>
 @endsection
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = emailInput.value.trim();
 
         if (!email) {
-            showError('Alamat email wajib diisi.');
+            showError('Email address is required.');
             emailInput.focus();
             return;
         }
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Basic email format check
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            showError('Format alamat email tidak valid.');
+            showError('Invalid email address format.');
             emailInput.focus();
             return;
         }
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
             </svg>
-            Mengirim...
+            Sending...
         `;
 
         try {
@@ -162,23 +162,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 formWrapper.classList.add('hidden');
                 alertSuccess.classList.remove('hidden');
             } else {
-                showError(data.message || 'Terjadi kesalahan. Silakan coba lagi.');
+                showError(data.message || 'An error occurred. Please try again.');
                 btn.disabled = false;
                 btn.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
                     </svg>
-                    Kirim Link Reset
+                    Send Reset Link
                 `;
             }
         } catch (err) {
-            showError('Gagal terhubung ke server. Periksa koneksi internet Anda.');
+            showError('Failed to connect to the server. Check your internet connection.');
             btn.disabled = false;
             btn.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
                 </svg>
-                Kirim Link Reset
+                Send Reset Link
             `;
         }
     });

@@ -57,7 +57,7 @@ class ApplicantLampiranController extends Controller
         ]);
 
         return redirect()->route('pelamar.lampiran')
-            ->with('success', 'Skill berhasil ditambahkan.');
+            ->with('success', 'Skill added successfully.');
     }
 
     // ===== SKILL UPDATE =====
@@ -136,7 +136,7 @@ class ApplicantLampiranController extends Controller
         ]);
 
         return redirect()->route('pelamar.lampiran')
-            ->with('success', 'Portofolio berhasil ditambahkan.')
+            ->with('success', 'Portfolio added successfully.')
             ->withFragment('tab-portofolio');
     }
 

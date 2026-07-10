@@ -22,7 +22,7 @@ class CheckRole
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Akun Anda telah dinonaktifkan oleh HR Master.',
+                    'message' => 'Your account has been deactivated by the HR Master.',
                     'redirect' => route('hr.logout-deactivated')
                 ], 403);
             }
@@ -31,7 +31,7 @@ class CheckRole
 
         if (!Auth::check()) {
             // Jika belum login, redirect ke login yang sesuai
-            session()->flash('auth_warning', 'Anda harus login terlebih dahulu untuk mengakses halaman tersebut.');
+            session()->flash('auth_warning', 'You must log in first to access that page.');
             return redirect(($role === 'hr' || $role === 'hr_master') ? '/hr/login' : '/login');
         }
 
@@ -46,7 +46,7 @@ class CheckRole
 
         if (!$allowed) {
             // Jika role tidak sesuai
-            session()->flash('auth_warning', 'Anda tidak memiliki hak akses untuk halaman tersebut.');
+            session()->flash('auth_warning', 'You do not have access permission for that page.');
             return redirect(($userRole === 'hr' || $userRole === 'hr_master') ? '/hr/dashboard' : '/pelamar/dashboard');
         }
 

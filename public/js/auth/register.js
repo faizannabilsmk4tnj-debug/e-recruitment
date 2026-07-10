@@ -27,33 +27,33 @@ document.addEventListener('DOMContentLoaded', function () {
             let hasError = false;
 
             if (!nama) {
-                showFieldError(namaInput, 'Nama lengkap wajib diisi.');
+                showFieldError(namaInput, 'Full name is required.');
                 hasError = true;
             }
 
             if (!email) {
-                showFieldError(emailInput, 'Alamat email wajib diisi.');
+                showFieldError(emailInput, 'Email address is required.');
                 hasError = true;
             } else if (!isValidEmail(email)) {
-                showFieldError(emailInput, 'Format email tidak valid.');
+                showFieldError(emailInput, 'Invalid email format.');
                 hasError = true;
             }
 
             if (!password) {
-                showFieldError(passwordInput, 'Kata sandi wajib diisi.');
+                showFieldError(passwordInput, 'Password is required.');
                 hasError = true;
             } else if (password.length < 8) {
-                showFieldError(passwordInput, 'Kata sandi minimal 8 karakter.');
+                showFieldError(passwordInput, 'Password must be at least 8 characters.');
                 hasError = true;
             }
 
             if (password !== confirmation) {
-                showFieldError(confirmInput, 'Konfirmasi sandi tidak cocok.');
+                showFieldError(confirmInput, 'Password confirmation does not match.');
                 hasError = true;
             }
 
             if (!termsAccepted) {
-                alert('Anda harus menyetujui Syarat & Ketentuan untuk melanjutkan.');
+                alert('You must agree to the Terms & Conditions to proceed.');
                 hasError = true;
             }
 
@@ -85,12 +85,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.success) {
                     window.location.href = '/login';
                 } else {
-                    alert(data.message || 'Register gagal');
+                    alert(data.message || 'Registration failed');
                     btnRegister.disabled = false;
                     btnRegister.innerHTML = 'Register';
                 }
             } catch (err) {
-                alert('Terjadi kesalahan. Coba lagi nanti.');
+                alert('An error occurred. Please try again later.');
                 btnRegister.disabled = false;
                 btnRegister.innerHTML = 'Register';
             }

@@ -13,13 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!file) return;
 
             if (file.size > 2 * 1024 * 1024) {
-                alert('Ukuran file melebihi 2MB. Silakan pilih foto lain.');
+                alert('File size exceeds 2MB. Please select another photo.');
                 fotoInput.value = '';
                 return;
             }
 
             if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                alert('Format file harus JPG atau PNG.');
+                alert('File format must be JPG or PNG.');
                 fotoInput.value = '';
                 return;
             }
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('beforeunload', function (e) {
         if (isDirty && !isSubmitting) {
             e.preventDefault();
-            e.returnValue = 'Data yang baru saja Anda isi belum disimpan dan akan di-reset (hilang) jika Anda meninggalkan halaman ini. Apakah Anda yakin ingin keluar?';
+            e.returnValue = 'The data you just entered has not been saved and will be reset (lost) if you leave this page. Are you sure you want to leave?';
             return e.returnValue;
         }
     });

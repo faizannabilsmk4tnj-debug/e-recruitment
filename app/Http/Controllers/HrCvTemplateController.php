@@ -12,7 +12,7 @@ class HrCvTemplateController extends Controller
 {
     public function index(Request $request): View
     {
-        $status = $request->query('status', 'semua');
+        $status = $request->query('status', 'all');
         $search = trim((string) $request->query('q', ''));
 
         $templates = CvTemplate::query()
@@ -55,7 +55,7 @@ class HrCvTemplateController extends Controller
 
         return redirect()
             ->route('hr.template-cv.editor', $template)
-            ->with('success', 'Template berhasil dibuat. Silakan edit layout.');
+            ->with('success', 'Template successfully created. Please edit the layout.');
     }
 
     public function edit(CvTemplate $template): View
@@ -67,7 +67,7 @@ class HrCvTemplateController extends Controller
     {
         $content = $template->content_html ?? '';
 
-        $html = '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
+        $html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <title>Preview: ' . e($template->name) . '</title>
 <style>
 body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:center;
@@ -83,7 +83,7 @@ body{margin:0;background:#cbd5e1;display:flex;flex-direction:column;align-items:
 body{padding-top:68px}
 </style></head><body>
 <div class="preview-bar">
-  <a href="javascript:history.back()">← Kembali</a>
+  <a href="javascript:history.back()">← Back</a>
   <span>Preview: ' . e($template->name) . '</span>
 </div>';
 
@@ -94,8 +94,8 @@ body{padding-top:68px}
                 <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin:0 auto 16px;display:block;opacity:.4">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
-                <p style="font-size:15px;font-weight:600;margin:0 0 8px">Template belum memiliki konten</p>
-                <p style="font-size:13px;margin:0">Silakan buka editor dan simpan layout terlebih dahulu.</p>
+                <p style="font-size:15px;font-weight:600;margin:0 0 8px">Template does not have content yet</p>
+                <p style="font-size:13px;margin:0">Please open the editor and save the layout first.</p>
             </div>';
         }
 
@@ -128,7 +128,7 @@ body{padding-top:68px}
 
         return redirect()
             ->route('hr.template-cv.editor', $template)
-            ->with('success', $validated['status'] === 'published' ? 'Template berhasil dipublikasikan.' : 'Draft template berhasil disimpan.');
+            ->with('success', $validated['status'] === 'published' ? 'Template successfully published.' : 'Draft template successfully saved.');
     }
 
     public function publish(CvTemplate $template): RedirectResponse
@@ -138,13 +138,13 @@ body{padding-top:68px}
             'is_active' => true,
         ]);
 
-        return back()->with('success', 'Template berhasil dipublikasikan.');
+        return back()->with('success', 'Template successfully published.');
     }
 
     public function setDraft(CvTemplate $template): RedirectResponse
     {
         if ($template->is_default) {
-            return back()->with('error', 'Template default tidak bisa diubah menjadi Draft. Pilih default lain terlebih dahulu.');
+            return back()->with('error', 'Default template cannot be changed to Draft. Please select another default template first.');
         }
 
         $template->update([
@@ -152,7 +152,7 @@ body{padding-top:68px}
             'is_active' => false,
         ]);
 
-        return back()->with('success', 'Template berhasil diubah menjadi Draft (Private).');
+        return back()->with('success', 'Template successfully changed to Draft (Private).');
     }
 
     public function setDefault(CvTemplate $template): RedirectResponse
@@ -167,23 +167,23 @@ body{padding-top:68px}
             ]);
         });
 
-        return back()->with('success', 'Template default berhasil diperbarui.');
+        return back()->with('success', 'Default template successfully updated.');
     }
 
     public function destroy(CvTemplate $template): RedirectResponse
     {
         if ($template->applicantCvs()->exists()) {
-            return back()->with('error', 'Template tidak bisa dihapus karena sudah digunakan pelamar.');
+            return back()->with('error', 'Template cannot be deleted because it is already used by applicants.');
         }
 
         if ($template->is_default) {
-            return back()->with('error', 'Template default tidak bisa dihapus. Pilih default lain terlebih dahulu.');
+            return back()->with('error', 'Default template cannot be deleted. Please select another default template first.');
         }
 
         $template->delete();
 
         return redirect()
             ->route('hr.template-cv.index')
-            ->with('success', 'Template berhasil dihapus.');
+            ->with('success', 'Template successfully deleted.');
     }
 }

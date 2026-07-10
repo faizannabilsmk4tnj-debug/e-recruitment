@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const searchMatch = !state.search || titleMatch || name.includes(state.search) || email.includes(state.search);
 
                 let focusMatch = true;
-                if (state.focus === 'review') focusMatch = (status === 'terkirim' || status === 'shortlisted');
+                if (state.focus === 'review') focusMatch = (status === 'submitted' || status === 'shortlisted');
                 if (state.focus === 'interview') focusMatch = (status === 'interview');
                 if (state.focus === 'decision') focusMatch = (status === 'shortlisted');
 
@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     const statusWeights = {
-        'terkirim': 1,
+        'submitted': 1,
         'shortlisted': 2,
         'interview': 3,
         'rejected': 4,

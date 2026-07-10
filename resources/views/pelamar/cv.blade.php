@@ -30,7 +30,7 @@
 <div class="flex items-start justify-between mb-6">
     <div>
         <h1 class="text-2xl font-bold text-gray-900">My CV</h1>
-        <p class="text-gray-500 mt-1 text-sm">Pilih template, lalu preview CV Anda dengan data profil terkini.</p>
+        <p class="text-gray-500 mt-1 text-sm">Select a template, then preview your CV with your latest profile data.</p>
     </div>
 </div>
 
@@ -40,8 +40,8 @@
     <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-300 mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
     </svg>
-    <p class="font-semibold text-gray-500">Belum ada template CV yang tersedia</p>
-    <p class="text-sm text-gray-400 mt-1">Hubungi HR untuk mempublikasikan template.</p>
+    <p class="font-semibold text-gray-500">No CV templates available</p>
+    <p class="text-sm text-gray-400 mt-1">Please contact HR to publish a template.</p>
 </div>
 @else
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10" id="template-grid">
@@ -77,7 +77,7 @@
         {{-- Info --}}
         <div class="p-5">
             <p class="text-[10px] font-bold uppercase tracking-widest mb-1 {{ $tpl->is_default ? 'text-green-700' : 'text-slate-500' }}">
-                {{ $tpl->is_default ? 'Template Utama' : 'Template HR' }}
+                {{ $tpl->is_default ? 'Primary Template' : 'HR Template' }}
             </p>
             <h3 class="font-bold text-gray-900 text-base">{{ $tpl->name }}</h3>
             @if($tpl->description)
@@ -85,7 +85,7 @@
             @endif
             <button class="select-btn w-full mt-4 bg-gray-100 text-gray-700 font-semibold py-2.5 rounded-lg text-sm
                            transition-colors flex items-center justify-center gap-2">
-                Pilih Template
+                Select Template
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
                 </svg>
@@ -100,18 +100,18 @@
 <div id="cv-preview-section" class="mb-10 scroll-mt-8 {{ $templates->isNotEmpty() ? '' : 'hidden' }}">
     <div class="flex items-center justify-between mb-6 border-b border-gray-100 pb-4 pt-2">
         <h2 class="text-xl font-bold text-gray-900">
-            Workspace CV —
+            CV Workspace —
             <span id="preview-template-name" class="text-green-800">{{ optional($templates->first())->name }}</span>
         </h2>
         <div class="flex items-center gap-3">
-            <span id="preview-loading-badge" class="hidden text-xs text-gray-400 italic animate-pulse">⏳ Memuat data CV...</span>
+            <span id="preview-loading-badge" class="hidden text-xs text-gray-400 italic animate-pulse">⏳ Loading CV data...</span>
             
             <button onclick="scrollToTemplates()"
                     class="text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 px-3.5 py-2 rounded-lg font-semibold flex items-center gap-1.5 transition-colors border border-gray-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
                 </svg>
-                Pilih Ulang Template
+                Reselect Template
             </button>
         </div>
     </div>
@@ -155,9 +155,9 @@
         <div class="lg:col-span-5 space-y-6">
             {{-- Action Cards (Download) --}}
             <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <h3 class="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3 text-slate-500">Unduh Dokumen</h3>
-                <h2 class="text-base font-bold text-gray-900 mb-2">Simpan CV sebagai PDF</h2>
-                <p class="text-xs text-gray-500 mb-4">Ekspor CV Anda ke dalam format PDF standar A4 berkualitas tinggi.</p>
+                <h3 class="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3 text-slate-500">Download Document</h3>
+                <h2 class="text-base font-bold text-gray-900 mb-2">Save CV as PDF</h2>
+                <p class="text-xs text-gray-500 mb-4">Export your CV into high-quality standard A4 PDF format.</p>
                 
                 <button id="btn-download" onclick="downloadCvPdf()"
                     class="w-full bg-[#15803d] hover:bg-[#166534] text-white font-semibold py-3 px-6 rounded-lg text-sm transition-colors shadow-sm flex items-center justify-center gap-2">
@@ -173,7 +173,7 @@
             {{-- Kelengkapan Data CV --}}
             <div id="kelengkapan-section" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                 <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-50">
-                    <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">Kelengkapan Data CV</h3>
+                    <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">CV Data Completeness</h3>
                     <span class="text-[10px] font-semibold text-green-700 bg-green-50 px-2.5 py-0.5 rounded-full">Real-time Check</span>
                 </div>
                 
@@ -189,12 +189,12 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-gray-700">Profil</p>
-                                <p class="text-[10px] text-gray-400">Data pribadi, bio & medsos</p>
+                                <p class="text-xs font-bold text-gray-700">Profile</p>
+                                <p class="text-[10px] text-gray-400">Personal data, bio & social media</p>
                             </div>
                         </div>
                         <span class="text-[11px] font-bold {{ $profile ? 'text-green-600' : 'text-gray-400' }}">
-                            {{ $profile ? 'Lengkap ✓' : 'Belum diisi' }}
+                            {{ $profile ? 'Complete ✓' : 'Incomplete' }}
                         </span>
                     </a>
 
@@ -209,12 +209,12 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-gray-700">Pengalaman Kerja</p>
-                                <p class="text-[10px] text-gray-400">Karir & deskripsi pekerjaan</p>
+                                <p class="text-xs font-bold text-gray-700">Work Experience</p>
+                                <p class="text-[10px] text-gray-400">Career & job description</p>
                             </div>
                         </div>
                         <span class="text-[11px] font-bold {{ $works->count() ? 'text-green-600' : 'text-gray-400' }}">
-                            {{ $works->count() ? $works->count().' entri ✓' : 'Belum diisi' }}
+                            {{ $works->count() ? $works->count().' entries ✓' : 'Incomplete' }}
                         </span>
                     </a>
 
@@ -229,12 +229,12 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-gray-700">Pendidikan</p>
-                                <p class="text-[10px] text-gray-400">Sekolah/Universitas & IPK</p>
+                                <p class="text-xs font-bold text-gray-700">Education</p>
+                                <p class="text-[10px] text-gray-400">School/University & GPA</p>
                             </div>
                         </div>
                         <span class="text-[11px] font-bold {{ $educations->count() ? 'text-green-600' : 'text-gray-400' }}">
-                            {{ $educations->count() ? $educations->count().' entri ✓' : 'Belum diisi' }}
+                            {{ $educations->count() ? $educations->count().' entries ✓' : 'Incomplete' }}
                         </span>
                     </a>
 
@@ -252,12 +252,12 @@
                                 </svg>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-gray-700">Lampiran & Keahlian</p>
-                                <p class="text-[10px] text-gray-400">Sertifikat & kompetensi</p>
+                                <p class="text-xs font-bold text-gray-700">Attachments & Skills</p>
+                                <p class="text-[10px] text-gray-400">Certificates & competencies</p>
                             </div>
                         </div>
                         <span class="text-[11px] font-bold {{ $hasAttachment ? 'text-green-600' : 'text-gray-400' }}">
-                            {{ $hasAttachment ? 'Lengkap ✓' : 'Belum diisi' }}
+                            {{ $hasAttachment ? 'Complete ✓' : 'Incomplete' }}
                         </span>
                     </a>
                 </div>
@@ -270,15 +270,16 @@
                         <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
                     </svg>
                     <div>
-                        <h4 class="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">Tips Profesional</h4>
+                        <h4 class="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">Professional Tips</h4>
                         <p class="text-xs text-amber-700 leading-relaxed">
-                            Pilih template dengan rasio teks-ke-ruang yang seimbang. Desain yang rapi membantu rekruter membaca keahlian utama Anda lebih cepat.
+                            Choose a template with a balanced text-to-space ratio. A clean design helps recruiters read your main skills faster.
                         </p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 {{-- Modal Full Screen Preview --}}
 <div id="cv-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center p-4">
@@ -384,7 +385,7 @@ function selectTemplate(card, shouldScroll = true) {
             }
         })
         .catch(function(err) {
-            badge.textContent = 'Gagal memuat CV. Coba refresh halaman.';
+            badge.textContent = 'Failed to load CV. Try refreshing the page.';
             console.error(err);
         });
 }
@@ -392,7 +393,7 @@ function selectTemplate(card, shouldScroll = true) {
 function printCv() {
     var frame = document.getElementById('cv-preview-frame');
     if (!frame || !frame.contentWindow) {
-        alert('Preview CV belum tersedia. Pilih template terlebih dahulu.');
+        alert('CV preview not available. Please choose a template first.');
         return;
     }
     frame.contentWindow.focus();
@@ -401,7 +402,7 @@ function printCv() {
 
 function downloadCvPdf() {
     if (!window.currentCvHtml) {
-        alert('Preview CV belum tersedia. Pilih template terlebih dahulu.');
+        alert('CV preview not available. Please choose a template first.');
         return;
     }
     
@@ -416,7 +417,7 @@ function downloadCvPdf() {
 
     var element = tempDiv.querySelector('.page');
     if (!element) {
-        alert('Gagal mendownload PDF. Elemen template (.page) tidak ditemukan.');
+        alert('Failed to download PDF. Template element (.page) not found.');
         document.body.removeChild(tempDiv);
         return;
     }
@@ -486,7 +487,7 @@ function downloadCvPdfFromModal() {
 
     var element = tempDiv.querySelector('.page');
     if (!element) {
-        alert('Gagal mendownload PDF. Elemen template (.page) tidak ditemukan.');
+        alert('Failed to download PDF. Template element (.page) not found.');
         document.body.removeChild(tempDiv);
         return;
     }

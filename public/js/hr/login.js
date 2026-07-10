@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
         alertEl.classList.add('hidden');
 
         if (!email || !pass) {
-            alertText.textContent = 'Email dan password wajib diisi.';
+            alertText.textContent = 'Email and password are required.';
             alertEl.classList.remove('hidden');
             return;
         }
@@ -94,22 +94,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.role === 'hr' || data.role === 'hr_master') {
                     window.location.href = '/hr/dashboard';
                 } else {
-                    alertText.textContent = 'Akun ini bukan akun HR.';
+                    alertText.textContent = 'This account is not an HR account.';
                     alertEl.classList.remove('hidden');
                 }
             } else {
-                alertText.textContent = data.message || 'Login gagal.';
+                alertText.textContent = data.message || 'Login failed.';
                 alertEl.classList.remove('hidden');
             }
             btnLogin.disabled = false;
-            btnLogin.innerHTML = 'Masuk ke HR Panel';
+            btnLogin.innerHTML = 'Sign In to HR Panel';
         })
         .catch((err) => {
             console.log('Fetch error:', err);
-            alertText.textContent = 'Terjadi kesalahan. Coba lagi.';
+            alertText.textContent = 'An error occurred. Please try again.';
             alertEl.classList.remove('hidden');
             btnLogin.disabled = false;
-            btnLogin.innerHTML = 'Masuk ke HR Panel';
+            btnLogin.innerHTML = 'Sign In to HR Panel';
         });
     }
 
@@ -121,16 +121,16 @@ document.addEventListener('DOMContentLoaded', function () {
     if (btnSendReset) {
         btnSendReset.addEventListener('click', async function () {
             const email = document.getElementById('forgot-email').value.trim();
-            if (!email) { alert('Masukkan email terlebih dahulu.'); return; }
+            if (!email) { alert('Please enter your email first.'); return; }
             
             // Basic email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                alert('Format email tidak valid.');
+                alert('Invalid email format.');
                 return;
             }
 
-            this.textContent = 'Mengirim...';
+            this.textContent = 'Sending...';
             this.disabled = true;
 
             try {
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const data = await res.json();
 
                 if (data.success) {
-                    btnSendReset.textContent = '✓ Link dikirim ke ' + email;
+                    btnSendReset.textContent = '✓ Link sent to ' + email;
                     setTimeout(() => {
                         modalForgot.classList.add('hidden');
                         btnSendReset.textContent = 'Send Reset Link';
@@ -155,12 +155,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         document.getElementById('forgot-email').value = '';
                     }, 2500);
                 } else {
-                    alert(data.message || 'Terjadi kesalahan. Silakan coba lagi.');
+                    alert(data.message || 'An error occurred. Please try again.');
                     btnSendReset.textContent = 'Send Reset Link';
                     btnSendReset.disabled = false;
                 }
             } catch (err) {
-                alert('Gagal terhubung ke server. Periksa koneksi internet Anda.');
+                alert('Failed to connect to server. Check your internet connection.');
                 btnSendReset.textContent = 'Send Reset Link';
                 btnSendReset.disabled = false;
             }
@@ -175,15 +175,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (alertSuccess) {
         if (params.get('password_reset') === '1') {
-            alertSuccessTitle.textContent = 'Password berhasil diperbarui!';
-            alertSuccessText.textContent = 'Silakan masuk menggunakan password baru Anda.';
+            alertSuccessTitle.textContent = 'Password successfully updated!';
+            alertSuccessText.textContent = 'Please sign in using your new password.';
             alertSuccess.classList.remove('hidden');
             window.history.replaceState({}, '', '/hr/login');
         }
 
         if (params.get('loggedout') === '1') {
-            alertSuccessTitle.textContent = 'Berhasil keluar.';
-            alertSuccessText.textContent = 'Sesi Anda telah diakhiri secara aman.';
+            alertSuccessTitle.textContent = 'Successfully logged out.';
+            alertSuccessText.textContent = 'Your session has been securely ended.';
             alertSuccess.classList.remove('hidden');
             window.history.replaceState({}, '', '/hr/login');
         }

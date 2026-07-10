@@ -57,8 +57,8 @@
                 <path d="m9 12 2 2 4-4"/>
             </svg>
             <div>
-                <p class="text-green-800 text-sm font-semibold">Akun berhasil dibuat!</p>
-                <p class="text-green-700 text-xs mt-0.5">Silakan masuk menggunakan email dan password yang baru saja kamu daftarkan.</p>
+                <p class="text-green-800 text-sm font-semibold">Account successfully created!</p>
+                <p class="text-green-700 text-xs mt-0.5">Please sign in using the email and password you just registered.</p>
             </div>
         </div>
 
@@ -117,8 +117,6 @@
                 </div>
             </div>
 
-
-
             <!-- Submit Button -->
             <button
                 type="button"
@@ -159,8 +157,8 @@
 
     if (params.get('password_reset') === '1') {
         const el = document.getElementById('alert-success');
-        el.querySelector('p.text-green-800').textContent = 'Password berhasil diperbarui!';
-        el.querySelector('p.text-green-700').textContent = 'Silakan masuk menggunakan password baru Anda.';
+        el.querySelector('p.text-green-800').textContent = 'Password successfully updated!';
+        el.querySelector('p.text-green-700').textContent = 'Please sign in using your new password.';
         el.classList.remove('hidden');
         window.history.replaceState({}, '', '/login');
     }
@@ -168,8 +166,8 @@
     if (params.get('loggedout') === '1') {
         // Tampilkan notifikasi logout berhasil
         const el = document.getElementById('alert-success');
-        el.querySelector('p.text-green-800').textContent = 'Berhasil keluar.';
-        el.querySelector('p.text-green-700').textContent = 'Silakan masuk kembali dengan akun yang diinginkan.';
+        el.querySelector('p.text-green-800').textContent = 'Successfully logged out.';
+        el.querySelector('p.text-green-700').textContent = 'Please log back in with your desired account.';
         el.classList.remove('hidden');
         window.history.replaceState({}, '', '/login');
     }

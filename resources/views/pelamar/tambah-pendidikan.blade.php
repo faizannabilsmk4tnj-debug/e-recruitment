@@ -20,7 +20,7 @@
 
 @if ($errors->any())
     <div class="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-        <p class="font-semibold">Mohon periksa kembali form pengisian Anda. Ada beberapa kesalahan data.</p>
+        <p class="font-semibold">Please check your form input. There are some data errors.</p>
     </div>
 @endif
 

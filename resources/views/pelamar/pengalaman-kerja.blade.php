@@ -1,6 +1,6 @@
 @extends('layouts.pelamar')
 
-@section('title', 'Pengalaman Kerja')
+@section('title', 'Work Experience')
 @section('nav-pengalaman', 'active')
 
 @section('content')
@@ -46,7 +46,7 @@
                             </span>
                             <span class="flex items-center gap-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                                {{ $experience->start_date->format('M Y') }} - {{ $experience->is_current ? 'Sekarang' : optional($experience->end_date)->format('M Y') }}
+                                {{ $experience->start_date->format('M Y') }} - {{ $experience->is_current ? 'Present' : optional($experience->end_date)->format('M Y') }}
                             </span>
                         </div>
                         @if ($experience->description)
@@ -59,7 +59,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
                         Edit
                     </a>
-                    <form action="{{ route('pelamar.pengalaman-kerja.destroy', $experience) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?')">
+                    <form action="{{ route('pelamar.pengalaman-kerja.destroy', $experience) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this work experience?')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="flex items-center gap-1 px-3 py-1.5 border border-gray-300 rounded-lg text-xs text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-colors">
@@ -74,7 +74,7 @@
 @else
     <div class="bg-white rounded-xl border border-gray-200 p-16 text-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-300 mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-        <p class="text-gray-500 font-medium">Belum ada pengalaman kerja.</p>
+        <p class="text-gray-500 font-medium">No work experience found.</p>
         <p class="text-gray-400 text-sm mt-1">Click "Add Experience" to add.</p>
     </div>
 @endif

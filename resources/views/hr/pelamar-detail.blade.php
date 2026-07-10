@@ -278,7 +278,7 @@
                     <button id="btn-action-interview"
                             @disabled(in_array($application->status, ['applied', 'accepted', 'rejected', 'withdrawn']))
                             class="w-full text-left bg-blue-50 hover:bg-blue-100 text-blue-800 border {{ $application->status === 'interview' ? 'border-blue-500 ring-2 ring-blue-500/20 font-bold' : 'border-blue-100' }} text-sm font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-between group disabled:opacity-55 disabled:cursor-not-allowed"
-                            title="{{ $application->status === 'applied' ? 'Harus shortlist pelamar sebelum menjadwalkan interview' : '' }}">
+                            title="{{ $application->status === 'applied' ? 'Must shortlist applicant before scheduling interview' : '' }}">
                         <span class="flex items-center gap-2.5">
                             <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                             Schedule Interview

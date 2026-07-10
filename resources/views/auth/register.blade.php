@@ -121,7 +121,7 @@
                     class="mt-1 h-4 w-4 rounded border-gray-300 text-green-700 focus:ring-green-600 accent-green-800 cursor-pointer"
                 >
                 <label for="terms" class="text-sm text-gray-600 cursor-pointer">
-                    Saya menyetujui <a href="#" class="font-semibold text-green-800 underline hover:text-green-600">Terms & Conditions</a> serta <a href="#" class="font-semibold text-green-800 underline hover:text-green-600">Privacy Policy</a> yang berlaku.
+                    I agree to the <a href="#" class="font-semibold text-green-800 underline hover:text-green-600">Terms & Conditions</a> and <a href="#" class="font-semibold text-green-800 underline hover:text-green-600">Privacy Policy</a>.
                 </label>
             </div>
 

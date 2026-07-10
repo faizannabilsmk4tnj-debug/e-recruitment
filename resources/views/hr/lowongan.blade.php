@@ -49,8 +49,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
                     </button>
                     <div class="info-tooltip hidden absolute z-30 w-56 bg-gray-900 text-white text-[10px] font-semibold rounded-lg p-2.5 shadow-lg -left-20 top-6 pointer-events-none normal-case tracking-normal leading-normal">
-                        <p class="mb-1 text-gray-300">Total seluruh lowongan kerja yang pernah dibuat (baik yang masih dirancang, sedang aktif, maupun yang sudah ditutup).</p>
-                        <p class="text-green-400 font-bold">+ : Lowongan baru yang selesai dibuat dalam jangka waktu terpilih.</p>
+                        <p class="mb-1 text-gray-300">Total of all job vacancies ever created (including drafts, active, and closed postings).</p>
+                        <p class="text-green-400 font-bold">+ : New vacancies created within the selected period.</p>
                     </div>
                 </div>
             </div>
@@ -71,8 +71,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
                     </button>
                     <div class="info-tooltip hidden absolute z-30 w-56 bg-gray-900 text-white text-[10px] font-semibold rounded-lg p-2.5 shadow-lg -left-20 top-6 pointer-events-none normal-case tracking-normal leading-normal">
-                        <p class="mb-1 text-gray-300">Jumlah pelamar yang lamarannya sedang ditinjau, masuk daftar kandidat, atau dalam tahap wawancara.</p>
-                        <p class="text-green-400 font-bold">+ : Pelamar baru yang mengirimkan lamarannya dalam jangka waktu terpilih.</p>
+                        <p class="mb-1 text-gray-300">Number of applicants whose applications are under review, shortlisted, or in the interview stage.</p>
+                        <p class="text-green-400 font-bold">+ : New applicants who submitted their applications within the selected period.</p>
                     </div>
                 </div>
             </div>
@@ -93,8 +93,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
                     </button>
                     <div class="info-tooltip hidden absolute z-30 w-56 bg-gray-900 text-white text-[10px] font-semibold rounded-lg p-2.5 shadow-lg -left-20 top-6 pointer-events-none normal-case tracking-normal leading-normal">
-                        <p class="mb-1.5 text-gray-300">Jumlah lowongan aktif yang batas waktu pendaftarannya akan berakhir dalam waktu dekat (7 hari ke depan).</p>
-                        <p class="text-red-400 font-bold">- : Jumlah lowongan yang sudah selesai Anda tutup dalam jangka waktu terpilih.</p>
+                        <p class="mb-1.5 text-gray-300">Number of active vacancies whose application deadlines will expire soon (next 7 days).</p>
+                        <p class="text-red-400 font-bold">- : Number of vacancies successfully closed within the selected period.</p>
                     </div>
                 </div>
             </div>

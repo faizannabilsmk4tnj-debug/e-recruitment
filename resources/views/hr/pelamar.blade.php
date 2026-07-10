@@ -150,7 +150,7 @@
 
         @foreach($lowonganList as $low)
         @php
-            $unreviewed = $low['counts']['terkirim'] + $low['counts']['shortlisted'];
+            $unreviewed = $low['counts']['submitted'] + $low['counts']['shortlisted'];
         @endphp
         <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden lowongan-card {{ $low['expanded'] ? 'is-expanded' : '' }}"
              data-lowongan-id="{{ $low['id'] }}"
@@ -205,8 +205,8 @@
 
                     <!-- Status breakdown pills -->
                     <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
-                        @if($low['counts']['terkirim'] > 0)
-                        <span class="text-[10px] font-bold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-1 rounded">{{ $low['counts']['terkirim'] }} Submitted</span>
+                        @if($low['counts']['submitted'] > 0)
+                        <span class="text-[10px] font-bold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-1 rounded">{{ $low['counts']['submitted'] }} Submitted</span>
                         @endif
                         @if($low['counts']['shortlisted'] > 0)
                         <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded">{{ $low['counts']['shortlisted'] }} Shortlisted</span>
@@ -230,7 +230,7 @@
                             data-vacancy-id="{{ $low['id'] }}" 
                             data-title="{{ $low['title'] }}"
                             data-status="{{ $low['status'] }}"
-                            data-undecided="{{ $low['counts']['terkirim'] + $low['counts']['shortlisted'] + $low['counts']['interview'] }}">
+                            data-undecided="{{ $low['counts']['submitted'] + $low['counts']['shortlisted'] + $low['counts']['interview'] }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
                             <path d="m9 14 2 2 4-4"/>
@@ -245,8 +245,8 @@
                 <!-- Status Tabs -->
                 <div class="flex items-center gap-1 px-6 pt-4 border-b border-gray-100 flex-wrap">
                     <button class="status-tab active-tab px-3 py-2 text-xs font-semibold text-green-800 border-b-2 border-green-700 transition-colors" data-status="all">All <span class="text-gray-400 ml-1">({{ $low['total'] }})</span></button>
-                    @if($low['counts']['terkirim'] > 0)
-                    <button class="status-tab px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors" data-status="terkirim">Submitted <span class="text-gray-400 ml-1">({{ $low['counts']['terkirim'] }})</span></button>
+                    @if($low['counts']['submitted'] > 0)
+                    <button class="status-tab px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors" data-status="submitted">Submitted <span class="text-gray-400 ml-1">({{ $low['counts']['submitted'] }})</span></button>
                     @endif
                     @if($low['counts']['shortlisted'] > 0)
                     <button class="status-tab px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800 border-b-2 border-transparent transition-colors" data-status="shortlisted">Shortlisted <span class="text-gray-400 ml-1">({{ $low['counts']['shortlisted'] }})</span></button>
@@ -328,7 +328,7 @@
                                 <div class="relative inline-block">
                                     <div class="{{ $p['status'] === 'withdrawn' ? 'filter blur-[1.5px]' : '' }}">
                                         @switch($p['status'])
-                                            @case('terkirim')
+                                            @case('submitted')
                                                 <span class="text-[10px] font-bold text-gray-600 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full uppercase">Submitted</span>
                                                 @break
                                             @case('shortlisted')

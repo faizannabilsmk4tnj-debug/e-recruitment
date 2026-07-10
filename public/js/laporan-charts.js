@@ -15,24 +15,24 @@ const monthlyData = dbData.monthlyData || {
 };
 
 const funnelData = dbData.funnelData || {
-  sourced: { count: 1284, pct: '100%', desc: 'Total pelamar yang masuk dari semua sumber rekrutmen.' },
-  screened: { count: 540, pct: '42%', desc: 'Pelamar yang lolos seleksi administrasi awal (CV screening).' },
-  interviewed: { count: 124, pct: '9.6%', desc: 'Pelamar yang dipanggil dan mengikuti sesi wawancara.' },
-  offermade: { count: 52, pct: '4%', desc: 'Pelamar yang menerima surat penawaran kerja (offer letter).' },
-  hired: { count: 49, pct: '3.8%', desc: 'Pelamar yang resmi bergabung sebagai karyawan.' },
+  sourced: { count: 1284, pct: '100%', desc: 'Total applicants entered from all recruitment sources.' },
+  screened: { count: 540, pct: '42%', desc: 'Applicants who passed the initial document screening (CV screening).' },
+  interviewed: { count: 124, pct: '9.6%', desc: 'Applicants invited to and completed the interview session.' },
+  offermade: { count: 52, pct: '4%', desc: 'Applicants who received a job offer letter.' },
+  hired: { count: 49, pct: '3.8%', desc: 'Applicants who officially joined as employees.' },
 };
 
 const sourceData = dbData.sourceData || {
-  linkedin: { label: 'LinkedIn', count: 706, pct: '55%', color: '#15803d', detail: 'Mayoritas pelamar senior dan profesional berasal dari LinkedIn. Konversi rata-rata 8%.' },
-  jobportal: { label: 'Job Portal', count: 321, pct: '25%', color: '#166534', detail: 'Dari platform Jobstreet, Indeed, dan Kalibrr. Konversi rata-rata 5%.' },
-  website: { label: 'Website', count: 257, pct: '20%', color: '#bfe3d0', detail: 'Pelamar langsung dari portal karir ecogreen.co.id. Konversi rata-rata 6%.' },
+  linkedin: { label: 'LinkedIn', count: 706, pct: '55%', color: '#15803d', detail: 'Majority of senior and professional applicants come from LinkedIn. Average conversion 8%.' },
+  jobportal: { label: 'Job Portal', count: 321, pct: '25%', color: '#166534', detail: 'From Jobstreet, Indeed, and Kalibrr platforms. Average conversion 5%.' },
+  website: { label: 'Website', count: 257, pct: '20%', color: '#bfe3d0', detail: 'Direct applicants from the ecogreen.co.id career portal. Average conversion 6%.' },
 };
 
 const deptData = dbData.deptData || {
-  manufacturing: { name: 'Manufacturing', roles: 12, days: 22, status: 'OPTIMAL', color: '#15803d', bg: '#d1f4e0', detail: 'Departemen dengan performa rekrutmen terbaik. Proses seleksi efisien dan tepat waktu.' },
-  engineering: { name: 'Engineering', roles: 8, days: 45, status: 'CRITICAL', color: '#9b1c1c', bg: '#fce8e8', detail: 'Kekurangan kandidat yang memenuhi kualifikasi teknis. Perlu strategi sourcing yang lebih aktif.' },
-  supplychain: { name: 'Supply Chain', roles: 15, days: 14, status: 'HIGH', color: '#15803d', bg: '#d1f4e0', detail: 'Waktu rekrutmen sangat cepat. Proses onboarding perlu dioptimalkan agar kualitas terjaga.' },
-  rdlabor: { name: 'R&D Labor', roles: 4, days: 31, status: 'AVERAGE', color: '#374151', bg: '#f3f4f6', detail: 'Performa standar. Rekrutmen spesialis R&D memerlukan evaluasi kompetensi yang lebih mendalam.' },
+  manufacturing: { name: 'Manufacturing', roles: 12, days: 22, status: 'OPTIMAL', color: '#15803d', bg: '#d1f4e0', detail: 'Department with the best recruitment performance. Selection process is efficient and timely.' },
+  engineering: { name: 'Engineering', roles: 8, days: 45, status: 'CRITICAL', color: '#9b1c1c', bg: '#fce8e8', detail: 'Shortage of candidates meeting technical qualifications. Active sourcing strategy needed.' },
+  supplychain: { name: 'Supply Chain', roles: 15, days: 14, status: 'HIGH', color: '#15803d', bg: '#d1f4e0', detail: 'Very fast recruitment time. Onboarding process should be optimized to maintain quality.' },
+  rdlabor: { name: 'R&D Labor', roles: 4, days: 31, status: 'AVERAGE', color: '#374151', bg: '#f3f4f6', detail: 'Standard performance. R&D specialist recruitment requires a deeper evaluation of competencies.' },
 };
 
 // ============ MODAL ============
@@ -99,19 +99,19 @@ function initBars() {
       openModal(
         'linear-gradient(135deg, #15803d, #166534)',
         'Monthly Breakdown',
-        `${m} 2026 — ${d.total} Pelamar`,
-        `<p class="text-gray-500 text-sm mb-6">Detail lengkap aktivitas rekrutmen pada bulan ${m} 2026.</p>
+        `${m} 2026 — ${d.total} Applicants`,
+        `<p class="text-gray-500 text-sm mb-6">Complete detail of recruitment activity in the month of ${m} 2026.</p>
         <div class="grid grid-cols-2 gap-3 mb-6">
-          ${statCard('Total Masuk', d.total.toLocaleString())}
-          ${statCard('External', d.external.toLocaleString(), d.total > 0 ? `${Math.round(d.external/d.total*100)}% dari total` : '0%')}
-          ${statCard('Referral', d.referral.toLocaleString(), d.total > 0 ? `${Math.round(d.referral/d.total*100)}% dari total` : '0%')}
-          ${statCard('Di-Screening', d.screened.toLocaleString(), d.total > 0 ? `${Math.round(d.screened/d.total*100)}% lolos` : '0%')}
-          ${statCard('Diwawancara', d.interviewed.toLocaleString(), d.total > 0 ? `${Math.round(d.interviewed/d.total*100)}% dari masuk` : '0%')}
-          ${statCard('Diterima', d.hired.toLocaleString(), `Konversi ${convRate}%`)}
+          ${statCard('Total Sourced', d.total.toLocaleString())}
+          ${statCard('External', d.external.toLocaleString(), d.total > 0 ? `${Math.round(d.external/d.total*100)}% of total` : '0%')}
+          ${statCard('Referral', d.referral.toLocaleString(), d.total > 0 ? `${Math.round(d.referral/d.total*100)}% of total` : '0%')}
+          ${statCard('Screened', d.screened.toLocaleString(), d.total > 0 ? `${Math.round(d.screened/d.total*100)}% passed` : '0%')}
+          ${statCard('Interviewed', d.interviewed.toLocaleString(), d.total > 0 ? `${Math.round(d.interviewed/d.total*100)}% of total` : '0%')}
+          ${statCard('Hired', d.hired.toLocaleString(), `Conversion ${convRate}%`)}
         </div>
         <div class="bg-green-50 border border-green-100 rounded-xl p-4">
-          <div class="text-xs font-bold text-green-800 uppercase tracking-wider mb-1">Catatan Bulan Ini</div>
-          <p class="text-sm text-green-900">Conversion rate ${convRate}% — ${d.hired >= 10 ? 'performa rekrutmen di atas rata-rata periode ini.' : 'rekrutmen berjalan stabil sesuai target.'}</p>
+          <div class="text-xs font-bold text-green-800 uppercase tracking-wider mb-1">Notes for this Month</div>
+          <p class="text-sm text-green-900">Conversion rate ${convRate}% — ${d.hired >= 10 ? 'recruitment performance is above average for this period.' : 'recruitment is running steadily according to target.'}</p>
         </div>`
       );
     });
@@ -128,19 +128,19 @@ function initFunnel() {
       const key = this.dataset.funnel;
       const d = funnelData[key];
       const label = this.querySelector('[data-funnel-label]')?.textContent || key;
-      const dropoff = key !== 'sourced' ? ` (${d.pct} dari total sourced)` : '';
+      const dropoff = key !== 'sourced' ? ` (${d.pct} of total sourced)` : '';
       openModal(
         'linear-gradient(135deg, #15803d, #166534)',
         'Hiring Funnel Detail',
         label,
         `<p class="text-gray-500 text-sm mb-6">${d.desc}</p>
         <div class="grid grid-cols-2 gap-3 mb-6">
-          ${statCard('Jumlah', d.count.toLocaleString())}
-          ${statCard('Persentase', d.pct, 'dari total sourced')}
+          ${statCard('Count', d.count.toLocaleString())}
+          ${statCard('Percentage', d.pct, 'of total sourced')}
         </div>
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-          <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Posisi di Funnel</div>
-          <div class="text-sm text-gray-700">${d.count.toLocaleString()} kandidat${dropoff} berhasil mencapai tahap <strong>${label}</strong>.</div>
+          <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Funnel Stage</div>
+          <div class="text-sm text-gray-700">${d.count.toLocaleString()} candidates${dropoff} successfully reached the <strong>${label}</strong> stage.</div>
         </div>`
       );
     });
@@ -162,12 +162,12 @@ function initSources() {
         d.label,
         `<p class="text-gray-500 text-sm mb-6">${d.detail}</p>
         <div class="grid grid-cols-2 gap-3 mb-6">
-          ${statCard('Total Kandidat', d.count.toLocaleString())}
-          ${statCard('Kontribusi', d.pct, 'dari total 1,284')}
+          ${statCard('Total Candidates', d.count.toLocaleString())}
+          ${statCard('Contribution', d.pct, 'of total 1,284')}
         </div>
         <div class="bg-gray-50 border border-gray-100 rounded-xl p-4">
-          <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Rekomendasi</div>
-          <p class="text-sm text-gray-700">${d.pct === '55%' ? 'Terus tingkatkan anggaran iklan LinkedIn untuk posisi senior.' : d.pct === '25%' ? 'Eksplorasi portal kerja lokal untuk memperluas jangkauan.' : 'Optimalkan SEO halaman karir dan CTA di website utama.'}</p>
+          <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Recommendations</div>
+          <p class="text-sm text-gray-700">${d.pct === '55%' ? 'Continue to increase LinkedIn advertising budget for senior positions.' : d.pct === '25%' ? 'Explore local job portals to expand reach.' : 'Optimize career page SEO and CTA on the main website.'}</p>
         </div>`
       );
     });
@@ -190,12 +190,12 @@ function initDepts() {
         `<p class="text-gray-500 text-sm mb-6">${d.detail}</p>
         <div class="grid grid-cols-3 gap-3 mb-6">
           ${statCard('Open Roles', d.roles)}
-          ${statCard('Avg. Days', d.days, 'hari per rekrutmen')}
+          ${statCard('Avg. Days', d.days, 'days per recruitment')}
           ${statCard('Status', `<span style="color:${d.color}">${d.status}</span>`)}
         </div>
         <div style="background:${d.bg};border:1px solid ${d.color}22" class="rounded-xl p-4">
-          <div class="text-xs font-bold uppercase tracking-wider mb-2" style="color:${d.color}">Saran Tindakan</div>
-          <p class="text-sm" style="color:${d.color}">${d.status === 'CRITICAL' ? 'Prioritaskan sourcing aktif, posting di platform spesialis industri, dan pertimbangkan referral bonus program.' : d.status === 'OPTIMAL' ? 'Pertahankan proses rekrutmen saat ini. Jadikan standar untuk departemen lain.' : d.status === 'HIGH' ? 'Proses rekrutmen berjalan baik. Perhatikan kualitas kandidat akhir agar tidak terburu-buru.' : 'Monitor perkembangan setiap bulan dan evaluasi kualifikasi posisi yang dibuka.'}</p>
+          <div class="text-xs font-bold uppercase tracking-wider mb-2" style="color:${d.color}">Action Recommendation</div>
+          <p class="text-sm" style="color:${d.color}">${d.status === 'CRITICAL' ? 'Prioritize active sourcing, post on industry-specific platforms, and consider referral bonus programs.' : d.status === 'OPTIMAL' ? 'Maintain current recruitment process. Make it a standard for other departments.' : d.status === 'HIGH' ? 'Recruitment process is going well. Pay attention to final candidate quality so as not to rush.' : 'Monitor monthly progress and evaluate the qualifications of opened positions.'}</p>
         </div>`
       );
     });
@@ -210,7 +210,7 @@ function initExport() {
   if (!btn) return;
 
   btn.addEventListener('click', async function() {
-    if (!window.jspdf) { alert('Library PDF sedang dimuat, coba lagi sebentar.'); return; }
+    if (!window.jspdf) { alert('PDF library is loading, please try again in a moment.'); return; }
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -220,7 +220,7 @@ function initExport() {
     const gray = [107, 114, 128];
     const darkGray = [55, 65, 81];
     const pageW = doc.internal.pageSize.getWidth();
-    const now = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    const now = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
 
     // ---- HEADER BAND ----
     doc.setFillColor(...green);
@@ -234,8 +234,8 @@ function initExport() {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(180, 220, 195);
-    doc.text(`Reporting Period: January 1, 2026 – June 30, 2026  |  Diekspor: ${now}  |  PT Ecogreen Oleochemicals`, 14, 22);
-    doc.text('Dokumen Rahasia — Hanya untuk Internal HR', 14, 28);
+    doc.text(`Reporting Period: January 1, 2026 – June 30, 2026  |  Exported: ${now}  |  PT Ecogreen Oleochemicals`, 14, 22);
+    doc.text('Confidential Document — HR Internal Only', 14, 28);
 
     let y = 40;
 
@@ -250,7 +250,7 @@ function initExport() {
     y += 8;
 
     const kpis = [
-      { label: 'Total Applicants', value: sourcedCount.toLocaleString(), note: `${applicantMoM >= 0 ? '↑ +' : '↓ '}${applicantMoM}% vs bulan lalu` },
+      { label: 'Total Applicants', value: sourcedCount.toLocaleString(), note: `${applicantMoM >= 0 ? '↑ +' : '↓ '}${applicantMoM}% vs last month` },
       { label: 'Offer Acceptance', value: `${offerAcceptanceRate.toFixed(1)}%`, note: '— Stable performance' },
       { label: 'Qualified Ratio', value: `${qualifiedRatio}%`, note: '↑ Profile quality ratio' },
     ];
@@ -305,7 +305,7 @@ function initExport() {
 
     doc.autoTable({
       startY: y,
-      head: [['Bulan', 'Total', 'External', 'Referral', 'Screened', 'Interview', 'Hired', 'Konversi']],
+      head: [['Month', 'Total', 'External', 'Referral', 'Screened', 'Interview', 'Hired', 'Conversion']],
       body: monthRows,
       styles: { fontSize: 8, cellPadding: 3, textColor: darkGray },
       headStyles: { fillColor: green, textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 7.5 },
@@ -375,7 +375,7 @@ function initExport() {
 
     doc.autoTable({
       startY: y,
-      head: [['Sumber', 'Kandidat', '%']],
+      head: [['Source', 'Candidates', '%']],
       body: [
         [sourceData.linkedin.label, sourceData.linkedin.count.toString(), sourceData.linkedin.pct],
         [sourceData.jobportal.label, sourceData.jobportal.count.toString(), sourceData.jobportal.pct],
@@ -391,7 +391,7 @@ function initExport() {
     const deptStatusColors = { OPTIMAL: [15,60,32], CRITICAL: [155,28,28], HIGH: [15,60,32], AVERAGE: [107,114,128] };
     doc.autoTable({
       startY: y,
-      head: [['Departemen', 'Roles', 'Avg. Days', 'Status']],
+      head: [['Department', 'Roles', 'Avg. Days', 'Status']],
       body: Object.values(deptData).map(d => [
         d.name, d.roles.toString(), d.days.toString(), d.status
       ]),
@@ -418,8 +418,8 @@ function initExport() {
       doc.setTextColor(180, 220, 195);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7);
-      doc.text('PT Ecogreen Oleochemicals — Sistem Rekrutmen Internal | Dokumen Rahasia', 14, fY + 3);
-      doc.text(`Halaman ${i} dari ${totalPages}`, pageW - 14, fY + 3, { align: 'right' });
+      doc.text('PT Ecogreen Oleochemicals — Internal Recruitment System | Confidential Document', 14, fY + 3);
+      doc.text(`Page ${i} of ${totalPages}`, pageW - 14, fY + 3, { align: 'right' });
     }
 
     doc.save(`Recruitment_Analytics_Report_${now.replace(/\s/g,'_')}.pdf`);

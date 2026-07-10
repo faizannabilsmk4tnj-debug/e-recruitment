@@ -1,6 +1,6 @@
 @extends('layouts.pelamar')
 
-@section('title', 'Pengalaman Organisasi')
+@section('title', 'Organization Experience')
 @section('nav-organisasi', 'active')
 
 @section('content')

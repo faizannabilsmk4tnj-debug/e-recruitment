@@ -91,41 +91,33 @@ class LaporanController extends Controller
             'sourced' => [
                 'count' => $sourcedCount,
                 'pct' => '100%',
-                'desc' => 'Total pelamar yang masuk dari semua sumber rekrutmen.'
+                'desc' => 'Total applicants received from all recruitment sources.'
             ],
             'screened' => [
                 'count' => $screenedCount,
                 'pct' => $sourcedCount > 0 ? round(($screenedCount / $sourcedCount) * 100, 1) . '%' : '0%',
-                'desc' => 'Pelamar yang lolos seleksi administrasi awal (CV screening).'
+                'desc' => 'Applicants who passed the initial administrative selection (CV screening).'
             ],
             'interviewed' => [
                 'count' => $interviewedCount,
                 'pct' => $sourcedCount > 0 ? round(($interviewedCount / $sourcedCount) * 100, 1) . '%' : '0%',
-                'desc' => 'Pelamar yang dipanggil dan mengikuti sesi wawancara.'
+                'desc' => 'Applicants invited to and participating in interview sessions.'
             ],
             'offermade' => [
                 'count' => $offersMade,
                 'pct' => $sourcedCount > 0 ? round(($offersMade / $sourcedCount) * 100, 1) . '%' : '0%',
-                'desc' => 'Pelamar yang menerima surat penawaran kerja (offer letter).'
+                'desc' => 'Applicants who received a job offer letter.'
             ],
             'hired' => [
                 'count' => $hiredCount,
                 'pct' => $sourcedCount > 0 ? round(($hiredCount / $sourcedCount) * 100, 1) . '%' : '0%',
-                'desc' => 'Pelamar yang resmi bergabung sebagai karyawan.'
+                'desc' => 'Applicants who officially joined as employees.'
             ]
         ];
 
         // 7. Applicant Sources (Determined by source column in applications, falling back to profile urls for old data)
         $linkedinCount = DB::table('applications')
-            ->leftJoin('user_profiles', 'applications.user_id', '=', 'user_profiles.user_id')
-            ->where(function ($q) {
-                $q->where('applications.source', 'linkedin')
-                  ->orWhere(function ($sub) {
-                      $sub->whereNull('applications.source')
-                          ->whereNotNull('user_profiles.linkedin_url')
-                          ->where('user_profiles.linkedin_url', '!=', '');
-                  });
-            })
+            ->where('applications.source', 'linkedin')
             ->count();
 
         $jobportalCount = DB::table('applications')
@@ -134,9 +126,6 @@ class LaporanController extends Controller
                 $q->whereIn('applications.source', ['jobstreet', 'jobportal', 'indeed', 'kalibrr', 'facebook', 'instagram'])
                   ->orWhere(function ($sub) {
                       $sub->whereNull('applications.source')
-                          ->where(function ($qq) {
-                              $qq->whereNull('user_profiles.linkedin_url')->orWhere('user_profiles.linkedin_url', '');
-                          })
                           ->whereNotNull('user_profiles.portfolio_url')
                           ->where('user_profiles.portfolio_url', '!=', '');
                   });
@@ -156,21 +145,21 @@ class LaporanController extends Controller
                 'count' => $linkedinCount,
                 'pct' => $sourcedCount > 0 ? round(($linkedinCount / $sourcedCount) * 100) . '%' : '0%',
                 'color' => '#15803d',
-                'detail' => 'LinkedIn Clicks: ' . ($linkedinClicks ?: round($linkedinCount * 2.3)) . ' views. Mayoritas pelamar senior dan profesional berasal dari LinkedIn.'
+                'detail' => 'LinkedIn Clicks: ' . ($linkedinClicks ?: round($linkedinCount * 2.3)) . ' views. Most senior and professional applicants come from LinkedIn.'
             ],
             'jobportal' => [
                 'label' => 'Job Portal / Social Media',
                 'count' => $jobportalCount,
                 'pct' => $sourcedCount > 0 ? round(($jobportalCount / $sourcedCount) * 100) . '%' : '0%',
                 'color' => '#166534',
-                'detail' => 'Social/Portal Clicks: ' . ($jobportalClicks ?: round($jobportalCount * 1.8)) . ' views. Dari platform Jobstreet, Indeed, Kalibrr, Facebook, dan Instagram.'
+                'detail' => 'Social/Portal Clicks: ' . ($jobportalClicks ?: round($jobportalCount * 1.8)) . ' views. From Jobstreet, Indeed, Kalibrr, Facebook, and Instagram platforms.'
             ],
             'website' => [
                 'label' => 'Website / Direct',
                 'count' => $websiteCount,
                 'pct' => $sourcedCount > 0 ? round(($websiteCount / $sourcedCount) * 100) . '%' : '0%',
                 'color' => '#bfe3d0',
-                'detail' => 'Website/Direct Clicks: ' . ($websiteClicks ?: round($websiteCount * 1.2)) . ' views. Pelamar langsung dari portal karir ecogreen.co.id.'
+                'detail' => 'Website/Direct Clicks: ' . ($websiteClicks ?: round($websiteCount * 1.2)) . ' views. Direct applicants from the ecogreen.co.id career portal.'
             ]
         ];
 
@@ -218,7 +207,7 @@ class LaporanController extends Controller
                 'status' => $status,
                 'color' => $color,
                 'bg' => $bg,
-                'detail' => "Aktivitas rekrutmen untuk departemen {$cat->name}. Rata-rata waktu proses seleksi adalah {$days} hari."
+                'detail' => "Recruitment activity for the {$cat->name} department. The average selection process time is {$days} days."
             ];
         }
 
@@ -232,7 +221,7 @@ class LaporanController extends Controller
                     'status' => 'OPTIMAL',
                     'color' => '#15803d',
                     'bg' => '#d1f4e0',
-                    'detail' => 'Departemen Manufacturing belum membuka lowongan aktif.'
+                    'detail' => 'The Manufacturing department has not yet opened any active job openings.'
                 ]
             ];
         }

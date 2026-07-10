@@ -180,11 +180,11 @@ class InterviewController extends Controller
 
             // Overlap check: (StartA < EndB) and (EndA > StartB)
             if ($newStart->lt($end) && $newEnd->gt($start)) {
-                $candidateName = $interview->application->user->name ?? 'Kandidat';
-                $jobTitle = $interview->application->job->title ?? 'Posisi';
+                $candidateName = $interview->application->user->name ?? 'Candidate';
+                $jobTitle = $interview->application->job->title ?? 'Position';
                 return [
                     'has_overlap' => true,
-                    'message' => "Jadwal bentrok dengan interview {$candidateName} ({$jobTitle}) pada pukul " . $start->format('H:i') . " - " . $end->format('H:i') . "."
+                    'message' => "Schedule conflicts with interview for {$candidateName} ({$jobTitle}) at " . $start->format('H:i') . " - " . $end->format('H:i') . "."
                 ];
             }
         }
@@ -325,11 +325,11 @@ class InterviewController extends Controller
 
             // Update notes with clean info about the approved reschedule
             $typeLabel = $request->interview_type === 'online' ? 'Online Meeting' : 'Offline (face-to-face)';
-            $newSchedule = Carbon::parse($request->scheduled_at)->translatedFormat('d M Y, H:i');
-            $interview->notes = "Jadwal diperbarui setelah permintaan reschedule disetujui.\n"
-                . "Jadwal baru: {$newSchedule} WIB ({$request->duration_minutes} menit)\n"
-                . "Tipe: {$typeLabel}"
-                . ($request->location_or_link ? "\nLokasi/Link: {$request->location_or_link}" : '');
+            $newSchedule = Carbon::parse($request->scheduled_at)->format('d M Y, H:i');
+            $interview->notes = "Schedule updated after reschedule request was approved.\n"
+                . "New schedule: {$newSchedule} WIB ({$request->duration_minutes} minutes)\n"
+                . "Type: {$typeLabel}"
+                . ($request->location_or_link ? "\nLocation/Link: {$request->location_or_link}" : '');
 
             $interview->save();
 
@@ -338,8 +338,8 @@ class InterviewController extends Controller
                 NotificationService::create(
                     $interview->application->user_id,
                     'interview_scheduled',
-                    'Permintaan Reschedule Disetujui',
-                    'Permintaan reschedule Anda untuk posisi ' . ($interview->application->job->title ?? 'Pekerjaan') . ' telah disetujui. Jadwal baru: ' . Carbon::parse($request->scheduled_at)->translatedFormat('d M Y, H:i') . '.',
+                    'Reschedule Request Approved',
+                    'Your reschedule request for the position of ' . ($interview->application->job->title ?? 'Job') . ' has been approved. New schedule: ' . Carbon::parse($request->scheduled_at)->format('d M Y, H:i') . '.',
                     [
                         'application_id' => $interview->application_id,
                         'interview_id'   => $interview->id,
@@ -353,12 +353,12 @@ class InterviewController extends Controller
                     'changed_by'     => auth()->id() ?? 1,
                     'old_status'     => $interview->application->status,
                     'new_status'     => $interview->application->status,
-                    'reason'         => 'HR menyetujui permintaan reschedule. Jadwal baru: ' . Carbon::parse($request->scheduled_at)->translatedFormat('d M Y, H:i'),
+                    'reason'         => 'HR approved reschedule request. New schedule: ' . Carbon::parse($request->scheduled_at)->format('d M Y, H:i'),
                     'created_at'     => now(),
                 ]);
             }
 
-            return response()->json(['success' => true, 'message' => 'Permintaan reschedule disetujui. Jadwal baru telah dikonfirmasi.']);
+            return response()->json(['success' => true, 'message' => 'Reschedule request approved. The new schedule has been confirmed.']);
 
         } else {
             // Decline: mark request as declined, revert status to scheduled (original schedule still stands)
@@ -369,13 +369,13 @@ class InterviewController extends Controller
             // Notify applicant: request declined
             if ($interview->application) {
                 $declineMsg = $request->decline_reason
-                    ? 'Permintaan reschedule Anda ditolak oleh HR. Alasan: ' . $request->decline_reason . '. Silakan hadir sesuai jadwal semula.'
-                    : 'Permintaan reschedule Anda ditolak oleh HR. Silakan hadir sesuai jadwal semula.';
+                    ? 'Your reschedule request has been declined by HR. Reason: ' . $request->decline_reason . '. Please attend according to the original schedule.'
+                    : 'Your reschedule request has been declined by HR. Please attend according to the original schedule.';
 
                 NotificationService::create(
                     $interview->application->user_id,
                     'interview_scheduled',
-                    'Permintaan Reschedule Ditolak',
+                    'Reschedule Request Declined',
                     $declineMsg,
                     [
                         'application_id' => $interview->application_id,
@@ -388,12 +388,12 @@ class InterviewController extends Controller
                     'changed_by'     => auth()->id() ?? 1,
                     'old_status'     => $interview->application->status,
                     'new_status'     => $interview->application->status,
-                    'reason'         => 'HR menolak permintaan reschedule. ' . ($request->decline_reason ? 'Alasan: ' . $request->decline_reason : ''),
+                    'reason'         => 'HR declined reschedule request. ' . ($request->decline_reason ? 'Reason: ' . $request->decline_reason : ''),
                     'created_at'     => now(),
                 ]);
             }
 
-            return response()->json(['success' => true, 'message' => 'Permintaan reschedule ditolak. Pelamar akan diberitahu.']);
+            return response()->json(['success' => true, 'message' => 'Reschedule request declined. The applicant will be notified.']);
         }
     }
 

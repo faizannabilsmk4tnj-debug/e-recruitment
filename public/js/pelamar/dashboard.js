@@ -10,10 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // ===== GREETING BY TIME =====
     function getGreeting() {
         const hour = new Date().getHours();
-        if (hour >= 5 && hour < 12)  return { salam: 'Selamat Pagi',   sub: 'Semoga harimu menyenangkan dan produktif! 🌤️' };
-        if (hour >= 12 && hour < 15) return { salam: 'Selamat Siang',  sub: 'Jangan lupa istirahat sejenak di tengah aktivitasmu. ☀️' };
-        if (hour >= 15 && hour < 18) return { salam: 'Selamat Sore',   sub: 'Semangat! Masih ada waktu untuk produktif hari ini. 🌇' };
-        return                               { salam: 'Selamat Malam',  sub: 'Selamat beristirahat dan persiapkan hari esok. 🌙' };
+        if (hour >= 5 && hour < 12)  return { salam: 'Good Morning',   sub: 'Have a wonderful and productive day! 🌤️' };
+        if (hour >= 12 && hour < 15) return { salam: 'Good Afternoon',  sub: 'Don\'t forget to take a short break amidst your activities. ☀️' };
+        if (hour >= 15 && hour < 18) return { salam: 'Good Evening',   sub: 'Keep it up! There is still time to be productive today. 🌇' };
+        return                               { salam: 'Good Night',  sub: 'Rest well and prepare for tomorrow. 🌙' };
     }
 
     const greetingText = document.getElementById('greeting-text');

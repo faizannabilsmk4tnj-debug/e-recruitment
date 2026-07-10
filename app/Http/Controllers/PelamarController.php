@@ -127,7 +127,7 @@ class PelamarController extends Controller
         if ($now->lt($scheduledAt->copy()->subMinutes(60))) {
             return response()->json([
                 'success' => false,
-                'message' => 'Absen belum dibuka. Anda baru bisa melakukan absen paling cepat 60 menit sebelum jadwal wawancara dimulai (' . $scheduledAt->format('H:i') . ' WIB).'
+                'message' => 'Attendance check-in is not open yet. You can only check-in at most 60 minutes before the scheduled interview time (' . $scheduledAt->format('H:i') . ' WIB).'
             ], 422);
         }
 
@@ -135,7 +135,7 @@ class PelamarController extends Controller
         if ($now->gt($scheduledAt->copy()->addMinutes(30))) {
             return response()->json([
                 'success' => false,
-                'message' => 'Absen sudah ditutup. Batas maksimal konfirmasi kehadiran adalah 30 menit setelah jadwal wawancara dimulai (' . $scheduledAt->copy()->addMinutes(30)->format('H:i') . ' WIB).'
+                'message' => 'Attendance check-in is closed. The maximum limit for confirmation is 30 minutes after the scheduled interview time (' . $scheduledAt->copy()->addMinutes(30)->format('H:i') . ' WIB).'
             ], 422);
         }
 
@@ -145,7 +145,7 @@ class PelamarController extends Controller
             if (!$request->hasFile('attendance_photo')) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Foto bukti kehadiran (selfie di lokasi) wajib diunggah untuk wawancara offline.'
+                    'message' => 'Attendance proof photo (selfie at the location) is required for offline interviews.'
                 ], 422);
             }
             
@@ -165,7 +165,7 @@ class PelamarController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Kehadiran Anda berhasil dikonfirmasi. Terima kasih!',
+            'message' => 'Your attendance has been successfully confirmed. Thank you!',
             'photo_url' => $photoUrl
         ]);
     }
@@ -204,18 +204,18 @@ class PelamarController extends Controller
             'changed_by'     => $user->id,
             'old_status'     => 'interview',
             'new_status'     => 'interview',
-            'reason'         => 'Pelamar mengajukan reschedule interview. Alasan: ' . $request->reschedule_reason . ' | Usulan: ' . \Carbon\Carbon::parse($request->proposed_date)->translatedFormat('d M Y, H:i'),
+            'reason'         => 'Applicant requested interview reschedule. Reason: ' . $request->reschedule_reason . ' | Proposed: ' . \Carbon\Carbon::parse($request->proposed_date)->format('d M Y, H:i'),
             'created_at'     => now(),
         ]);
 
         // Notify HR
         try {
-            $jobTitle = $interview->application->job->title ?? 'Pekerjaan';
+            $jobTitle = $interview->application->job->title ?? 'Job';
             \App\Services\NotificationService::create(
                 $interview->scheduled_by,
                 'interview_reschedule_request',
-                'Permintaan Reschedule Interview',
-                $user->name . ' mengajukan reschedule untuk posisi ' . $jobTitle . '. Tinjau dan putuskan di halaman Interviews.',
+                'Interview Reschedule Request',
+                $user->name . ' requested a reschedule for the ' . $jobTitle . ' position. Review and decide on the Interviews page.',
                 [
                     'interview_id'   => $interview->id,
                     'application_id' => $interview->application_id,
@@ -231,7 +231,7 @@ class PelamarController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Permintaan reschedule berhasil diajukan ke tim HR.'
+            'message' => 'Reschedule request successfully submitted to the HR team.'
         ]);
     }
 
@@ -255,9 +255,9 @@ class PelamarController extends Controller
         // 1. Cancel the interview session
         $interview->status = 'cancelled';
         
-        $declineNote = "[Wawancara Ditolak oleh Pelamar]\nAlasan: " . $request->decline_reason;
+        $declineNote = "[Interview Declined by Applicant]\nReason: " . $request->decline_reason;
         $interview->notes = $interview->notes 
-            ? $declineNote . "\n\n-------------------\nCatatan HR Sebelumnya:\n" . $interview->notes
+            ? $declineNote . "\n\n-------------------\nPrevious HR Notes:\n" . $interview->notes
             : $declineNote;
             
         $interview->save();
@@ -274,7 +274,7 @@ class PelamarController extends Controller
             'changed_by' => $user->id,
             'old_status' => $oldStatus,
             'new_status' => 'rejected',
-            'reason' => 'Pelamar menolak jadwal interview (Otomatis Tereliminasi). Alasan: ' . $request->decline_reason,
+            'reason' => 'Applicant declined interview schedule (Automatically Disqualified). Reason: ' . $request->decline_reason,
             'created_at' => now(),
         ]);
 
@@ -283,8 +283,8 @@ class PelamarController extends Controller
             \App\Services\NotificationService::create(
                 $interview->scheduled_by,
                 'interview_declined',
-                'Interview Ditolak Pelamar (Tereliminasi)',
-                $user->name . ' menolak undangan interview untuk posisi ' . ($application->jobPosting->title ?? 'Pekerjaan') . '. Pelamar otomatis dinyatakan gugur/tereliminasi.',
+                'Interview Declined by Applicant (Disqualified)',
+                $user->name . ' declined the interview invitation for the ' . ($application->jobPosting->title ?? 'position') . ' position. Applicant is automatically disqualified.',
                 [
                     'interview_id' => $interview->id,
                     'application_id' => $application->id,
@@ -298,7 +298,7 @@ class PelamarController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Undangan wawancara telah Anda tolak. Lamaran pekerjaan Anda otomatis dinyatakan gugur (tereliminasi).'
+            'message' => 'You have declined the interview invitation. Your job application is automatically disqualified.'
         ]);
     }
 
@@ -371,14 +371,14 @@ class PelamarController extends Controller
         if ($saved) {
             $saved->delete();
             $isSaved = false;
-            $message = 'Lowongan berhasil dihapus dari bookmark.';
+            $message = 'Job posting removed from bookmarks.';
         } else {
             SavedJob::create([
                 'user_id' => $user->id,
                 'job_id' => $id
             ]);
             $isSaved = true;
-            $message = 'Lowongan berhasil disimpan ke bookmark.';
+            $message = 'Job posting saved to bookmarks.';
         }
 
         return response()->json([

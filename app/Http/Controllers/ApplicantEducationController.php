@@ -44,7 +44,7 @@ class ApplicantEducationController extends Controller
 
         Education::create($data);
 
-        return redirect('/pelamar/pendidikan')->with('success', 'Riwayat pendidikan berhasil ditambahkan.');
+        return redirect('/pelamar/pendidikan')->with('success', 'Education history added successfully.');
     }
 
     public function edit(Request $request, Education $education): View
@@ -74,7 +74,7 @@ class ApplicantEducationController extends Controller
 
         $education->update($data);
 
-        return redirect('/pelamar/pendidikan')->with('success', 'Riwayat pendidikan berhasil diperbarui.');
+        return redirect('/pelamar/pendidikan')->with('success', 'Education history updated successfully.');
     }
 
     public function destroy(Request $request, Education $education): RedirectResponse
@@ -85,7 +85,7 @@ class ApplicantEducationController extends Controller
         $this->deleteStoredFile($education->skhu_file);
         $education->delete();
 
-        return back()->with('success', 'Riwayat pendidikan berhasil dihapus.');
+        return back()->with('success', 'Education history deleted successfully.');
     }
 
     private function validatedData(Request $request): array

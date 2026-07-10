@@ -79,7 +79,7 @@
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Salary Range</p>
                             <p class="text-sm font-bold text-gray-900 mt-1">
                                 @if($vacancy->show_salary && $vacancy->salary_min && $vacancy->salary_max)
-                                    Rp {{ number_format($vacancy->salary_min / 1000000, 1, ',', '.') }}jt - {{ number_format($vacancy->salary_max / 1000000, 1, ',', '.') }}jt
+                                    Rp {{ number_format($vacancy->salary_min / 1000000, 1, ',', '.') }}M - {{ number_format($vacancy->salary_max / 1000000, 1, ',', '.') }}M
                                 @else
                                     Hidden
                                 @endif
@@ -87,7 +87,7 @@
                         </div>
                         <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Quota</p>
-                            <p class="text-sm font-bold text-gray-900 mt-1">{{ $vacancy->quota }} Personel</p>
+                            <p class="text-sm font-bold text-gray-900 mt-1">{{ $vacancy->quota }} Personnel</p>
                         </div>
                         <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Age Limit</p>

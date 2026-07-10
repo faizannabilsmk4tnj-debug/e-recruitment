@@ -21,21 +21,21 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'Email tidak ditemukan'
+                'message' => 'Email not found'
             ]);
         }
 
         if ($user->role !== 'applicant') {
             return response()->json([
                 'success' => false,
-                'message' => 'Email tidak terdaftar sebagai pelamar'
+                'message' => 'Email is not registered as an applicant'
             ]);
         }
 
         if (!Hash::check($request->password, $user->getAuthPassword())) {
             return response()->json([
                 'success' => false,
-                'message' => 'Password salah'
+                'message' => 'Incorrect password'
             ]);
         }
 
@@ -55,28 +55,28 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'Email tidak ditemukan'
+                'message' => 'Email not found'
             ]);
         }
 
         if ($user->role !== 'hr' && $user->role !== 'hr_master') {
             return response()->json([
                 'success' => false,
-                'message' => 'Akun ini bukan akun HR'
+                'message' => 'This account is not an HR account'
             ]);
         }
 
         if (!$user->is_active) {
             return response()->json([
                 'success' => false,
-                'message' => 'Akun Anda telah dinonaktifkan oleh HR Master.'
+                'message' => 'Your account has been deactivated by the HR Master.'
             ]);
         }
 
         if (!Hash::check($request->password, $user->getAuthPassword())) {
             return response()->json([
                 'success' => false,
-                'message' => 'Password salah'
+                'message' => 'Incorrect password'
             ]);
         }
 
@@ -97,13 +97,13 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
         ], [
-            'nama.required' => 'Nama lengkap wajib diisi.',
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email sudah terdaftar.',
-            'password.required' => 'Kata sandi wajib diisi.',
-            'password.min' => 'Kata sandi minimal 8 karakter.',
-            'password.confirmed' => 'Konfirmasi sandi tidak cocok.',
+            'nama.required' => 'Full name is required.',
+            'email.required' => 'Email is required.',
+            'email.email' => 'Invalid email format.',
+            'email.unique' => 'Email is already registered.',
+            'password.required' => 'Password is required.',
+            'password.min' => 'Password must be at least 8 characters.',
+            'password.confirmed' => 'Password confirmation does not match.',
         ]);
 
         if ($validator->fails()) {
@@ -123,7 +123,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Register berhasil'
+            'message' => 'Registration successful'
         ]);
     }
 
@@ -137,7 +137,7 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => true,
-                'message' => 'Jika email terdaftar, link reset akan dikirim.',
+                'message' => 'If the email is registered, a reset link will be sent.',
             ]);
         }
 
@@ -166,7 +166,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Jika email terdaftar, link reset akan dikirim.',
+            'message' => 'If the email is registered, a reset link will be sent.',
         ]);
     }
 
@@ -187,7 +187,7 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'Email tidak terdaftar.'
+                'message' => 'Email is not registered.'
             ]);
         }
 
@@ -199,14 +199,14 @@ class AuthController extends Controller
         if (!$resetRecord || !hash_equals($resetRecord->token, hash('sha256', $request->token))) {
             return response()->json([
                 'success' => false,
-                'message' => 'Token reset password tidak valid.'
+                'message' => 'Invalid password reset token.'
             ]);
         }
 
         if (Carbon::parse($resetRecord->expires_at)->isPast()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Token reset password telah kedaluwarsa.'
+                'message' => 'Password reset token has expired.'
             ]);
         }
 
@@ -220,7 +220,7 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'role'    => $user->role,
-            'message' => 'Password Anda berhasil diperbarui.'
+            'message' => 'Your password has been successfully updated.'
         ]);
     }
 

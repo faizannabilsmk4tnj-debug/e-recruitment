@@ -35,7 +35,7 @@ class ApplicantWorkExperienceController extends Controller
 
         return redirect()
             ->route('pelamar.pengalaman-kerja.index')
-            ->with('success', 'Pengalaman kerja berhasil ditambahkan.');
+            ->with('success', 'Work experience added successfully.');
     }
 
     public function edit(WorkExperience $workExperience): View
@@ -53,7 +53,7 @@ class ApplicantWorkExperienceController extends Controller
 
         return redirect()
             ->route('pelamar.pengalaman-kerja.index')
-            ->with('success', 'Pengalaman kerja berhasil diperbarui.');
+            ->with('success', 'Work experience updated successfully.');
     }
 
     public function destroy(WorkExperience $workExperience): RedirectResponse
@@ -64,7 +64,7 @@ class ApplicantWorkExperienceController extends Controller
 
         return redirect()
             ->route('pelamar.pengalaman-kerja.index')
-            ->with('success', 'Pengalaman kerja berhasil dihapus.');
+            ->with('success', 'Work experience deleted successfully.');
     }
 
     private function validatedData(Request $request): array

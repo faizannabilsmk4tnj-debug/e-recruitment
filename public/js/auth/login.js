@@ -34,13 +34,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const password = passwordInput.value.trim();
 
             if (!email || !password) {
-                alertErrorText.textContent = 'Harap isi email dan kata sandi.';
+                alertErrorText.textContent = 'Please fill in your email and password.';
                 alertError.classList.remove('hidden');
                 return;
             }
 
             if (!isValidEmail(email)) {
-                alertErrorText.textContent = 'Format email tidak valid.';
+                alertErrorText.textContent = 'Invalid email format.';
                 alertError.classList.remove('hidden');
                 return;
             }
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error(error);
-                alertErrorText.textContent = 'Terjadi kesalahan. Coba lagi.';
+                alertErrorText.textContent = 'An error occurred. Please try again.';
                 alertError.classList.remove('hidden');
                 btnLogin.disabled = false;
                 btnLogin.innerHTML = 'Sign In';
