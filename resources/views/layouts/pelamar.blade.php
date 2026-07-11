@@ -549,13 +549,34 @@
         }
 
         function markNotifReadPelamar(event, notifId) {
+            event.preventDefault();
+            const targetUrl = event.currentTarget.getAttribute('href');
+            
             fetch('/api/notifications/' + notifId + '/read', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 }
-            }).catch(() => {});
+            })
+            .then(() => {
+                if (targetUrl && targetUrl !== '#') {
+                    if (window.location.pathname === targetUrl) {
+                        window.location.reload();
+                    } else {
+                        window.location.href = targetUrl;
+                    }
+                }
+            })
+            .catch(() => {
+                if (targetUrl && targetUrl !== '#') {
+                    if (window.location.pathname === targetUrl) {
+                        window.location.reload();
+                    } else {
+                        window.location.href = targetUrl;
+                    }
+                }
+            });
         }
 
         function markAllNotifPelamar() {
