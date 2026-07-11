@@ -536,7 +536,7 @@
                 const unreadDot = n.is_unread ? '<div class="w-1.5 h-1.5 bg-green-500 rounded-full absolute top-3 right-3"></div>' : '';
                 const borderClass = i < notifications.length - 1 ? 'border-b border-gray-50' : '';
 
-                html += `<a href="${icon.link}" onclick="markNotifReadPelamar(event, ${n.id})" class="block px-4 py-3 hover:bg-gray-50 transition-colors ${borderClass} ${unreadBg} relative">
+                html += `<a href="${icon.link}" onclick="markNotifReadPelamar(event, ${n.id}, '${n.type}')" class="block px-4 py-3 hover:bg-gray-50 transition-colors ${borderClass} ${unreadBg} relative">
                     ${unreadDot}
                     <div class="flex items-start gap-3">
                         <div class="w-8 h-8 rounded-full ${icon.bg} flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -554,7 +554,7 @@
             list.innerHTML = html;
         }
 
-        function markNotifReadPelamar(event, notifId) {
+        function markNotifReadPelamar(event, notifId, type) {
             event.preventDefault();
             const targetUrl = event.currentTarget.getAttribute('href');
             
@@ -566,7 +566,25 @@
                 }
             })
             .then(() => {
-                if (targetUrl && targetUrl !== '#') {
+                if (type === 'privilege_change' && window.USER_PRIVILEGE === true) {
+                    // Close see-all notifications modal if open
+                    const allNotifsModal = document.getElementById('all-notifications-modal');
+                    if (allNotifsModal) {
+                        if (typeof closeAllNotificationsModal === 'function') {
+                            closeAllNotificationsModal();
+                        } else {
+                            allNotifsModal.classList.add('hidden');
+                        }
+                    }
+                    // Open the privilege granted modal
+                    const grantedModal = document.getElementById('privilege-granted-modal');
+                    if (grantedModal) {
+                        grantedModal.classList.remove('hidden');
+                    }
+                    if (typeof fetchNotifPelamar === 'function') {
+                        fetchNotifPelamar();
+                    }
+                } else if (targetUrl && targetUrl !== '#') {
                     if (window.location.pathname === targetUrl) {
                         window.location.reload();
                     } else {
@@ -575,7 +593,20 @@
                 }
             })
             .catch(() => {
-                if (targetUrl && targetUrl !== '#') {
+                if (type === 'privilege_change' && window.USER_PRIVILEGE === true) {
+                    const allNotifsModal = document.getElementById('all-notifications-modal');
+                    if (allNotifsModal) {
+                        if (typeof closeAllNotificationsModal === 'function') {
+                            closeAllNotificationsModal();
+                        } else {
+                            allNotifsModal.classList.add('hidden');
+                        }
+                    }
+                    const grantedModal = document.getElementById('privilege-granted-modal');
+                    if (grantedModal) {
+                        grantedModal.classList.remove('hidden');
+                    }
+                } else if (targetUrl && targetUrl !== '#') {
                     if (window.location.pathname === targetUrl) {
                         window.location.reload();
                     } else {

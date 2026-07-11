@@ -554,7 +554,7 @@ function openAllNotificationsModal() {
             item.className = `notif-modal-item block p-4 rounded-xl border ${unreadBg} transition-all duration-200 cursor-pointer shadow-sm relative`;
             item.onclick = function(e) {
                 if (typeof markNotifReadPelamar === 'function') {
-                    markNotifReadPelamar(e, n.id);
+                    markNotifReadPelamar(e, n.id, n.type);
                 } else {
                     fetch('/api/notifications/' + n.id + '/read', {
                         method: 'POST',
