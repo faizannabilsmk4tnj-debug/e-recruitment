@@ -58,6 +58,7 @@ class NotificationController extends Controller
             'success'       => true,
             'notifications' => $notifications,
             'unread_count'  => $unreadCount,
+            'has_privilege' => (bool) $user->has_privilege,
         ]);
     }
 

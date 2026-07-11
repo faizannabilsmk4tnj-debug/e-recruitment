@@ -478,6 +478,15 @@
             .then(r => r.json())
             .then(data => {
                 if (!data.success) return;
+
+                // Monitor has_privilege dynamically in real-time
+                if (typeof data.has_privilege !== 'undefined') {
+                    const isPriv = data.has_privilege;
+                    const localPriv = localStorage.getItem('last_known_privilege') !== 'false';
+                    if (isPriv !== localPriv) {
+                        checkUserPrivilegeState(isPriv);
+                    }
+                }
                 
                 const currentIds = data.notifications.map(n => n.id);
                 
@@ -486,9 +495,6 @@
                     newNotifs.forEach(n => {
                         if (n.type === 'privilege_change') {
                             showToastPelamar(`${n.title}: ${n.message}`, 'warning');
-                            if (window.location.pathname === '/pelamar/dashboard' || window.location.pathname.startsWith('/pelamar/lowongan')) {
-                                setTimeout(() => window.location.reload(), 2000);
-                            }
                         } else {
                             showToastPelamar(`${n.title}: ${n.message}`, 'success');
                         }
@@ -764,6 +770,121 @@
             };
         })();
     </script>
+
+    <!-- Modal Hak Akses Dicabut (Revoked) -->
+    <div id="privilege-revoked-modal" class="fixed inset-0 z-[99999] hidden flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md">
+        <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 sm:p-12 border border-red-100 flex flex-col items-center text-center transform scale-100 transition-all duration-300">
+            <!-- Pulse Icon Background -->
+            <div class="relative mb-8">
+                <div class="absolute inset-0 rounded-full bg-red-100 animate-ping opacity-75"></div>
+                <div class="relative w-20 h-20 bg-red-50 rounded-full flex items-center justify-center text-red-600 border border-red-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-red-950 font-sans tracking-tight">Hak Akses Sistem Anda Ditangguhkan</h2>
+            <p class="text-sm sm:text-base text-gray-500 mt-4 leading-relaxed font-sans max-w-md">
+                Mohon maaf, hak akses Anda untuk melakukan pendaftaran lowongan baru pada portal rekrutmen ini telah dinonaktifkan oleh tim HR Ecogreen Oleochemicals.
+            </p>
+            <div class="w-full bg-red-50 border border-red-100 rounded-2xl p-4 mt-6 text-xs text-red-800 font-medium leading-relaxed font-sans text-left">
+                <div class="flex gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-red-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <span>Anda tidak dapat melamar ke lowongan baru atau memperbarui dokumen tertentu hingga akses Anda diaktifkan kembali oleh HR. Untuk pertanyaan lebih lanjut, silakan hubungi unit rekrutmen.</span>
+                </div>
+            </div>
+            
+            <!-- Action: Logout Only -->
+            <div class="w-full mt-8">
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 text-sm shadow-lg shadow-red-100 focus:outline-none flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                        Keluar dari Sistem
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Hak Akses Diberikan (Granted) -->
+    <div id="privilege-granted-modal" class="fixed inset-0 z-[99999] hidden flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md">
+        <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 sm:p-12 border border-green-100 flex flex-col items-center text-center transform scale-100 transition-all duration-300">
+            <!-- Confetti/Celebration Effect -->
+            <div class="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none opacity-20">
+                <div class="absolute w-2 h-2 bg-green-500 rounded-full top-10 left-10 animate-ping"></div>
+                <div class="absolute w-2.5 h-2.5 bg-yellow-500 rounded-full top-20 right-20 animate-ping"></div>
+            </div>
+            
+            <!-- Pulse Icon Background -->
+            <div class="relative mb-8">
+                <div class="absolute inset-0 rounded-full bg-green-100 animate-pulse"></div>
+                <div class="relative w-20 h-20 bg-green-50 rounded-full flex items-center justify-center text-green-600 border border-green-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-green-950 font-sans tracking-tight">Hak Akses Sistem Telah Aktif</h2>
+            <p class="text-sm sm:text-base text-gray-500 mt-4 leading-relaxed font-sans max-w-md">
+                Selamat! Hak akses akun Anda telah dipulihkan. Anda sekarang dapat mendaftar lowongan baru dan berinteraksi secara penuh kembali dengan portal rekrutmen.
+            </p>
+            
+            <!-- Action: Close Modal to Continue -->
+            <div class="w-full mt-8">
+                <button onclick="closePrivilegeGrantedModal()" class="w-full bg-green-750 hover:bg-green-850 active:bg-green-950 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 text-sm shadow-lg shadow-green-100 focus:outline-none flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    Masuk ke Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if(Auth::check())
+    <script>
+        window.USER_PRIVILEGE = {{ Auth::user()->has_privilege ? 'true' : 'false' }};
+
+        function checkUserPrivilegeState(currentPriv) {
+            const lastKnown = localStorage.getItem('last_known_privilege');
+            const revokedModal = document.getElementById('privilege-revoked-modal');
+            const grantedModal = document.getElementById('privilege-granted-modal');
+
+            if (currentPriv === false) {
+                // Show revoked modal (no close button)
+                if (revokedModal) revokedModal.classList.remove('hidden');
+                if (grantedModal) grantedModal.classList.add('hidden');
+                localStorage.setItem('last_known_privilege', 'false');
+            } else {
+                // If privilege is true
+                if (revokedModal) revokedModal.classList.add('hidden');
+                if (lastKnown === 'false') {
+                    // Privilege was just granted! Show granted modal
+                    if (grantedModal) grantedModal.classList.remove('hidden');
+                } else {
+                    localStorage.setItem('last_known_privilege', 'true');
+                }
+            }
+        }
+
+        function closePrivilegeGrantedModal() {
+            const grantedModal = document.getElementById('privilege-granted-modal');
+            if (grantedModal) grantedModal.classList.add('hidden');
+            localStorage.setItem('last_known_privilege', 'true');
+            window.location.reload(); // Refresh the page to reload dashboard options and tables
+        }
+
+        // Initialize state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkUserPrivilegeState(window.USER_PRIVILEGE);
+        });
+    </script>
+    @endif
 
     @yield('scripts')
 </body>
