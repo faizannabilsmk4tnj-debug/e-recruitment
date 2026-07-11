@@ -226,14 +226,20 @@
             </div>
             <div class="divide-y divide-gray-50" id="notifications">
                 @forelse($notifications as $notif)
-                <div class="flex items-start gap-3 px-5 py-4 hover:bg-blue-50/30 transition-colors cursor-pointer">
-                    <div class="w-2.5 h-2.5 {{ is_null($notif->read_at) ? 'bg-blue-500 ring-2 ring-blue-200' : 'bg-gray-300' }} rounded-full mt-1.5 shrink-0"></div>
+                @php
+                    $link = '/pelamar/dashboard';
+                    if (in_array($notif->type, ['status_change', 'interview_scheduled', 'interview_rescheduled', 'interview_cancelled'])) {
+                        $link = '/pelamar/status-lamaran';
+                    }
+                @endphp
+                <a href="{{ $link }}" onclick="markNotifReadPelamar(event, {{ $notif->id }}, '{{ $notif->type }}')" class="block flex items-start gap-3 px-5 py-4 hover:bg-green-50/40 transition-colors cursor-pointer {{ is_null($notif->read_at) ? 'bg-green-50/20' : '' }}">
+                    <div class="w-2.5 h-2.5 {{ is_null($notif->read_at) ? 'bg-green-500 ring-2 ring-green-100' : 'bg-gray-300' }} rounded-full mt-1.5 shrink-0"></div>
                     <div>
                         <p class="font-semibold text-sm text-gray-900">{{ $notif->title }}</p>
                         <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">{{ $notif->message }}</p>
                         <p class="text-xs text-gray-400 mt-1.5 font-medium">{{ $notif->created_at->diffForHumans() }}</p>
                     </div>
-                </div>
+                </a>
                 @empty
                 <p class="text-sm text-gray-400 px-5 py-4">No notifications</p>
                 @endforelse
