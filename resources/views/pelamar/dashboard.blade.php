@@ -239,7 +239,7 @@
                 @endforelse
             </div>
             <div class="px-5 py-3 border-t border-gray-100 bg-gray-50/50">
-                <a href="#" class="text-sm font-semibold text-green-700 hover:text-green-600 transition-colors flex items-center justify-center gap-1">
+                <a href="javascript:void(0)" onclick="openAllNotificationsModal()" class="text-sm font-semibold text-green-700 hover:text-green-600 transition-colors flex items-center justify-center gap-1">
                     See All Notifications
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </a>
@@ -440,5 +440,187 @@ document.addEventListener('DOMContentLoaded', function () {
         showStep(0);
     }, 1000);
 });
+</script>
+
+<!-- Modal Semua Notifikasi -->
+<div id="all-notifications-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 sm:p-6">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity opacity-0" id="notif-modal-backdrop" onclick="closeAllNotificationsModal()"></div>
+    
+    <!-- Panel -->
+    <div class="relative w-full max-w-2xl h-[75vh] bg-white rounded-2xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300 flex flex-col overflow-hidden z-10 border border-gray-100" id="notif-modal-panel">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-white shrink-0">
+            <div class="flex items-center gap-2.5">
+                <div class="w-1.5 h-6 bg-amber-500 rounded-full"></div>
+                <h2 class="text-lg font-bold text-gray-900 font-sans">Semua Notifikasi</h2>
+                <span id="notif-modal-badge" class="hidden text-xs font-bold text-white bg-green-600 px-2.5 py-0.5 rounded-full animate-pulse">0 Baru</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="markAllNotificationsReadInModal()" id="btn-modal-mark-all" class="text-xs font-semibold text-green-700 hover:text-green-800 transition-colors bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg hidden">
+                    Tandai Semua Dibaca
+                </button>
+                <button onclick="closeAllNotificationsModal()" class="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Body / List -->
+        <div class="flex-1 overflow-y-auto bg-gray-50/50 p-6 space-y-3" id="notif-modal-list">
+            <!-- Loading state -->
+            <div class="flex flex-col items-center justify-center py-12 text-gray-400" id="notif-modal-loading">
+                <div class="animate-spin rounded-full h-8 w-8 border-4 border-green-200 border-t-green-700 mb-3"></div>
+                <p class="text-sm font-sans">Memuat semua notifikasi...</p>
+            </div>
+            <!-- Notifications list will be inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+function openAllNotificationsModal() {
+    const modal = document.getElementById('all-notifications-modal');
+    const backdrop = document.getElementById('notif-modal-backdrop');
+    const panel = document.getElementById('notif-modal-panel');
+    const loading = document.getElementById('notif-modal-loading');
+    const list = document.getElementById('notif-modal-list');
+    
+    // Show modal
+    modal.classList.remove('hidden');
+    void modal.offsetWidth; // force reflow
+    backdrop.classList.remove('opacity-0');
+    backdrop.classList.add('opacity-100');
+    panel.classList.remove('scale-95', 'opacity-0');
+    panel.classList.add('scale-100', 'opacity-100');
+    
+    // Reset list and show loading
+    const oldItems = list.querySelectorAll('.notif-modal-item');
+    oldItems.forEach(item => item.remove());
+    loading.classList.remove('hidden');
+    
+    // Fetch notifications (limit=100)
+    fetch('/api/notifications?limit=100', {
+        headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+    })
+    .then(r => r.json())
+    .then(data => {
+        loading.classList.add('hidden');
+        if (!data.success) return;
+        
+        // Update header count and button visibility
+        const badge = document.getElementById('notif-modal-badge');
+        const btnMarkAll = document.getElementById('btn-modal-mark-all');
+        
+        if (data.unread_count > 0) {
+            badge.textContent = `${data.unread_count} Baru`;
+            badge.classList.remove('hidden');
+            btnMarkAll.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+            btnMarkAll.classList.add('hidden');
+        }
+        
+        if (!data.notifications || data.notifications.length === 0) {
+            const emptyState = document.createElement('div');
+            emptyState.className = 'notif-modal-item flex flex-col items-center justify-center py-12 text-gray-400';
+            emptyState.innerHTML = `
+                <svg class="w-12 h-12 text-gray-300 mb-2 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                <p class="text-sm font-sans">Tidak ada notifikasi</p>
+            `;
+            list.appendChild(emptyState);
+            return;
+        }
+        
+        data.notifications.forEach(n => {
+            const icon = (typeof PELAMAR_NOTIF_ICONS !== 'undefined' && PELAMAR_NOTIF_ICONS[n.type]) || 
+                         (typeof PELAMAR_NOTIF_DEFAULT !== 'undefined' && PELAMAR_NOTIF_DEFAULT) || 
+                         {
+                             bg: 'bg-gray-100', color: 'text-gray-600',
+                             svg: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>',
+                             link: '#'
+                         };
+            const unreadBg = n.is_unread ? 'bg-green-50/70 border-green-100 hover:bg-green-100/50' : 'bg-white border-gray-100 hover:bg-gray-50';
+            const unreadDot = n.is_unread ? '<div class="w-2.5 h-2.5 bg-green-500 rounded-full shrink-0 animate-pulse"></div>' : '';
+            const escHtml = typeof escapeHtmlPelamar === 'function' ? escapeHtmlPelamar : (str => {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            });
+            
+            const item = document.createElement('a');
+            item.href = icon.link;
+            item.className = `notif-modal-item block p-4 rounded-xl border ${unreadBg} transition-all duration-200 cursor-pointer shadow-sm relative`;
+            item.onclick = function(e) {
+                if (typeof markNotifReadPelamar === 'function') {
+                    markNotifReadPelamar(e, n.id);
+                } else {
+                    fetch('/api/notifications/' + n.id + '/read', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        }
+                    }).catch(() => {});
+                }
+            };
+            item.innerHTML = `
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full ${icon.bg} flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5 ${icon.color}" fill="none" stroke="currentColor" viewBox="0 0 24 24">${icon.svg}</svg>
+                    </div>
+                    <div class="flex-1 min-w-0 pr-4">
+                        <h4 class="text-sm font-semibold text-gray-900 font-sans">${escHtml(n.title)}</h4>
+                        <p class="text-xs text-gray-500 mt-1 leading-relaxed font-sans">${escHtml(n.message)}</p>
+                        <span class="inline-block text-[10px] text-gray-400 mt-2 font-medium font-sans">${n.time_ago}</span>
+                    </div>
+                    <div class="flex items-center justify-center pt-1">
+                        ${unreadDot}
+                    </div>
+                </div>
+            `;
+            list.appendChild(item);
+        });
+    })
+    .catch(e => console.error(e));
+}
+
+function closeAllNotificationsModal() {
+    const modal = document.getElementById('all-notifications-modal');
+    const backdrop = document.getElementById('notif-modal-backdrop');
+    const panel = document.getElementById('notif-modal-panel');
+    
+    backdrop.classList.remove('opacity-100');
+    backdrop.classList.add('opacity-0');
+    panel.classList.remove('scale-100', 'opacity-100');
+    panel.classList.add('scale-95', 'opacity-0');
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+}
+
+function markAllNotificationsReadInModal() {
+    fetch('/api/notifications/read-all', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            // Refresh modal list
+            openAllNotificationsModal();
+            // Also refresh layout bell dropdown if available
+            if (typeof fetchNotifPelamar === 'function') {
+                fetchNotifPelamar();
+            }
+        }
+    })
+    .catch(() => {});
+}
 </script>
 @endsection
