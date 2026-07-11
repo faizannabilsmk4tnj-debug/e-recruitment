@@ -338,8 +338,8 @@ class InterviewController extends Controller
                 NotificationService::create(
                     $interview->application->user_id,
                     'interview_scheduled',
-                    'Reschedule Request Approved',
-                    'Your reschedule request for the position of ' . ($interview->application->job->title ?? 'Job') . ' has been approved. New schedule: ' . Carbon::parse($request->scheduled_at)->format('d M Y, H:i') . '.',
+                    'Permintaan Penjadwalan Ulang Disetujui',
+                    'Permintaan penjadwalan ulang Anda untuk posisi ' . ($interview->application->job->title ?? 'Lowongan') . ' telah disetujui. Jadwal baru: ' . Carbon::parse($request->scheduled_at)->format('d M Y, H:i') . '.',
                     [
                         'application_id' => $interview->application_id,
                         'interview_id'   => $interview->id,
@@ -369,13 +369,13 @@ class InterviewController extends Controller
             // Notify applicant: request declined
             if ($interview->application) {
                 $declineMsg = $request->decline_reason
-                    ? 'Your reschedule request has been declined by HR. Reason: ' . $request->decline_reason . '. Please attend according to the original schedule.'
-                    : 'Your reschedule request has been declined by HR. Please attend according to the original schedule.';
+                    ? 'Permintaan penjadwalan ulang Anda telah ditolak oleh HR. Alasan: ' . $request->decline_reason . '. Silakan hadir sesuai jadwal semula.'
+                    : 'Permintaan penjadwalan ulang Anda telah ditolak oleh HR. Silakan hadir sesuai jadwal semula.';
 
                 NotificationService::create(
                     $interview->application->user_id,
                     'interview_scheduled',
-                    'Reschedule Request Declined',
+                    'Permintaan Penjadwalan Ulang Ditolak',
                     $declineMsg,
                     [
                         'application_id' => $interview->application_id,

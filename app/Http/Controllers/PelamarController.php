@@ -210,12 +210,12 @@ class PelamarController extends Controller
 
         // Notify HR
         try {
-            $jobTitle = $interview->application->job->title ?? 'Job';
+            $jobTitle = $interview->application->job->title ?? 'Lowongan';
             \App\Services\NotificationService::create(
                 $interview->scheduled_by,
                 'interview_reschedule_request',
-                'Interview Reschedule Request',
-                $user->name . ' requested a reschedule for the ' . $jobTitle . ' position. Review and decide on the Interviews page.',
+                'Permintaan Jadwal Ulang Wawancara',
+                $user->name . ' mengajukan penjadwalan ulang wawancara untuk posisi ' . $jobTitle . '. Tinjau dan putuskan di halaman Wawancara.',
                 [
                     'interview_id'   => $interview->id,
                     'application_id' => $interview->application_id,
@@ -283,8 +283,8 @@ class PelamarController extends Controller
             \App\Services\NotificationService::create(
                 $interview->scheduled_by,
                 'interview_declined',
-                'Interview Declined by Applicant (Disqualified)',
-                $user->name . ' declined the interview invitation for the ' . ($application->jobPosting->title ?? 'position') . ' position. Applicant is automatically disqualified.',
+                'Undangan Wawancara Ditolak (Didiskualifikasi)',
+                $user->name . ' menolak undangan wawancara untuk posisi ' . ($application->jobPosting->title ?? 'posisi') . '. Pelamar otomatis didiskualifikasi.',
                 [
                     'interview_id' => $interview->id,
                     'application_id' => $application->id,

@@ -39,7 +39,7 @@ class NotificationService
                     if (in_array($type, $allowedTypes)) {
                         $shouldEmail = true;
                         $actionUrl = url('/pelamar/status-lamaran');
-                        $actionText = 'View Application Status';
+                        $actionText = 'Lihat Status Lamaran';
                     }
                 } elseif (in_array($user->role, ['hr', 'hr_master'])) {
                     // Send email to HR for vacancy closures and approaching deadlines
@@ -50,7 +50,7 @@ class NotificationService
                     if (in_array($type, $allowedTypes)) {
                         $shouldEmail = true;
                         $actionUrl = url('/hr/lowongan');
-                        $actionText = 'Manage Vacancies';
+                        $actionText = 'Kelola Lowongan';
                     }
                 }
 
@@ -73,8 +73,8 @@ class NotificationService
      */
     public static function notifyNewApplication($application): void
     {
-        $applicantName = $application->user->name ?? 'Applicant';
-        $jobTitle      = $application->job->title ?? 'Vacancy';
+        $applicantName = $application->user->name ?? 'Pelamar';
+        $jobTitle      = $application->job->title ?? 'Lowongan';
 
         $hrUsers = User::whereIn('role', ['hr', 'hr_master'])
             ->where('is_active', true)
@@ -90,8 +90,8 @@ class NotificationService
             self::create(
                 $hr->id,
                 'new_applicant',
-                'New Applicant',
-                "{$applicantName} applied for the {$jobTitle} position.",
+                'Pelamar Baru',
+                "{$applicantName} melamar untuk posisi {$jobTitle}.",
                 [
                     'application_id' => $application->id,
                     'job_id'         => $application->job_id,
@@ -107,13 +107,13 @@ class NotificationService
      */
     public static function notifyStatusChange($application, string $newStatus): void
     {
-        $jobTitle = $application->job->title ?? 'Vacancy';
+        $jobTitle = $application->job->title ?? 'Lowongan';
 
         $statusLabels = [
-            'shortlisted' => 'Shortlisted',
-            'interview'   => 'Interview Stage',
-            'accepted'    => 'Accepted',
-            'rejected'    => 'Rejected',
+            'shortlisted' => 'Lolos Seleksi Administrasi',
+            'interview'   => 'Tahap Wawancara',
+            'accepted'    => 'Diterima',
+            'rejected'    => 'Ditolak',
         ];
 
         $label = $statusLabels[$newStatus] ?? ucfirst($newStatus);
@@ -121,8 +121,8 @@ class NotificationService
         self::create(
             $application->user_id,
             'status_change',
-            'Application Status Updated',
-            "Your application for the position {$jobTitle} has been updated to: {$label}.",
+            'Status Lamaran Diperbarui',
+            "Lamaran Anda untuk posisi {$jobTitle} telah diperbarui menjadi: {$label}.",
             [
                 'application_id' => $application->id,
                 'job_id'         => $application->job_id,
@@ -137,10 +137,10 @@ class NotificationService
      */
     public static function notifyPrivilegeChange($user, bool $hasPrivilege): void
     {
-        $title = $hasPrivilege ? 'Access Privilege Granted' : 'Access Privilege Revoked';
+        $title = $hasPrivilege ? 'Hak Akses Diberikan' : 'Hak Akses Dicabut';
         $message = $hasPrivilege 
-            ? 'Your recruitment system access privilege has been GRANTED by HR. You are now able to apply for new vacancies.'
-            : 'Your recruitment system access privilege has been REVOKED by HR. You are temporarily unable to apply for new vacancies.';
+            ? 'Hak akses sistem rekrutmen Anda telah DIBERIKAN oleh HR. Anda sekarang dapat melakukan pendaftaran lowongan baru.'
+            : 'Hak akses sistem rekrutmen Anda telah DICABUT oleh HR. Anda sementara waktu tidak dapat melakukan pendaftaran lowongan baru.';
 
         self::create(
             $user->id,
@@ -162,25 +162,25 @@ class NotificationService
         $application = $interview->application ?? null;
         if (!$application) return;
 
-        $jobTitle    = $application->job->title ?? 'Vacancy';
+        $jobTitle    = $application->job->title ?? 'Lowongan';
         $scheduledAt = $interview->scheduled_at;
 
         // Format the date nicely
         $dateStr = $scheduledAt
             ? \Carbon\Carbon::parse($scheduledAt)->format('d M Y, H:i')
-            : 'Soon';
+            : 'Segera';
 
         $typeLabel = match ($interview->interview_type) {
-            'online'  => 'Online',
-            'offline' => 'Offline',
-            default   => ucfirst($interview->interview_type),
+            'online'  => 'Daring (Online)',
+            'offline' => 'Luring (Offline)',
+            default   => $interview->interview_type === 'online' ? 'Online' : 'Offline',
         };
 
         self::create(
             $application->user_id,
             'interview_scheduled',
-            'Interview Scheduled',
-            "Your {$typeLabel} interview for the position {$jobTitle} is scheduled on {$dateStr}.",
+            'Undangan Wawancara',
+            "Wawancara {$typeLabel} Anda untuk posisi {$jobTitle} dijadwalkan pada {$dateStr}.",
             [
                 'application_id' => $application->id,
                 'interview_id'   => $interview->id,
@@ -200,27 +200,27 @@ class NotificationService
         $application = $interview->application ?? null;
         if (!$application) return;
 
-        $jobTitle    = $application->job->title ?? 'Vacancy';
+        $jobTitle    = $application->job->title ?? 'Lowongan';
         $newScheduledAt = $interview->scheduled_at;
 
         $oldDateStr = $oldScheduledAt
             ? \Carbon\Carbon::parse($oldScheduledAt)->format('d M Y, H:i')
-            : 'Previous Schedule';
+            : 'Jadwal Sebelumnya';
         $newDateStr = $newScheduledAt
             ? \Carbon\Carbon::parse($newScheduledAt)->format('d M Y, H:i')
-            : 'Soon';
+            : 'Segera';
 
         $typeLabel = match ($interview->interview_type) {
-            'online'  => 'Online',
-            'offline' => 'Offline',
-            default   => ucfirst($interview->interview_type),
+            'online'  => 'Daring (Online)',
+            'offline' => 'Luring (Offline)',
+            default   => $interview->interview_type === 'online' ? 'Online' : 'Offline',
         };
 
         self::create(
             $application->user_id,
             'interview_rescheduled',
-            'Interview Rescheduled',
-            "The {$typeLabel} interview schedule for the position {$jobTitle} has been rescheduled from {$oldDateStr} to {$newDateStr}.",
+            'Jadwal Wawancara Diubah',
+            "Jadwal wawancara {$typeLabel} untuk posisi {$jobTitle} telah diubah dari {$oldDateStr} menjadi {$newDateStr}.",
             [
                 'application_id' => $application->id,
                 'interview_id'   => $interview->id,
@@ -241,7 +241,7 @@ class NotificationService
         $application = $interview->application ?? null;
         if (!$application) return;
 
-        $jobTitle    = $application->job->title ?? 'Vacancy';
+        $jobTitle    = $application->job->title ?? 'Lowongan';
         $scheduledAt = $interview->scheduled_at;
 
         $dateStr = $scheduledAt
@@ -249,16 +249,16 @@ class NotificationService
             : '';
 
         $typeLabel = match ($interview->interview_type) {
-            'online'  => 'Online',
-            'offline' => 'Offline',
-            default   => ucfirst($interview->interview_type),
+            'online'  => 'Daring (Online)',
+            'offline' => 'Luring (Offline)',
+            default   => $interview->interview_type === 'online' ? 'Online' : 'Offline',
         };
 
         self::create(
             $application->user_id,
             'interview_cancelled',
-            'Interview Cancelled',
-            "The {$typeLabel} interview for the position {$jobTitle}" . ($dateStr ? " scheduled on {$dateStr}" : "") . " has been cancelled.",
+            'Jadwal Wawancara Dibatalkan',
+            "Wawancara {$typeLabel} untuk posisi {$jobTitle}" . ($dateStr ? " yang dijadwalkan pada {$dateStr}" : "") . " telah dibatalkan.",
             [
                 'application_id' => $application->id,
                 'interview_id'   => $interview->id,
@@ -288,8 +288,8 @@ class NotificationService
             self::create(
                 $hr->id,
                 'vacancy_deadline',
-                'Vacancy Closing Soon',
-                "The vacancy \"{$jobPosting->title}\" is closing in {$daysRemaining} days.",
+                'Lowongan Segera Berakhir',
+                "Lowongan \"{$jobPosting->title}\" akan berakhir dalam {$daysRemaining} hari.",
                 [
                     'job_id'         => $jobPosting->id,
                     'job_title'      => $jobPosting->title,

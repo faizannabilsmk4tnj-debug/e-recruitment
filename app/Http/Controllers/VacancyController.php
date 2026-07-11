@@ -274,8 +274,8 @@ class VacancyController extends Controller
                     NotificationService::create(
                         $hr->id,
                         'vacancy_closed_auto',
-                        'Vacancy Closed (Quota Full)',
-                        "Vacancy \"{$vacancy->title}\" has been automatically closed because the applicant quota is full ({$vacancy->applicant_count}/{$vacancy->quota}).",
+                        'Lowongan Ditutup (Kuota Penuh)',
+                        "Lowongan \"{$vacancy->title}\" telah ditutup secara otomatis karena kuota pelamar sudah terpenuhi ({$vacancy->applicant_count}/{$vacancy->quota}).",
                         [
                             'job_id'    => $vacancy->id,
                             'job_title' => $vacancy->title,
