@@ -139,7 +139,7 @@
                 @enderror
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">Upload SKHU Photo <span class="text-gray-400 font-normal">(Optional)</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Upload Exam Results Photo (SKHU) <span class="text-gray-400 font-normal">(Optional)</span></label>
                 <div class="border-2 border-dashed border-gray-300 rounded-lg p-5 text-center hover:border-green-400 transition-colors cursor-pointer" id="drop-skhu">
                     <div id="placeholder-skhu" class="{{ $education?->skhu_file ? 'hidden' : '' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-300 mx-auto mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
@@ -153,7 +153,7 @@
                             @endif
                         </p>
                         @if ($education?->skhu_file)
-                            <a href="{{ asset('storage/' . $education->skhu_file) }}" target="_blank" class="text-xs text-green-600 font-semibold block mt-1 hover:underline" onclick="event.stopPropagation()">View Current SKHU</a>
+                            <a href="{{ asset('storage/' . $education->skhu_file) }}" target="_blank" class="text-xs text-green-600 font-semibold block mt-1 hover:underline" onclick="event.stopPropagation()">View Current Exam Results (SKHU)</a>
                         @endif
                         <button type="button" class="remove-file text-xs text-red-500 mt-1" data-target="skhu">Delete</button>
                     </div>
