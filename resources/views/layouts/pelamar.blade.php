@@ -837,7 +837,7 @@
                 </button>
                 <form action="{{ route('logout') }}" method="POST" class="flex-1">
                     @csrf
-                    <button type="submit" class="w-full bg-red-650 hover:bg-red-750 active:bg-red-850 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 text-sm shadow-md focus:outline-none flex items-center justify-center gap-2">
+                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 text-sm shadow-md focus:outline-none flex items-center justify-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                         Keluar dari Sistem
                     </button>
@@ -898,7 +898,7 @@
             
             <!-- Action: Close Modal to Continue -->
             <div class="w-full mt-8">
-                <button onclick="closePrivilegeGrantedModal()" class="w-full bg-green-750 hover:bg-green-850 active:bg-green-950 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 text-sm shadow-lg shadow-green-100 focus:outline-none flex items-center justify-center gap-2">
+                <button onclick="closePrivilegeGrantedModal()" class="w-full bg-green-700 hover:bg-green-800 active:bg-green-900 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 text-sm shadow-lg shadow-green-100 focus:outline-none flex items-center justify-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                     Masuk ke Dashboard
                 </button>
