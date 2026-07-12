@@ -547,7 +547,16 @@ class JobPostingController extends Controller
     {
         $location = \App\Models\WorkLocation::findOrFail($id);
         
-        $count = \App\Models\JobPosting::where('location', $location->name)->count();
+        $locationName = trim($location->name);
+        $firstWord = preg_replace('/[^a-zA-Z0-9]/', '', explode(' ', $locationName)[0]);
+
+        $count = \App\Models\JobPosting::where(function($query) use ($locationName, $firstWord) {
+            $query->where('location', 'like', '%' . $locationName . '%');
+            if (!empty($firstWord)) {
+                $query->orWhere('location', 'like', '%' . $firstWord . '%');
+            }
+        })->count();
+
         if ($count > 0) {
             return response()->json([
                 'success' => false,
