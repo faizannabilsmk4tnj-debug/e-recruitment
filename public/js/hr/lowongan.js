@@ -720,20 +720,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const coverUpload = document.getElementById('v-cover-upload');
         if (coverUpload) {
-            coverUpload.disabled = isPublished;
+            coverUpload.disabled = false;
         }
         const coverPlaceholder = document.getElementById('v-upload-placeholder');
         if (coverPlaceholder) {
-            if (isPublished) {
-                coverPlaceholder.classList.add('cursor-not-allowed', 'opacity-60');
-                coverPlaceholder.style.pointerEvents = 'none';
-            } else {
-                coverPlaceholder.classList.remove('cursor-not-allowed', 'opacity-60');
-                coverPlaceholder.style.pointerEvents = '';
-            }
+            coverPlaceholder.classList.remove('cursor-not-allowed', 'opacity-60');
+            coverPlaceholder.style.pointerEvents = '';
         }
 
-        if (isPublished) {
+        if (bannerImage) {
+            btnVRemoveImg.classList.remove('hidden');
+        } else {
             btnVRemoveImg.classList.add('hidden');
         }
 

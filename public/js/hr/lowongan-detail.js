@@ -651,24 +651,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         const coverUpload = document.getElementById('v-cover-upload');
-        if (coverUpload) coverUpload.disabled = isPublished;
+        if (coverUpload) coverUpload.disabled = false;
 
         const coverPlaceholder = document.getElementById('v-upload-placeholder');
         if (coverPlaceholder) {
-            if (isPublished) {
-                coverPlaceholder.classList.add('cursor-not-allowed', 'opacity-60');
-                coverPlaceholder.style.pointerEvents = 'none';
-            } else {
-                coverPlaceholder.classList.remove('cursor-not-allowed', 'opacity-60');
-                coverPlaceholder.style.pointerEvents = '';
-            }
+            coverPlaceholder.classList.remove('cursor-not-allowed', 'opacity-60');
+            coverPlaceholder.style.pointerEvents = '';
         }
 
         if (btnVRemoveImg) {
-            if (isPublished) {
-                btnVRemoveImg.classList.add('hidden');
-            } else if (data.banner_image) {
+            if (data.banner_image) {
                 btnVRemoveImg.classList.remove('hidden');
+            } else {
+                btnVRemoveImg.classList.add('hidden');
             }
         }
 
@@ -739,9 +734,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (vUploadPlaceholder) {
         vUploadPlaceholder.addEventListener('click', () => {
-            const data = window.vacancyData;
-            const isPublished = data && data.status !== 'draft';
-            if (!isPublished) vCoverUpload.click();
+            vCoverUpload.click();
         });
     }
 
@@ -768,12 +761,8 @@ document.addEventListener('DOMContentLoaded', function () {
             vCoverDropArea.addEventListener(eventName, e => {
                 e.preventDefault();
                 e.stopPropagation();
-                const data = window.vacancyData;
-                const isPublished = data && data.status !== 'draft';
-                if (!isPublished) {
-                    vCoverDropArea.classList.remove('bg-gray-50', 'border-gray-200');
-                    vCoverDropArea.classList.add('bg-green-50', 'border-green-600');
-                }
+                vCoverDropArea.classList.remove('bg-gray-50', 'border-gray-200');
+                vCoverDropArea.classList.add('bg-green-50', 'border-green-600');
             }, false);
         });
 
@@ -787,13 +776,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         vCoverDropArea.addEventListener('drop', e => {
-            const data = window.vacancyData;
-            const isPublished = data && data.status !== 'draft';
-            if (!isPublished) {
-                const dt = e.dataTransfer;
-                const file = dt.files[0];
-                handleVCoverFile(file);
-            }
+            const dt = e.dataTransfer;
+            const file = dt.files[0];
+            handleVCoverFile(file);
         }, false);
     }
 

@@ -352,25 +352,33 @@ class JobPostingController extends Controller
 
 
 
-        // Save banner image if provided as base64
-        $bannerPath = $job->banner_image;
-        if (!empty($validated['banner_image']) && str_starts_with($validated['banner_image'], 'data:image/')) {
-            list($type, $data) = explode(';', $validated['banner_image']);
-            list(, $data)      = explode(',', $data);
-            $data = base64_decode($data);
+        // Save banner image if provided as base64 or keep old banner image or remove if null
+        $bannerPath = null;
+        if (!empty($validated['banner_image'])) {
+            if (str_starts_with($validated['banner_image'], 'data:image/')) {
+                list($type, $data) = explode(';', $validated['banner_image']);
+                list(, $data)      = explode(',', $data);
+                $data = base64_decode($data);
 
-            $extension = 'jpg';
-            if (str_contains($type, 'png')) {
-                $extension = 'png';
-            } elseif (str_contains($type, 'gif')) {
-                $extension = 'gif';
-            } elseif (str_contains($type, 'webp')) {
-                $extension = 'webp';
+                $extension = 'jpg';
+                if (str_contains($type, 'png')) {
+                    $extension = 'png';
+                } elseif (str_contains($type, 'gif')) {
+                    $extension = 'gif';
+                } elseif (str_contains($type, 'webp')) {
+                    $extension = 'webp';
+                }
+
+                $fileName = 'banner_' . time() . '_' . uniqid() . '.' . $extension;
+                \Illuminate\Support\Facades\Storage::disk('public')->put('job_banners/' . $fileName, $data);
+                $bannerPath = 'storage/job_banners/' . $fileName;
+            } else {
+                // Keep the old one (if it's a URL/path)
+                // Remove the domain if it has one
+                $parsedUrl = parse_url($validated['banner_image']);
+                $path = $parsedUrl['path'] ?? $validated['banner_image'];
+                $bannerPath = ltrim($path, '/');
             }
-
-            $fileName = 'banner_' . time() . '_' . uniqid() . '.' . $extension;
-            \Illuminate\Support\Facades\Storage::disk('public')->put('job_banners/' . $fileName, $data);
-            $bannerPath = 'storage/job_banners/' . $fileName;
         }
 
         // Convert benefits array/string to string
