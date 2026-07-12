@@ -30,18 +30,37 @@ class PelamarController extends Controller
             \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         }
 
-        // 1. Calculate stats for cards
-        $totalApplicants = Application::count();
-        $submittedCount  = Application::where('status', 'applied')->count();
-        $shortlistedCount = Application::where('status', 'shortlisted')->count();
-        $interviewCount  = Application::where('status', 'interview')->count();
-        $acceptedCount   = Application::where('status', 'accepted')->count();
-        $rejectedCount   = Application::where('status', 'rejected')->count();
-        $decisionCount   = Application::whereIn('status', ['shortlisted'])->count();
+        // 1. Calculate stats for cards (excluding archived vacancies)
+        $totalApplicants = Application::whereHas('job', function ($q) {
+            $q->where('is_archived', false);
+        })->count();
+        $submittedCount  = Application::where('status', 'applied')
+            ->whereHas('job', function ($q) {
+                $q->where('is_archived', false);
+            })->count();
+        $shortlistedCount = Application::where('status', 'shortlisted')
+            ->whereHas('job', function ($q) {
+                $q->where('is_archived', false);
+            })->count();
+        $interviewCount  = Application::where('status', 'interview')
+            ->whereHas('job', function ($q) {
+                $q->where('is_archived', false);
+            })->count();
+        $acceptedCount   = Application::where('status', 'accepted')
+            ->whereHas('job', function ($q) {
+                $q->where('is_archived', false);
+            })->count();
+        $rejectedCount   = Application::where('status', 'rejected')
+            ->whereHas('job', function ($q) {
+                $q->where('is_archived', false);
+            })->count();
+        $decisionCount   = Application::whereIn('status', ['shortlisted'])
+            ->whereHas('job', function ($q) {
+                $q->where('is_archived', false);
+            })->count();
 
-        // 2. Fetch non-archived job postings
+        // 2. Fetch job postings (both active and archived)
         $jobs = JobPosting::with(['category', 'applications.user.profile'])
-            ->where('is_archived', false)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -103,13 +122,14 @@ class PelamarController extends Controller
             $newApplicantsCount = $applications->where('is_seen', false)->count();
 
             // Calculate countdown text
-            $deadline = $job->deadline ? \Carbon\Carbon::parse($job->deadline)->endOfDay() : null;
+            $now = \Carbon\Carbon::now('Asia/Jakarta');
+            $deadline = $job->deadline ? \Carbon\Carbon::parse($job->deadline->format('Y-m-d'), 'Asia/Jakarta')->endOfDay() : null;
             $countdownText = '';
             if ($deadline) {
-                if (now()->greaterThan($deadline)) {
+                if ($now->greaterThan($deadline)) {
                     $countdownText = 'Deadline Passed';
                 } else {
-                    $diff = now()->diff($deadline);
+                    $diff = $now->diff($deadline);
                     if ($diff->days > 0) {
                         $countdownText = 'Deadline ' . $diff->days . 'd ' . $diff->h . 'h left';
                     } else if ($diff->h > 0) {
@@ -129,12 +149,14 @@ class PelamarController extends Controller
                 'department' => $deptName,
                 'total' => $applications->count(),
                 'posted' => $job->created_at ? $job->created_at->format('d M Y') : 'N/A',
-                'days_since' => $job->created_at ? $job->created_at->diffInDays(now()) : 30,
-                'deadline_days' => $job->deadline ? now()->diffInDays($job->deadline, false) : 30,
+                'days_since' => $job->created_at ? $job->created_at->diffInDays($now) : 30,
+                'deadline_days' => $job->deadline ? $now->diffInDays($deadline, false) : 30,
                 'auto_close_method' => $job->auto_close_method,
                 'quota' => $job->quota,
                 'new_applicants_count' => $newApplicantsCount,
                 'countdown_text' => $countdownText,
+                'deadline_timestamp' => $deadline ? $deadline->toIso8601String() : null,
+                'is_archived' => (bool)$job->is_archived,
                 'counts' => [
                     'submitted' => $applications->where('status', 'applied')->count(),
                     'shortlisted' => $applications->where('status', 'shortlisted')->count(),
@@ -803,7 +825,8 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
             }
 
             // Update is_archived = true
-            $job->update(['is_archived' => true]);
+            $job->is_archived = true;
+            $job->save();
 
             return response()->json([
                 'success' => true,

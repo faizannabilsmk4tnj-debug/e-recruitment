@@ -117,6 +117,7 @@
                 <option value="DRAFT">Draft</option>
                 <option value="CLOSED">Closed</option>
                 <option value="FILLED">Filled</option>
+                <option value="ARCHIVED">Archived</option>
             </select>
             <select id="filter-category" class="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-600">
                 <option value="">Category: All</option>
@@ -142,6 +143,12 @@
                 <option value="recent">Sort: Newest</option>
                 <option value="alpha">Sort: A-Z</option>
             </select>
+
+            <!-- Show Archived Toggle Button -->
+            <button id="btn-toggle-archived" class="flex items-center gap-1.5 border border-gray-200 text-gray-600 hover:border-purple-300 hover:text-purple-750 font-semibold px-3.5 py-2 rounded-lg text-sm transition-all bg-white cursor-pointer" data-active="false" type="button">
+                <span id="archived-dot" class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-colors"></span>
+                Show Archived
+            </button>
             
             <button id="btn-clear-filters" class="hidden items-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700 transition-all px-3 py-2 rounded-lg border border-red-200 hover:border-red-300 bg-red-50 hover:bg-red-100/80 shadow-sm cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
@@ -212,11 +219,12 @@
                     // Reference ID format (REF-ECO-YEAR-ID)
                     $refId = 'REF-ECO-' . $v->created_at->format('Y') . '-' . str_pad($v->id, 3, '0', STR_PAD_LEFT);
                 @endphp
-                <tr class="border-t border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer vacancy-row {{ $isLockedStatus ? 'opacity-50' : '' }}"
+                <tr class="border-t border-gray-50 transition-colors cursor-pointer vacancy-row {{ $v->is_archived ? 'bg-purple-50/20 hover:bg-purple-50/40 opacity-80' : 'hover:bg-gray-50' }} {{ $isLockedStatus && !$v->is_archived ? 'opacity-50' : '' }}"
                     data-id="{{ $v->id }}"
                     data-title="{{ strtolower($v->title) }}"
                     data-ref="{{ strtolower($refId) }}"
                     data-status="{{ $statusBadge }}"
+                    data-archived="{{ $v->is_archived ? 'true' : 'false' }}"
                     data-category="{{ $v->category->name ?? '' }}"
                     data-category-id="{{ $v->category_id }}"
                     data-location="{{ $v->location }}"
@@ -240,6 +248,9 @@
                         <div class="flex items-center gap-2">
                             <p class="font-bold text-sm {{ $isLockedStatus ? 'line-through text-gray-400' : 'text-gray-900' }}">{{ $v->title }}</p>
                             <span class="text-[9px] font-bold text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded uppercase shrink-0">{{ str_replace('-', ' ', $v->employment_type) }}</span>
+                            @if($v->is_archived)
+                                <span class="text-[9px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-1.5 py-0.5 rounded uppercase shrink-0">ARCHIVED</span>
+                            @endif
                         </div>
                         <p class="text-[10px] text-gray-400 mt-0.5">{{ $refId }}</p>
                     </td>
@@ -260,7 +271,9 @@
                     <td class="py-4 pr-4 text-sm font-semibold text-gray-700">{{ str_pad($v->quota, 2, '0', STR_PAD_LEFT) }}</td>
                     <td class="py-4 pr-4 text-sm text-gray-500">{{ $v->deadline ? $v->deadline->format('d M Y') : '-' }}</td>
                     <td class="py-4 pr-4">
-                        @if($statusBadge === 'ACTIVE')
+                        @if($v->is_archived)
+                            <span class="text-xs font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-1 rounded-full">ARCHIVED</span>
+                        @elseif($statusBadge === 'ACTIVE')
                             <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full">ACTIVE</span>
                         @elseif($statusBadge === 'DRAFT')
                             <span class="text-xs font-bold text-gray-500 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-full">DRAFT</span>

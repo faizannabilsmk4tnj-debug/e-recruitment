@@ -128,6 +128,12 @@
                 <option value="alpha">Sort: A-Z</option>
             </select>
 
+            <!-- Show Archived Toggle Button -->
+            <button id="btn-toggle-archived" class="flex items-center gap-1.5 border border-gray-200 text-gray-600 hover:border-green-300 hover:text-green-700 font-semibold px-3.5 py-2 rounded-lg text-xs transition-all bg-white" data-active="false" type="button">
+                <span id="archived-dot" class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-colors"></span>
+                Show Archived
+            </button>
+
             <!-- Expand/Collapse all -->
             <div class="flex bg-gray-100 rounded-lg p-0.5 gap-0.5">
                 <button id="btn-expand-all" class="px-3 py-1.5 text-xs font-semibold rounded-md text-gray-600 hover:text-gray-800 transition-colors">Expand All</button>
@@ -157,7 +163,7 @@
             $unreviewed = $low['counts']['submitted'] + $low['counts']['shortlisted'];
             $statusLabel = $low['status'] === 'filled' ? 'FILLED' : ($low['status'] === 'closed' ? 'CLOSE' : strtoupper($low['status']));
         @endphp
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden lowongan-card {{ $low['expanded'] ? 'is-expanded' : '' }}"
+        <div class="rounded-2xl border overflow-hidden lowongan-card {{ $low['expanded'] ? 'is-expanded' : '' }} {{ $low['is_archived'] ? 'bg-purple-50/20 border-purple-200 opacity-85 hover:opacity-100 transition-all' : 'bg-white border-gray-100' }}"
              data-lowongan-id="{{ $low['id'] }}"
              data-title="{{ strtolower($low['title']) }}"
              data-department="{{ $low['department'] }}"
@@ -166,7 +172,8 @@
              data-deadline-days="{{ $low['deadline_days'] }}"
              data-unreviewed="{{ $unreviewed }}"
              data-interview="{{ $low['counts']['interview'] }}"
-             data-decision="{{ $low['counts']['shortlisted'] }}">
+             data-decision="{{ $low['counts']['shortlisted'] }}"
+             data-archived="{{ $low['is_archived'] ? 'true' : 'false' }}">
 
             <!-- Card Header Wrapper with Archive action -->
             <div class="flex items-center justify-between hover:bg-gray-50/50 transition-colors border-b border-transparent">
@@ -181,18 +188,22 @@
                         <div class="flex items-center gap-2 flex-wrap">
                             <h3 class="font-bold text-gray-900 truncate lowongan-title">{{ $low['title'] }}</h3>
                             <span class="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded uppercase">{{ $low['department'] }}</span>
-                            @if($low['status'] === 'filled')
+                            @if($low['is_archived'])
+                                <span class="text-[10px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full shrink-0">ARCHIVED</span>
+                            @elseif($low['status'] === 'filled')
                                 <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full shrink-0">{{ $statusLabel }}</span>
                             @elseif($low['status'] === 'closed')
                                 <span class="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full shrink-0">{{ $statusLabel }}</span>
                             @endif
 
-                            <!-- Auto Close displays -->
+                             <!-- Auto Close displays -->
                             @if(!in_array($low['status'], ['closed', 'filled']))
                                 @if(in_array($low['auto_close_method'], ['deadline', 'both']))
-                                <span class="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                                <span class="countdown-timer-badge text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0"
+                                      data-deadline="{{ $low['deadline_timestamp'] ?? '' }}"
+                                      data-fallback="{{ $low['countdown_text'] }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-red-605" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    {{ $low['countdown_text'] }}
+                                    <span class="countdown-text">{{ $low['countdown_text'] }}</span>
                                 </span>
                                 @endif
 
@@ -235,6 +246,14 @@
 
                 <!-- Complete & Archive button -->
                 <div class="px-5 border-l border-gray-100 py-4 shrink-0 flex items-center">
+                    @if($low['is_archived'])
+                    <span class="p-2 text-purple-500 bg-purple-50 rounded-lg flex items-center justify-center cursor-default" title="Vacancy is Archived">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            <path d="m9 14 2 2 4-4"/>
+                        </svg>
+                    </span>
+                    @else
                     <button class="btn-archive-vacancy p-2 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-50 transition-all cursor-pointer focus:outline-none" 
                             title="Selesaikan & Arsipkan Lowongan" 
                             data-vacancy-id="{{ $low['id'] }}" 
@@ -246,6 +265,7 @@
                             <path d="m9 14 2 2 4-4"/>
                         </svg>
                     </button>
+                    @endif
                 </div>
             </div>
 

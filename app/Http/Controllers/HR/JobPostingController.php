@@ -30,22 +30,26 @@ class JobPostingController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Calculate statistics based on real data
-        $totalVacancies = JobPosting::count();
+        // Calculate statistics based on real data (excluding archived vacancies)
+        $totalVacancies = JobPosting::where('is_archived', false)->count();
         $activeApplicants = DB::table('applications')
-            ->whereIn('status', ['applied', 'shortlisted', 'interview'])
+            ->join('job_postings', 'applications.job_id', '=', 'job_postings.id')
+            ->where('job_postings.is_archived', false)
+            ->whereIn('applications.status', ['applied', 'shortlisted', 'interview'])
             ->count();
         
         // Closing soon (deadline within 7 days and status is open)
+        $nowLocal = \Carbon\Carbon::now('Asia/Jakarta');
         $closingSoon = JobPosting::where('status', 'open')
+            ->where('is_archived', false)
             ->whereNotNull('deadline')
-            ->where('deadline', '<=', now()->addDays(7))
-            ->where('deadline', '>=', now()->startOfDay())
+            ->where('deadline', '<=', $nowLocal->copy()->addDays(7)->toDateString())
+            ->where('deadline', '>=', $nowLocal->toDateString())
             ->count();
 
         // Calculate recruitment target fill percentage
-        $totalQuota = JobPosting::where('status', 'open')->sum('quota');
-        $totalApplicantsFilled = JobPosting::where('status', 'open')->sum('applicant_count');
+        $totalQuota = JobPosting::where('is_archived', false)->where('status', 'open')->sum('quota');
+        $totalApplicantsFilled = JobPosting::where('is_archived', false)->where('status', 'open')->sum('applicant_count');
         $recruitmentTargetPercentage = $totalQuota > 0 ? min(100, round(($totalApplicantsFilled / $totalQuota) * 100)) : 0;
 
         // Compute trend stats (using actual database counts based on database records)

@@ -8,7 +8,51 @@ document.addEventListener('DOMContentLoaded', function () {
         search: '',
         dept: '',
         sort: 'pelamar-desc',
+        showArchived: false,
     };
+
+    // Restore global state from sessionStorage
+    const savedState = sessionStorage.getItem('pelamar_global_state');
+    if (savedState) {
+        try {
+            const parsed = JSON.parse(savedState);
+            Object.assign(state, parsed);
+        } catch (e) {
+            console.error('Failed to parse persisted state', e);
+        }
+    }
+
+    // Sync restored state to DOM input elements
+    const searchInput = document.getElementById('global-search');
+    if (searchInput) searchInput.value = state.search;
+    const deptSelect = document.getElementById('filter-dept');
+    if (deptSelect) deptSelect.value = state.dept;
+    const sortSelect = document.getElementById('sort-lowongan');
+    if (sortSelect) sortSelect.value = state.sort;
+    if (typeof updateQuickFilterUI === 'function') {
+        updateQuickFilterUI();
+    }
+
+    const btnToggleArchived = document.getElementById('btn-toggle-archived');
+    if (btnToggleArchived) {
+        btnToggleArchived.dataset.active = state.showArchived ? 'true' : 'false';
+        const dot = document.getElementById('archived-dot');
+        if (state.showArchived) {
+            btnToggleArchived.classList.remove('bg-white', 'border-gray-200', 'text-gray-600');
+            btnToggleArchived.classList.add('bg-purple-50', 'border-purple-300', 'text-purple-800');
+            if (dot) {
+                dot.classList.remove('bg-gray-300');
+                dot.classList.add('bg-purple-600');
+            }
+        } else {
+            btnToggleArchived.classList.add('bg-white', 'border-gray-200', 'text-gray-600');
+            btnToggleArchived.classList.remove('bg-purple-50', 'border-purple-300', 'text-purple-800');
+            if (dot) {
+                dot.classList.add('bg-gray-300');
+                dot.classList.remove('bg-purple-600');
+            }
+        }
+    }
 
     const container = document.getElementById('lowongan-container');
     const cards = () => Array.from(document.querySelectorAll('.lowongan-card'));
@@ -26,6 +70,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ===== MAIN APPLY =====
     function apply() {
+        // Save global state to sessionStorage
+        sessionStorage.setItem('pelamar_global_state', JSON.stringify(state));
+
         let visibleLowCount = 0;
         let visibleAppCount = 0;
 
@@ -73,8 +120,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
+            const isArchived = card.dataset.archived === 'true';
             const noActiveFilter = state.focus === 'all' && !state.search && !state.dept;
-            const showCard = deptMatch && (
+            const showCard = (!isArchived || state.showArchived) && deptMatch && (
                 matchedRows > 0 ||
                 noActiveFilter ||
                 (titleMatch && state.focus === 'all')
@@ -140,8 +188,24 @@ document.addEventListener('DOMContentLoaded', function () {
             return 0;
         });
 
-        list.forEach(c => container.appendChild(c));
-        container.appendChild(emptyResult);
+        // Check if the current order in the DOM matches the sorted list
+        const currentChildren = Array.from(container.children).filter(el => el.classList.contains('lowongan-card') && el.style.display !== 'none');
+        let orderChanged = currentChildren.length !== list.length;
+        if (!orderChanged) {
+            for (let i = 0; i < list.length; i++) {
+                if (currentChildren[i] !== list[i]) {
+                    orderChanged = true;
+                    break;
+                }
+            }
+        }
+
+        if (orderChanged) {
+            const scrollPos = window.scrollY;
+            list.forEach(c => container.appendChild(c));
+            container.appendChild(emptyResult);
+            window.scrollTo(0, scrollPos);
+        }
     }
 
     // ===== ACTIVE FILTER PILLS =====
@@ -159,6 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (state.search) pills.push({ label: 'Search: "' + state.search + '"', type: 'search' });
         if (state.dept) pills.push({ label: 'Dept: ' + state.dept, type: 'dept' });
+        if (state.showArchived) pills.push({ label: 'Showing Archived', type: 'archived' });
 
         if (pills.length === 0) {
             activeFilterBar.classList.add('hidden');
@@ -181,6 +246,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (type === 'focus') { state.focus = 'all'; updateQuickFilterUI(); }
                 if (type === 'search') { state.search = ''; document.getElementById('global-search').value = ''; }
                 if (type === 'dept') { state.dept = ''; document.getElementById('filter-dept').value = ''; }
+                if (type === 'archived') {
+                    state.showArchived = false;
+                    const toggleBtn = document.getElementById('btn-toggle-archived');
+                    if (toggleBtn) {
+                        toggleBtn.dataset.active = 'false';
+                        toggleBtn.classList.add('bg-white', 'border-gray-200', 'text-gray-600');
+                        toggleBtn.classList.remove('bg-purple-50', 'border-purple-300', 'text-purple-800');
+                        const dot = document.getElementById('archived-dot');
+                        if (dot) {
+                            dot.classList.add('bg-gray-300');
+                            dot.classList.remove('bg-purple-600');
+                        }
+                    }
+                }
                 apply();
             });
         });
@@ -227,12 +306,51 @@ document.addEventListener('DOMContentLoaded', function () {
         apply();
     });
 
+    const toggleBtn = document.getElementById('btn-toggle-archived');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+            state.showArchived = !state.showArchived;
+            this.dataset.active = state.showArchived ? 'true' : 'false';
+            const dot = document.getElementById('archived-dot');
+            if (state.showArchived) {
+                this.classList.remove('bg-white', 'border-gray-200', 'text-gray-600');
+                this.classList.add('bg-purple-50', 'border-purple-300', 'text-purple-800');
+                if (dot) {
+                    dot.classList.remove('bg-gray-300');
+                    dot.classList.add('bg-purple-600');
+                }
+            } else {
+                this.classList.add('bg-white', 'border-gray-200', 'text-gray-600');
+                this.classList.remove('bg-purple-50', 'border-purple-300', 'text-purple-800');
+                if (dot) {
+                    dot.classList.add('bg-gray-300');
+                    dot.classList.remove('bg-purple-600');
+                }
+            }
+            apply();
+        });
+    }
+
     document.getElementById('btn-clear-filters').addEventListener('click', () => {
         state.focus = 'all';
         state.search = '';
         state.dept = '';
+        state.showArchived = false;
         document.getElementById('global-search').value = '';
         document.getElementById('filter-dept').value = '';
+        
+        const toggleBtn = document.getElementById('btn-toggle-archived');
+        if (toggleBtn) {
+            toggleBtn.dataset.active = 'false';
+            toggleBtn.classList.add('bg-white', 'border-gray-200', 'text-gray-600');
+            toggleBtn.classList.remove('bg-purple-50', 'border-purple-300', 'text-purple-800');
+            const dot = document.getElementById('archived-dot');
+            if (dot) {
+                dot.classList.add('bg-gray-300');
+                dot.classList.remove('bg-purple-600');
+            }
+        }
+        
         updateQuickFilterUI();
         apply();
     });
@@ -312,12 +430,20 @@ document.addEventListener('DOMContentLoaded', function () {
         card.querySelector('.lowongan-body').classList.remove('hidden');
         card.querySelector('.lowongan-chevron').style.transform = 'rotate(90deg)';
         markVacancyAsSeen(card);
+        const vacancyId = card.dataset.lowonganId;
+        if (vacancyId) {
+            sessionStorage.setItem('expanded_vacancy_' + vacancyId, 'true');
+        }
     }
     function collapseCard(card) {
         card.classList.remove('is-expanded');
         card.querySelector('.lowongan-body').classList.add('hidden');
         card.querySelector('.lowongan-chevron').style.transform = 'rotate(0deg)';
         dismissNewBadges(card);
+        const vacancyId = card.dataset.lowonganId;
+        if (vacancyId) {
+            sessionStorage.removeItem('expanded_vacancy_' + vacancyId);
+        }
     }
 
     document.querySelectorAll('.lowongan-toggle').forEach(btn => {
@@ -378,23 +504,68 @@ document.addEventListener('DOMContentLoaded', function () {
         if (emptyEl) tbody.appendChild(emptyEl);
     }
 
-    // ===== STATUS TABS (per card) =====
-    document.querySelectorAll('.lowongan-card').forEach(card => {
-        statusTabState.set(card, 'all');
+    // ===== STATUS TABS (per card) & STATE RESTORATION =====
+    document.querySelectorAll('.lowongan-card').forEach((card, index) => {
+        const vacancyId = card.dataset.lowonganId;
+
+        // Restore expansion state
+        if (vacancyId) {
+            const isExpandedPersisted = sessionStorage.getItem('expanded_vacancy_' + vacancyId);
+            if (isExpandedPersisted === 'true') {
+                expandCard(card);
+            } else if (isExpandedPersisted === null) {
+                // If no persisted state, keep the default (first card expanded)
+                if (index === 0) {
+                    expandCard(card);
+                } else {
+                    collapseCard(card);
+                }
+            } else {
+                collapseCard(card);
+            }
+        }
+
+        // Restore tab selection state
+        let activeTabStatus = 'all';
+        if (vacancyId) {
+            const persistedTab = sessionStorage.getItem('active_tab_vacancy_' + vacancyId);
+            if (persistedTab) {
+                activeTabStatus = persistedTab;
+            }
+        }
+        statusTabState.set(card, activeTabStatus);
+
+        // Sync the UI active tab classes based on activeTabStatus
+        const tabs = card.querySelectorAll('.status-tab');
+        tabs.forEach(tab => {
+            if (tab.dataset.status === activeTabStatus) {
+                tab.classList.add('active-tab', 'text-green-800', 'border-b-2', 'border-green-700');
+                tab.classList.remove('text-gray-500', 'border-transparent');
+            } else {
+                tab.classList.remove('active-tab', 'text-green-800', 'border-b-2', 'border-green-700');
+                tab.classList.add('text-gray-500', 'border-transparent');
+            }
+        });
+
         syncDismissedBadges(card);
 
-        const tabs = card.querySelectorAll('.status-tab');
-
+        // Set up tab click listeners
         tabs.forEach(tab => {
             tab.addEventListener('click', function () {
                 tabs.forEach(t => {
-                    t.classList.remove('active-tab', 'text-green-800', 'border-green-700');
+                    t.classList.remove('active-tab', 'text-green-800', 'border-b-2', 'border-green-700');
                     t.classList.add('text-gray-500', 'border-transparent');
                 });
-                this.classList.add('active-tab', 'text-green-800', 'border-green-700');
+                this.classList.add('active-tab', 'text-green-800', 'border-b-2', 'border-green-700');
                 this.classList.remove('text-gray-500', 'border-transparent');
 
-                statusTabState.set(card, this.dataset.status);
+                const status = this.dataset.status;
+                statusTabState.set(card, status);
+
+                if (vacancyId) {
+                    sessionStorage.setItem('active_tab_vacancy_' + vacancyId, status);
+                }
+
                 dismissNewBadges(card);
                 apply();
             });
@@ -857,14 +1028,47 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (data.success) {
                         const card = document.querySelector(`.lowongan-card[data-lowongan-id="${currentArchiveVacancyId}"]`);
                         if (card) {
-                            card.classList.add('opacity-0', 'transition-all', 'duration-500');
-                            card.style.height = '0px';
-                            card.style.margin = '0px';
-                            card.style.padding = '0px';
-                            setTimeout(() => {
-                                card.remove();
+                            card.dataset.archived = 'true';
+                            card.classList.remove('bg-white', 'border-gray-100');
+                            card.classList.add('bg-purple-50/20', 'border-purple-200', 'opacity-85', 'hover:opacity-100', 'transition-all');
+                            
+                            const titleContainer = card.querySelector('.lowongan-title')?.parentElement;
+                            if (titleContainer) {
+                                titleContainer.querySelectorAll('.rounded-full').forEach(b => b.remove());
+                                const archivedBadge = document.createElement('span');
+                                archivedBadge.className = 'text-[10px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full shrink-0';
+                                archivedBadge.textContent = 'ARCHIVED';
+                                titleContainer.appendChild(archivedBadge);
+                            }
+                            
+                            const actionContainer = card.querySelector('.btn-archive-vacancy')?.parentElement;
+                            if (actionContainer) {
+                                actionContainer.innerHTML = `
+                                    <span class="p-2 text-purple-500 bg-purple-50 rounded-lg flex items-center justify-center cursor-default" title="Vacancy is Archived">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                            <path d="m9 14 2 2 4-4"/>
+                                        </svg>
+                                    </span>
+                                `;
+                            }
+
+                            if (state.showArchived) {
                                 apply();
-                            }, 500);
+                            } else {
+                                card.classList.add('opacity-0', 'transition-all', 'duration-500');
+                                card.style.height = '0px';
+                                card.style.margin = '0px';
+                                card.style.padding = '0px';
+                                setTimeout(() => {
+                                    card.style.display = 'none';
+                                    card.classList.remove('opacity-0');
+                                    card.style.height = '';
+                                    card.style.margin = '';
+                                    card.style.padding = '';
+                                    apply();
+                                }, 500);
+                            }
                         }
                         closeArchiveModal();
                     } else {
@@ -923,7 +1127,64 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 100);
     }
 
+    // ===== COUNTDOWN STOPWATCH =====
+    function initCountdownTimers() {
+        const timerBadges = document.querySelectorAll('.countdown-timer-badge');
+        if (timerBadges.length === 0) return;
+
+        function updateTimers() {
+            const now = Date.now();
+            timerBadges.forEach(badge => {
+                const deadlineStr = badge.dataset.deadline;
+                if (!deadlineStr) return;
+
+                const deadlineTime = new Date(deadlineStr).getTime();
+                if (isNaN(deadlineTime)) return;
+
+                const diff = deadlineTime - now;
+                const textEl = badge.querySelector('.countdown-text');
+                if (!textEl) return;
+
+                if (diff <= 0) {
+                    textEl.textContent = 'Deadline Passed';
+                    badge.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
+                    badge.classList.remove('bg-red-500', 'text-white', 'border-red-600', 'animate-pulse');
+                    const svg = badge.querySelector('svg');
+                    if (svg) svg.classList.add('text-red-605');
+                    return;
+                }
+
+                // If remaining time is under 24 hours (86400000 ms)
+                if (diff <= 86400000) {
+                    const hours = Math.floor(diff / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    const pad = num => String(num).padStart(2, '0');
+                    textEl.textContent = `Deadline ${pad(hours)}:${pad(minutes)}:${pad(seconds)} left`;
+
+                    // Apply active red stopwatch styling
+                    badge.classList.remove('bg-red-50', 'text-red-700', 'border-red-200');
+                    badge.classList.add('bg-red-500', 'text-white', 'border-red-600', 'animate-pulse');
+                    const svg = badge.querySelector('svg');
+                    if (svg) svg.classList.remove('text-red-605');
+                } else {
+                    // Fallback to PHP rendered text
+                    textEl.textContent = badge.dataset.fallback || textEl.textContent;
+                    badge.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
+                    badge.classList.remove('bg-red-500', 'text-white', 'border-red-600', 'animate-pulse');
+                    const svg = badge.querySelector('svg');
+                    if (svg) svg.classList.add('text-red-605');
+                }
+            });
+        }
+
+        updateTimers();
+        setInterval(updateTimers, 1000);
+    }
+
     // Initial
+    initCountdownTimers();
     apply();
 });
 

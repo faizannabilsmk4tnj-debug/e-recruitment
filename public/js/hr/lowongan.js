@@ -223,6 +223,49 @@ document.addEventListener('DOMContentLoaded', function () {
     const cardClosingSoon = document.getElementById('card-closing-soon');
     let filterClosingSoonActive = false;
 
+    let showArchived = sessionStorage.getItem('lowongan_show_archived') === 'true';
+
+    // Sync button state initially
+    const btnToggleArchived = document.getElementById('btn-toggle-archived');
+    if (btnToggleArchived) {
+        btnToggleArchived.dataset.active = showArchived ? 'true' : 'false';
+        const dot = document.getElementById('archived-dot');
+        if (showArchived) {
+            btnToggleArchived.classList.remove('bg-white', 'border-gray-200', 'text-gray-600');
+            btnToggleArchived.classList.add('bg-purple-50', 'border-purple-300', 'text-purple-800');
+            if (dot) {
+                dot.classList.remove('bg-gray-300');
+                dot.classList.add('bg-purple-600');
+            }
+        }
+    }
+
+    if (btnToggleArchived) {
+        btnToggleArchived.addEventListener('click', function () {
+            showArchived = !showArchived;
+            sessionStorage.setItem('lowongan_show_archived', showArchived ? 'true' : 'false');
+            this.dataset.active = showArchived ? 'true' : 'false';
+            const dot = document.getElementById('archived-dot');
+            if (showArchived) {
+                this.classList.remove('bg-white', 'border-gray-200', 'text-gray-600');
+                this.classList.add('bg-purple-50', 'border-purple-300', 'text-purple-800');
+                if (dot) {
+                    dot.classList.remove('bg-gray-300');
+                    dot.classList.add('bg-purple-600');
+                }
+            } else {
+                this.classList.add('bg-white', 'border-gray-200', 'text-gray-600');
+                this.classList.remove('bg-purple-50', 'border-purple-300', 'text-purple-800');
+                if (dot) {
+                    dot.classList.add('bg-gray-300');
+                    dot.classList.remove('bg-purple-600');
+                }
+            }
+            currentPage = 1;
+            applyFilters();
+        });
+    }
+
     if (cardClosingSoon) {
         cardClosingSoon.addEventListener('click', function (e) {
             // Do not trigger filter if user clicks info icon or its tooltip
@@ -260,6 +303,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     cardClosingSoon.classList.add('border-gray-100');
                 }
             }
+
+            showArchived = false;
+            sessionStorage.setItem('lowongan_show_archived', 'false');
+            if (btnToggleArchived) {
+                btnToggleArchived.dataset.active = 'false';
+                btnToggleArchived.classList.add('bg-white', 'border-gray-200', 'text-gray-600');
+                btnToggleArchived.classList.remove('bg-purple-50', 'border-purple-300', 'text-purple-800');
+                const dot = document.getElementById('archived-dot');
+                if (dot) {
+                    dot.classList.add('bg-gray-300');
+                    dot.classList.remove('bg-purple-600');
+                }
+            }
             
             currentPage = 1;
             applyFilters();
@@ -277,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const employmentType = filterEmploymentType ? filterEmploymentType.value.toLowerCase() : '';
 
         // Toggle clear filters button visibility
-        const isFilterActive = q || status || category || location || employmentType || filterClosingSoonActive;
+        const isFilterActive = q || status || category || location || employmentType || filterClosingSoonActive || showArchived;
         if (btnClearFilters) {
             if (isFilterActive) {
                 btnClearFilters.classList.remove('hidden');
@@ -291,8 +347,23 @@ document.addEventListener('DOMContentLoaded', function () {
         // 1. Gather all rows that match the filter criteria
         const matchingRows = [];
         document.querySelectorAll('.vacancy-row').forEach(row => {
+            const isArchived = row.dataset.archived === 'true';
+            if (isArchived && !showArchived && status !== 'ARCHIVED') {
+                row.style.display = 'none';
+                return;
+            }
+
             const matchQ  = row.dataset.title.toLowerCase().includes(q) || row.dataset.ref.toLowerCase().includes(q);
-            const matchS  = !status   || row.dataset.status   === status;
+            
+            let matchS = false;
+            if (!status) {
+                matchS = true;
+            } else if (status === 'ARCHIVED') {
+                matchS = isArchived;
+            } else {
+                matchS = row.dataset.status === status;
+            }
+
             const matchC  = !category || row.dataset.category.toLowerCase() === category;
             let matchL = !location;
             if (location) {
