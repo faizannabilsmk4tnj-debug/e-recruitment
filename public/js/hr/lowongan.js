@@ -291,7 +291,16 @@ document.addEventListener('DOMContentLoaded', function () {
             const matchQ  = row.dataset.title.toLowerCase().includes(q) || row.dataset.ref.toLowerCase().includes(q);
             const matchS  = !status   || row.dataset.status   === status;
             const matchC  = !category || row.dataset.category.toLowerCase() === category;
-            const matchL  = !location || row.dataset.location.toLowerCase() === location;
+            let matchL = !location;
+            if (location) {
+                const vacancyLoc = row.dataset.location.toLowerCase();
+                const filterLoc = location.toLowerCase();
+                const filterFirstWord = filterLoc.split(/[ ,(]/)[0];
+                matchL = vacancyLoc === filterLoc || 
+                         vacancyLoc.includes(filterLoc) || 
+                         filterLoc.includes(vacancyLoc) ||
+                         (filterFirstWord.length > 2 && vacancyLoc.includes(filterFirstWord));
+            }
             const matchE  = !employmentType || row.dataset.employmentType.toLowerCase() === employmentType;
             
             let matchClosingSoon = true;
