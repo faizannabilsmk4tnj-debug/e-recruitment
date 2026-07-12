@@ -138,6 +138,8 @@ class PelamarController extends Controller
     /**
      * Show detail page for a specific applicant (via application ID).
      */
+    public function show($id)
+    {
         $application = Application::with([
             'user.profile',
             'user.educations',
