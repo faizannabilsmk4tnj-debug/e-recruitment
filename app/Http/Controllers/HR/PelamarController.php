@@ -98,6 +98,28 @@ class PelamarController extends Controller
             $interviewCountJob = $applications->where('status', 'interview')->count();
             $decisionCountJob = $applications->whereIn('status', ['shortlisted'])->count();
 
+            $newApplicantsCount = $applications->where('is_seen', false)->count();
+
+            // Calculate countdown text
+            $deadline = $job->deadline ? \Carbon\Carbon::parse($job->deadline)->endOfDay() : null;
+            $countdownText = '';
+            if ($deadline) {
+                if (now()->greaterThan($deadline)) {
+                    $countdownText = 'Expired';
+                } else {
+                    $diff = now()->diff($deadline);
+                    if ($diff->days > 0) {
+                        $countdownText = 'Deadline ' . $diff->days . 'd ' . $diff->h . 'h left';
+                    } else if ($diff->h > 0) {
+                        $countdownText = 'Deadline ' . $diff->h . 'h ' . $diff->i . 'm left';
+                    } else {
+                        $countdownText = 'Deadline ' . $diff->i . 'm left';
+                    }
+                }
+            } else {
+                $countdownText = 'No deadline';
+            }
+
             $lowonganList[] = [
                 'id' => $job->id,
                 'title' => $job->title,
@@ -107,6 +129,10 @@ class PelamarController extends Controller
                 'posted' => $job->created_at ? $job->created_at->format('d M Y') : 'N/A',
                 'days_since' => $job->created_at ? $job->created_at->diffInDays(now()) : 30,
                 'deadline_days' => $job->deadline ? now()->diffInDays($job->deadline, false) : 30,
+                'auto_close_method' => $job->auto_close_method,
+                'quota' => $job->quota,
+                'new_applicants_count' => $newApplicantsCount,
+                'countdown_text' => $countdownText,
                 'counts' => [
                     'submitted' => $applications->where('status', 'applied')->count(),
                     'shortlisted' => $applications->where('status', 'shortlisted')->count(),

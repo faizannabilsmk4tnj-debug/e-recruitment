@@ -268,18 +268,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function removeNewApplicantsBadge(card) {
+        const badge = card.querySelector('.new-applicants-badge');
+        if (badge) {
+            badge.remove();
+        }
+    }
+
     function expandCard(card) {
         card.classList.add('is-expanded');
         card.querySelector('.lowongan-body').classList.remove('hidden');
         card.querySelector('.lowongan-chevron').style.transform = 'rotate(90deg)';
         markVacancyAsSeen(card);
-        removeNewBadge(card);
     }
     function collapseCard(card) {
         card.classList.remove('is-expanded');
         card.querySelector('.lowongan-body').classList.add('hidden');
         card.querySelector('.lowongan-chevron').style.transform = 'rotate(0deg)';
         removeNewBadge(card);
+        removeNewApplicantsBadge(card);
     }
 
     document.querySelectorAll('.lowongan-toggle').forEach(btn => {
@@ -357,6 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 statusTabState.set(card, this.dataset.status);
                 removeNewBadge(card);
+                removeNewApplicantsBadge(card);
                 apply();
             });
         });

@@ -177,11 +177,18 @@
                             <h3 class="font-bold text-gray-900 truncate lowongan-title">{{ $low['title'] }}</h3>
                             <span class="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded uppercase">{{ $low['department'] }}</span>
 
-                            <!-- Urgency badges -->
-                            @if($low['deadline_days'] <= 7)
-                            <span class="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6"/><path d="M12 16h.01"/></svg>
-                                Deadline {{ $low['deadline_days'] }} days
+                            <!-- Auto Close displays -->
+                            @if(in_array($low['auto_close_method'], ['deadline', 'both']))
+                            <span class="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-red-605" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                {{ $low['countdown_text'] }}
+                            </span>
+                            @endif
+
+                            @if(in_array($low['auto_close_method'], ['quota', 'both']))
+                            <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-blue-605" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                Quota: {{ $low['total'] }}/{{ $low['quota'] }}
                             </span>
                             @endif
 
@@ -203,22 +210,13 @@
                         </p>
                     </div>
 
-                    <!-- Status breakdown pills -->
-                    <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
-                        @if($low['counts']['submitted'] > 0)
-                        <span class="text-[10px] font-bold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-1 rounded">{{ $low['counts']['submitted'] }} Submitted</span>
-                        @endif
-                        @if($low['counts']['shortlisted'] > 0)
-                        <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded">{{ $low['counts']['shortlisted'] }} Shortlisted</span>
-                        @endif
-                        @if($low['counts']['interview'] > 0)
-                        <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-1 rounded">{{ $low['counts']['interview'] }} Interview</span>
-                        @endif
-                        @if($low['counts']['accepted'] > 0)
-                        <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-1 rounded">{{ $low['counts']['accepted'] }} Accepted</span>
-                        @endif
-                        @if($low['counts']['rejected'] > 0)
-                        <span class="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-1 rounded">{{ $low['counts']['rejected'] }} Rejected</span>
+                    <!-- Status breakdown pills replaced with New Applicants count -->
+                    <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end new-applicants-badge-container">
+                        @if($low['new_applicants_count'] > 0)
+                        <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full flex items-center gap-1.5 new-applicants-badge animate-pulse">
+                            <span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                            {{ $low['new_applicants_count'] }} {{ $low['new_applicants_count'] > 1 ? 'Applicants' : 'Applicant' }} New
+                        </span>
                         @endif
                     </div>
                 </button>
