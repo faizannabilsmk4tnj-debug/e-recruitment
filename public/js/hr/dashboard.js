@@ -41,11 +41,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnChartNext = document.getElementById('btn-chart-next');
     const chartSubDesc = document.getElementById('chart-sub-desc');
 
-    // Offset state for sliding window of monthly chart (length 12)
-    // By default, show the last 6 months (index 6 to 11)
-    let monthlyWindowStart = chartData.monthly.values.length >= 6 
-        ? chartData.monthly.values.length - 6 
-        : 0;
+    // Offset state for calendar semester pages (Page 1: 0 for Jan-Jun, Page 2: 6 for Jul-Dec)
+    // Default to the current month's semester
+    let monthlyWindowStart = new Date().getMonth() < 6 ? 0 : 6;
 
     // ===== BAR TOOLTIP =====
     const tooltip = document.createElement('div');
@@ -187,17 +185,17 @@ document.addEventListener('DOMContentLoaded', function () {
         currentMode = mode;
     }
 
-    // Attach click events to nav arrows (paginated by 6 months)
+    // Attach click events to nav arrows (Semester pagination: Jan-Jun vs Jul-Dec)
     btnChartPrev?.addEventListener('click', () => {
-        if (currentMode === 'monthly' && monthlyWindowStart >= 6) {
-            monthlyWindowStart -= 6;
+        if (currentMode === 'monthly') {
+            monthlyWindowStart = 0; // Go to Jan-Jun page
             updateChart('monthly');
         }
     });
 
     btnChartNext?.addEventListener('click', () => {
-        if (currentMode === 'monthly' && monthlyWindowStart + 6 < chartData.monthly.values.length) {
-            monthlyWindowStart += 6;
+        if (currentMode === 'monthly') {
+            monthlyWindowStart = 6; // Go to Jul-Dec page
             updateChart('monthly');
         }
     });
@@ -237,7 +235,14 @@ document.addEventListener('DOMContentLoaded', function () {
     function showWeeklyModal(labelStr, total) {
         if (!chartModalTitle) return;
         chartModalTitle.textContent = "Day " + labelStr;
-        
+
+        // Guarantee that the sum of parts is mathematically equal to total
+        const p1 = Math.round(total * 0.40); // Applied
+        const p2 = Math.round(total * 0.25); // Shortlisted
+        const p3 = Math.round(total * 0.15); // Interview
+        const p4 = Math.round(total * 0.10); // Accepted
+        const p5 = total - p1 - p2 - p3 - p4; // Rejected
+
         const dailyHtml = `
             <div class="flex justify-between items-center mb-3">
                 <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Incoming Applicants</span>
@@ -245,16 +250,24 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
             <div class="space-y-2.5 border-t border-gray-200 pt-4 mt-1">
                 <div class="flex justify-between items-center text-sm text-gray-600">
-                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div><span>Document Screening Passed</span></div>
-                    <span class="font-semibold text-gray-800">${Math.round(total * 0.45)}</span>
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div><span>Applied</span></div>
+                    <span class="font-semibold text-gray-800">${p1}</span>
                 </div>
                 <div class="flex justify-between items-center text-sm text-gray-600">
-                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-purple-500"></div><span>In Interview Process</span></div>
-                    <span class="font-semibold text-gray-800">${Math.round(total * 0.30)}</span>
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-teal-500"></div><span>Shortlisted</span></div>
+                    <span class="font-semibold text-gray-800">${p2}</span>
                 </div>
                 <div class="flex justify-between items-center text-sm text-gray-600">
-                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div><span>Rejected / Failed</span></div>
-                    <span class="font-semibold text-gray-800">${Math.round(total * 0.25)}</span>
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-purple-500"></div><span>Interview</span></div>
+                    <span class="font-semibold text-gray-800">${p3}</span>
+                </div>
+                <div class="flex justify-between items-center text-sm text-gray-600">
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-emerald-500"></div><span>Accepted</span></div>
+                    <span class="font-semibold text-gray-800">${p4}</span>
+                </div>
+                <div class="flex justify-between items-center text-sm text-gray-600">
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div><span>Rejected</span></div>
+                    <span class="font-semibold text-gray-800">${p5}</span>
                 </div>
             </div>
         `;

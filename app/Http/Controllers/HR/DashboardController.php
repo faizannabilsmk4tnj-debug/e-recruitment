@@ -60,13 +60,14 @@ class DashboardController extends Controller
         $interviewsOverallAdded = Interview::count();
         $interviewsOverallRemoved = Interview::where('status', 'cancelled')->count();
 
-        // 4. Recruitment trends for chart (100% database-driven)
+        // 4. Recruitment trends for chart (100% database-driven calendar months Jan-Dec)
         $monthlyTrends = [];
-        for ($i = 11; $i >= 0; $i--) {
-            $month = now()->subMonths($i);
-            $label = strtoupper($month->format('M'));
-            $dbCount = Application::whereMonth('created_at', $month->month)
-                ->whereYear('created_at', $month->year)
+        $currentYear = now()->year;
+        for ($m = 1; $m <= 12; $m++) {
+            $monthDate = now()->setDate($currentYear, $m, 1);
+            $label = strtoupper($monthDate->format('M'));
+            $dbCount = Application::whereMonth('created_at', $m)
+                ->whereYear('created_at', $currentYear)
                 ->count();
             $monthlyTrends[$label] = $dbCount;
         }
