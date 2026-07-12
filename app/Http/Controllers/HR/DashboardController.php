@@ -73,11 +73,13 @@ class DashboardController extends Controller
         }
 
         $weeklyTrends = [];
+        $weeklyDates = [];
         for ($i = 6; $i >= 0; $i--) {
             $day = now()->subDays($i);
             $label = strtoupper($day->format('D'));
             $dbCount = Application::whereDate('created_at', $day->toDateString())->count();
             $weeklyTrends[$label] = $dbCount;
+            $weeklyDates[] = $day->format('d M Y');
         }
 
         // 5. Active vacancies list
@@ -121,6 +123,7 @@ class DashboardController extends Controller
             'interviewsOverall',
             'monthlyTrends',
             'weeklyTrends',
+            'weeklyDates',
             'activeVacancies',
             'wawancaraData',
             'vacanciesAdded',

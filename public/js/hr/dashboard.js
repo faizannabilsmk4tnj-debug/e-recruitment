@@ -135,6 +135,10 @@ document.addEventListener('DOMContentLoaded', function () {
             bar.className = `w-full rounded-t-lg ${barColor} chart-bar transition-all duration-500`;
             bar.style.height = height + 'px';
             bar.style.cursor = 'pointer';
+            
+            if (mode === 'weekly' && data.dates && data.dates[i]) {
+                bar.setAttribute('data-date', data.dates[i]);
+            }
 
             const label = document.createElement('span');
             label.className = `text-[10px] ${textColor} chart-label`;
@@ -146,7 +150,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Add Event Listeners for Tooltip
             bar.addEventListener('mouseenter', () => {
-                tooltip.textContent = labelStr + ': ' + val + ' applicants';
+                const dateStr = bar.getAttribute('data-date');
+                const displayLabel = dateStr ? `${labelStr} (${dateStr})` : labelStr;
+                tooltip.textContent = displayLabel + ': ' + val + ' applicants';
                 tooltip.classList.remove('hidden');
             });
             bar.addEventListener('mousemove', e => {
@@ -177,7 +183,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     showMonthWeeksModal(labelStr, val);
                 } else if (mode === 'weekly') {
                     if (!labelStr || val === 0) return;
-                    showWeeklyModal(labelStr, val);
+                    const dateVal = bar.getAttribute('data-date') || '';
+                    showWeeklyModal(labelStr, val, dateVal);
                 }
             });
         });
@@ -232,9 +239,9 @@ document.addEventListener('DOMContentLoaded', function () {
         chartModal.classList.remove('hidden');
     }
 
-    function showWeeklyModal(labelStr, total) {
+    function showWeeklyModal(labelStr, total, dateStr) {
         if (!chartModalTitle) return;
-        chartModalTitle.textContent = "Day " + labelStr;
+        chartModalTitle.textContent = "Day " + labelStr + (dateStr ? ` (${dateStr})` : '');
 
         // Guarantee that the sum of parts is mathematically equal to total
         const p1 = Math.round(total * 0.40); // Applied

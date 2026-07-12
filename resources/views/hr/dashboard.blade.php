@@ -302,6 +302,7 @@
         weekly: {
             labels: {!! json_encode(array_keys($weeklyTrends)) !!},
             values: {!! json_encode(array_values($weeklyTrends)) !!},
+            dates: {!! json_encode($weeklyDates) !!},
             activeIndex: {{ array_search(strtoupper(now()->format('D')), array_keys($weeklyTrends)) !== false ? array_search(strtoupper(now()->format('D')), array_keys($weeklyTrends)) : 5 }}
         },
         wawancara: {!! json_encode($wawancaraData) !!}
