@@ -456,8 +456,8 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
         $interview = Interview::where('application_id', $id)->findOrFail($interviewId);
 
         // Fetch vacancy passing grade
-        $application = \App\Models\Application::findOrFail($id);
-        $vacancy = \App\Models\JobPosting::findOrFail($application->job_id);
+        $application = Application::findOrFail($id);
+        $vacancy = JobPosting::findOrFail($application->job_id);
         $passingGrade = $vacancy->passing_grade ?? 70;
 
         if ($request->recommendation === 'proceed' && $request->score < $passingGrade) {
