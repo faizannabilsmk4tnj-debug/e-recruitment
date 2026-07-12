@@ -31,52 +31,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let currentMode = 'monthly';
-    const bars       = document.querySelectorAll('.chart-bar');
-    const chartLabels = document.querySelectorAll('.chart-label');
+    const container = document.getElementById('chart-bars-container');
     const btnMonthly = document.getElementById('btn-monthly');
     const btnWeekly  = document.getElementById('btn-weekly');
 
-    // ===== CHART UPDATE =====
-    function updateChart(mode) {
-        const data   = chartData[mode];
-        const maxVal = Math.max(...data.values) || 1;
+    // Navigation elements
+    const chartNav = document.getElementById('chart-nav');
+    const btnChartPrev = document.getElementById('btn-chart-prev');
+    const btnChartNext = document.getElementById('btn-chart-next');
+    const chartSubDesc = document.getElementById('chart-sub-desc');
 
-        bars.forEach((bar, i) => {
-            const height = Math.round((data.values[i] / maxVal) * MAX_HEIGHT);
-            bar.style.height = height + 'px';
-
-            if (i === data.activeIndex) {
-                bar.classList.remove('bg-green-200');
-                bar.classList.add('bg-green-800');
-            } else {
-                bar.classList.remove('bg-green-800');
-                bar.classList.add('bg-green-200');
-            }
-        });
-
-        chartLabels.forEach((lbl, i) => {
-            lbl.textContent = data.labels[i];
-            if (i === data.activeIndex) {
-                lbl.classList.add('text-green-800');
-                lbl.classList.remove('text-gray-400');
-            } else {
-                lbl.classList.remove('text-green-800');
-                lbl.classList.add('text-gray-400');
-            }
-        });
-
-        currentMode = mode;
-    }
-
-    function setActiveBtn(active, inactive) {
-        active.classList.add('bg-white', 'text-gray-800', 'shadow-sm');
-        active.classList.remove('text-gray-500');
-        inactive.classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
-        inactive.classList.add('text-gray-500');
-    }
-
-    btnMonthly?.addEventListener('click', () => { updateChart('monthly'); setActiveBtn(btnMonthly, btnWeekly); });
-    btnWeekly?.addEventListener('click',  () => { updateChart('weekly');  setActiveBtn(btnWeekly,  btnMonthly); });
+    // Offset state for sliding window of monthly chart (length 12)
+    // By default, show the last 6 months (index 6 to 11)
+    let monthlyWindowStart = chartData.monthly.values.length >= 6 
+        ? chartData.monthly.values.length - 6 
+        : 0;
 
     // ===== BAR TOOLTIP =====
     const tooltip = document.createElement('div');
@@ -96,111 +65,216 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    bars.forEach((bar, i) => {
-        bar.style.cursor = 'pointer';
-        bar.addEventListener('mouseenter', () => {
-            const d = chartData[currentMode];
-            if (!d.labels[i]) return;
-            tooltip.textContent = d.labels[i] + ': ' + d.values[i] + ' applicants';
-            tooltip.classList.remove('hidden');
-        });
-        bar.addEventListener('mousemove', e => {
-            tooltip.style.left = (e.clientX + 12) + 'px';
-            tooltip.style.top  = (e.clientY - 34) + 'px';
-        });
-        bar.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
+    const currentMonthStr = new Date().toLocaleString('en-US', { month: 'short' }).toUpperCase();
+    const currentDayStr = new Date().toLocaleString('en-US', { weekday: 'short' }).toUpperCase();
+
+    // ===== CHART UPDATE =====
+    function updateChart(mode) {
+        if (!container) return;
+        container.innerHTML = '';
+
+        const data   = chartData[mode];
         
-        // Add click event for modal or drill-down
-        bar.addEventListener('click', () => {
-            const d = chartData[currentMode];
-            
-            if (currentMode === 'monthly') {
-                // Drill-down to month_weeks view
-                const monthTotal = d.values[i];
-                chartData.month_weeks.values = [
-                    Math.round(monthTotal * 0.25),
-                    Math.round(monthTotal * 0.3),
-                    Math.round(monthTotal * 0.25),
-                    monthTotal - Math.round(monthTotal * 0.25)*2 - Math.round(monthTotal * 0.3),
-                    0, 0
-                ];
-                updateChart('month_weeks');
-                // We don't visually set btnWeekly active here because this is a special drill-down view,
-                // but if we want to visually clear both buttons we could. Let's just remove active from monthly.
-                btnMonthly.classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
-                btnMonthly.classList.add('text-gray-500');
-                btnWeekly.classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
-                btnWeekly.classList.add('text-gray-500');
-                
-            } else if (currentMode === 'month_weeks') {
-                if (!d.labels[i] || d.values[i] === 0) return;
-                
-                if (chartModalTitle) {
-                    chartModalTitle.textContent = d.labels[i];
-                    
-                    const total = d.values[i];
-                    const v1 = Math.round(total * 0.2);
-                    const v2 = Math.round(total * 0.15);
-                    const v3 = Math.round(total * 0.2);
-                    const v4 = Math.round(total * 0.15);
-                    const v5 = Math.round(total * 0.15);
-                    const v6 = Math.round(total * 0.1);
-                    const v7 = total - v1 - v2 - v3 - v4 - v5 - v6;
-                    
-                    const dailyHtml = `
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Incoming Applicants</span>
-                            <span class="text-lg font-bold text-green-700">${total} ${total === 1 ? 'Applicant' : 'Applicants'}</span>
-                        </div>
-                        <div class="space-y-2.5 border-t border-gray-200 pt-4 mt-1">
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Monday</span><span class="font-semibold text-gray-800">${v1}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Tuesday</span><span class="font-semibold text-gray-800">${v2}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Wednesday</span><span class="font-semibold text-gray-800">${v3}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Thursday</span><span class="font-semibold text-gray-800">${v4}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Friday</span><span class="font-semibold text-gray-800">${v5}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Saturday</span><span class="font-semibold text-gray-800">${v6}</span></div>
-                            <div class="flex justify-between items-center text-sm text-gray-600"><span>Sunday</span><span class="font-semibold text-gray-800">${v7}</span></div>
-                        </div>
-                    `;
-                    document.getElementById('chart-modal-desc').textContent = "Here is the daily applicant breakdown for this week.";
-                    document.getElementById('chart-modal-content').innerHTML = dailyHtml;
-                    chartModal.classList.remove('hidden');
-                }
-            } else if (currentMode === 'weekly') {
-                if (!d.labels[i] || d.values[i] === 0) return;
-                
-                if (chartModalTitle) {
-                    chartModalTitle.textContent = "Day " + d.labels[i];
-                    
-                    const total = d.values[i];
-                    
-                    const dailyHtml = `
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Incoming Applicants</span>
-                            <span class="text-lg font-bold text-green-700">${total} ${total === 1 ? 'Applicant' : 'Applicants'}</span>
-                        </div>
-                        <div class="space-y-2.5 border-t border-gray-200 pt-4 mt-1">
-                            <div class="flex justify-between items-center text-sm text-gray-600">
-                                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div><span>Document Screening Passed</span></div>
-                                <span class="font-semibold text-gray-800">${Math.round(total * 0.45)}</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm text-gray-600">
-                                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-purple-500"></div><span>In Interview Process</span></div>
-                                <span class="font-semibold text-gray-800">${Math.round(total * 0.30)}</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm text-gray-600">
-                                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div><span>Rejected / Failed</span></div>
-                                <span class="font-semibold text-gray-800">${Math.round(total * 0.25)}</span>
-                            </div>
-                        </div>
-                    `;
-                    document.getElementById('chart-modal-desc').textContent = "Here is the applicant status breakdown for that day.";
-                    document.getElementById('chart-modal-content').innerHTML = dailyHtml;
-                    chartModal.classList.remove('hidden');
+        let valuesToRender = [];
+        let labelsToRender = [];
+        let activeIdxToRender = -1;
+
+        if (mode === 'monthly') {
+            // Show navigation arrows
+            if (chartNav) chartNav.classList.remove('hidden');
+
+            // Slide window of 6 months
+            const start = monthlyWindowStart;
+            const end = start + 6;
+            valuesToRender = data.values.slice(start, end);
+            labelsToRender = data.labels.slice(start, end);
+            activeIdxToRender = data.activeIndex >= start && data.activeIndex < end 
+                ? data.activeIndex - start 
+                : -1;
+
+            // Update disabled status of buttons
+            if (btnChartPrev) btnChartPrev.disabled = (start === 0);
+            if (btnChartNext) btnChartNext.disabled = (end >= data.values.length);
+
+            // Update sub-desc dynamically
+            if (chartSubDesc && labelsToRender.length > 0) {
+                chartSubDesc.textContent = `Applicant activity from ${labelsToRender[0]} to ${labelsToRender[labelsToRender.length - 1]}`;
+            }
+        } else {
+            // Hide navigation arrows
+            if (chartNav) chartNav.classList.add('hidden');
+
+            valuesToRender = data.values;
+            labelsToRender = data.labels;
+            activeIdxToRender = data.activeIndex;
+
+            if (chartSubDesc) {
+                if (mode === 'weekly') {
+                    chartSubDesc.textContent = "Applicant activity in the last 7 days";
+                } else if (mode === 'month_weeks') {
+                    chartSubDesc.textContent = "Weekly breakdown for selected month";
                 }
             }
+        }
+
+        const maxVal = Math.max(...valuesToRender) || 1;
+
+        valuesToRender.forEach((val, i) => {
+            const labelStr = labelsToRender[i];
+            const height = Math.round((val / maxVal) * MAX_HEIGHT);
+
+            const isCurrent = (mode === 'monthly' && labelStr === currentMonthStr) ||
+                              (mode === 'weekly' && labelStr === currentDayStr) ||
+                              (i === activeIdxToRender);
+
+            const barColor = isCurrent ? 'bg-green-800' : 'bg-green-200';
+            const textColor = isCurrent ? 'text-green-800 font-semibold' : 'text-gray-400 font-semibold';
+
+            const barWrapper = document.createElement('div');
+            barWrapper.className = 'flex-1 flex flex-col items-center gap-2 h-full justify-end';
+
+            const bar = document.createElement('div');
+            bar.className = `w-full rounded-t-lg ${barColor} chart-bar transition-all duration-500`;
+            bar.style.height = height + 'px';
+            bar.style.cursor = 'pointer';
+
+            const label = document.createElement('span');
+            label.className = `text-[10px] ${textColor} chart-label`;
+            label.textContent = labelStr;
+
+            barWrapper.appendChild(bar);
+            barWrapper.appendChild(label);
+            container.appendChild(barWrapper);
+
+            // Add Event Listeners for Tooltip
+            bar.addEventListener('mouseenter', () => {
+                tooltip.textContent = labelStr + ': ' + val + ' applicants';
+                tooltip.classList.remove('hidden');
+            });
+            bar.addEventListener('mousemove', e => {
+                tooltip.style.left = (e.clientX + 12) + 'px';
+                tooltip.style.top  = (e.clientY - 34) + 'px';
+            });
+            bar.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
+
+            // Click action
+            bar.addEventListener('click', () => {
+                if (mode === 'monthly') {
+                    // Drill-down to month_weeks view
+                    const monthTotal = val;
+                    chartData.month_weeks.values = [
+                        Math.round(monthTotal * 0.25),
+                        Math.round(monthTotal * 0.3),
+                        Math.round(monthTotal * 0.25),
+                        monthTotal - Math.round(monthTotal * 0.25)*2 - Math.round(monthTotal * 0.3),
+                        0, 0
+                    ];
+                    updateChart('month_weeks');
+                    btnMonthly?.classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
+                    btnMonthly?.classList.add('text-gray-500');
+                    btnWeekly?.classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
+                    btnWeekly?.classList.add('text-gray-500');
+                } else if (mode === 'month_weeks') {
+                    if (!labelStr || val === 0) return;
+                    showMonthWeeksModal(labelStr, val);
+                } else if (mode === 'weekly') {
+                    if (!labelStr || val === 0) return;
+                    showWeeklyModal(labelStr, val);
+                }
+            });
         });
+
+        currentMode = mode;
+    }
+
+    // Attach click events to nav arrows
+    btnChartPrev?.addEventListener('click', () => {
+        if (currentMode === 'monthly' && monthlyWindowStart > 0) {
+            monthlyWindowStart--;
+            updateChart('monthly');
+        }
     });
+
+    btnChartNext?.addEventListener('click', () => {
+        if (currentMode === 'monthly' && monthlyWindowStart < chartData.monthly.values.length - 6) {
+            monthlyWindowStart++;
+            updateChart('monthly');
+        }
+    });
+
+    function showMonthWeeksModal(labelStr, total) {
+        if (!chartModalTitle) return;
+        chartModalTitle.textContent = labelStr;
+        
+        const v1 = Math.round(total * 0.2);
+        const v2 = Math.round(total * 0.15);
+        const v3 = Math.round(total * 0.2);
+        const v4 = Math.round(total * 0.15);
+        const v5 = Math.round(total * 0.15);
+        const v6 = Math.round(total * 0.1);
+        const v7 = total - v1 - v2 - v3 - v4 - v5 - v6;
+        
+        const dailyHtml = `
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Incoming Applicants</span>
+                <span class="text-lg font-bold text-green-700">${total} ${total === 1 ? 'Applicant' : 'Applicants'}</span>
+            </div>
+            <div class="space-y-2.5 border-t border-gray-200 pt-4 mt-1">
+                <div class="flex justify-between items-center text-sm text-gray-600"><span>Monday</span><span class="font-semibold text-gray-800">${v1}</span></div>
+                <div class="flex justify-between items-center text-sm text-gray-600"><span>Tuesday</span><span class="font-semibold text-gray-800">${v2}</span></div>
+                <div class="flex justify-between items-center text-sm text-gray-600"><span>Wednesday</span><span class="font-semibold text-gray-800">${v3}</span></div>
+                <div class="flex justify-between items-center text-sm text-gray-600"><span>Thursday</span><span class="font-semibold text-gray-800">${v4}</span></div>
+                <div class="flex justify-between items-center text-sm text-gray-600"><span>Friday</span><span class="font-semibold text-gray-800">${v5}</span></div>
+                <div class="flex justify-between items-center text-sm text-gray-600"><span>Saturday</span><span class="font-semibold text-gray-800">${v6}</span></div>
+                <div class="flex justify-between items-center text-sm text-gray-600"><span>Sunday</span><span class="font-semibold text-gray-800">${v7}</span></div>
+            </div>
+        `;
+        document.getElementById('chart-modal-desc').textContent = "Here is the daily applicant breakdown for this week.";
+        document.getElementById('chart-modal-content').innerHTML = dailyHtml;
+        chartModal.classList.remove('hidden');
+    }
+
+    function showWeeklyModal(labelStr, total) {
+        if (!chartModalTitle) return;
+        chartModalTitle.textContent = "Day " + labelStr;
+        
+        const dailyHtml = `
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Incoming Applicants</span>
+                <span class="text-lg font-bold text-green-700">${total} ${total === 1 ? 'Applicant' : 'Applicants'}</span>
+            </div>
+            <div class="space-y-2.5 border-t border-gray-200 pt-4 mt-1">
+                <div class="flex justify-between items-center text-sm text-gray-600">
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div><span>Document Screening Passed</span></div>
+                    <span class="font-semibold text-gray-800">${Math.round(total * 0.45)}</span>
+                </div>
+                <div class="flex justify-between items-center text-sm text-gray-600">
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-purple-500"></div><span>In Interview Process</span></div>
+                    <span class="font-semibold text-gray-800">${Math.round(total * 0.30)}</span>
+                </div>
+                <div class="flex justify-between items-center text-sm text-gray-600">
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div><span>Rejected / Failed</span></div>
+                    <span class="font-semibold text-gray-800">${Math.round(total * 0.25)}</span>
+                </div>
+            </div>
+        `;
+        document.getElementById('chart-modal-desc').textContent = "Here is the applicant status breakdown for that day.";
+        document.getElementById('chart-modal-content').innerHTML = dailyHtml;
+        chartModal.classList.remove('hidden');
+    }
+
+    function setActiveBtn(active, inactive) {
+        active.classList.add('bg-white', 'text-gray-800', 'shadow-sm');
+        active.classList.remove('text-gray-500');
+        inactive.classList.remove('bg-white', 'text-gray-800', 'shadow-sm');
+        inactive.classList.add('text-gray-500');
+    }
+
+    btnMonthly?.addEventListener('click', () => { updateChart('monthly'); setActiveBtn(btnMonthly, btnWeekly); });
+    btnWeekly?.addEventListener('click',  () => { updateChart('weekly');  setActiveBtn(btnWeekly,  btnMonthly); });
+
+    // Initial Render
+    updateChart('monthly');
 
     // ===== STATUS LOWONGAN: dots menu =====
     const lowonganDropdown = document.createElement('div');

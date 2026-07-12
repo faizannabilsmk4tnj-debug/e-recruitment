@@ -137,11 +137,22 @@
                 <div class="flex items-start justify-between mb-1">
                     <div>
                         <h2 class="font-bold text-gray-900 text-lg">Recruitment Trends</h2>
-                        <p class="text-xs text-gray-400 mt-0.5">Applicant activity in the last 6 months</p>
+                        <p id="chart-sub-desc" class="text-xs text-gray-400 mt-0.5">Applicant activity in the last 6 months</p>
                     </div>
-                    <div class="flex bg-gray-100 rounded-lg p-0.5 gap-0.5">
-                        <button id="btn-monthly" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-white text-gray-800 shadow-sm transition-all">Monthly</button>
-                        <button id="btn-weekly" class="px-3 py-1.5 text-xs font-semibold rounded-md text-gray-500 hover:text-gray-700 transition-all">Weekly</button>
+                    <div class="flex items-center gap-3">
+                        <!-- Navigation Arrows (only visible when in monthly mode) -->
+                        <div id="chart-nav" class="flex gap-1">
+                            <button id="btn-chart-prev" class="w-7 h-7 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed" title="Previous 6 Months">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                            </button>
+                            <button id="btn-chart-next" class="w-7 h-7 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed" title="Next 6 Months">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                        <div class="flex bg-gray-100 rounded-lg p-0.5 gap-0.5">
+                            <button id="btn-monthly" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-white text-gray-800 shadow-sm transition-all">Monthly</button>
+                            <button id="btn-weekly" class="px-3 py-1.5 text-xs font-semibold rounded-md text-gray-500 hover:text-gray-700 transition-all">Weekly</button>
+                        </div>
                     </div>
                 </div>
 
@@ -156,20 +167,8 @@
                         <span class="text-[10px] text-gray-300">0</span>
                     </div>
                     <!-- Bars -->
-                    <div class="ml-8 flex items-end gap-3" style="height: 160px;">
-                        @foreach($monthlyTrends as $monthLabel => $val)
-                        @php
-                            $isCurrentMonth = ($monthLabel === strtoupper(now()->format('M')));
-                            $barColor = $isCurrentMonth ? 'bg-green-800' : 'bg-green-200';
-                            $textColor = $isCurrentMonth ? 'text-green-800 font-semibold' : 'text-gray-400 font-semibold';
-                            $maxVal = max(array_values($monthlyTrends));
-                            $percentHeight = $maxVal > 0 ? round(($val / $maxVal) * 140) : 0;
-                        @endphp
-                        <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                            <div class="w-full rounded-t-lg {{ $barColor }} chart-bar transition-all duration-500" style="height:{{ $percentHeight }}px;" data-monthly="{{ $val }}" data-weekly="40"></div>
-                            <span class="text-[10px] {{ $textColor }} chart-label">{{ $monthLabel }}</span>
-                        </div>
-                        @endforeach
+                    <div id="chart-bars-container" class="ml-8 flex items-end gap-3" style="height: 160px;">
+                        <!-- Generated dynamically by JavaScript -->
                     </div>
                 </div>
             </div>
