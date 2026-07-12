@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
 
             // 6. Kategori & Lowongan kerja
             JobCategoriesSeeder::class,
-            JobPostingsSeeder::class,
+            TestJobPostingsSeeder::class,
 
             // 7. Lamaran & log status (FK ke users, job_postings, applicant_cvs)
             ApplicationsSeeder::class,

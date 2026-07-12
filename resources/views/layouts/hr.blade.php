@@ -88,7 +88,7 @@
                 <div class="flex items-center gap-2 cursor-pointer group" onclick="document.getElementById('logout-dropdown').classList.toggle('hidden')">
                     <div class="text-right">
                         <div class="text-xs font-semibold text-white leading-none">{{ Auth::user()->name }}</div>
-                        <div class="text-[10px] text-green-300 leading-none mt-0.5">{{ Auth::user()->job_title ?: 'HR Staff' }}</div>
+                        <div class="text-[10px] text-green-300 leading-none mt-0.5">{{ Auth::user()->job_title ?: (Auth::user()->role === 'hr_master' ? 'HR Master' : 'HR Staff') }}</div>
                     </div>
                     <div class="w-8 h-8 rounded-full bg-green-600 border-2 border-green-400 overflow-hidden flex items-center justify-center">
                         @if(Auth::check() && Auth::user()->avatar)
