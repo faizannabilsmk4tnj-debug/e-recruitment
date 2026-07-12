@@ -53,6 +53,7 @@
                                 'draft' => 'bg-amber-50 border-amber-200 text-amber-700',
                                 'closed' => 'bg-red-50 border-red-200 text-red-700',
                                 'expired' => 'bg-gray-50 border-gray-200 text-gray-700',
+                                'filled' => 'bg-blue-50 border-blue-200 text-blue-700',
                             ];
                             $statusClass = $statusClasses[$vacancy->status] ?? 'bg-gray-50 border-gray-200 text-gray-700';
 
@@ -61,6 +62,7 @@
                                 'draft' => 'bg-amber-500',
                                 'closed' => 'bg-red-500',
                                 'expired' => 'bg-gray-500',
+                                'filled' => 'bg-blue-500',
                             ];
                             $dotClass = $dotClasses[$vacancy->status] ?? 'bg-gray-500';
                             
@@ -161,10 +163,10 @@
             $currentApplicants = $stats['total'] ?? 0;
             $percentQuota = min(100, round(($currentApplicants / $quota) * 100));
 
-            $cardBg = ($vacancy->status === 'closed' || $vacancy->status === 'expired') ? 'bg-gray-900' : 'bg-green-900';
-            $barBg = ($vacancy->status === 'closed' || $vacancy->status === 'expired') ? 'bg-gray-800' : 'bg-green-800';
-            $fillBg = ($vacancy->status === 'closed' || $vacancy->status === 'expired') ? 'bg-gray-500' : 'bg-green-400';
-            $textMuted = ($vacancy->status === 'closed' || $vacancy->status === 'expired') ? 'text-gray-400' : 'text-green-300';
+            $cardBg = in_array($vacancy->status, ['closed', 'expired', 'filled']) ? 'bg-gray-900' : 'bg-green-900';
+            $barBg = in_array($vacancy->status, ['closed', 'expired', 'filled']) ? 'bg-gray-800' : 'bg-green-800';
+            $fillBg = in_array($vacancy->status, ['closed', 'expired', 'filled']) ? 'bg-gray-500' : 'bg-green-400';
+            $textMuted = in_array($vacancy->status, ['closed', 'expired', 'filled']) ? 'text-gray-400' : 'text-green-300';
             
             $autoCloseMethod = $vacancy->auto_close_method ?? 'both';
         @endphp
@@ -175,7 +177,7 @@
 
             <p class="text-white font-bold text-lg">Vacancy Progress</p>
             
-            @if($vacancy->status === 'closed' || $vacancy->status === 'expired')
+            @if(in_array($vacancy->status, ['closed', 'expired', 'filled']))
                 <p class="text-gray-400 text-xs mt-1 mb-6">This recruitment process has been concluded.</p>
             @elseif($autoCloseMethod === 'deadline')
                 <p class="text-green-300 text-xs mt-1 mb-6">Auto-close is active based on time deadline on {{ $vacancy->deadline ? \Carbon\Carbon::parse($vacancy->deadline)->format('M d, Y') : '-' }}.</p>
@@ -187,7 +189,7 @@
                 <p class="text-green-300 text-xs mt-1 mb-6">Recruitment is managed manually by HR.</p>
             @endif
 
-            @if($vacancy->status === 'closed' || $vacancy->status === 'expired')
+            @if(in_array($vacancy->status, ['closed', 'expired', 'filled']))
                 <div class="flex items-center justify-between mt-4">
                     <span class="text-xs text-gray-400">Status</span>
                     <span class="text-red-400 text-sm font-bold uppercase tracking-wider">Concluded</span>
@@ -527,6 +529,8 @@
                     <select id="v-status" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
                         <option value="DRAFT">Draft</option>
                         <option value="ACTIVE">Active</option>
+                        <option value="CLOSED">Closed</option>
+                        <option value="FILLED">Filled</option>
                     </select>
                 </div>
                 <div>

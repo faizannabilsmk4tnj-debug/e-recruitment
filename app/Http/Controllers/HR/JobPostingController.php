@@ -23,8 +23,9 @@ class JobPostingController extends Controller
             ->orderByRaw("CASE 
                 WHEN status = 'open' THEN 1 
                 WHEN status = 'draft' THEN 2 
-                WHEN status = 'closed' THEN 3 
-                ELSE 4 
+                WHEN status = 'filled' THEN 3
+                WHEN status = 'closed' THEN 4 
+                ELSE 5 
             END")
             ->orderBy('created_at', 'desc')
             ->get();
@@ -52,22 +53,22 @@ class JobPostingController extends Controller
             'daily' => [
                 'vacancies' => JobPosting::where('created_at', '>=', now()->subDay())->count(),
                 'applicants' => DB::table('applications')->where('created_at', '>=', now()->subDay())->count(),
-                'closed' => JobPosting::where('status', 'closed')->where('updated_at', '>=', now()->subDay())->count(),
+                'closed' => JobPosting::whereIn('status', ['closed', 'filled'])->where('updated_at', '>=', now()->subDay())->count(),
             ],
             'weekly' => [
                 'vacancies' => JobPosting::where('created_at', '>=', now()->subWeek())->count(),
                 'applicants' => DB::table('applications')->where('created_at', '>=', now()->subWeek())->count(),
-                'closed' => JobPosting::where('status', 'closed')->where('updated_at', '>=', now()->subWeek())->count(),
+                'closed' => JobPosting::whereIn('status', ['closed', 'filled'])->where('updated_at', '>=', now()->subWeek())->count(),
             ],
             'monthly' => [
                 'vacancies' => JobPosting::where('created_at', '>=', now()->subMonth())->count(),
                 'applicants' => DB::table('applications')->where('created_at', '>=', now()->subMonth())->count(),
-                'closed' => JobPosting::where('status', 'closed')->where('updated_at', '>=', now()->subMonth())->count(),
+                'closed' => JobPosting::whereIn('status', ['closed', 'filled'])->where('updated_at', '>=', now()->subMonth())->count(),
             ],
             'yearly' => [
                 'vacancies' => JobPosting::where('created_at', '>=', now()->subYear())->count(),
                 'applicants' => DB::table('applications')->where('created_at', '>=', now()->subYear())->count(),
-                'closed' => JobPosting::where('status', 'closed')->where('updated_at', '>=', now()->subYear())->count(),
+                'closed' => JobPosting::whereIn('status', ['closed', 'filled'])->where('updated_at', '>=', now()->subYear())->count(),
             ],
         ];
 
@@ -118,7 +119,7 @@ class JobPostingController extends Controller
             'salary_min' => 'nullable|string',
             'salary_max' => 'nullable|string',
             'show_salary' => 'boolean',
-            'status' => 'required|in:draft,open,closed,expired',
+            'status' => 'required|in:draft,open,closed,expired,filled',
             'auto_close_method' => 'nullable|in:deadline,quota,both,manual',
             'banner_image' => 'nullable|string',
             'employment_type' => $isDraft ? 'nullable|in:full-time,part-time,contract,internship' : 'required|in:full-time,part-time,contract,internship',
@@ -299,7 +300,7 @@ class JobPostingController extends Controller
             'age_max' => 'nullable|integer|min:0',
             'passing_grade' => 'nullable|integer|min:0|max:100',
             'deadline' => $isDraft ? 'nullable|date' : 'required|date',
-            'status' => 'required|in:draft,open,closed,expired',
+            'status' => 'required|in:draft,open,closed,expired,filled',
             'auto_close_method' => 'nullable|in:deadline,quota,both,manual',
             'description' => $isDraft ? 'nullable|string' : 'required|string',
             'requirements' => $isDraft ? 'nullable|string' : 'required|string',
@@ -430,7 +431,7 @@ class JobPostingController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $validated = $request->validate([
-            'status' => 'required|in:draft,open,closed,expired',
+            'status' => 'required|in:draft,open,closed,expired,filled',
         ]);
 
         $job = JobPosting::findOrFail($id);
@@ -468,7 +469,7 @@ class JobPostingController extends Controller
         }
 
         $job->status = $validated['status'];
-        if ($validated['status'] === 'closed') {
+        if ($validated['status'] === 'closed' || $validated['status'] === 'filled') {
             $job->closed_at = now();
         }
         $job->save();

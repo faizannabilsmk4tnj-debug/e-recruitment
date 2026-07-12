@@ -894,6 +894,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let dbStatus = 'open';
             if (status === 'DRAFT') dbStatus = 'draft';
             if (status === 'CLOSED') dbStatus = 'closed';
+            if (status === 'FILLED') dbStatus = 'filled';
 
             fetch('/hr/lowongan/' + data.id, {
                 method: 'PUT',

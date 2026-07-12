@@ -363,8 +363,8 @@ class PelamarController extends Controller
     {
         $user = Auth::user();
         
-        // Check if job exists and is open/closed
-        $job = \App\Models\JobPosting::whereIn('status', ['open', 'closed'])->findOrFail($id);
+        // Check if job exists and is open/closed/filled
+        $job = \App\Models\JobPosting::whereIn('status', ['open', 'closed', 'filled'])->findOrFail($id);
 
         $saved = SavedJob::where('user_id', $user->id)->where('job_id', $id)->first();
 

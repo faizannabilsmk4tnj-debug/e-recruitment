@@ -29,8 +29,8 @@ class DashboardController extends Controller
 
         // --- CALCULATE ADDED / REMOVED CHANGE INDICATORS ---
         // Active Vacancies
-        $vacanciesAdded = JobPosting::whereIn('status', ['open', 'closed'])->count();
-        $vacanciesRemoved = JobPosting::where('status', 'closed')->count();
+        $vacanciesAdded = JobPosting::whereIn('status', ['open', 'closed', 'filled'])->count();
+        $vacanciesRemoved = JobPosting::whereIn('status', ['closed', 'filled'])->count();
 
         // Applicants (Today)
         $applicantsTodayAdded = Application::whereDate('created_at', now()->toDateString())->count();

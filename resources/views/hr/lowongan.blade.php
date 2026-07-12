@@ -190,6 +190,8 @@
                     $statusBadge = 'DRAFT';
                     if ($v->status === 'open') {
                         $statusBadge = 'ACTIVE';
+                    } elseif ($v->status === 'filled') {
+                        $statusBadge = 'FILLED';
                     } elseif ($v->status === 'closed' || $v->status === 'expired') {
                         if ($v->quota > 0 && $v->applicant_count >= $v->quota) {
                             $statusBadge = 'FILLED';
@@ -204,7 +206,7 @@
                     // Reference ID format (REF-ECO-YEAR-ID)
                     $refId = 'REF-ECO-' . $v->created_at->format('Y') . '-' . str_pad($v->id, 3, '0', STR_PAD_LEFT);
                 @endphp
-                <tr class="border-t border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer vacancy-row {{ $v->status === 'closed' || $v->status === 'expired' ? 'opacity-50' : '' }}"
+                <tr class="border-t border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer vacancy-row {{ in_array($v->status, ['closed', 'expired', 'filled']) ? 'opacity-50' : '' }}"
                     data-id="{{ $v->id }}"
                     data-title="{{ strtolower($v->title) }}"
                     data-ref="{{ strtolower($refId) }}"
@@ -230,7 +232,7 @@
 
                     <td class="py-4 pr-4">
                         <div class="flex items-center gap-2">
-                            <p class="font-bold text-sm {{ $v->status === 'closed' || $v->status === 'expired' ? 'line-through text-gray-400' : 'text-gray-900' }}">{{ $v->title }}</p>
+                            <p class="font-bold text-sm {{ in_array($v->status, ['closed', 'expired', 'filled']) ? 'line-through text-gray-400' : 'text-gray-900' }}">{{ $v->title }}</p>
                             <span class="text-[9px] font-bold text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded uppercase shrink-0">{{ str_replace('-', ' ', $v->employment_type) }}</span>
                         </div>
                         <p class="text-[10px] text-gray-400 mt-0.5">{{ $refId }}</p>
@@ -243,7 +245,7 @@
                         @else
                             <div class="flex items-center gap-2">
                                 <div class="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                    <div class="h-full {{ $v->status === 'closed' || $v->status === 'expired' ? 'bg-gray-400' : 'bg-green-600' }} rounded-full" style="width: {{ $progress }}%"></div>
+                                    <div class="h-full {{ in_array($v->status, ['closed', 'expired', 'filled']) ? 'bg-gray-400' : 'bg-green-600' }} rounded-full" style="width: {{ $progress }}%"></div>
                                 </div>
                                 <span class="text-sm font-semibold text-gray-700">{{ $v->applicant_count }}</span>
                             </div>
@@ -413,6 +415,8 @@
                 <select id="v-status" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
                     <option value="DRAFT">Draft</option>
                     <option value="ACTIVE">Active</option>
+                    <option value="CLOSED">Closed</option>
+                    <option value="FILLED">Filled</option>
                 </select>
             </div>
             <div>

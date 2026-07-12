@@ -42,6 +42,8 @@
                         <h1 class="text-2xl font-bold text-gray-900" id="job-title">{{ $vacancy->title }}</h1>
                         @if($vacancy->status === 'open')
                         <span class="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-0.5 rounded-full uppercase shrink-0" id="job-badge">Active</span>
+                        @elseif($vacancy->status === 'filled')
+                        <span class="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-full uppercase shrink-0" id="job-badge">Filled</span>
                         @else
                         <span class="text-xs font-bold text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full uppercase shrink-0" id="job-badge">Closed</span>
                         @endif
@@ -75,7 +77,7 @@
                     </div>
                 </div>
             </div>
-
+ 
             <!-- Slot Progress -->
             @php
                 $remainingSlots = max(0, $vacancy->quota - $vacancy->applicant_count);
@@ -94,7 +96,7 @@
                 </div>
             </div>
         </div>
-
+ 
         <!-- Deskripsi -->
         <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Job Description</h2>
@@ -105,7 +107,7 @@
                     {!! nl2br(e($vacancy->description)) !!}
                 @endif
             </div>
-
+ 
             <h2 class="text-lg font-bold text-gray-900 mt-8 mb-4">Qualifications</h2>
             <div class="text-sm text-gray-600 leading-relaxed ck-content" id="job-qualifications">
                 @if(str_contains($vacancy->requirements, '<') && str_contains($vacancy->requirements, '>'))
@@ -123,7 +125,7 @@
                     </ul>
                 @endif
             </div>
-
+ 
             <h2 class="text-lg font-bold text-gray-900 mt-8 mb-4">Benefits & Facilities</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="job-benefits">
                 @if($vacancy->benefits)
@@ -147,18 +149,18 @@
             </div>
         </div>
     </div>
-
+ 
     <!-- RIGHT: Action Panel (1/3) -->
     <div class="w-full lg:w-80 shrink-0 space-y-6">
-
+ 
         <!-- Tindakan Cepat -->
         <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
             <h3 class="font-bold text-gray-900 mb-2">Quick Actions</h3>
             <p class="text-sm text-gray-500 mb-5">Interested in this position? Apply now before the quota is full.</p>
             
             @if($vacancy->status !== 'open')
-            <span class="flex items-center justify-center gap-2 w-full bg-gray-155 text-gray-400 font-semibold py-3 rounded-lg text-sm cursor-not-allowed mb-3">
-                Closed / Filled
+            <span class="flex items-center justify-center gap-2 w-full bg-gray-100 border border-gray-200 text-gray-400 font-semibold py-3 rounded-lg text-sm cursor-not-allowed mb-3">
+                {{ $vacancy->status === 'filled' ? 'Filled' : 'Closed' }}
             </span>
             @elseif(!auth()->user()->has_privilege)
             <button disabled class="flex items-center justify-center gap-2 w-full bg-gray-100 border border-gray-200 text-gray-400 font-semibold py-3 rounded-lg text-sm cursor-not-allowed mb-3" title="Your access privileges have been suspended by HR.">

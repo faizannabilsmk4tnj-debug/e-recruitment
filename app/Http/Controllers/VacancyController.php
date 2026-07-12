@@ -15,7 +15,7 @@ class VacancyController extends Controller
         $locations = \App\Models\WorkLocation::where('is_active', true)->get();
         
         $query = JobPosting::with('category')
-            ->whereIn('status', ['open', 'closed']);
+            ->whereIn('status', ['open', 'closed', 'filled']);
 
         if ($request->filled('q')) {
             $search = $request->q;

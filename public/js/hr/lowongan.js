@@ -1054,6 +1054,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let dbStatus = 'open';
             if (status === 'DRAFT') dbStatus = 'draft';
             if (status === 'CLOSED') dbStatus = 'closed';
+            if (status === 'FILLED') dbStatus = 'filled';
 
             fetch('/hr/lowongan/' + id, {
                 method: 'PUT',
@@ -1230,7 +1231,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Accept': 'application/json'
             },
             body: JSON.stringify({
-                status: 'closed'
+                status: 'filled'
             })
         })
         .then(response => {
