@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Hash;
 $hash = Hash::make('password');
 DB::table('users')->where('email', 'hr@ecogreen.com')->update([
     'password_hash' => $hash,
-    'password' => $hash,
 ]);
 
 // Verify

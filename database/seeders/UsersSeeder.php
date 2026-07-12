@@ -18,7 +18,7 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
+        $users = [
             [
                 'id'                => 1,
                 'name'              => 'Admin HR Eco Green',
@@ -242,6 +242,10 @@ class UsersSeeder extends Seeder
                 'created_at'        => now(),
                 'updated_at'        => now(),
             ],
-        ]);
+        ];
+
+        foreach ($users as $user) {
+            DB::table('users')->updateOrInsert(['id' => $user['id']], $user);
+        }
     }
 }
