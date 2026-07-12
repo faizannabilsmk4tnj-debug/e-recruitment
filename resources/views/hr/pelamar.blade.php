@@ -304,6 +304,8 @@
                         }}"
                             data-name="{{ strtolower($p['name']) }}"
                             data-email="{{ strtolower($p['email']) }}"
+                            data-phone="{{ $p['phone'] }}"
+                            data-gpa="{{ $p['gpa'] }}"
                             data-status="{{ $p['status'] }}"
                             data-score="{{ $p['score'] }}"
                             data-date-idx="{{ $loop->index }}">

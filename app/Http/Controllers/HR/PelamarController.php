@@ -85,6 +85,8 @@ class PelamarController extends Controller
                     'id' => $app->id,
                     'name' => $name,
                     'email' => $user->email,
+                    'phone' => $user->phone ?? '-',
+                    'gpa' => $profile ? ($profile->gpa ?? '-') : '-',
                     'date' => $app->created_at ? $app->created_at->format('d M Y') : 'N/A',
                     'status' => $viewStatus,
                     'score' => $score,

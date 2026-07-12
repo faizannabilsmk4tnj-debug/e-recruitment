@@ -505,6 +505,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 applicants.push({
                                     name: row.dataset.name || row.querySelector('.applicant-name')?.textContent?.trim() || '',
                                     email: row.dataset.email || row.querySelector('.applicant-email')?.textContent?.trim() || '',
+                                    phone: row.dataset.phone || '-',
+                                    gpa: row.dataset.gpa || '-',
                                     date: row.cells && row.cells[1] ? row.cells[1].textContent.trim() : '',
                                     status: row.dataset.status || '',
                                     score: row.dataset.score || ''
@@ -677,18 +679,22 @@ document.addEventListener('DOMContentLoaded', function () {
    <Column ss:Width="180"/>
    <Column ss:Width="200"/>
    <Column ss:Width="120"/>
+   <Column ss:Width="80"/>
    <Column ss:Width="120"/>
+   <Column ss:Width="100"/>
    <Column ss:Width="80"/>
    <Row ss:Height="30">
-    <Cell ss:MergeAcross="4" ss:StyleID="Title"><Data ss:Type="String">${escapeXml(v.title)}</Data></Cell>
+    <Cell ss:MergeAcross="6" ss:StyleID="Title"><Data ss:Type="String">${escapeXml(v.title)}</Data></Cell>
    </Row>
    <Row ss:Height="20">
-    <Cell ss:MergeAcross="4" ss:StyleID="SubTitle"><Data ss:Type="String">Department: ${escapeXml(v.department)} • Total Filtered Applicants: ${v.applicants.length}</Data></Cell>
+    <Cell ss:MergeAcross="6" ss:StyleID="SubTitle"><Data ss:Type="String">Department: ${escapeXml(v.department)} • Total Filtered Applicants: ${v.applicants.length}</Data></Cell>
    </Row>
    <Row ss:Height="10"/>
    <Row ss:Height="25">
     <Cell ss:StyleID="Header"><Data ss:Type="String">Applicant Name</Data></Cell>
     <Cell ss:StyleID="Header"><Data ss:Type="String">Email</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">Phone</Data></Cell>
+    <Cell ss:StyleID="Header"><Data ss:Type="String">GPA</Data></Cell>
     <Cell ss:StyleID="Header"><Data ss:Type="String">Applied Date</Data></Cell>
     <Cell ss:StyleID="Header"><Data ss:Type="String">Status</Data></Cell>
     <Cell ss:StyleID="Header"><Data ss:Type="String">Match Score</Data></Cell>
@@ -697,7 +703,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             if (v.applicants.length === 0) {
                                 xml += `   <Row ss:Height="25">
-    <Cell ss:MergeAcross="4" ss:StyleID="Data"><Data ss:Type="String">No applicants found matching active filters.</Data></Cell>
+    <Cell ss:MergeAcross="6" ss:StyleID="Data"><Data ss:Type="String">No applicants found matching active filters.</Data></Cell>
    </Row>
 `;
                             } else {
@@ -710,6 +716,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                     xml += `   <Row ss:Height="20">
     <Cell ss:StyleID="${rowStyle}"><Data ss:Type="String">${escapeXml(p.name)}</Data></Cell>
     <Cell ss:StyleID="${rowStyle}"><Data ss:Type="String">${escapeXml(p.email)}</Data></Cell>
+    <Cell ss:StyleID="${rowStyle}"><Data ss:Type="String">${escapeXml(p.phone)}</Data></Cell>
+    <Cell ss:StyleID="${rowStyle}"><Data ss:Type="String">${escapeXml(p.gpa)}</Data></Cell>
     <Cell ss:StyleID="${rowStyle}"><Data ss:Type="String">${escapeXml(p.date)}</Data></Cell>
     <Cell ss:StyleID="${statusStyle}"><Data ss:Type="String">${escapeXml(p.status.toUpperCase())}</Data></Cell>
     <Cell ss:StyleID="${scoreStyle}"><Data ss:Type="Number">${p.score}</Data></Cell>
