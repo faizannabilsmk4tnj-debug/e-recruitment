@@ -16,4 +16,4 @@ DB::table('users')->where('email', 'hr@ecogreen.com')->update([
 // Verify
 echo "hr@ecogreen.com check 'password': " . (Hash::check('password', DB::table('users')->where('email', 'hr@ecogreen.com')->value('password_hash')) ? 'PASS ✓' : 'FAIL ✗') . PHP_EOL;
 echo "nouzenshin check '12345678': " . (Hash::check('12345678', DB::table('users')->where('email', 'nouzenshin@gmail.com')->value('password_hash')) ? 'PASS ✓' : 'FAIL ✗') . PHP_EOL;
-echo "shinnouzen check '12345678': " . (Hash::check('12345678', DB::table('users')->where('email', 'shinnouzen@gmail.com')->value('password_hash')) ? 'PASS ✓' : 'FAIL ✗') . PHP_EOL;
+echo "ecorgeen check '12345678': " . (Hash::check('12345678', DB::table('users')->where('email', 'ecorgeen@gmail.com')->value('password_hash')) ? 'PASS ✓' : 'FAIL ✗') . PHP_EOL;

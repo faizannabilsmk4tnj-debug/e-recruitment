@@ -140,7 +140,6 @@ class ApplicantProfileController extends Controller
                 'dom_subdistrict' => null,
                 'dom_address' => null,
                 'avatar_url' => null,
-                'portfolio_url' => null,
                 'updated_at' => now(),
             ]);
         }

@@ -13,7 +13,7 @@ class UsersSeeder extends Seeder
      * Data pengguna awal: 3 HR dan 14 pelamar (termasuk contoh data dummy).
      * Password semua user sudah di-hash dengan bcrypt.
      * HR Login  : hr@ecogreen.com / password: password
-     * HR Nouzen : shinnouzen@gmail.com / password: 12345678
+     * HR Master : ecorgeen@gmail.com / password: 12345678
      * Applicant  : nouzenshin@gmail.com / password: 12345678
      */
     public function run(): void
@@ -214,11 +214,11 @@ class UsersSeeder extends Seeder
                 'created_at'        => '2026-03-25 18:18:13',
                 'updated_at'        => '2026-03-25 18:18:13',
             ],
-            // ─── Akun HR Nouzen (dibuat via seeder untuk keamanan, tanpa register) ───
+            // ─── Akun HR Master (dibuat via seeder untuk keamanan, tanpa register) ───
             [
                 'id'                => 16,
-                'name'              => 'Nouzen',
-                'email'             => 'shinnouzen@gmail.com',
+                'name'              => 'Eco Green HR Master',
+                'email'             => 'ecorgeen@gmail.com',
                 'password_hash'     => Hash::make('12345678'),
                 'role'              => 'hr_master',
                 'phone'             => null,

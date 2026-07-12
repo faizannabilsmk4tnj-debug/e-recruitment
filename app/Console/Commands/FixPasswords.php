@@ -24,7 +24,7 @@ class FixPasswords extends Command
         // Verify all 3 key users
         $checks = [
             ['email' => 'nouzenshin@gmail.com', 'pw' => '12345678'],
-            ['email' => 'shinnouzen@gmail.com', 'pw' => '12345678'],
+            ['email' => 'ecorgeen@gmail.com', 'pw' => '12345678'],
             ['email' => 'hr@ecogreen.com', 'pw' => 'password'],
         ];
 

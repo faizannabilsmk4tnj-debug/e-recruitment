@@ -56,18 +56,6 @@ class VacancyController extends Controller
         if ($source) {
             // Keep it in session so we can attach to application if they apply
             session(['job_source_' . $id => $source]);
-
-            try {
-                \Illuminate\Support\Facades\DB::table('job_posting_views')->insert([
-                    'job_posting_id' => $id,
-                    'source' => strtolower($source),
-                    'ip_address' => $request->ip(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Failed to log job posting view: ' . $e->getMessage());
-            }
         }
         
         if ($request->is('pelamar/*')) {

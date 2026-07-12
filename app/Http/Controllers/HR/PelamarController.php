@@ -138,8 +138,6 @@ class PelamarController extends Controller
     /**
      * Show detail page for a specific applicant (via application ID).
      */
-    public function show($id)
-    {
         $application = Application::with([
             'user.profile',
             'user.educations',
@@ -148,6 +146,11 @@ class PelamarController extends Controller
             'job.category',
             'cv'
         ])->findOrFail($id);
+
+        if (!$application->is_seen) {
+            $application->is_seen = true;
+            $application->save();
+        }
 
         $user = $application->user;
         $profile = $user->profile;

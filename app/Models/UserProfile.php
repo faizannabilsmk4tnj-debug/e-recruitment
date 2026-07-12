@@ -34,7 +34,6 @@ class UserProfile extends Model
         'dom_subdistrict',
         'dom_address',
         'avatar_url',
-        'portfolio_url',
         'updated_at',
     ];
 

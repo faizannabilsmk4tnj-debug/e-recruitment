@@ -81,7 +81,21 @@
                             data-status="{{ $filterStatus }}">
                             <td class="px-5 py-4">
                                 <p class="font-bold text-sm text-gray-900 group-hover:text-green-800 transition-colors">{{ $jobTitle }}</p>
-                                <p class="text-xs text-gray-400">{{ $deptName }}</p>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="text-xs text-gray-400">{{ $deptName }}</span>
+                                    <span class="text-gray-300">•</span>
+                                    @if($app->is_seen)
+                                        <span class="inline-flex items-center gap-0.5 text-[10px] font-bold text-blue-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                            Opened by HR
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-0.5 text-[10px] font-bold text-gray-400">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                                            Sent
+                                        </span>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-5 py-4 text-sm text-gray-600 font-medium">{{ $dateStr }}</td>
                             <td class="px-5 py-4">
@@ -175,6 +189,16 @@
                             <p class="font-bold text-sm text-gray-900">Application Submitted</p>
                             <p class="text-xs text-gray-400 mt-0.5">{{ $submittedDate->format('d M Y, H:i') }} WIB</p>
                             <p class="text-xs text-gray-500 mt-1 font-medium">Documents successfully uploaded and verified by the system.</p>
+                            
+                            @if($app->is_seen)
+                                <div class="mt-2 bg-blue-50/60 border border-blue-100 rounded-lg p-2.5 flex items-start gap-2 max-w-xs">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    <div>
+                                        <p class="text-[11px] font-bold text-blue-800">Opened by HR</p>
+                                        <p class="text-[10px] text-blue-600/80">HR has opened and is currently reviewing your documents.</p>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Step 2: Shortlisted (Only if they actually got shortlisted before withdrawing) -->
@@ -211,6 +235,16 @@
                             <p class="font-bold text-sm text-gray-900">Application Submitted</p>
                             <p class="text-xs text-gray-400 mt-0.5">{{ $submittedDate->format('d M Y, H:i') }} WIB</p>
                             <p class="text-xs text-gray-500 mt-1 font-medium">Documents successfully uploaded and verified by the system.</p>
+                            
+                            @if($app->is_seen)
+                                <div class="mt-2 bg-blue-50/60 border border-blue-100 rounded-lg p-2.5 flex items-start gap-2 max-w-xs">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    <div>
+                                        <p class="text-[11px] font-bold text-blue-800">Opened by HR</p>
+                                        <p class="text-[10px] text-blue-600/80">HR has opened and is currently reviewing your documents.</p>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Step 2: Shortlisted ✓ -->
@@ -251,6 +285,16 @@
                             <p class="font-bold text-sm text-gray-900">Application Submitted</p>
                             <p class="text-xs text-gray-400 mt-0.5">{{ $submittedDate->format('d M Y, H:i') }} WIB</p>
                             <p class="text-xs text-gray-500 mt-1 font-medium">Documents successfully uploaded and verified by the system.</p>
+                            
+                            @if($app->is_seen)
+                                <div class="mt-2 bg-blue-50/60 border border-blue-100 rounded-lg p-2.5 flex items-start gap-2 max-w-xs">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    <div>
+                                        <p class="text-[11px] font-bold text-blue-800">Opened by HR</p>
+                                        <p class="text-[10px] text-blue-600/80">HR has opened and is currently reviewing your documents.</p>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Step 2: Shortlisted -->

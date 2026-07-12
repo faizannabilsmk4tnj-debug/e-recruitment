@@ -115,29 +115,31 @@ class LaporanController extends Controller
             ]
         ];
 
-        // 7. Applicant Sources (Determined by source column in applications, falling back to profile urls for old data)
+        // 7. Applicant Sources (Determined by source column in applications, falling back to portofolio table presence for old data)
         $linkedinCount = DB::table('applications')
             ->where('applications.source', 'linkedin')
             ->count();
 
         $jobportalCount = DB::table('applications')
-            ->leftJoin('user_profiles', 'applications.user_id', '=', 'user_profiles.user_id')
             ->where(function ($q) {
                 $q->whereIn('applications.source', ['jobstreet', 'jobportal', 'indeed', 'kalibrr', 'facebook', 'instagram'])
                   ->orWhere(function ($sub) {
                       $sub->whereNull('applications.source')
-                          ->whereNotNull('user_profiles.portfolio_url')
-                          ->where('user_profiles.portfolio_url', '!=', '');
+                          ->whereExists(function ($query) {
+                              $query->select(DB::raw(1))
+                                    ->from('portofolio')
+                                    ->whereColumn('portofolio.user_id', 'applications.user_id');
+                          });
                   });
             })
             ->count();
 
         $websiteCount = max(0, $sourcedCount - $linkedinCount - $jobportalCount);
 
-        // Clicks count by source from views table
-        $linkedinClicks = DB::table('job_posting_views')->where('source', 'linkedin')->count();
-        $jobportalClicks = DB::table('job_posting_views')->whereIn('source', ['jobstreet', 'jobportal', 'indeed', 'kalibrr', 'facebook', 'instagram'])->count();
-        $websiteClicks = DB::table('job_posting_views')->whereIn('source', ['website', 'direct', 'direct-link'])->count();
+        // Clicks count by source (job_posting_views table has been dropped)
+        $linkedinClicks = 0;
+        $jobportalClicks = 0;
+        $websiteClicks = 0;
 
         $sourceData = [
             'linkedin' => [
