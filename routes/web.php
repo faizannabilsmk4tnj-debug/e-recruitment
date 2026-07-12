@@ -145,7 +145,7 @@ Route::middleware(['auth', 'role:applicant'])->group(function () {
     Route::post('/pelamar/review-lamaran/{id}',   [VacancyController::class, 'submitApplication'])->name('pelamar.review-lamaran.submit');
     Route::get('/pelamar/lowongan-tersimpan', [PelamarController::class, 'savedJobs'])->name('pelamar.lowongan-tersimpan');
     Route::post('/pelamar/lowongan/{id}/toggle-save', [PelamarController::class, 'toggleSaveJob'])->name('pelamar.lowongan.toggle-save');
-    Route::get('/pelamar/application-submitted', fn() => view('pelamar.application-submitted'))->name('pelamar.application-submitted');
+    Route::get('/pelamar/application-submitted', fn() => view('pelamar.lamaran-terkirim'))->name('pelamar.application-submitted');
     Route::get('/pelamar/lamaran-terkirim', fn() => redirect('/pelamar/application-submitted'));
 
 
