@@ -327,7 +327,7 @@ if (app()->environment('local')) {
 
     Route::get('/test-all-notifications', function() {
         $applicant = \App\Models\User::where('role', 'applicant')->where('email', 'nouzenshin@gmail.com')->first();
-        $hr = \App\Models\User::where('role', 'hr_master')->where('email', 'ecorgeen@gmail.com')->first();
+        $hr = \App\Models\User::where('role', 'hr_master')->where('email', 'ecogreenhrmaster@gmail.com')->first();
         
         if (!$applicant || !$hr) {
             return "Error: Test users not found. Make sure seeds are run.";

@@ -399,6 +399,11 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('porto-method-field').innerHTML = '';
         document.getElementById('porto-type-wrap').classList.toggle('hidden', mode === 'edit');
         
+        // Set correct radio button value
+        document.querySelectorAll('#form-porto input[name="type"]').forEach(r => {
+            r.checked = r.value === (data.type || 'link');
+        });
+
         // Ensure enctype is always multipart/form-data to support file uploads in both store and update
         formPorto.setAttribute('enctype', 'multipart/form-data');
 
@@ -411,10 +416,6 @@ document.addEventListener('DOMContentLoaded', function () {
             formPorto.action = '{{ route('pelamar.portofolio.store') }}';
             document.getElementById('porto-link-field').classList.remove('hidden');
             document.getElementById('porto-file-field').classList.add('hidden');
-            // reset radio buttons to link
-            document.querySelectorAll('#form-porto input[name="type"]').forEach(r => {
-                r.checked = r.value === 'link';
-            });
         }
         modalPorto.classList.remove('hidden');
     }
@@ -507,6 +508,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 modalPorto.classList.add('hidden');
+            } else if (data.errors) {
+                alert(Object.values(data.errors).flat().join('\n'));
+            } else if (data.message) {
+                alert(data.message);
             }
         })
         .catch(() => alert('Failed to save. Try again.'));
