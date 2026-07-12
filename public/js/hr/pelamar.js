@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Sync restored state to DOM input elements
     const searchInput = document.getElementById('global-search');
     if (searchInput) searchInput.value = state.search;
-    const deptSelect = document.getElementById('filter-dept');
+    const deptSelect = document.getElementById('filter-category');
     if (deptSelect) deptSelect.value = state.dept;
     const sortSelect = document.getElementById('sort-lowongan');
     if (sortSelect) sortSelect.value = state.sort;
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (state.search) pills.push({ label: 'Search: "' + state.search + '"', type: 'search' });
-        if (state.dept) pills.push({ label: 'Dept: ' + state.dept, type: 'dept' });
+        if (state.dept) pills.push({ label: 'Category: ' + state.dept, type: 'dept' });
         if (state.showArchived) pills.push({ label: 'Showing Archived', type: 'archived' });
 
         if (pills.length === 0) {
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const type = btn.dataset.remove;
                 if (type === 'focus') { state.focus = 'all'; updateQuickFilterUI(); }
                 if (type === 'search') { state.search = ''; document.getElementById('global-search').value = ''; }
-                if (type === 'dept') { state.dept = ''; document.getElementById('filter-dept').value = ''; }
+                if (type === 'dept') { state.dept = ''; document.getElementById('filter-category').value = ''; }
                 if (type === 'archived') {
                     state.showArchived = false;
                     const toggleBtn = document.getElementById('btn-toggle-archived');
@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function () {
         apply();
     });
 
-    document.getElementById('filter-dept').addEventListener('change', function () {
+    document.getElementById('filter-category').addEventListener('change', function () {
         state.dept = this.value;
         apply();
     });
