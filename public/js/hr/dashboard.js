@@ -143,8 +143,13 @@ document.addEventListener('DOMContentLoaded', function () {
             bar.style.height = height + 'px';
             bar.style.cursor = 'pointer';
             
-            if (mode === 'weekly' && data.dates && data.dates[i]) {
-                bar.setAttribute('data-date', data.dates[i]);
+            if (mode === 'weekly') {
+                if (data.dates && data.dates[i]) {
+                    bar.setAttribute('data-date', data.dates[i]);
+                }
+                if (data.details && data.details[i]) {
+                    bar.setAttribute('data-details', JSON.stringify(data.details[i]));
+                }
             }
 
             const label = document.createElement('span');
@@ -191,7 +196,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else if (mode === 'weekly') {
                     if (!labelStr || val === 0) return;
                     const dateVal = bar.getAttribute('data-date') || '';
-                    showWeeklyModal(labelStr, val, dateVal);
+                    const detailsVal = bar.getAttribute('data-details') ? JSON.parse(bar.getAttribute('data-details')) : null;
+                    showWeeklyModal(labelStr, val, dateVal, detailsVal);
                 }
             });
         });
@@ -246,16 +252,25 @@ document.addEventListener('DOMContentLoaded', function () {
         chartModal.classList.remove('hidden');
     }
 
-    function showWeeklyModal(labelStr, total, dateStr) {
+    function showWeeklyModal(labelStr, total, dateStr, details) {
         if (!chartModalTitle) return;
         chartModalTitle.textContent = "Day " + labelStr + (dateStr ? ` (${dateStr})` : '');
 
-        // Guarantee that the sum of parts is mathematically equal to total
-        const p1 = Math.round(total * 0.40); // Applied
-        const p2 = Math.round(total * 0.25); // Shortlisted
-        const p3 = Math.round(total * 0.15); // Interview
-        const p4 = Math.round(total * 0.10); // Accepted
-        const p5 = total - p1 - p2 - p3 - p4; // Rejected
+        let p1 = 0, p2 = 0, p3 = 0, p4 = 0, p5 = 0;
+        if (details) {
+            p1 = details.applied || 0;
+            p2 = details.shortlisted || 0;
+            p3 = details.interview || 0;
+            p4 = details.accepted || 0;
+            p5 = details.rejected || 0;
+        } else {
+            // Guarantee that the sum of parts is mathematically equal to total
+            p1 = Math.round(total * 0.40); // Applied
+            p2 = Math.round(total * 0.25); // Shortlisted
+            p3 = Math.round(total * 0.15); // Interview
+            p4 = Math.round(total * 0.10); // Accepted
+            p5 = total - p1 - p2 - p3 - p4; // Rejected
+        }
 
         const dailyHtml = `
             <div class="flex justify-between items-center mb-3">
