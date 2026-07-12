@@ -115,6 +115,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        // Calculate and update total badge
+        const totalSum = valuesToRender.reduce((sum, val) => sum + val, 0);
+        const chartTotalBadge = document.getElementById('chart-total-badge');
+        if (chartTotalBadge) {
+            chartTotalBadge.textContent = `Total: ${totalSum} ${totalSum === 1 ? 'Applicant' : 'Applicants'}`;
+        }
+
         const maxVal = Math.max(...valuesToRender) || 1;
 
         valuesToRender.forEach((val, i) => {

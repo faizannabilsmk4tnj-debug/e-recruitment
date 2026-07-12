@@ -136,7 +136,10 @@
             <div class="bg-white rounded-2xl border border-gray-100 p-6">
                 <div class="flex items-start justify-between mb-1">
                     <div>
-                        <h2 class="font-bold text-gray-900 text-lg">Recruitment Trends</h2>
+                        <div class="flex items-center gap-2">
+                            <h2 class="font-bold text-gray-900 text-lg">Recruitment Trends</h2>
+                            <span id="chart-total-badge" class="px-2 py-0.5 text-[10px] font-bold text-green-800 bg-green-50 rounded-full border border-green-100">Total: 0 Applicants</span>
+                        </div>
                         <p id="chart-sub-desc" class="text-xs text-gray-400 mt-0.5">Applicant activity in the last 6 months</p>
                     </div>
                     <div class="flex items-center gap-3">
