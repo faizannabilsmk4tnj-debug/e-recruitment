@@ -484,16 +484,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const emptyEl = card.querySelector('.applicant-empty');
 
         rowsArray.sort((a, b) => {
-            const statusA = a.dataset.status;
-            const statusB = b.dataset.status;
-            const weightA = statusWeights[statusA] || 99;
-            const weightB = statusWeights[statusB] || 99;
-
-            if (weightA !== weightB) {
-                return weightA - weightB;
-            }
-
-            // Same status: sort based on the chosen mode
             if (mode === 'score-desc') return parseInt(b.dataset.score) - parseInt(a.dataset.score);
             if (mode === 'score-asc') return parseInt(a.dataset.score) - parseInt(b.dataset.score);
             if (mode === 'name') return a.dataset.name.localeCompare(b.dataset.name);
