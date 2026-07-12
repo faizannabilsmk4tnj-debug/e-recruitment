@@ -119,7 +119,7 @@ class JobPostingController extends Controller
             'salary_min' => 'nullable|string',
             'salary_max' => 'nullable|string',
             'show_salary' => 'boolean',
-            'status' => 'required|in:draft,open,closed,expired,filled',
+            'status' => 'required|in:draft,open,closed,filled',
             'auto_close_method' => 'nullable|in:deadline,quota,both,manual',
             'banner_image' => 'nullable|string',
             'employment_type' => $isDraft ? 'nullable|in:full-time,part-time,contract,internship' : 'required|in:full-time,part-time,contract,internship',
@@ -300,7 +300,7 @@ class JobPostingController extends Controller
             'age_max' => 'nullable|integer|min:0',
             'passing_grade' => 'nullable|integer|min:0|max:100',
             'deadline' => $isDraft ? 'nullable|date' : 'required|date',
-            'status' => 'required|in:draft,open,closed,expired,filled',
+            'status' => 'required|in:draft,open,closed,filled',
             'auto_close_method' => 'nullable|in:deadline,quota,both,manual',
             'description' => $isDraft ? 'nullable|string' : 'required|string',
             'requirements' => $isDraft ? 'nullable|string' : 'required|string',
@@ -315,6 +315,13 @@ class JobPostingController extends Controller
         $validated = $request->validate($rules);
 
         $job = JobPosting::findOrFail($id);
+
+        if (in_array($job->status, ['closed', 'filled'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This vacancy can no longer be edited because it is already closed or filled.'
+            ], 422);
+        }
         
         // Age validation
         $ageMin = isset($validated['age_min']) ? (int)$validated['age_min'] : null;
@@ -439,7 +446,7 @@ class JobPostingController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $validated = $request->validate([
-            'status' => 'required|in:draft,open,closed,expired,filled',
+            'status' => 'required|in:draft,open,closed,filled',
         ]);
 
         $job = JobPosting::findOrFail($id);

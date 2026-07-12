@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Per-card status tab state
     const statusTabState = new WeakMap();
+    const dismissedBadgeState = new WeakMap();
+
+    const getDismissedBadgeStorageKey = card => `pelamar-dismissed-badges-${card.dataset.lowonganId || 'unknown'}`;
 
     // ===== MAIN APPLY =====
     function apply() {
@@ -27,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let visibleAppCount = 0;
 
         cards().forEach(card => {
+            syncDismissedBadges(card);
             const title = card.dataset.title;
             const dept = card.dataset.department;
             const rows = card.querySelectorAll('.applicant-row');
@@ -275,6 +279,34 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function dismissNewBadges(card) {
+        dismissedBadgeState.set(card, true);
+        card.classList.add('new-badges-dismissed');
+        try {
+            sessionStorage.setItem(getDismissedBadgeStorageKey(card), '1');
+        } catch (e) {
+            // Ignore storage failures and keep the DOM state as the source of truth.
+        }
+        removeNewBadge(card);
+        removeNewApplicantsBadge(card);
+    }
+
+    function syncDismissedBadges(card) {
+        let persisted = false;
+        try {
+            persisted = sessionStorage.getItem(getDismissedBadgeStorageKey(card)) === '1';
+        } catch (e) {
+            persisted = false;
+        }
+
+        if (dismissedBadgeState.get(card) || persisted) {
+            dismissedBadgeState.set(card, true);
+            card.classList.add('new-badges-dismissed');
+            removeNewBadge(card);
+            removeNewApplicantsBadge(card);
+        }
+    }
+
     function expandCard(card) {
         card.classList.add('is-expanded');
         card.querySelector('.lowongan-body').classList.remove('hidden');
@@ -285,8 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
         card.classList.remove('is-expanded');
         card.querySelector('.lowongan-body').classList.add('hidden');
         card.querySelector('.lowongan-chevron').style.transform = 'rotate(0deg)';
-        removeNewBadge(card);
-        removeNewApplicantsBadge(card);
+        dismissNewBadges(card);
     }
 
     document.querySelectorAll('.lowongan-toggle').forEach(btn => {
@@ -350,6 +381,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ===== STATUS TABS (per card) =====
     document.querySelectorAll('.lowongan-card').forEach(card => {
         statusTabState.set(card, 'all');
+        syncDismissedBadges(card);
 
         const tabs = card.querySelectorAll('.status-tab');
 
@@ -363,8 +395,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.classList.remove('text-gray-500', 'border-transparent');
 
                 statusTabState.set(card, this.dataset.status);
-                removeNewBadge(card);
-                removeNewApplicantsBadge(card);
+                dismissNewBadges(card);
                 apply();
             });
         });
@@ -380,31 +411,87 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // ===== EXPORT EXCEL (With choice modal & SpreadsheetML worksheets) =====
+    // ===== EXPORT EXCEL (Styled XLSX workbook) =====
     const btnExport = document.getElementById('btn-export');
     const exportModal = document.getElementById('export-modal');
     const btnCloseExportModal = document.getElementById('btn-close-export-modal');
     const btnCancelExport = document.getElementById('btn-cancel-export');
     const btnConfirmExport = document.getElementById('btn-confirm-export');
     const exportSingleSelect = document.getElementById('export-single-select');
+    const exportWarningModal = document.getElementById('export-warning-modal');
+    const btnCloseExportWarningModal = document.getElementById('btn-close-export-warning-modal');
+    const btnOkExportWarningModal = document.getElementById('btn-ok-export-warning-modal');
     const radioScopeAll = document.querySelector('input[name="export-scope"][value="all"]');
     const radioScopeSingle = document.querySelector('input[name="export-scope"][value="single"]');
+    const ExcelJS = window.ExcelJS;
+    const usedSheetNames = new Set();
+
+    const createSafeSheetName = (title, fallback = 'Vacancy') => {
+        const base = String(title || fallback)
+            .replace(/[\[\]\:\*\?\/\\]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .slice(0, 31) || fallback;
+
+        let sheetName = base;
+        let suffix = 2;
+
+        while (usedSheetNames.has(sheetName.toLowerCase())) {
+            const suffixText = ` (${suffix})`;
+            sheetName = `${base.slice(0, 31 - suffixText.length)}${suffixText}`;
+            suffix += 1;
+        }
+
+        usedSheetNames.add(sheetName.toLowerCase());
+        return sheetName;
+    };
+
+    const closeExportWarningModal = () => exportWarningModal?.classList.add('hidden');
+    const openExportWarningModal = () => {
+        exportModal.classList.add('hidden');
+        exportWarningModal?.classList.remove('hidden');
+    };
+
+    const getVisibleVacancies = () => cards().reduce((acc, card, idx) => {
+        if (card.style.display === 'none') return acc;
+
+        const applicants = [];
+        card.querySelectorAll('.applicant-row').forEach(row => {
+            applicants.push({
+                name: row.dataset.name || row.querySelector('.applicant-name')?.textContent?.trim() || '',
+                email: row.dataset.email || row.querySelector('.applicant-email')?.textContent?.trim() || '',
+                phone: row.dataset.phone || '-',
+                gpa: row.dataset.gpa || '-',
+                date: row.cells && row.cells[1] ? row.cells[1].textContent.trim() : '',
+                status: row.dataset.status || '',
+                score: row.dataset.score || ''
+            });
+        });
+
+        acc.push({
+            idx,
+            title: card.querySelector('.lowongan-title')?.textContent?.trim() || card.dataset.title || '',
+            department: card.dataset.department || '',
+            deadline: card.dataset.deadlineDays ? `${card.dataset.deadlineDays} days` : 'N/A',
+            applicants
+        });
+        return acc;
+    }, []);
 
     if (btnExport && exportModal) {
-        // Open Modal
         btnExport.addEventListener('click', function (e) {
             e.preventDefault();
 
-            // Populating select dropdown dynamically with visible vacancies
             if (exportSingleSelect) {
                 exportSingleSelect.innerHTML = '';
                 let visibleCount = 0;
                 cards().forEach((card, idx) => {
                     if (card.style.display !== 'none') {
                         const jobTitle = card.querySelector('.lowongan-title')?.textContent?.trim() || card.dataset.title || '';
+                        const totalApplicants = parseInt(card.dataset.total) || 0;
                         const opt = document.createElement('option');
                         opt.value = idx;
-                        opt.textContent = jobTitle;
+                        opt.textContent = totalApplicants > 0 ? jobTitle : `${jobTitle} (No applicants)`;
                         exportSingleSelect.appendChild(opt);
                         visibleCount++;
                     }
@@ -418,27 +505,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // Reset modal states
             if (radioScopeAll) radioScopeAll.checked = true;
             if (exportSingleSelect) exportSingleSelect.disabled = true;
-
+            closeExportWarningModal();
             exportModal.classList.remove('hidden');
         });
 
-        // Close Modal helpers
-        const closeModal = () => {
-            exportModal.classList.add('hidden');
-        };
+        const closeModal = () => exportModal.classList.add('hidden');
+        btnCloseExportModal?.addEventListener('click', closeModal);
+        btnCancelExport?.addEventListener('click', closeModal);
+        btnCloseExportWarningModal?.addEventListener('click', closeExportWarningModal);
+        btnOkExportWarningModal?.addEventListener('click', closeExportWarningModal);
 
-        if (btnCloseExportModal) btnCloseExportModal.addEventListener('click', closeModal);
-        if (btnCancelExport) btnCancelExport.addEventListener('click', closeModal);
-
-        // Close on clicking backdrop
-        exportModal.addEventListener('click', function (e) {
+        exportModal.addEventListener('click', e => {
             if (e.target === exportModal) closeModal();
         });
 
-        // Toggle dropdown disable state on radio change
+        exportWarningModal?.addEventListener('click', e => {
+            if (e.target === exportWarningModal) closeExportWarningModal();
+        });
+
         document.querySelectorAll('input[name="export-scope"]').forEach(radio => {
             radio.addEventListener('change', function () {
                 if (exportSingleSelect) {
@@ -447,325 +533,247 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
 
-        // Confirm & Execute Export
-        if (btnConfirmExport) {
-            btnConfirmExport.addEventListener('click', function () {
-                const spinnerSvg = '<svg class="w-4 h-4 animate-spin inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
-                const checkSvg = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
-                const downloadSvg = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>';
+        btnConfirmExport?.addEventListener('click', async function () {
+            const isAll = radioScopeAll ? radioScopeAll.checked : true;
+            const selectedIdx = exportSingleSelect ? exportSingleSelect.value : '';
 
-                btnConfirmExport.innerHTML = spinnerSvg + ' Exporting...';
-                btnConfirmExport.disabled = true;
+            if (!isAll) {
+                const selectedCard = cards()[parseInt(selectedIdx, 10)];
+                const selectedTotal = selectedCard ? parseInt(selectedCard.dataset.total) || 0 : 0;
+                if (!selectedCard || selectedTotal <= 0) {
+                    openExportWarningModal();
+                    return;
+                }
+            }
 
-                setTimeout(() => {
-                    try {
-                        const isAll = radioScopeAll ? radioScopeAll.checked : true;
-                        const selectedIdx = exportSingleSelect ? exportSingleSelect.value : '';
+            if (!ExcelJS) {
+                alert('Excel export library is not loaded.');
+                return;
+            }
 
-                        const usedNames = new Set();
-                        const getUniqueSheetName = (title) => {
-                            let base = title.replace(/[\\/?*\[\]:]/g, '');
-                            if (base.length > 25) base = base.slice(0, 25);
-                            let name = base.trim() || 'Vacancy';
-                            let counter = 1;
-                            while (usedNames.has(name.toLowerCase())) {
-                                let suffix = ` (${counter})`;
-                                name = base.slice(0, 31 - suffix.length) + suffix;
-                                counter++;
-                            }
-                            usedNames.add(name.toLowerCase());
-                            return name;
+            const spinnerSvg = '<svg class="w-4 h-4 animate-spin inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
+            const checkSvg = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+            const downloadSvg = '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>';
+
+            btnConfirmExport.innerHTML = spinnerSvg + ' Exporting...';
+            btnConfirmExport.disabled = true;
+
+            try {
+                const visibleVacancies = getVisibleVacancies();
+                const selectedVacancies = isAll
+                    ? visibleVacancies
+                    : visibleVacancies.filter(v => String(v.idx) === String(selectedIdx));
+
+                if (!selectedVacancies.length) {
+                    throw new Error('No data found to export');
+                }
+
+                const workbook = new ExcelJS.Workbook();
+                usedSheetNames.clear();
+                workbook.creator = 'PT Ecogreen Oleochemicals';
+                workbook.created = new Date();
+                workbook.modified = new Date();
+                workbook.properties.date1904 = false;
+                workbook.views = [{ activeTab: 0, firstSheet: 0, visibility: 'visible' }];
+
+                const green = 'FF15803D';
+                const greenDark = 'FF14532D';
+                const blue = 'FF2563EB';
+                const amber = 'FFF59E0B';
+                const red = 'FFDC2626';
+                const slate = 'FF475569';
+                const borderColor = 'FFE2E8F0';
+
+                const paintBand = (sheet, rowNumber, fromCol, toCol, fillArgb, fontProps = {}) => {
+                    for (let col = fromCol; col <= toCol; col += 1) {
+                        const cell = sheet.getCell(rowNumber, col);
+                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: fillArgb } };
+                        cell.font = {
+                            name: 'Calibri',
+                            size: fontProps.size || 11,
+                            bold: !!fontProps.bold,
+                            italic: !!fontProps.italic,
+                            color: { argb: fontProps.color || 'FFFFFFFF' }
                         };
-
-                        const escapeXml = (unsafe) => {
-                            return String(unsafe)
-                                .replace(/&/g, '&amp;')
-                                .replace(/</g, '&lt;')
-                                .replace(/>/g, '&gt;')
-                                .replace(/"/g, '&quot;')
-                                .replace(/'/g, '&apos;');
-                        };
-
-                        const activeVacancies = [];
-                        cards().forEach((card, idx) => {
-                            if (card.style.display === 'none') return;
-
-                            // If exporting single, skip other cards
-                            if (!isAll && String(idx) !== String(selectedIdx)) return;
-
-                            const jobTitle = card.querySelector('.lowongan-title')?.textContent?.trim() || card.dataset.title || '';
-                            const department = card.dataset.department || '';
-                            const total = card.dataset.total || '0';
-                            const deadlineDays = card.dataset.deadlineDays || '';
-                            const deadlineText = deadlineDays ? `${deadlineDays} days` : 'N/A';
-
-                            const applicants = [];
-                            card.querySelectorAll('.applicant-row').forEach(row => {
-                                if (row.style.display === 'none') return;
-                                applicants.push({
-                                    name: row.dataset.name || row.querySelector('.applicant-name')?.textContent?.trim() || '',
-                                    email: row.dataset.email || row.querySelector('.applicant-email')?.textContent?.trim() || '',
-                                    phone: row.dataset.phone || '-',
-                                    gpa: row.dataset.gpa || '-',
-                                    date: row.cells && row.cells[1] ? row.cells[1].textContent.trim() : '',
-                                    status: row.dataset.status || '',
-                                    score: row.dataset.score || ''
-                                });
-                            });
-
-                            activeVacancies.push({
-                                title: jobTitle,
-                                department: department,
-                                total: total,
-                                deadline: deadlineText,
-                                applicants: applicants
-                            });
-                        });
-
-                        if (activeVacancies.length === 0) {
-                            throw new Error('No data found to export');
-                        }
-
-                        let xml = `<?xml version="1.0" encoding="utf-8"?>
-<?mso-application progid="Excel.Sheet"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:o="urn:schemas-microsoft-com:office:office"
- xmlns:x="urn:schemas-microsoft-com:office:excel"
- xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:html="http://www.w3.org/TR/REC-html40">
- <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
-  <Author>PT Ecogreen Oleochemicals</Author>
-  <Created>${new Date().toISOString()}</Created>
- </DocumentProperties>
- <Styles>
-  <Style ss:ID="Default" ss:Name="Normal">
-   <Alignment ss:Vertical="Center"/>
-   <Borders/>
-   <Font ss:FontName="Calibri" x:CharSet="1" ss:Size="11" ss:Color="#000000"/>
-   <Interior/>
-   <NumberFormat/>
-   <Protection/>
-  </Style>
-  <Style ss:ID="Header">
-   <Font ss:FontName="Calibri" ss:Bold="1" ss:Color="#FFFFFF" ss:Size="11"/>
-   <Interior ss:Color="#15803D" ss:Pattern="Solid"/>
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#15803D"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#166534"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#166534"/>
-   </Borders>
-  </Style>
-  <Style ss:ID="Title">
-   <Font ss:FontName="Calibri" ss:Bold="1" ss:Size="16" ss:Color="#14532D"/>
-   <Alignment ss:Vertical="Center"/>
-  </Style>
-  <Style ss:ID="SubTitle">
-   <Font ss:FontName="Calibri" ss:Italic="1" ss:Size="10" ss:Color="#475569"/>
-   <Alignment ss:Vertical="Center"/>
-  </Style>
-  <Style ss:ID="Data">
-   <Alignment ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
-   </Borders>
-  </Style>
-  <Style ss:ID="DataPassed">
-   <Alignment ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
-   </Borders>
-   <Interior ss:Color="#DCFCE7" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="DataFailed">
-   <Alignment ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
-   </Borders>
-   <Interior ss:Color="#FEE2E2" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="Score">
-   <Font ss:FontName="Calibri" ss:Bold="1"/>
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
-   </Borders>
-  </Style>
-  <Style ss:ID="ScorePassed">
-   <Font ss:FontName="Calibri" ss:Bold="1" ss:Color="#15803D"/>
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
-   </Borders>
-   <Interior ss:Color="#DCFCE7" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="ScoreFailed">
-   <Font ss:FontName="Calibri" ss:Bold="1" ss:Color="#B91C1C"/>
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
-   </Borders>
-   <Interior ss:Color="#FEE2E2" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="StatusText">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
-   </Borders>
-  </Style>
-  <Style ss:ID="StatusTextPassed">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
-   </Borders>
-   <Interior ss:Color="#DCFCE7" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="StatusTextFailed">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
-   </Borders>
-   <Interior ss:Color="#FEE2E2" ss:Pattern="Solid"/>
-  </Style>
- </Styles>
-`;
-
-                        // --- OVERVIEW SHEET (Only for "All" export) ---
-                        if (isAll) {
-                            xml += ` <Worksheet ss:Name="Overview Summary">
-  <Table>
-   <Column ss:Width="220"/>
-   <Column ss:Width="150"/>
-   <Column ss:Width="120"/>
-   <Column ss:Width="100"/>
-   <Column ss:Width="100"/>
-   <Row ss:Height="30">
-    <Cell ss:MergeAcross="4" ss:StyleID="Title"><Data ss:Type="String">Recruitment Summary Overview</Data></Cell>
-   </Row>
-   <Row ss:Height="20">
-    <Cell ss:MergeAcross="4" ss:StyleID="SubTitle"><Data ss:Type="String">Exported on: ${new Date().toLocaleString()} • Active Vacancies: ${activeVacancies.length}</Data></Cell>
-   </Row>
-   <Row ss:Height="10"/>
-   <Row ss:Height="25">
-    <Cell ss:StyleID="Header"><Data ss:Type="String">Vacancy Position</Data></Cell>
-    <Cell ss:StyleID="Header"><Data ss:Type="String">Department</Data></Cell>
-    <Cell ss:StyleID="Header"><Data ss:Type="String">Total Applicants</Data></Cell>
-    <Cell ss:StyleID="Header"><Data ss:Type="String">Deadline</Data></Cell>
-    <Cell ss:StyleID="Header"><Data ss:Type="String">Status</Data></Cell>
-   </Row>
-`;
-
-                            activeVacancies.forEach(v => {
-                                xml += `   <Row ss:Height="20">
-    <Cell ss:StyleID="Data"><Data ss:Type="String">${escapeXml(v.title)}</Data></Cell>
-    <Cell ss:StyleID="Data"><Data ss:Type="String">${escapeXml(v.department)}</Data></Cell>
-    <Cell ss:StyleID="Score"><Data ss:Type="Number">${v.applicants.length}</Data></Cell>
-    <Cell ss:StyleID="Data"><Data ss:Type="String">${escapeXml(v.deadline)}</Data></Cell>
-    <Cell ss:StyleID="Data"><Data ss:Type="String">Active</Data></Cell>
-   </Row>
-`;
-                            });
-
-                            xml += `  </Table>
- </Worksheet>
-`;
-                        }
-
-                        // --- INDIVIDUAL WORKSEETS ---
-                        activeVacancies.forEach(v => {
-                            const sheetName = getUniqueSheetName(v.title);
-                            xml += ` <Worksheet ss:Name="${escapeXml(sheetName)}">
-  <Table>
-   <Column ss:Width="180"/>
-   <Column ss:Width="200"/>
-   <Column ss:Width="120"/>
-   <Column ss:Width="80"/>
-   <Column ss:Width="120"/>
-   <Column ss:Width="100"/>
-   <Column ss:Width="80"/>
-   <Row ss:Height="30">
-    <Cell ss:MergeAcross="6" ss:StyleID="Title"><Data ss:Type="String">${escapeXml(v.title)}</Data></Cell>
-   </Row>
-   <Row ss:Height="20">
-    <Cell ss:MergeAcross="6" ss:StyleID="SubTitle"><Data ss:Type="String">Department: ${escapeXml(v.department)} • Total Filtered Applicants: ${v.applicants.length}</Data></Cell>
-   </Row>
-   <Row ss:Height="10"/>
-   <Row ss:Height="25">
-    <Cell ss:StyleID="Header"><Data ss:Type="String">Applicant Name</Data></Cell>
-    <Cell ss:StyleID="Header"><Data ss:Type="String">Email</Data></Cell>
-    <Cell ss:StyleID="Header"><Data ss:Type="String">Phone</Data></Cell>
-    <Cell ss:StyleID="Header"><Data ss:Type="String">GPA</Data></Cell>
-    <Cell ss:StyleID="Header"><Data ss:Type="String">Applied Date</Data></Cell>
-    <Cell ss:StyleID="Header"><Data ss:Type="String">Status</Data></Cell>
-    <Cell ss:StyleID="Header"><Data ss:Type="String">Match Score</Data></Cell>
-   </Row>
-`;
-
-                            if (v.applicants.length === 0) {
-                                xml += `   <Row ss:Height="25">
-    <Cell ss:MergeAcross="6" ss:StyleID="Data"><Data ss:Type="String">No applicants found matching active filters.</Data></Cell>
-   </Row>
-`;
-                            } else {
-                                v.applicants.forEach(p => {
-                                    const scoreVal = parseInt(p.score) || 0;
-                                    const isPassed = scoreVal >= 70;
-                                    const rowStyle = isPassed ? 'DataPassed' : 'DataFailed';
-                                    const statusStyle = isPassed ? 'StatusTextPassed' : 'StatusTextFailed';
-                                    const scoreStyle = isPassed ? 'ScorePassed' : 'ScoreFailed';
-                                    xml += `   <Row ss:Height="20">
-    <Cell ss:StyleID="${rowStyle}"><Data ss:Type="String">${escapeXml(p.name)}</Data></Cell>
-    <Cell ss:StyleID="${rowStyle}"><Data ss:Type="String">${escapeXml(p.email)}</Data></Cell>
-    <Cell ss:StyleID="${rowStyle}"><Data ss:Type="String">${escapeXml(p.phone)}</Data></Cell>
-    <Cell ss:StyleID="${rowStyle}"><Data ss:Type="String">${escapeXml(p.gpa)}</Data></Cell>
-    <Cell ss:StyleID="${rowStyle}"><Data ss:Type="String">${escapeXml(p.date)}</Data></Cell>
-    <Cell ss:StyleID="${statusStyle}"><Data ss:Type="String">${escapeXml(p.status.toUpperCase())}</Data></Cell>
-    <Cell ss:StyleID="${scoreStyle}"><Data ss:Type="Number">${p.score}</Data></Cell>
-   </Row>
-`;
-                                });
-                            }
-
-                            xml += `  </Table>
- </Worksheet>
-`;
-                        });
-
-                        xml += `</Workbook>`;
-
-                        const blob = new Blob([xml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
-                        const url = URL.createObjectURL(blob);
-
-                        const filename = isAll
-                            ? `applicant_report_all_${new Date().toISOString().slice(0, 10)}.xls`
-                            : `applicant_report_${activeVacancies[0].title.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${new Date().toISOString().slice(0, 10)}.xls`;
-
-                        const link = document.createElement("a");
-                        link.setAttribute("href", url);
-                        link.setAttribute("download", filename);
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-
-                        // Success feedback on main button
-                        btnConfirmExport.innerHTML = checkSvg + ' Success';
-                        btnConfirmExport.classList.add('text-green-700', 'border-green-300', 'bg-green-50');
-                        setTimeout(() => {
-                            btnConfirmExport.innerHTML = downloadSvg + ' Export Excel';
-                            btnConfirmExport.classList.remove('text-green-700', 'border-green-300', 'bg-green-50');
-                        }, 1500);
-
-                        closeModal();
-                    } catch (e) {
-                        console.error(e);
-                        alert('Failed to export data: ' + e.message);
-                    } finally {
-                        btnConfirmExport.innerHTML = 'Export Excel';
-                        btnConfirmExport.disabled = false;
+                        cell.alignment = fontProps.alignment || { vertical: 'middle' };
                     }
-                }, 800);
-            });
-        }
+                };
+
+                const styleTitle = (sheet, rowNumber, fromCol, toCol) => {
+                    paintBand(sheet, rowNumber, fromCol, toCol, greenDark, { size: 16, bold: true, color: 'FFFFFFFF' });
+                };
+                const styleSubTitle = (sheet, rowNumber, fromCol, toCol) => {
+                    paintBand(sheet, rowNumber, fromCol, toCol, 'FFEFF6F0', { size: 10, italic: true, color: slate });
+                };
+                const styleHeader = cell => {
+                    cell.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
+                    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: green } };
+                    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+                    cell.border = {
+                        top: { style: 'thin', color: { argb: greenDark } },
+                        left: { style: 'thin', color: { argb: greenDark } },
+                        bottom: { style: 'thin', color: { argb: greenDark } },
+                        right: { style: 'thin', color: { argb: greenDark } }
+                    };
+                };
+                const styleData = (cell, fillArgb = null, align = 'left') => {
+                    cell.font = { name: 'Calibri', size: 11 };
+                    cell.alignment = { horizontal: align, vertical: 'middle' };
+                    cell.border = {
+                        top: { style: 'thin', color: { argb: borderColor } },
+                        left: { style: 'thin', color: { argb: borderColor } },
+                        bottom: { style: 'thin', color: { argb: borderColor } },
+                        right: { style: 'thin', color: { argb: borderColor } }
+                    };
+                    if (fillArgb) {
+                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: fillArgb } };
+                    }
+                };
+                const colorForScore = score => {
+                    const val = Number(score) || 0;
+                    if (val >= 80) return { fill: 'FFDCFCE7', font: 'FF15803D' };
+                    if (val >= 60) return { fill: 'FFFEF3C7', font: 'FFB45309' };
+                    return { fill: 'FFFEE2E2', font: 'FFB91C1C' };
+                };
+
+                if (isAll) {
+                    const overview = workbook.addWorksheet('Overview Summary', {
+                        views: [{ state: 'frozen', ySplit: 3 }],
+                        properties: { defaultRowHeight: 20 }
+                    });
+                    overview.columns = [
+                        { width: 34 },
+                        { width: 22 },
+                        { width: 18 },
+                        { width: 16 },
+                        { width: 14 }
+                    ];
+
+                    overview.mergeCells('A1:E1');
+                    overview.getCell('A1').value = 'Recruitment Summary Overview';
+                    styleTitle(overview, 1, 1, 5);
+
+                    overview.mergeCells('A2:E2');
+                    overview.getCell('A2').value = `Exported on: ${new Date().toLocaleString()} | Active Vacancies: ${selectedVacancies.length}`;
+                    styleSubTitle(overview, 2, 1, 5);
+
+                    const header = overview.addRow(['Vacancy Position', 'Department', 'Total Applicants', 'Deadline', 'Status']);
+                    header.eachCell(cell => styleHeader(cell));
+
+                    selectedVacancies.forEach((v, index) => {
+                        const row = overview.addRow([v.title, v.department, v.applicants.length, v.deadline, 'Active']);
+                        row.eachCell((cell, colNumber) => {
+                            const align = colNumber === 3 || colNumber === 5 ? 'center' : 'left';
+                            styleData(cell, index % 2 === 0 ? 'FFF8FAFC' : null, align);
+                        });
+                        row.getCell(5).font = { name: 'Calibri', size: 11, bold: true, color: { argb: greenDark } };
+                    });
+                }
+
+                selectedVacancies.forEach(v => {
+                    const ws = workbook.addWorksheet(createSafeSheetName(v.title));
+                    ws.views = [{ state: 'frozen', ySplit: 4 }];
+                    ws.columns = [
+                        { width: 24 },
+                        { width: 30 },
+                        { width: 18 },
+                        { width: 12 },
+                        { width: 18 },
+                        { width: 14 },
+                        { width: 14 }
+                    ];
+
+                    ws.mergeCells('A1:G1');
+                    ws.getCell('A1').value = v.title;
+                    styleTitle(ws, 1, 1, 7);
+
+                    ws.mergeCells('A2:G2');
+                    ws.getCell('A2').value = `Department: ${v.department} | Total Applicants: ${v.applicants.length}`;
+                    styleSubTitle(ws, 2, 1, 7);
+
+                    ws.addRow([]);
+
+                    const header = ws.addRow(['Applicant Name', 'Email', 'Phone', 'GPA', 'Applied Date', 'Status', 'Match Score']);
+                    header.eachCell(cell => styleHeader(cell));
+
+                    if (!v.applicants.length) {
+                        ws.mergeCells(`A5:G5`);
+                        const emptyCell = ws.getCell('A5');
+                        emptyCell.value = 'No applicants found for this vacancy.';
+                        styleData(emptyCell, 'FFF3F4F6', 'center');
+                    } else {
+                        v.applicants.forEach((p, rowIndex) => {
+                            const row = ws.addRow([
+                                p.name,
+                                p.email,
+                                p.phone,
+                                p.gpa,
+                                p.date,
+                                String(p.status).toUpperCase(),
+                                Number(p.score) || 0
+                            ]);
+
+                            const scoreStyles = colorForScore(p.score);
+                            row.eachCell((cell, colNumber) => {
+                                const align = colNumber === 7 || colNumber === 4 ? 'center' : (colNumber === 3 ? 'center' : 'left');
+                                const fill = colNumber === 7 ? scoreStyles.fill : (rowIndex % 2 === 0 ? 'FFF8FAFC' : null);
+                                styleData(cell, fill, align);
+                                if (colNumber === 7) {
+                                    cell.font = { name: 'Calibri', size: 11, bold: true, color: { argb: scoreStyles.font } };
+                                }
+                                if (colNumber === 6) {
+                                    const statusMap = {
+                                        submitted: { fill: 'FFF3F4F6', font: 'FF4B5563' },
+                                        shortlisted: { fill: 'FFFEF3C7', font: 'FF92400E' },
+                                        interview: { fill: 'FFDBEAFE', font: 'FF1D4ED8' },
+                                        accepted: { fill: 'FFDCFCE7', font: 'FF15803D' },
+                                        rejected: { fill: 'FFFEE2E2', font: 'FFB91C1C' },
+                                        withdrawn: { fill: 'FFE5E7EB', font: 'FF6B7280' }
+                                    };
+                                    const s = statusMap[String(p.status).toLowerCase()] || statusMap.submitted;
+                                    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: s.fill } };
+                                    cell.font = { name: 'Calibri', size: 11, bold: true, color: { argb: s.font } };
+                                }
+                            });
+
+                            row.height = 20;
+                        });
+                    }
+                });
+
+                const buffer = await workbook.xlsx.writeBuffer();
+                const blob = new Blob([buffer], {
+                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                });
+                const url = URL.createObjectURL(blob);
+                const filename = isAll
+                    ? `applicant_report_all_${new Date().toISOString().slice(0, 10)}.xlsx`
+                    : `applicant_report_${selectedVacancies[0].title.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`;
+
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+                btnConfirmExport.innerHTML = checkSvg + ' Success';
+                btnConfirmExport.classList.add('text-green-700', 'border-green-300', 'bg-green-50');
+                setTimeout(() => {
+                    btnConfirmExport.innerHTML = downloadSvg + ' Export Excel';
+                    btnConfirmExport.classList.remove('text-green-700', 'border-green-300', 'bg-green-50');
+                }, 1500);
+
+                closeModal();
+            } catch (e) {
+                console.error(e);
+                alert('Failed to export data: ' + e.message);
+            } finally {
+                btnConfirmExport.innerHTML = 'Export Excel';
+                btnConfirmExport.disabled = false;
+            }
+        });
     }
 
     // ===== ARCHIVE MODAL =====
@@ -918,3 +926,4 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial
     apply();
 });
+

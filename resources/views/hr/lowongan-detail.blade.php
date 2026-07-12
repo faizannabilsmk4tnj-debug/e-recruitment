@@ -48,11 +48,11 @@
                             </p>
                         </div>
                         @php
+                            $isFilled = $vacancy->status === 'filled';
                             $statusClasses = [
                                 'open' => 'bg-green-50 border-green-200 text-green-700',
                                 'draft' => 'bg-amber-50 border-amber-200 text-amber-700',
                                 'closed' => 'bg-red-50 border-red-200 text-red-700',
-                                'expired' => 'bg-gray-50 border-gray-200 text-gray-700',
                                 'filled' => 'bg-blue-50 border-blue-200 text-blue-700',
                             ];
                             $statusClass = $statusClasses[$vacancy->status] ?? 'bg-gray-50 border-gray-200 text-gray-700';
@@ -61,7 +61,6 @@
                                 'open' => 'bg-green-500 animate-pulse',
                                 'draft' => 'bg-amber-500',
                                 'closed' => 'bg-red-500',
-                                'expired' => 'bg-gray-500',
                                 'filled' => 'bg-blue-500',
                             ];
                             $dotClass = $dotClasses[$vacancy->status] ?? 'bg-gray-500';
@@ -128,7 +127,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
                                 Edit Vacancy
                             </button>
-                        @else
+                        @elseif(!in_array($vacancy->status, ['closed', 'filled']))
                             <button id="btn-edit-detail" data-id="{{ $vacancy->id }}" class="flex items-center gap-2 border border-gray-300 text-gray-700 font-semibold px-5 py-2.5 rounded-lg text-sm hover:bg-gray-50 transition-colors cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
                                 Edit Vacancy
@@ -147,26 +146,29 @@
             
             $totalDays = max(1, $startDate->diffInDays($endDate));
             $daysRemaining = max(0, now()->diffInDays($endDate, false));
-            if (now() > $endDate || in_array($vacancy->status, ['closed', 'expired', 'filled'])) {
+            if (now() > $endDate || in_array($vacancy->status, ['closed', 'filled'])) {
                 $daysRemaining = 0;
             }
             // Round days remaining to a clean integer
             $daysRemainingClean = round($daysRemaining);
             
             $percentRemaining = $totalDays > 0 ? min(100, max(0, round(($daysRemaining / $totalDays) * 100))) : 0;
-            if (in_array($vacancy->status, ['closed', 'expired', 'filled'])) {
+            if (in_array($vacancy->status, ['closed', 'filled'])) {
                 $percentRemaining = 0;
             }
 
             // Quota calculations
             $quota = $vacancy->quota ?? 1;
             $currentApplicants = $stats['total'] ?? 0;
-            $percentQuota = min(100, round(($currentApplicants / $quota) * 100));
+            $percentQuota = $vacancy->status === 'filled'
+                ? 100
+                : min(100, round(($currentApplicants / $quota) * 100));
+            $displayApplicants = $vacancy->status === 'filled' ? $quota : $currentApplicants;
 
-            $cardBg = in_array($vacancy->status, ['closed', 'expired', 'filled']) ? 'bg-gray-900' : 'bg-green-900';
-            $barBg = in_array($vacancy->status, ['closed', 'expired', 'filled']) ? 'bg-gray-800' : 'bg-green-800';
-            $fillBg = in_array($vacancy->status, ['closed', 'expired', 'filled']) ? 'bg-gray-500' : 'bg-green-400';
-            $textMuted = in_array($vacancy->status, ['closed', 'expired', 'filled']) ? 'text-gray-400' : 'text-green-300';
+            $cardBg = in_array($vacancy->status, ['closed', 'filled']) ? 'bg-gray-900' : 'bg-green-900';
+            $barBg = in_array($vacancy->status, ['closed', 'filled']) ? 'bg-gray-800' : 'bg-green-800';
+            $fillBg = in_array($vacancy->status, ['closed', 'filled']) ? 'bg-gray-500' : 'bg-green-400';
+            $textMuted = in_array($vacancy->status, ['closed', 'filled']) ? 'text-gray-400' : 'text-green-300';
             
             $autoCloseMethod = $vacancy->auto_close_method ?? 'both';
         @endphp
@@ -177,7 +179,7 @@
 
             <p class="text-white font-bold text-lg">Vacancy Progress</p>
             
-            @if(in_array($vacancy->status, ['closed', 'expired', 'filled']))
+            @if(in_array($vacancy->status, ['closed', 'filled']))
                 <p class="text-gray-400 text-xs mt-1 mb-6">This recruitment process has been concluded.</p>
             @elseif($autoCloseMethod === 'deadline')
                 <p class="text-green-300 text-xs mt-1 mb-6">Auto-close is active based on time deadline on {{ $vacancy->deadline ? \Carbon\Carbon::parse($vacancy->deadline)->format('M d, Y') : '-' }}.</p>
@@ -189,7 +191,7 @@
                 <p class="text-green-300 text-xs mt-1 mb-6">Recruitment is managed manually by HR.</p>
             @endif
 
-            @if(in_array($vacancy->status, ['closed', 'expired', 'filled']))
+            @if(in_array($vacancy->status, ['closed', 'filled']))
                 <div class="flex items-center justify-between mt-4">
                     <span class="text-xs text-gray-400">Status</span>
                     <span class="text-red-400 text-sm font-bold uppercase tracking-wider">Concluded</span>
@@ -211,7 +213,7 @@
                             
                             <div class="flex items-center gap-1.5">
                                 <!-- Warning indicator: Hidden by default, shown by JS when time's up -->
-                                <span id="time-warning-icon" class="hidden text-red-500 animate-pulse tooltip-container cursor-pointer inline-flex items-center" data-tooltip="Recruitment deadline has expired.">
+                                <span id="time-warning-icon" class="hidden text-red-500 animate-pulse tooltip-container cursor-pointer inline-flex items-center" data-tooltip="Recruitment deadline has passed.">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                                 </span>
                                 <!-- Live Countdown Container -->
@@ -231,24 +233,24 @@
                     <div>
                         <div class="flex items-center justify-between mb-1.5">
                             <div class="flex items-center gap-1.5">
-                                <span class="text-xs {{ $textMuted }}">Quota Filled</span>
+                                <span class="text-xs {{ $textMuted }}">Quota Fulfilled</span>
                                 @if(in_array($autoCloseMethod, ['quota', 'both']))
                                     <!-- Auto Close active marker -->
-                                    <span class="tooltip-container cursor-pointer inline-flex items-center" data-tooltip="Auto-close is active based on recruitment quota. System will automatically stop accepting new applications once the quota is reached.">
+                                    <span class="tooltip-container cursor-pointer inline-flex items-center" data-tooltip="Auto-close is active based on recruitment quota. System will automatically stop accepting new applications once the quota has been fulfilled.">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                                     </span>
                                 @endif
                             </div>
                             
                             <div class="flex items-center gap-1.5">
-                                @if($currentApplicants >= $quota)
+                                @if($vacancy->status === 'filled' || $currentApplicants >= $quota)
                                     <!-- Quota is Full indicator: green checkmark -->
-                                    <span id="quota-warning-icon" class="text-green-400 tooltip-container cursor-pointer inline-flex items-center" data-tooltip="Recruitment quota is full.">
+                                    <span id="quota-warning-icon" class="text-green-400 tooltip-container cursor-pointer inline-flex items-center" data-tooltip="Recruitment quota has been fulfilled.">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                                     </span>
                                 @endif
                                 <span class="text-white text-base font-extrabold tracking-tight">
-                                    {{ $currentApplicants }} <span class="text-xs text-gray-300 font-semibold font-normal">/ {{ $quota }} Applicants</span>
+                                    {{ $displayApplicants }} <span class="text-xs text-gray-300 font-semibold font-normal">/ {{ $quota }} Applicants</span>
                                 </span>
                             </div>
                         </div>

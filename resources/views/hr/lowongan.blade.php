@@ -186,13 +186,16 @@
 
                 @foreach($vacancies as $v)
                 @php
+                    $isLockedStatus = in_array($v->status, ['closed', 'filled']);
+                    $isFilled = $v->status === 'filled';
+
                     // Map database status to uppercase badge text
                     $statusBadge = 'DRAFT';
                     if ($v->status === 'open') {
                         $statusBadge = 'ACTIVE';
                     } elseif ($v->status === 'filled') {
                         $statusBadge = 'FILLED';
-                    } elseif ($v->status === 'closed' || $v->status === 'expired') {
+                    } elseif ($v->status === 'closed') {
                         if ($v->quota > 0 && $v->applicant_count >= $v->quota) {
                             $statusBadge = 'FILLED';
                         } else {
@@ -201,12 +204,15 @@
                     }
                     
                     // Compute progress
-                    $progress = $v->quota > 0 ? min(100, ($v->applicant_count / $v->quota) * 100) : 0;
+                    $progress = $isFilled
+                        ? 100
+                        : ($v->quota > 0 ? min(100, ($v->applicant_count / $v->quota) * 100) : 0);
+                    $displayApplicants = $isFilled ? $v->quota : $v->applicant_count;
                     
                     // Reference ID format (REF-ECO-YEAR-ID)
                     $refId = 'REF-ECO-' . $v->created_at->format('Y') . '-' . str_pad($v->id, 3, '0', STR_PAD_LEFT);
                 @endphp
-                <tr class="border-t border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer vacancy-row {{ in_array($v->status, ['closed', 'expired', 'filled']) ? 'opacity-50' : '' }}"
+                <tr class="border-t border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer vacancy-row {{ $isLockedStatus ? 'opacity-50' : '' }}"
                     data-id="{{ $v->id }}"
                     data-title="{{ strtolower($v->title) }}"
                     data-ref="{{ strtolower($refId) }}"
@@ -232,7 +238,7 @@
 
                     <td class="py-4 pr-4">
                         <div class="flex items-center gap-2">
-                            <p class="font-bold text-sm {{ in_array($v->status, ['closed', 'expired', 'filled']) ? 'line-through text-gray-400' : 'text-gray-900' }}">{{ $v->title }}</p>
+                            <p class="font-bold text-sm {{ $isLockedStatus ? 'line-through text-gray-400' : 'text-gray-900' }}">{{ $v->title }}</p>
                             <span class="text-[9px] font-bold text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded uppercase shrink-0">{{ str_replace('-', ' ', $v->employment_type) }}</span>
                         </div>
                         <p class="text-[10px] text-gray-400 mt-0.5">{{ $refId }}</p>
@@ -240,14 +246,14 @@
                     <td class="py-4 pr-4 text-sm text-gray-500">{{ $v->category->name ?? '-' }}</td>
                     <td class="py-4 pr-4 text-sm text-gray-500">{{ $v->location ?? '-' }}</td>
                     <td class="py-4 pr-4">
-                        @if($v->applicant_count === 0)
+                        @if($v->applicant_count === 0 && !$isFilled)
                             <span class="text-sm text-green-600 font-medium">No applicants yet</span>
                         @else
                             <div class="flex items-center gap-2">
                                 <div class="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                    <div class="h-full {{ in_array($v->status, ['closed', 'expired', 'filled']) ? 'bg-gray-400' : 'bg-green-600' }} rounded-full" style="width: {{ $progress }}%"></div>
+                                    <div class="h-full {{ in_array($v->status, ['closed', 'filled']) ? 'bg-gray-400' : 'bg-green-600' }} rounded-full" style="width: {{ $progress }}%"></div>
                                 </div>
-                                <span class="text-sm font-semibold text-gray-700">{{ $v->applicant_count }}</span>
+                                <span class="text-sm font-semibold text-gray-700">{{ $displayApplicants }}</span>
                             </div>
                         @endif
                     </td>
@@ -270,7 +276,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                                 Publish
                             </button>
-                        @elseif($v->status !== 'closed' && $v->status !== 'expired')
+                        @elseif(!$isLockedStatus)
                             <button class="btn-vacancy-action text-gray-400 hover:text-gray-700 transition-colors p-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
                             </button>

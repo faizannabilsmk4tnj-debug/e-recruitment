@@ -26,6 +26,10 @@
         animation: highlight-pulse-animation 0.8s ease-in-out 1;
         border: 2px solid #16a34a !important;
     }
+    .lowongan-card.new-badges-dismissed .new-vacancy-badge,
+    .lowongan-card.new-badges-dismissed .new-applicants-badge {
+        display: none !important;
+    }
 </style>
 @endsection
 
@@ -151,6 +155,7 @@
         @foreach($lowonganList as $low)
         @php
             $unreviewed = $low['counts']['submitted'] + $low['counts']['shortlisted'];
+            $statusLabel = $low['status'] === 'filled' ? 'FILLED' : ($low['status'] === 'closed' ? 'CLOSE' : strtoupper($low['status']));
         @endphp
         <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden lowongan-card {{ $low['expanded'] ? 'is-expanded' : '' }}"
              data-lowongan-id="{{ $low['id'] }}"
@@ -176,20 +181,27 @@
                         <div class="flex items-center gap-2 flex-wrap">
                             <h3 class="font-bold text-gray-900 truncate lowongan-title">{{ $low['title'] }}</h3>
                             <span class="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded uppercase">{{ $low['department'] }}</span>
-
-                            <!-- Auto Close displays -->
-                            @if(in_array($low['auto_close_method'], ['deadline', 'both']))
-                            <span class="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-red-605" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                {{ $low['countdown_text'] }}
-                            </span>
+                            @if($low['status'] === 'filled')
+                                <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full shrink-0">{{ $statusLabel }}</span>
+                            @elseif($low['status'] === 'closed')
+                                <span class="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full shrink-0">{{ $statusLabel }}</span>
                             @endif
 
-                            @if(in_array($low['auto_close_method'], ['quota', 'both']))
-                            <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-blue-605" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                                Quota: {{ $low['total'] }}/{{ $low['quota'] }}
-                            </span>
+                            <!-- Auto Close displays -->
+                            @if(!in_array($low['status'], ['closed', 'filled']))
+                                @if(in_array($low['auto_close_method'], ['deadline', 'both']))
+                                <span class="text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-red-605" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    {{ $low['countdown_text'] }}
+                                </span>
+                                @endif
+
+                                @if(in_array($low['auto_close_method'], ['quota', 'both']))
+                                <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-blue-605" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                    Quota: {{ $low['total'] }}/{{ $low['quota'] }}
+                                </span>
+                                @endif
                             @endif
 
                             @if($unreviewed >= 50)
@@ -442,6 +454,37 @@
     </div>
 </div>
 
+<!-- Export Warning Modal -->
+<div id="export-warning-modal" class="hidden fixed inset-0 bg-gray-900/40 backdrop-blur-sm flex items-center justify-center z-[60] transition-opacity duration-300">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-2xl w-full max-w-md p-6 transform scale-95 transition-transform duration-300">
+        <div class="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
+            <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>
+                    <path d="M12 9v4"/>
+                    <path d="M12 17h.01"/>
+                </svg>
+                Export Not Available
+            </h3>
+            <button id="btn-close-export-warning-modal" class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+            </button>
+        </div>
+
+        <div class="space-y-3 my-4">
+            <p class="text-sm text-gray-600 leading-relaxed">
+                This vacancy does not have any applicants yet. Please wait until at least one application is submitted before exporting the single-position Excel file.
+            </p>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-4 border-t border-gray-100">
+            <button id="btn-ok-export-warning-modal" class="px-4 py-2 bg-green-800 text-white rounded-lg text-xs font-semibold hover:bg-green-700 transition-all shadow-sm">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- Archive Confirmation Modal -->
 <div id="archive-confirm-modal" class="hidden fixed inset-0 bg-gray-900/40 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-2xl w-full max-w-md p-6 transform scale-95 transition-transform duration-300">
@@ -502,5 +545,6 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('js/vendor/exceljs.min.js') }}"></script>
 <script src="{{ asset('js/hr/pelamar.js') }}"></script>
 @endsection

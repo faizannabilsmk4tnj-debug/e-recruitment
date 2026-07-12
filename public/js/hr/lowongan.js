@@ -496,6 +496,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function toggleActionDropdown(btn, row) {
         if (!dropdown) return;
         const rect = btn.getBoundingClientRect();
+        const status = row.dataset.status;
+        const lockedStatuses = ['CLOSED', 'EXPIRED', 'FILLED'];
+
+        if (lockedStatuses.includes(status)) {
+            dropdown.classList.add('hidden');
+            return;
+        }
         
         // If same button and dropdown is open, close it
         if (activeRow === row && !dropdown.classList.contains('hidden')) {
@@ -508,7 +515,6 @@ document.addEventListener('DOMContentLoaded', function () {
         dropdown.style.right = (window.innerWidth - rect.right + window.scrollX) + 'px';
         
         // Dynamically toggle Close / Fill buttons depending on status
-        const status = row.dataset.status;
         const fillBtn = dropdown.querySelector('.vd-fill');
         const closeBtn = dropdown.querySelector('.vd-close');
         

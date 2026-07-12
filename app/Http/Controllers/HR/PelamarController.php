@@ -107,7 +107,7 @@ class PelamarController extends Controller
             $countdownText = '';
             if ($deadline) {
                 if (now()->greaterThan($deadline)) {
-                    $countdownText = 'Expired';
+                    $countdownText = 'Deadline Passed';
                 } else {
                     $diff = now()->diff($deadline);
                     if ($diff->days > 0) {
