@@ -187,17 +187,17 @@ document.addEventListener('DOMContentLoaded', function () {
         currentMode = mode;
     }
 
-    // Attach click events to nav arrows
+    // Attach click events to nav arrows (paginated by 6 months)
     btnChartPrev?.addEventListener('click', () => {
-        if (currentMode === 'monthly' && monthlyWindowStart > 0) {
-            monthlyWindowStart--;
+        if (currentMode === 'monthly' && monthlyWindowStart >= 6) {
+            monthlyWindowStart -= 6;
             updateChart('monthly');
         }
     });
 
     btnChartNext?.addEventListener('click', () => {
-        if (currentMode === 'monthly' && monthlyWindowStart < chartData.monthly.values.length - 6) {
-            monthlyWindowStart++;
+        if (currentMode === 'monthly' && monthlyWindowStart + 6 < chartData.monthly.values.length) {
+            monthlyWindowStart += 6;
             updateChart('monthly');
         }
     });
