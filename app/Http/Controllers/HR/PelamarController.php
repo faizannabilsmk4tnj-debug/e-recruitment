@@ -49,7 +49,7 @@ class PelamarController extends Controller
         $deptList = [];
 
         foreach ($jobs as $index => $job) {
-            $applications = $job->applications;
+            $applications = $job->applications->sortByDesc('created_at');
 
             // Collect unique departments for the view dropdown filter
             $deptName = $job->category ? $job->category->name : 'General';

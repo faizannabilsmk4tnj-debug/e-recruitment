@@ -138,6 +138,11 @@
                 <option value="internship">Internship</option>
             </select>
             
+            <select id="sort-vacancy" class="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-600">
+                <option value="recent">Sort: Newest</option>
+                <option value="alpha">Sort: A-Z</option>
+            </select>
+            
             <button id="btn-clear-filters" class="hidden items-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700 transition-all px-3 py-2 rounded-lg border border-red-200 hover:border-red-300 bg-red-50 hover:bg-red-100/80 shadow-sm cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
                 Reset Filters

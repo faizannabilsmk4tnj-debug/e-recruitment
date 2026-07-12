@@ -20,6 +20,12 @@ class JobPostingController extends Controller
         $locations = \App\Models\WorkLocation::where('is_active', true)->get();
         
         $vacancies = JobPosting::with('category')
+            ->orderByRaw("CASE 
+                WHEN status = 'open' THEN 1 
+                WHEN status = 'draft' THEN 2 
+                WHEN status = 'closed' THEN 3 
+                ELSE 4 
+            END")
             ->orderBy('created_at', 'desc')
             ->get();
 

@@ -250,6 +250,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (filterLocation) filterLocation.value = '';
             if (filterEmploymentType) filterEmploymentType.value = '';
             
+            const sortVacancySelect = document.getElementById('sort-vacancy');
+            if (sortVacancySelect) sortVacancySelect.value = 'recent';
+            
             if (filterClosingSoonActive) {
                 filterClosingSoonActive = false;
                 if (cardClosingSoon) {
@@ -334,6 +337,47 @@ document.addEventListener('DOMContentLoaded', function () {
                 row.style.display = 'none'; // hide mismatched rows immediately
             }
         });
+
+        // 1.5 Sort matching rows by status group, then secondary sort mode
+        const statusWeights = {
+            'ACTIVE': 1,
+            'DRAFT': 2,
+            'FILLED': 3,
+            'CLOSED': 4
+        };
+
+        const sortMode = document.getElementById('sort-vacancy')?.value || 'recent';
+
+        matchingRows.sort((a, b) => {
+            const statusA = a.dataset.status;
+            const statusB = b.dataset.status;
+            const weightA = statusWeights[statusA] || 99;
+            const weightB = statusWeights[statusB] || 99;
+
+            if (weightA !== weightB) {
+                return weightA - weightB;
+            }
+
+            // Same status: sort based on the chosen mode
+            if (sortMode === 'alpha') {
+                return a.dataset.title.localeCompare(b.dataset.title);
+            }
+            // default is 'recent': newest first (highest ID first)
+            return parseInt(b.dataset.id) - parseInt(a.dataset.id);
+        });
+
+        // Re-order rows in DOM so they display correctly
+        const tableBody = document.getElementById('vacancy-table');
+        if (tableBody) {
+            matchingRows.forEach(row => {
+                tableBody.appendChild(row);
+            });
+            // Ensure empty-state-row is always at the bottom
+            const emptyState = document.getElementById('empty-state-row');
+            if (emptyState) {
+                tableBody.appendChild(emptyState);
+            }
+        }
 
         // 2. Paginate matching rows
         const totalItems = matchingRows.length;
@@ -437,6 +481,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (filterCategory) filterCategory.addEventListener('change', () => { currentPage = 1; applyFilters(); });
     if (filterLocation) filterLocation.addEventListener('change', () => { currentPage = 1; applyFilters(); });
     if (filterEmploymentType) filterEmploymentType.addEventListener('change', () => { currentPage = 1; applyFilters(); });
+    const sortVacancySelect = document.getElementById('sort-vacancy');
+    if (sortVacancySelect) sortVacancySelect.addEventListener('change', () => { currentPage = 1; applyFilters(); });
 
     // ===== ACTION DROPDOWN =====
     const dropdown = document.getElementById('vacancy-dropdown');

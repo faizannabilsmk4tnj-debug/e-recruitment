@@ -19,6 +19,10 @@
         </div>
         <input type="text" id="search-input" placeholder="Search position or department..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
     </div>
+    <select id="sort-select" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-600">
+        <option value="recent">Sort: Newest</option>
+        <option value="alpha">Sort: A-Z</option>
+    </select>
     <div class="flex gap-2">
         <button class="filter-btn active bg-green-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors" data-filter="all">All</button>
         <button class="filter-btn bg-white text-gray-600 border border-gray-300 text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-filter="submitted">Submitted</button>
@@ -78,7 +82,8 @@
                         @endphp
                         <tr class="border-b border-gray-50 hover:bg-green-50/20 transition-colors cursor-pointer lamaran-row" 
                             data-id="{{ $app->id }}" 
-                            data-status="{{ $filterStatus }}">
+                            data-status="{{ $filterStatus }}"
+                            data-title="{{ strtolower($jobTitle) }}">
                             <td class="px-5 py-4">
                                 <p class="font-bold text-sm text-gray-900 group-hover:text-green-800 transition-colors">{{ $jobTitle }}</p>
                                 <div class="flex items-center gap-1.5 mt-0.5">
@@ -106,12 +111,17 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
+                        <tr id="empty-state-row-candidate">
                             <td colspan="4" class="px-5 py-12 text-center text-sm text-gray-500 font-medium bg-white">
                                 You have not submitted any job applications yet.
                             </td>
                         </tr>
                     @endforelse
+                    <tr id="no-results-row-candidate" class="hidden">
+                        <td colspan="4" class="px-5 py-12 text-center text-sm text-gray-500 font-medium bg-white">
+                            No applications match your filter or search.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -874,6 +884,73 @@ document.addEventListener('DOMContentLoaded', function () {
     // Refresh display of confirmation badges (handled via server state)
     function refreshConfirmationStates() {}
 
+    function applyFiltersAndSort() {
+        const activeBtn = document.querySelector('.filter-btn.active');
+        const filter = activeBtn ? activeBtn.dataset.filter : 'all';
+        const q = document.getElementById('search-input').value.toLowerCase().trim();
+        const sortMode = document.getElementById('sort-select').value;
+
+        const matchingRows = [];
+        document.querySelectorAll('.lamaran-row').forEach(row => {
+            const statusMatch = (filter === 'all' || row.dataset.status === filter);
+            const searchMatch = !q || row.textContent.toLowerCase().includes(q);
+
+            if (statusMatch && searchMatch) {
+                row.style.display = '';
+                matchingRows.push(row);
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Sort matching rows
+        const statusWeights = {
+            'accepted': 1,
+            'interview': 2,
+            'shortlisted': 3,
+            'submitted': 4,
+            'rejected': 5,
+            'withdrawn': 6
+        };
+
+        matchingRows.sort((a, b) => {
+            const statusA = a.dataset.status;
+            const statusB = b.dataset.status;
+            const weightA = statusWeights[statusA] || 99;
+            const weightB = statusWeights[statusB] || 99;
+
+            if (weightA !== weightB) {
+                return weightA - weightB;
+            }
+
+            // Same status: sort based on the chosen mode
+            if (sortMode === 'alpha') {
+                return a.dataset.title.localeCompare(b.dataset.title);
+            }
+            // default is 'recent': newest first (highest ID first)
+            return parseInt(b.dataset.id) - parseInt(a.dataset.id);
+        });
+
+        // Re-append to tbody to apply the sorted order visually
+        const tbody = document.getElementById('lamaran-tbody');
+        if (tbody) {
+            matchingRows.forEach(row => {
+                tbody.appendChild(row);
+            });
+            // Re-append no-results row
+            const emptyState = document.getElementById('empty-state-row-candidate');
+            const noResults = document.getElementById('no-results-row-candidate');
+            if (noResults) {
+                if (matchingRows.length === 0 && !emptyState) {
+                    noResults.classList.remove('hidden');
+                } else {
+                    noResults.classList.add('hidden');
+                }
+                tbody.appendChild(noResults);
+            }
+        }
+    }
+
     // ===== FILTER BUTTONS =====
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', function () {
@@ -884,25 +961,21 @@ document.addEventListener('DOMContentLoaded', function () {
             this.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-300');
             this.classList.add('bg-green-800', 'text-white', 'active');
 
-            const filter = this.dataset.filter;
-            document.querySelectorAll('.lamaran-row').forEach(row => {
-                if (filter === 'all' || row.dataset.status === filter) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
+            applyFiltersAndSort();
         });
     });
 
     // ===== SEARCH =====
-    document.getElementById('search-input').addEventListener('input', function () {
-        const q = this.value.toLowerCase();
-        document.querySelectorAll('.lamaran-row').forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(q) ? '' : 'none';
-        });
-    });
+    document.getElementById('search-input').addEventListener('input', applyFiltersAndSort);
+
+    // ===== SORT =====
+    const sortSelect = document.getElementById('sort-select');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', applyFiltersAndSort);
+    }
+
+    // Initial sort/filter call
+    applyFiltersAndSort();
 
     // ===== DETAIL: Show Timeline =====
     document.querySelectorAll('.btn-detail, .lamaran-row').forEach(el => {
