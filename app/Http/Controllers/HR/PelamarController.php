@@ -327,19 +327,39 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
   body{background:#fff;padding:0}
   .page{width:100%}
 }
-</style>
-</head><body>
+</style>';
+
+        if ($request->has('download')) {
+            $html .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const element = document.querySelector(".page");
+        const opt = {
+            margin:       0,
+            filename:     "CV_' . str_replace("'", "\\'", str_replace(' ', '_', $name)) . '.pdf",
+            image:        { type: "jpeg", quality: 0.98 },
+            html2canvas:  { scale: 2.5, useCORS: true, logging: false },
+            jsPDF:        { unit: "mm", format: "a4", orientation: "portrait" }
+        };
+        
+        html2pdf().set(opt).from(element).save().then(() => {
+            setTimeout(() => {
+                window.close();
+            }, 1500);
+        }).catch(err => {
+            console.error("PDF generation failed:", err);
+        });
+    });
+</script>';
+        }
+
+        $html .= '</head><body>
 <div class="page">
 ' . $blocksHtml . '
 </div>
 </body></html>';
 
         $headers = ['Content-Type' => 'text/html; charset=utf-8'];
-        
-        if ($request->has('download')) {
-            $filename = 'CV_' . str_replace(' ', '_', $name) . '.html';
-            $headers['Content-Disposition'] = 'attachment; filename="' . $filename . '"';
-        }
         
         return response($html, 200, $headers);
     }
