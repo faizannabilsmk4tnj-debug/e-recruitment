@@ -29,14 +29,14 @@ class CheckVacancyDeadlines extends Command
      */
     public function handle()
     {
-        $today = Carbon::today();
+        $today = Carbon::today('Asia/Jakarta');
         $this->info("Checking vacancy status and deadlines for: " . $today->toDateString());
-
+ 
         // Get all open job postings
         $jobs = JobPosting::where('status', 'open')->get();
-
+ 
         $processedCount = 0;
-
+ 
         /** @var \App\Models\JobPosting $job */
         foreach ($jobs as $job) {
             $isClosed = false;
@@ -59,9 +59,10 @@ class CheckVacancyDeadlines extends Command
             
             // 2. Check if Deadline is passed (if not already closed and auto_close_method allows deadline closure)
             if (!$isClosed && $job->deadline && in_array($job->auto_close_method, ['deadline', 'both'])) {
-                $deadline = Carbon::parse($job->deadline)->endOfDay();
+                $nowLocal = Carbon::now('Asia/Jakarta');
+                $deadline = Carbon::parse($job->deadline->format('Y-m-d'), 'Asia/Jakarta')->endOfDay();
                 
-                if ($deadline->isPast()) {
+                if ($nowLocal->greaterThan($deadline)) {
                     $job->update([
                         'status' => 'closed',
                         'closed_at' => now()
@@ -74,7 +75,7 @@ class CheckVacancyDeadlines extends Command
                     $processedCount++;
                 } else {
                     // Check if deadline is approaching (3 days or 1 day)
-                    $daysRemaining = (int) $today->diffInDays(Carbon::parse($job->deadline)->startOfDay(), false);
+                    $daysRemaining = (int) $today->diffInDays(Carbon::parse($job->deadline->format('Y-m-d'), 'Asia/Jakarta')->startOfDay(), false);
                     if (in_array($daysRemaining, [3, 1])) {
                         $this->notifyHRApproaching($job, $daysRemaining);
                         $processedCount++;
@@ -82,7 +83,7 @@ class CheckVacancyDeadlines extends Command
                 }
             }
         }
-
+ 
         $this->info("Finished checking vacancies. Processed {$processedCount} actions.");
     }
 

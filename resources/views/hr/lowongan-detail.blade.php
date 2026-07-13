@@ -141,12 +141,13 @@
 
         <!-- Vacancy Progress -->
         @php
-            $startDate = $vacancy->created_at;
-            $endDate = $vacancy->deadline ? \Carbon\Carbon::parse($vacancy->deadline)->endOfDay() : $startDate->copy()->addDays(30);
+            $nowLocal = \Carbon\Carbon::now('Asia/Jakarta');
+            $startDate = $vacancy->created_at->setTimezone('Asia/Jakarta');
+            $endDate = $vacancy->deadline ? \Carbon\Carbon::parse($vacancy->deadline->format('Y-m-d'), 'Asia/Jakarta')->endOfDay() : $startDate->copy()->addDays(30);
             
             $totalDays = max(1, $startDate->diffInDays($endDate));
-            $daysRemaining = max(0, now()->diffInDays($endDate, false));
-            if (now() > $endDate || in_array($vacancy->status, ['closed', 'filled'])) {
+            $daysRemaining = max(0, $nowLocal->diffInDays($endDate, false));
+            if ($nowLocal > $endDate || in_array($vacancy->status, ['closed', 'filled'])) {
                 $daysRemaining = 0;
             }
             // Round days remaining to a clean integer
@@ -218,8 +219,8 @@
                                 </span>
                                 <!-- Live Countdown Container -->
                                 <div id="countdown-container" 
-                                     data-deadline="{{ $vacancy->deadline ? \Carbon\Carbon::parse($vacancy->deadline)->endOfDay()->toIso8601String() : '' }}"
-                                     data-created="{{ $vacancy->created_at->toIso8601String() }}">
+                                     data-deadline="{{ $vacancy->deadline ? \Carbon\Carbon::parse($vacancy->deadline->format('Y-m-d'), 'Asia/Jakarta')->endOfDay()->toIso8601String() : '' }}"
+                                     data-created="{{ $vacancy->created_at->setTimezone('Asia/Jakarta')->toIso8601String() }}">
                                     <span id="countdown-timer" class="text-white text-base font-extrabold tracking-tight">Calculating...</span>
                                 </div>
                             </div>

@@ -65,10 +65,11 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                 Schedule New
             </button>
-            <a href="/hr/wawancara" class="bg-white border border-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-50 transition-colors shadow-sm flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                Calendar View
-            </a>
+            <div class="flex items-center bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-inner">
+                <span class="px-3.5 py-1.5 text-xs font-bold text-green-900 bg-white shadow-sm rounded-md transition-colors">List View</span>
+                <a href="/hr/wawancara" class="px-3.5 py-1.5 text-xs font-bold text-gray-500 rounded-md hover:text-gray-900 transition-colors">Month View</a>
+            </div>
+
         </div>
     </div>
 
@@ -409,40 +410,57 @@
         @endif
     </div>
 
-    <!-- Stat Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-green-900 text-white rounded-2xl p-6 shadow-md relative overflow-hidden">
-            <div class="absolute -right-4 -top-4 opacity-10">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-            </div>
-            <div class="relative z-10">
-                <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+    <!-- Bottom Section: Stats & Location Templates -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-green-900 text-white rounded-2xl p-6 shadow-md relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 opacity-10">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                 </div>
-                <h3 class="text-sm font-semibold text-green-100 mb-1">Active Scheduled</h3>
-                <div class="text-4xl font-extrabold mb-1">{{ $totalScheduled }}</div>
-                <p class="text-[10px] font-medium text-green-300">Requires attendance</p>
+                <div class="relative z-10">
+                    <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+                    </div>
+                    <h3 class="text-sm font-semibold text-green-100 mb-1">Active Scheduled</h3>
+                    <div class="text-4xl font-extrabold mb-1">{{ $totalScheduled }}</div>
+                    <p class="text-[10px] font-medium text-green-300">Requires attendance</p>
+                </div>
+            </div>
+
+            <div class="bg-green-100 border border-green-200 text-green-900 rounded-2xl p-6 shadow-sm">
+                <div class="w-10 h-10 bg-green-200/50 rounded-lg flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <h3 class="text-sm font-semibold text-green-800 mb-1">Attendance Rate</h3>
+                <div class="text-4xl font-extrabold mb-1">{{ $attendanceRate }}%</div>
+                <p class="text-[10px] font-bold text-green-700 flex items-center gap-1">
+                    Completed vs Cancelled
+                </p>
+            </div>
+
+            <div class="bg-gray-100 border border-gray-200 text-gray-900 rounded-2xl p-6 shadow-sm">
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 21-6-6m6 6v-4.8m0 4.8h-4.8"/><path d="M3 16.2V21m0 0h4.8M3 21l6-6"/><path d="M21 7.8V3m0 0h-4.8M21 3l-6 6"/><path d="M3 7.8V3m0 0h4.8M3 3l6 6"/></svg>
+                </div>
+                <h3 class="text-sm font-semibold text-gray-600 mb-1">Average Duration</h3>
+                <div class="text-4xl font-extrabold mb-1">{{ $avgDuration }}m</div>
+                <p class="text-[10px] font-medium text-gray-500">Scheduled standard minutes</p>
             </div>
         </div>
-
-        <div class="bg-green-100 border border-green-200 text-green-900 rounded-2xl p-6 shadow-sm">
-            <div class="w-10 h-10 bg-green-200/50 rounded-lg flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <div class="lg:col-span-1">
+            <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 h-full flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Location Templates</h3>
+                        <button type="button" onclick="openCentralLocTemplateModal()" class="text-[10px] text-green-700 hover:text-green-900 font-bold transition flex items-center gap-1 cursor-pointer">
+                            ⚙️ Manage
+                        </button>
+                    </div>
+                    <div class="space-y-2.5 max-h-48 overflow-y-auto pr-1" id="central-loc-templates-list">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
             </div>
-            <h3 class="text-sm font-semibold text-green-800 mb-1">Attendance Rate</h3>
-            <div class="text-4xl font-extrabold mb-1">{{ $attendanceRate }}%</div>
-            <p class="text-[10px] font-bold text-green-700 flex items-center gap-1">
-                Completed vs Cancelled
-            </p>
-        </div>
-
-        <div class="bg-gray-100 border border-gray-200 text-gray-900 rounded-2xl p-6 shadow-sm">
-            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 21-6-6m6 6v-4.8m0 4.8h-4.8"/><path d="M3 16.2V21m0 0h4.8M3 21l6-6"/><path d="M21 7.8V3m0 0h-4.8M21 3l-6 6"/><path d="M3 7.8V3m0 0h4.8M3 3l6 6"/></svg>
-            </div>
-            <h3 class="text-sm font-semibold text-gray-600 mb-1">Average Duration</h3>
-            <div class="text-4xl font-extrabold mb-1">{{ $avgDuration }}m</div>
-            <p class="text-[10px] font-medium text-gray-500">Scheduled standard minutes</p>
         </div>
     </div>
 </div>
@@ -519,16 +537,29 @@
                     </ul>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Interview Type</label>
-                    <select name="interview_type" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
-                        <option value="online" selected>Online Meeting</option>
-                        <option value="offline">On-site / Offline</option>
-                    </select>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Interview Type</label>
+                        <select name="interview_type" id="buat_interview_type" required class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                            <option value="online" selected>Online Meeting</option>
+                            <option value="offline">On-site / Offline</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Quick Select Template</label>
+                        <select id="buat_template_select" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                            <option value="">-- Choose Template --</option>
+                        </select>
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Location / Meeting Link</label>
-                    <input name="location_or_link" type="text" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="https://meet.google.com/...">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest">Location / Meeting Link</label>
+                        <button type="button" onclick="openCentralLocTemplateModal()" class="text-[10px] text-green-700 hover:text-green-900 font-bold transition flex items-center gap-1 cursor-pointer">
+                            ⚙️ Manage Templates
+                        </button>
+                    </div>
+                    <input name="location_or_link" id="buat_location_or_link" type="text" required class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="https://meet.google.com/...">
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Notes</label>
@@ -608,16 +639,29 @@
                     </ul>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Interview Type</label>
-                    <select name="interview_type" id="reschedule-type" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
-                        <option value="online">Online Meeting</option>
-                        <option value="offline">On-site / Offline</option>
-                    </select>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Interview Type</label>
+                        <select name="interview_type" id="reschedule-type" required class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                            <option value="online">Online Meeting</option>
+                            <option value="offline">On-site / Offline</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Quick Select Template</label>
+                        <select id="reschedule_template_select" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                            <option value="">-- Choose Template --</option>
+                        </select>
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Location / Meeting Link</label>
-                    <input name="location_or_link" id="reschedule-location" type="text" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="https://meet.google.com/...">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest">Location / Meeting Link</label>
+                        <button type="button" onclick="openCentralLocTemplateModal()" class="text-[10px] text-green-700 hover:text-green-900 font-bold transition flex items-center gap-1 cursor-pointer">
+                            ⚙️ Manage Templates
+                        </button>
+                    </div>
+                    <input name="location_or_link" id="reschedule-location" type="text" required class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="https://meet.google.com/...">
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Notes</label>
@@ -1583,5 +1627,346 @@
             }
         }
     }
+    // ===== CENTRAL LOCATION TEMPLATES SYSTEM =====
+    const defaultLocationTemplates = [
+        { name: 'Google Meet (HR Room 1)', type: 'online', value: 'https://meet.google.com/abc-defg-hij' },
+        { name: 'Zoom Meeting (Ecogreen)', type: 'online', value: 'https://zoom.us/j/9876543210' },
+        { name: 'HQ Batam (Main Office)', type: 'offline', value: 'Ruko Eco Green Block A No. 12, Batam Center (https://maps.app.goo.gl/default1)' },
+        { name: 'Branch Office Jakarta', type: 'offline', value: 'Sudirman Tower Lt. 15, Jakarta Selatan (https://maps.app.goo.gl/default2)' }
+    ];
+
+    const getLocTemplates = () => {
+        const stored = localStorage.getItem('interview_location_templates');
+        if (!stored) {
+            localStorage.setItem('interview_location_templates', JSON.stringify(defaultLocationTemplates));
+            return defaultLocationTemplates;
+        }
+        return JSON.parse(stored);
+    };
+
+    const saveLocTemplates = (templates) => {
+        localStorage.setItem('interview_location_templates', JSON.stringify(templates));
+    };
+
+    const populateCentralLocationTemplatesSummary = () => {
+        const listContainer = document.getElementById('central-loc-templates-list');
+        if (!listContainer) return;
+        const templates = getLocTemplates();
+        listContainer.innerHTML = '';
+        if (templates.length === 0) {
+            listContainer.innerHTML = '<span class="text-[10px] text-gray-400 italic">No templates defined.</span>';
+            return;
+        }
+        templates.forEach(tpl => {
+            const item = document.createElement('div');
+            item.className = 'p-2 bg-gray-50 border border-gray-150 rounded-xl text-xs flex flex-col gap-0.5 hover:bg-gray-100/60 transition shadow-sm';
+            item.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-gray-800 truncate max-w-[120px]">${tpl.name}</span>
+                    <span class="text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase ${tpl.type === 'online' ? 'bg-blue-50 text-blue-700 border border-blue-100' : 'bg-purple-50 text-purple-700 border border-purple-100'}">${tpl.type}</span>
+                </div>
+                <div class="text-[10px] text-gray-400 truncate" title="${tpl.value}">${tpl.value}</div>
+            `;
+            listContainer.appendChild(item);
+        });
+    };
+
+    let editingTemplateIdx = -1;
+
+    const setFormMode = (mode, tpl = null, idx = -1) => {
+        const nameInput   = document.getElementById('central-new-name');
+        const typeSelect  = document.getElementById('central-new-type');
+        const valInput    = document.getElementById('central-new-val');
+        const addBtn      = document.getElementById('btn-central-add-template');
+        const cancelBtn   = document.getElementById('btn-central-cancel-edit');
+        const formTitle   = document.getElementById('central-form-title');
+
+        if (mode === 'edit' && tpl) {
+            editingTemplateIdx = idx;
+            nameInput.value   = tpl.name;
+            typeSelect.value  = tpl.type;
+            valInput.value    = tpl.value;
+            addBtn.textContent = 'Update Template';
+            addBtn.classList.replace('bg-green-800', 'bg-blue-700');
+            addBtn.classList.replace('hover:bg-green-900', 'hover:bg-blue-800');
+            cancelBtn.classList.remove('hidden');
+            formTitle.textContent = 'Edit Template';
+            nameInput.focus();
+        } else {
+            editingTemplateIdx = -1;
+            nameInput.value   = '';
+            typeSelect.value  = 'online';
+            valInput.value    = '';
+            addBtn.textContent = 'Add Template';
+            addBtn.classList.replace('bg-blue-700', 'bg-green-800');
+            addBtn.classList.replace('hover:bg-blue-800', 'hover:bg-green-900');
+            cancelBtn.classList.add('hidden');
+            formTitle.textContent = 'Create New Template';
+        }
+    };
+
+    const populateCentralLocEditorList = () => {
+        const editorList = document.getElementById('central-loc-editor-list');
+        if (!editorList) return;
+
+        const templates = getLocTemplates();
+        editorList.innerHTML = '';
+
+        if (templates.length === 0) {
+            editorList.innerHTML = '<p class="text-xs text-gray-400 italic py-2 text-center bg-gray-50 rounded-xl">No templates configured.</p>';
+            return;
+        }
+
+        templates.forEach((tpl, idx) => {
+            const row = document.createElement('div');
+            row.className = 'flex items-center justify-between gap-2 p-2.5 bg-white border border-gray-150 rounded-xl text-xs shadow-sm hover:border-gray-300 transition';
+            
+            row.innerHTML = `
+                <div class="truncate flex-1">
+                    <span class="font-bold text-gray-800">${tpl.name}</span>
+                    <span class="text-[8px] font-extrabold px-1.5 py-0.5 rounded border ml-1.5 uppercase ${tpl.type === 'online' ? 'bg-blue-50 text-blue-700 border-blue-100' : 'bg-purple-50 text-purple-700 border-purple-100'}">${tpl.type}</span>
+                    <div class="text-[10px] text-gray-400 truncate mt-0.5" title="${tpl.value}">${tpl.value}</div>
+                </div>
+                <div class="flex items-center gap-1 shrink-0">
+                    <button type="button" class="btn-edit-tpl text-blue-500 hover:text-blue-700 p-1.5 hover:bg-blue-50 rounded-lg transition" data-idx="${idx}" title="Edit">✏️</button>
+                    <button type="button" class="btn-delete-tpl text-red-500 hover:text-red-700 p-1.5 hover:bg-red-50 rounded-lg transition font-bold" data-idx="${idx}" title="Delete">✕</button>
+                </div>
+            `;
+
+            row.querySelector('.btn-edit-tpl').addEventListener('click', function() {
+                const i = parseInt(this.dataset.idx, 10);
+                const current = getLocTemplates();
+                setFormMode('edit', current[i], i);
+            });
+
+            row.querySelector('.btn-delete-tpl').addEventListener('click', function() {
+                const i = parseInt(this.dataset.idx, 10);
+                if (confirm('Delete this template?')) {
+                    const current = getLocTemplates();
+                    current.splice(i, 1);
+                    saveLocTemplates(current);
+                    setFormMode('add');
+                    populateCentralLocationTemplatesSummary();
+                    populateCentralLocEditorList();
+                    populateModalTemplateSelects();
+                }
+            });
+
+            editorList.appendChild(row);
+        });
+    };
+
+    window.openCentralLocTemplateModal = () => {
+        document.getElementById('modal-central-loc-templates').classList.remove('hidden');
+        populateCentralLocEditorList();
+    };
+
+    window.closeCentralLocTemplateModal = () => {
+        document.getElementById('modal-central-loc-templates').classList.add('hidden');
+    };
+
+    // Add / Update template handler
+    const btnAddTpl = document.getElementById('btn-central-add-template');
+    if (btnAddTpl) {
+        btnAddTpl.addEventListener('click', () => {
+            const nameInput  = document.getElementById('central-new-name');
+            const typeSelect = document.getElementById('central-new-type');
+            const valInput   = document.getElementById('central-new-val');
+
+            const name  = nameInput.value.trim();
+            const type  = typeSelect.value;
+            const value = valInput.value.trim();
+
+            if (!name || !value) {
+                alert('Please fill in all template fields.');
+                return;
+            }
+
+            const current = getLocTemplates();
+
+            if (editingTemplateIdx >= 0) {
+                current[editingTemplateIdx] = { name, type, value };
+            } else {
+                current.push({ name, type, value });
+            }
+
+            saveLocTemplates(current);
+            setFormMode('add');
+            populateCentralLocationTemplatesSummary();
+            populateCentralLocEditorList();
+            populateModalTemplateSelects();
+        });
+    }
+
+    // Cancel edit handler
+    const btnCancelEdit = document.getElementById('btn-central-cancel-edit');
+    if (btnCancelEdit) {
+        btnCancelEdit.addEventListener('click', () => setFormMode('add'));
+    }
+
+    // Modal template select dropdown population logic
+    const populateModalTemplateSelects = () => {
+        const templates = getLocTemplates();
+        
+        // 1. Buat Modal templates
+        const buatTypeSelect = document.getElementById('buat_interview_type');
+        const buatTemplateSelect = document.getElementById('buat_template_select');
+        const buatLocInput = document.getElementById('buat_location_or_link');
+
+        if (buatTypeSelect && buatTemplateSelect) {
+            const selectedType = buatTypeSelect.value;
+            buatTemplateSelect.innerHTML = '<option value="">-- Choose Template --</option>';
+            templates.filter(t => t.type === selectedType).forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.value;
+                opt.textContent = t.name;
+                buatTemplateSelect.appendChild(opt);
+            });
+        }
+
+        // 2. Reschedule Modal templates
+        const rescheduleTypeSelect = document.getElementById('reschedule-type');
+        const rescheduleTemplateSelect = document.getElementById('reschedule_template_select');
+        const rescheduleLocInput = document.getElementById('reschedule-location');
+
+        if (rescheduleTypeSelect && rescheduleTemplateSelect) {
+            const selectedType = rescheduleTypeSelect.value;
+            rescheduleTemplateSelect.innerHTML = '<option value="">-- Choose Template --</option>';
+            templates.filter(t => t.type === selectedType).forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.value;
+                opt.textContent = t.name;
+                rescheduleTemplateSelect.appendChild(opt);
+            });
+        }
+    };
+
+    // Listeners for select templates selection changes
+    const buatTypeSelect = document.getElementById('buat_interview_type');
+    const buatTemplateSelect = document.getElementById('buat_template_select');
+    const buatLocInput = document.getElementById('buat_location_or_link');
+
+    if (buatTypeSelect) {
+        buatTypeSelect.addEventListener('change', () => {
+            populateModalTemplateSelects();
+            if (buatLocInput) buatLocInput.value = '';
+        });
+    }
+    if (buatTemplateSelect && buatLocInput) {
+        buatTemplateSelect.addEventListener('change', () => {
+            if (buatTemplateSelect.value) {
+                buatLocInput.value = buatTemplateSelect.value;
+            }
+        });
+    }
+
+    const rescheduleTypeSelect = document.getElementById('reschedule-type');
+    const rescheduleTemplateSelect = document.getElementById('reschedule_template_select');
+    const rescheduleLocInput = document.getElementById('reschedule-location');
+
+    if (rescheduleTypeSelect) {
+        rescheduleTypeSelect.addEventListener('change', () => {
+            populateModalTemplateSelects();
+            if (rescheduleLocInput) rescheduleLocInput.value = '';
+        });
+    }
+    if (rescheduleTemplateSelect && rescheduleLocInput) {
+        rescheduleTemplateSelect.addEventListener('change', () => {
+            if (rescheduleTemplateSelect.value) {
+                rescheduleLocInput.value = rescheduleTemplateSelect.value;
+            }
+        });
+    }
+
+    // Override openRescheduleModal to pre-populate and set templates dropdown correctly
+    const originalOpenRescheduleModal = window.openRescheduleModal;
+    window.openRescheduleModal = function(interview) {
+        if (originalOpenRescheduleModal) originalOpenRescheduleModal(interview);
+        
+        // Now sync templates selector
+        setTimeout(() => {
+            populateModalTemplateSelects();
+            // Pre-select matching template if exact value matches
+            if (rescheduleTemplateSelect && rescheduleLocInput) {
+                rescheduleTemplateSelect.value = '';
+                Array.from(rescheduleTemplateSelect.options).forEach(opt => {
+                    if (opt.value === rescheduleLocInput.value) {
+                        rescheduleTemplateSelect.value = opt.value;
+                    }
+                });
+            }
+        }, 100);
+    };
+
+    // Override openScheduleModal to sync templates
+    const originalOpenScheduleModal = window.openScheduleModal;
+    window.openScheduleModal = function() {
+        if (originalOpenScheduleModal) originalOpenScheduleModal();
+        populateModalTemplateSelects();
+        if (buatLocInput) buatLocInput.value = '';
+        if (buatTemplateSelect) buatTemplateSelect.value = '';
+    };
+
+    // Initial loading
+    populateCentralLocationTemplatesSummary();
+    populateModalTemplateSelects();
 </script>
+
+<!-- Modal: Central Location Templates Manager -->
+<div id="modal-central-loc-templates" class="fixed inset-0 z-[120] hidden">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="closeCentralLocTemplateModal()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-gray-150 max-w-lg w-full overflow-hidden animate-card">
+            <div class="px-6 py-5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                    <h3 class="font-extrabold text-lg text-gray-950">Manage Location Templates</h3>
+                    <p class="text-xs text-gray-500 font-semibold mt-0.5">Define pre-configured addresses or online meeting links</p>
+                </div>
+                <button type="button" onclick="closeCentralLocTemplateModal()" class="text-gray-400 hover:text-gray-600 bg-gray-100 rounded-full p-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-6">
+                <!-- Current Templates List -->
+                <div>
+                    <span class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Configured Templates</span>
+                    <div id="central-loc-editor-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Add / Edit Template Section -->
+                <div class="border-t border-gray-200 pt-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span id="central-form-title" class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider">Create New Template</span>
+                        <button type="button" id="btn-central-cancel-edit" class="hidden text-[10px] text-gray-500 hover:text-gray-700 font-bold px-2 py-1 rounded-lg hover:bg-gray-100 transition">✕ Cancel Edit</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[9px] font-bold text-gray-400 uppercase mb-1">Template Name</label>
+                            <input type="text" id="central-new-name" placeholder="e.g. Zoom Room A" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-gray-400 uppercase mb-1">Interview Type</label>
+                            <select id="central-new-type" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                                <option value="online">Online</option>
+                                <option value="offline">Offline</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-bold text-gray-400 uppercase mb-1">Location Value (Link / Address)</label>
+                        <input type="text" id="central-new-val" placeholder="e.g. Ruko Eco Green or https://zoom.us/..." class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                    </div>
+                    <button type="button" id="btn-central-add-template" class="w-full bg-green-800 hover:bg-green-900 text-white text-xs font-bold py-2 rounded-lg transition shadow-md">Add Template</button>
+                </div>
+            </div>
+            
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end">
+                <button type="button" onclick="closeCentralLocTemplateModal()" class="bg-white border border-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-xs hover:bg-gray-50 transition-colors shadow-sm">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

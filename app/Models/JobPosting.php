@@ -34,6 +34,7 @@ class JobPosting extends Model
         'auto_close_method',
         'deadline',
         'closed_at',
+        'is_archived',
     ];
 
     protected $casts = [

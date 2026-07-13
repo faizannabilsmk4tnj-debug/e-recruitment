@@ -56,10 +56,10 @@
                 </div>
             </div>
 
-            <a href="/hr/wawancara/daftar" class="bg-green-800 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-green-900 transition-colors shadow-sm flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
-                List View
-            </a>
+            <div class="flex items-center bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-inner">
+                <a href="/hr/wawancara/daftar" class="px-3.5 py-1.5 text-xs font-bold text-gray-500 rounded-md hover:text-gray-900 transition-colors">List View</a>
+                <span class="px-3.5 py-1.5 text-xs font-bold text-green-900 bg-white shadow-sm rounded-md transition-colors">Month View</span>
+            </div>
         </div>
     </div>
 
@@ -119,6 +119,19 @@
                 </ul>
             </div>
 
+            <!-- Location Templates Manager Widget -->
+            <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Location Templates</h3>
+                    <button type="button" onclick="openCentralLocTemplateModal()" class="text-[10px] text-green-700 hover:text-green-900 font-bold transition flex items-center gap-1 cursor-pointer">
+                        ⚙️ Manage
+                    </button>
+                </div>
+                <div class="space-y-2.5 max-h-48 overflow-y-auto pr-1" id="central-loc-templates-list">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
             <!-- Upcoming Events List -->
             <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Coming Up</h3>
@@ -175,10 +188,6 @@
                     <button class="btn-next-month p-1.5 text-gray-400 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7-7" /></svg>
                     </button>
-                </div>
-                <div class="flex items-center bg-gray-200/60 rounded-lg p-1">
-                    <button id="tab-minggu" onclick="window.location.href='/hr/wawancara/daftar'" class="px-4 py-1.5 text-xs font-bold text-gray-500 rounded-md hover:text-gray-900 transition-colors">List View</button>
-                    <button id="tab-bulan" class="px-4 py-1.5 text-xs font-bold text-green-900 bg-white shadow-sm rounded-md transition-colors">Month</button>
                 </div>
             </div>
 
@@ -382,6 +391,243 @@
                 updateMonthDisplay();
             });
         });
+        // ===== CENTRAL LOCATION TEMPLATES SYSTEM =====
+        const defaultLocationTemplates = [
+            { name: 'Google Meet (HR Room 1)', type: 'online', value: 'https://meet.google.com/abc-defg-hij' },
+            { name: 'Zoom Meeting (Ecogreen)', type: 'online', value: 'https://zoom.us/j/9876543210' },
+            { name: 'HQ Batam (Main Office)', type: 'offline', value: 'Ruko Eco Green Block A No. 12, Batam Center (https://maps.app.goo.gl/default1)' },
+            { name: 'Branch Office Jakarta', type: 'offline', value: 'Sudirman Tower Lt. 15, Jakarta Selatan (https://maps.app.goo.gl/default2)' }
+        ];
+
+        const getLocTemplates = () => {
+            const stored = localStorage.getItem('interview_location_templates');
+            if (!stored) {
+                localStorage.setItem('interview_location_templates', JSON.stringify(defaultLocationTemplates));
+                return defaultLocationTemplates;
+            }
+            return JSON.parse(stored);
+        };
+
+        const saveLocTemplates = (templates) => {
+            localStorage.setItem('interview_location_templates', JSON.stringify(templates));
+        };
+
+        const populateCentralLocationTemplatesSummary = () => {
+            const listContainer = document.getElementById('central-loc-templates-list');
+            if (!listContainer) return;
+            const templates = getLocTemplates();
+            listContainer.innerHTML = '';
+            if (templates.length === 0) {
+                listContainer.innerHTML = '<span class="text-[10px] text-gray-400 italic">No templates defined.</span>';
+                return;
+            }
+            templates.forEach(tpl => {
+                const item = document.createElement('div');
+                item.className = 'p-2 bg-gray-50 border border-gray-150 rounded-xl text-xs flex flex-col gap-0.5 hover:bg-gray-100/60 transition shadow-sm';
+                item.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-gray-800 truncate max-w-[120px]">${tpl.name}</span>
+                        <span class="text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase ${tpl.type === 'online' ? 'bg-blue-50 text-blue-700 border border-blue-100' : 'bg-purple-50 text-purple-700 border border-purple-100'}">${tpl.type}</span>
+                    </div>
+                    <div class="text-[10px] text-gray-400 truncate" title="${tpl.value}">${tpl.value}</div>
+                `;
+                listContainer.appendChild(item);
+            });
+        };
+
+        let editingTemplateIdx = -1;
+
+        const setFormMode = (mode, tpl = null, idx = -1) => {
+            const nameInput   = document.getElementById('central-new-name');
+            const typeSelect  = document.getElementById('central-new-type');
+            const valInput    = document.getElementById('central-new-val');
+            const addBtn      = document.getElementById('btn-central-add-template');
+            const cancelBtn   = document.getElementById('btn-central-cancel-edit');
+            const formTitle   = document.getElementById('central-form-title');
+
+            if (mode === 'edit' && tpl) {
+                editingTemplateIdx = idx;
+                nameInput.value   = tpl.name;
+                typeSelect.value  = tpl.type;
+                valInput.value    = tpl.value;
+                addBtn.textContent = 'Update Template';
+                addBtn.classList.replace('bg-green-800', 'bg-blue-700');
+                addBtn.classList.replace('hover:bg-green-900', 'hover:bg-blue-800');
+                cancelBtn.classList.remove('hidden');
+                formTitle.textContent = 'Edit Template';
+                nameInput.focus();
+            } else {
+                editingTemplateIdx = -1;
+                nameInput.value   = '';
+                typeSelect.value  = 'online';
+                valInput.value    = '';
+                addBtn.textContent = 'Add Template';
+                addBtn.classList.replace('bg-blue-700', 'bg-green-800');
+                addBtn.classList.replace('hover:bg-blue-800', 'hover:bg-green-900');
+                cancelBtn.classList.add('hidden');
+                formTitle.textContent = 'Create New Template';
+            }
+        };
+
+        const populateCentralLocEditorList = () => {
+            const editorList = document.getElementById('central-loc-editor-list');
+            if (!editorList) return;
+
+            const templates = getLocTemplates();
+            editorList.innerHTML = '';
+
+            if (templates.length === 0) {
+                editorList.innerHTML = '<p class="text-xs text-gray-400 italic py-2 text-center bg-gray-50 rounded-xl">No templates configured.</p>';
+                return;
+            }
+
+            templates.forEach((tpl, idx) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between gap-2 p-2.5 bg-white border border-gray-150 rounded-xl text-xs shadow-sm hover:border-gray-300 transition';
+                
+                row.innerHTML = `
+                    <div class="truncate flex-1">
+                        <span class="font-bold text-gray-800">${tpl.name}</span>
+                        <span class="text-[8px] font-extrabold px-1.5 py-0.5 rounded border ml-1.5 uppercase ${tpl.type === 'online' ? 'bg-blue-50 text-blue-700 border-blue-100' : 'bg-purple-50 text-purple-700 border-purple-100'}">${tpl.type}</span>
+                        <div class="text-[10px] text-gray-400 truncate mt-0.5" title="${tpl.value}">${tpl.value}</div>
+                    </div>
+                    <div class="flex items-center gap-1 shrink-0">
+                        <button type="button" class="btn-edit-tpl text-blue-500 hover:text-blue-700 p-1.5 hover:bg-blue-50 rounded-lg transition" data-idx="${idx}" title="Edit">✏️</button>
+                        <button type="button" class="btn-delete-tpl text-red-500 hover:text-red-700 p-1.5 hover:bg-red-50 rounded-lg transition font-bold" data-idx="${idx}" title="Delete">✕</button>
+                    </div>
+                `;
+
+                row.querySelector('.btn-edit-tpl').addEventListener('click', function() {
+                    const i = parseInt(this.dataset.idx, 10);
+                    const current = getLocTemplates();
+                    setFormMode('edit', current[i], i);
+                });
+
+                row.querySelector('.btn-delete-tpl').addEventListener('click', function() {
+                    const i = parseInt(this.dataset.idx, 10);
+                    if (confirm('Delete this template?')) {
+                        const current = getLocTemplates();
+                        current.splice(i, 1);
+                        saveLocTemplates(current);
+                        setFormMode('add');
+                        populateCentralLocationTemplatesSummary();
+                        populateCentralLocEditorList();
+                    }
+                });
+
+                editorList.appendChild(row);
+            });
+        };
+
+        window.openCentralLocTemplateModal = () => {
+            document.getElementById('modal-central-loc-templates').classList.remove('hidden');
+            populateCentralLocEditorList();
+        };
+
+        window.closeCentralLocTemplateModal = () => {
+            document.getElementById('modal-central-loc-templates').classList.add('hidden');
+        };
+
+        // Add / Update template handler
+        const btnAddTpl = document.getElementById('btn-central-add-template');
+        if (btnAddTpl) {
+            btnAddTpl.addEventListener('click', () => {
+                const nameInput  = document.getElementById('central-new-name');
+                const typeSelect = document.getElementById('central-new-type');
+                const valInput   = document.getElementById('central-new-val');
+
+                const name  = nameInput.value.trim();
+                const type  = typeSelect.value;
+                const value = valInput.value.trim();
+
+                if (!name || !value) {
+                    alert('Please fill in all template fields.');
+                    return;
+                }
+
+                const current = getLocTemplates();
+
+                if (editingTemplateIdx >= 0) {
+                    // Update existing
+                    current[editingTemplateIdx] = { name, type, value };
+                } else {
+                    // Add new
+                    current.push({ name, type, value });
+                }
+
+                saveLocTemplates(current);
+                setFormMode('add');
+                populateCentralLocationTemplatesSummary();
+                populateCentralLocEditorList();
+            });
+        }
+
+        // Cancel edit handler
+        const btnCancelEdit = document.getElementById('btn-central-cancel-edit');
+        if (btnCancelEdit) {
+            btnCancelEdit.addEventListener('click', () => setFormMode('add'));
+        }
+
+        // Initial loading of summary card
+        populateCentralLocationTemplatesSummary();
     });
 </script>
+
+<!-- Modal: Central Location Templates Manager -->
+<div id="modal-central-loc-templates" class="fixed inset-0 z-[120] hidden">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="closeCentralLocTemplateModal()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-gray-150 max-w-lg w-full overflow-hidden animate-card">
+            <div class="px-6 py-5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                    <h3 class="font-extrabold text-lg text-gray-950">Manage Location Templates</h3>
+                    <p class="text-xs text-gray-500 font-semibold mt-0.5">Define pre-configured addresses or online meeting links</p>
+                </div>
+                <button type="button" onclick="closeCentralLocTemplateModal()" class="text-gray-400 hover:text-gray-600 bg-gray-100 rounded-full p-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-6">
+                <!-- Current Templates List -->
+                <div>
+                    <span class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Configured Templates</span>
+                    <div id="central-loc-editor-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Add / Edit Template Section -->
+                <div class="border-t border-gray-200 pt-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span id="central-form-title" class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider">Create New Template</span>
+                        <button type="button" id="btn-central-cancel-edit" class="hidden text-[10px] text-gray-500 hover:text-gray-700 font-bold px-2 py-1 rounded-lg hover:bg-gray-100 transition">✕ Cancel Edit</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[9px] font-bold text-gray-400 uppercase mb-1">Template Name</label>
+                            <input type="text" id="central-new-name" placeholder="e.g. Zoom Room A" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-gray-400 uppercase mb-1">Interview Type</label>
+                            <select id="central-new-type" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                                <option value="online">Online</option>
+                                <option value="offline">Offline</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-bold text-gray-400 uppercase mb-1">Location Value (Link / Address)</label>
+                        <input type="text" id="central-new-val" placeholder="e.g. Ruko Eco Green or https://zoom.us/..." class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                    </div>
+                    <button type="button" id="btn-central-add-template" class="w-full bg-green-800 hover:bg-green-900 text-white text-xs font-bold py-2 rounded-lg transition shadow-md">Add Template</button>
+                </div>
+            </div>
+            
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end">
+                <button type="button" onclick="closeCentralLocTemplateModal()" class="bg-white border border-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-xs hover:bg-gray-50 transition-colors shadow-sm">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
