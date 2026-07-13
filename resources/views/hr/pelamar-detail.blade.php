@@ -222,27 +222,6 @@
                 </div>
             </section>
 
-            <section class="bg-white rounded-xl border border-gray-100 p-6">
-                <div class="flex items-center justify-between mb-5">
-                    <h3 class="text-lg font-bold text-gray-900">CV Preview</h3>
-                    <div class="flex items-center gap-4">
-                        @if($application->resume_url)
-                            <a href="{{ asset($application->resume_url) }}" target="_blank" class="text-sm text-blue-700 font-bold hover:underline flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                                Download Uploaded CV
-                            </a>
-                        @endif
-                        <a href="/hr/pelamar/{{ $application->id }}/cv-preview" target="_blank" class="text-sm text-green-800 font-bold hover:underline">Open full CV</a>
-                    </div>
-                </div>
-                <div class="bg-gray-100 rounded-xl p-4 overflow-hidden">
-                    @if($application->resume_url && (Str::endsWith($application->resume_url, '.pdf') || Str::endsWith($application->resume_url, '.PDF')))
-                        <iframe src="{{ asset($application->resume_url) }}" title="CV {{ $user->name }}" class="w-full h-[720px] bg-white rounded border border-gray-200"></iframe>
-                    @else
-                        <iframe src="/hr/pelamar/{{ $application->id }}/cv-preview" title="CV {{ $user->name }}" class="w-full h-[720px] bg-white rounded border border-gray-200"></iframe>
-                    @endif
-                </div>
-            </section>
         </div>
 
         <div class="space-y-6">
@@ -371,14 +350,7 @@
                 </button>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-5">Internal Note</h3>
-                <form id="form-add-note" class="space-y-4">
-                    @csrf
-                    <textarea name="note" rows="3" required class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Write internal HR note..."></textarea>
-                    <button type="submit" class="w-full border border-green-200 bg-green-50 text-green-800 text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-green-100 transition">Add Note</button>
-                </form>
-            </div>
+
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h3 class="text-lg font-bold text-gray-900 mb-5">Activity Log</h3>
@@ -398,14 +370,7 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Interview Session</h3>
-                <p class="text-xs text-gray-500 mb-4">All matters related to the interview (schedule, reschedule, attendance status, and evaluation inputs) are managed on the Interview page.</p>
-                <a href="/hr/wawancara/daftar?search={{ urlencode($user->name) }}" class="inline-flex items-center justify-center w-full bg-green-800 hover:bg-green-950 text-white text-xs font-semibold py-2.5 rounded-lg transition-colors gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                    Manage Candidate Interview
-                </a>
-            </div>
+
         </div>
     </div>
 </div>
@@ -782,20 +747,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    document.getElementById('form-add-note').addEventListener('submit', async function (event) {
-        event.preventDefault();
-        const formData = new FormData(this);
-        try {
-            const data = await submitJson(`/hr/pelamar/${applicationId}/note`, {
-                note: formData.get('note'),
-            });
-            this.reset();
-            showToast(data.message || 'Note saved successfully.');
-        } catch (error) {
-            showToast(error.message, 'error');
-        }
-    });
-
     // ===== INTERVIEW MODAL HANDLERS =====
     const modal = document.getElementById('modal-jadwal');
     
@@ -1067,7 +1018,7 @@ window.closeCvPreviewModal = function() {
                         Download CV
                     </a>
                 @else
-                    <a href="/hr/pelamar/{{ $application->id }}/cv-preview" 
+                    <a href="/hr/pelamar/{{ $application->id }}/cv-preview?download=1" 
                        target="_blank"
                        class="inline-flex items-center gap-1.5 bg-green-750 hover:bg-green-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition-colors shadow-sm cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

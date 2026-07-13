@@ -260,7 +260,7 @@ class PelamarController extends Controller
     /**
      * Generate dynamic CV HTML for the preview iframe on the detail page.
      */
-    public function cvPreview($id)
+    public function cvPreview(Request $request, $id)
     {
         $application = Application::findOrFail($id);
         $user = $application->user;
@@ -332,9 +332,16 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
 <div class="page">
 ' . $blocksHtml . '
 </div>
+<script>
+    if (window.location.search.indexOf("download=1") > -1) {
+        window.print();
+    }
+</script>
 </body></html>';
 
-        return response($html, 200, ['Content-Type' => 'text/html; charset=utf-8']);
+        $headers = ['Content-Type' => 'text/html; charset=utf-8'];
+        
+        return response($html, 200, $headers);
     }
 
     /**
