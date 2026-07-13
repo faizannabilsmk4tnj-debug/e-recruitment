@@ -224,6 +224,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         list.sort((a, b) => {
+            const archivedA = a.dataset.archived === 'true';
+            const archivedB = b.dataset.archived === 'true';
+            if (archivedA !== archivedB) {
+                return archivedA ? 1 : -1;
+            }
+
             if (mode === 'pelamar-desc') return parseInt(b.dataset.total) - parseInt(a.dataset.total);
             if (mode === 'urgency') {
                 return getUrgencyScore(a) - getUrgencyScore(b);
