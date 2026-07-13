@@ -490,14 +490,55 @@
 
                 <div>
                     <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Interview Type</label>
-                    <select name="interview_type" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                    <select name="interview_type" id="interview_type_select" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
                         <option value="online">Online</option>
                         <option value="offline">Offline</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Location / Meeting Link</label>
-                    <input name="location_or_link" type="text" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="https://meet.google.com/...">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest">Location / Meeting Link</label>
+                        <button type="button" id="btn-manage-loc-templates" class="text-[10px] text-green-700 hover:text-green-900 font-bold transition flex items-center gap-1 cursor-pointer">
+                            ⚙️ Manage Templates
+                        </button>
+                    </div>
+
+                    {{-- Location Templates Selector Area --}}
+                    <div id="loc-templates-container" class="mb-2">
+                        <span class="block text-[8px] font-bold text-gray-400 uppercase tracking-wider mb-1">Choose Location Template:</span>
+                        <div class="flex flex-wrap gap-1.5" id="loc-templates-list">
+                            <!-- Populated dynamically via JS based on type -->
+                        </div>
+                    </div>
+
+                    <input name="location_or_link" id="interview_location" type="text" required class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="https://meet.google.com/...">
+
+                    {{-- Dynamic Template Editor Section (Collapsible) --}}
+                    <div id="loc-templates-editor" class="hidden mt-3 p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-gray-700 uppercase tracking-wider">Manage Location Templates</span>
+                            <button type="button" id="btn-close-loc-editor" class="text-xs text-gray-400 hover:text-gray-600 font-bold">Done</button>
+                        </div>
+                        
+                        <!-- List of existing templates with delete buttons -->
+                        <div id="loc-editor-list" class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                            <!-- Populated dynamically -->
+                        </div>
+
+                        <!-- Add new template form -->
+                        <div class="border-t border-gray-200 pt-3 space-y-2">
+                            <span class="block text-[9px] font-bold text-gray-400 uppercase">Add New Template</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" id="new-loc-name" placeholder="Template Name (e.g. Google Meet Room 2)" class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none bg-white">
+                                <select id="new-loc-type" class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none bg-white">
+                                    <option value="online">Online</option>
+                                    <option value="offline">Offline</option>
+                                </select>
+                            </div>
+                            <input type="text" id="new-loc-val" placeholder="Link / Address Details / Google Map link" class="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none bg-white">
+                            <button type="button" id="btn-add-loc-template" class="w-full bg-green-700 hover:bg-green-800 text-white text-[10px] font-bold py-1.5 rounded-lg transition">Add Template</button>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Notes</label>
@@ -659,6 +700,169 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize interview templates
     populateInterviewTemplates();
+
+    // ===== DYNAMIC LOCATION & MEETING LINK TEMPLATE SYSTEM =====
+    const defaultLocationTemplates = [
+        { name: 'Google Meet (HR Room 1)', type: 'online', value: 'https://meet.google.com/abc-defg-hij' },
+        { name: 'Zoom Meeting (Ecogreen)', type: 'online', value: 'https://zoom.us/j/9876543210' },
+        { name: 'HQ Batam (Main Office)', type: 'offline', value: 'Ruko Eco Green Block A No. 12, Batam Center (https://maps.app.goo.gl/default1)' },
+        { name: 'Branch Office Jakarta', type: 'offline', value: 'Sudirman Tower Lt. 15, Jakarta Selatan (https://maps.app.goo.gl/default2)' }
+    ];
+
+    const getLocTemplates = () => {
+        const stored = localStorage.getItem('interview_location_templates');
+        if (!stored) {
+            localStorage.setItem('interview_location_templates', JSON.stringify(defaultLocationTemplates));
+            return defaultLocationTemplates;
+        }
+        return JSON.parse(stored);
+    };
+
+    const saveLocTemplates = (templates) => {
+        localStorage.setItem('interview_location_templates', JSON.stringify(templates));
+    };
+
+    const populateLocationTemplates = () => {
+        const typeSelect = document.getElementById('interview_type_select');
+        const listContainer = document.getElementById('loc-templates-list');
+        const locInput = document.getElementById('interview_location');
+        if (!typeSelect || !listContainer || !locInput) return;
+
+        const currentType = typeSelect.value; // 'online' or 'offline'
+        const templates = getLocTemplates();
+        const filtered = templates.filter(t => t.type === currentType);
+
+        listContainer.innerHTML = '';
+        if (filtered.length === 0) {
+            listContainer.innerHTML = '<span class="text-[10px] text-gray-400 italic">No templates for this type.</span>';
+            return;
+        }
+
+        filtered.forEach(tpl => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'text-[10px] bg-green-50 hover:bg-green-100 text-green-800 border border-green-200 hover:border-green-300 rounded-lg px-2.5 py-1 font-semibold transition cursor-pointer';
+            btn.textContent = tpl.name;
+            btn.title = tpl.value;
+            btn.addEventListener('click', () => {
+                locInput.value = tpl.value;
+                // Add minor glow highlight to show field populated
+                locInput.classList.add('ring-2', 'ring-green-400');
+                setTimeout(() => locInput.classList.remove('ring-2', 'ring-green-400'), 800);
+            });
+            listContainer.appendChild(btn);
+        });
+    };
+
+    const populateLocEditorList = () => {
+        const editorList = document.getElementById('loc-editor-list');
+        if (!editorList) return;
+
+        const templates = getLocTemplates();
+        editorList.innerHTML = '';
+
+        if (templates.length === 0) {
+            editorList.innerHTML = '<p class="text-xs text-gray-400 italic py-1">No templates configured.</p>';
+            return;
+        }
+
+        templates.forEach((tpl, idx) => {
+            const row = document.createElement('div');
+            row.className = 'flex items-center justify-between gap-2 p-2 bg-white border border-gray-150 rounded-lg text-xs shadow-sm';
+            
+            row.innerHTML = `
+                <div class="truncate flex-1">
+                    <span class="font-bold text-gray-700">${tpl.name}</span>
+                    <span class="text-[9px] font-semibold px-1.5 py-0.5 rounded border ml-1 uppercase ${tpl.type === 'online' ? 'bg-blue-50 text-blue-700 border-blue-100' : 'bg-orange-50 text-orange-700 border-orange-100'}">${tpl.type}</span>
+                    <div class="text-[10px] text-gray-400 truncate mt-0.5" title="${tpl.value}">${tpl.value}</div>
+                </div>
+                <button type="button" class="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded transition font-bold" data-idx="${idx}">✕</button>
+            `;
+
+            row.querySelector('button').addEventListener('click', function() {
+                const i = parseInt(this.dataset.idx, 10);
+                if (confirm('Delete this template?')) {
+                    const current = getLocTemplates();
+                    current.splice(i, 1);
+                    saveLocTemplates(current);
+                    populateLocationTemplates();
+                    populateLocEditorList();
+                }
+            });
+
+            editorList.appendChild(row);
+        });
+    };
+
+    // Toggle editor panel
+    const btnManage = document.getElementById('btn-manage-loc-templates');
+    const editorPanel = document.getElementById('loc-templates-editor');
+    const btnCloseEditor = document.getElementById('btn-close-loc-editor');
+
+    if (btnManage && editorPanel) {
+        btnManage.addEventListener('click', () => {
+            editorPanel.classList.toggle('hidden');
+            if (!editorPanel.classList.contains('hidden')) {
+                populateLocEditorList();
+            }
+        });
+    }
+
+    if (btnCloseEditor && editorPanel) {
+        btnCloseEditor.addEventListener('click', () => {
+            editorPanel.classList.add('hidden');
+        });
+    }
+
+    // Add new template
+    const btnAddTpl = document.getElementById('btn-add-loc-template');
+    if (btnAddTpl) {
+        btnAddTpl.addEventListener('click', () => {
+            const nameInput = document.getElementById('new-loc-name');
+            const typeSelect = document.getElementById('new-loc-type');
+            const valInput = document.getElementById('new-loc-val');
+
+            const name = nameInput.value.trim();
+            const type = typeSelect.value;
+            const value = valInput.value.trim();
+
+            if (!name || !value) {
+                alert('Please fill in both Name and Location/Link details.');
+                return;
+            }
+
+            const current = getLocTemplates();
+            current.push({ name, type, value });
+            saveLocTemplates(current);
+
+            // Reset inputs
+            nameInput.value = '';
+            valInput.value = '';
+
+            // Update views
+            populateLocationTemplates();
+            populateLocEditorList();
+        });
+    }
+
+    // Bind type switch to toggle templates list & update input placeholder
+    const typeSelect = document.getElementById('interview_type_select');
+    const locInput = document.getElementById('interview_location');
+    if (typeSelect) {
+        typeSelect.addEventListener('change', () => {
+            populateLocationTemplates();
+            if (locInput) {
+                if (typeSelect.value === 'online') {
+                    locInput.placeholder = 'https://meet.google.com/abc-defg-hij or zoom link...';
+                } else {
+                    locInput.placeholder = 'Ruko Eco Green Block A No. 12, Batam Center...';
+                }
+            }
+        });
+    }
+
+    // Initial load
+    populateLocationTemplates();
 
     window.triggerQuickStatus = function(status) {
         quickStatusInput.value = status;
