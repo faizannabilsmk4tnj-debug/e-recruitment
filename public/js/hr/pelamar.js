@@ -658,9 +658,7 @@ document.addEventListener('DOMContentLoaded', function () {
         exportWarningModal?.classList.remove('hidden');
     };
 
-    const getVisibleVacancies = () => cards().reduce((acc, card, idx) => {
-        if (card.style.display === 'none') return acc;
-
+    const getAllVacancies = () => cards().reduce((acc, card, idx) => {
         const applicants = [];
         card.querySelectorAll('.applicant-row').forEach(row => {
             applicants.push({
@@ -690,20 +688,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (exportSingleSelect) {
                 exportSingleSelect.innerHTML = '';
-                let visibleCount = 0;
-                cards().forEach((card, idx) => {
-                    if (card.style.display !== 'none') {
-                        const jobTitle = card.querySelector('.lowongan-title')?.textContent?.trim() || card.dataset.title || '';
-                        const totalApplicants = parseInt(card.dataset.total) || 0;
-                        const opt = document.createElement('option');
-                        opt.value = idx;
-                        opt.textContent = totalApplicants > 0 ? jobTitle : `${jobTitle} (No applicants)`;
-                        exportSingleSelect.appendChild(opt);
-                        visibleCount++;
-                    }
+                const allCards = cards();
+                allCards.forEach((card, idx) => {
+                    const jobTitle = card.querySelector('.lowongan-title')?.textContent?.trim() || card.dataset.title || '';
+                    const totalApplicants = parseInt(card.dataset.total) || 0;
+                    const opt = document.createElement('option');
+                    opt.value = idx;
+                    opt.textContent = totalApplicants > 0 ? jobTitle : `${jobTitle} (No applicants)`;
+                    exportSingleSelect.appendChild(opt);
                 });
 
-                if (visibleCount === 0) {
+                if (allCards.length === 0) {
                     const opt = document.createElement('option');
                     opt.value = '';
                     opt.textContent = 'No active vacancies';
@@ -765,10 +760,10 @@ document.addEventListener('DOMContentLoaded', function () {
             btnConfirmExport.disabled = true;
 
             try {
-                const visibleVacancies = getVisibleVacancies();
+                const allVacancies = getAllVacancies();
                 const selectedVacancies = isAll
-                    ? visibleVacancies
-                    : visibleVacancies.filter(v => String(v.idx) === String(selectedIdx));
+                    ? cards().filter(c => c.style.display !== 'none').map(c => allVacancies.find(v => String(v.idx) === String(cards().indexOf(c)))).filter(Boolean)
+                    : allVacancies.filter(v => String(v.idx) === String(selectedIdx));
 
                 if (!selectedVacancies.length) {
                     throw new Error('No data found to export');
