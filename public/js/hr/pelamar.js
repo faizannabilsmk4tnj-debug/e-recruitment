@@ -100,7 +100,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (state.focus === 'interview') focusMatch = (status === 'interview');
                 if (state.focus === 'decision') focusMatch = (status === 'shortlisted');
 
-                const statusTabMatch = (statusTab === 'all') || (status === statusTab);
+                // Per-card tab filter only applies when no global focus filter is active.
+                // If a global focus is set (review/interview/decision), the tab is bypassed.
+                const statusTabMatch = (state.focus !== 'all') || (statusTab === 'all') || (status === statusTab);
 
                 const show = searchMatch && focusMatch && statusTabMatch;
                 row.style.display = show ? '' : 'none';
