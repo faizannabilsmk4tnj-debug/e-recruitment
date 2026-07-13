@@ -173,7 +173,10 @@
              data-unreviewed="{{ $unreviewed }}"
              data-interview="{{ $low['counts']['interview'] }}"
              data-decision="{{ $low['counts']['shortlisted'] }}"
-             data-archived="{{ $low['is_archived'] ? 'true' : 'false' }}">
+             data-archived="{{ $low['is_archived'] ? 'true' : 'false' }}"
+             data-status="{{ strtolower($low['status']) }}"
+             data-quota="{{ $low['quota'] ?? 0 }}"
+             data-accepted="{{ $low['counts']['accepted'] ?? 0 }}">
 
             <!-- Card Header Wrapper with Archive action -->
             <div class="flex items-center justify-between hover:bg-gray-50/50 transition-colors border-b border-transparent">

@@ -173,15 +173,60 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ===== SORT CARDS =====
     function sortCards() {
-        const list = cards().filter(c => c.style.display !== 'none');
+        const list = cards();
         const mode = state.sort;
+
+        function getUrgencyScore(card) {
+            const status = card.dataset.status;
+            const isArchived = card.dataset.archived === 'true';
+            
+            // Lowongan yang diarsipkan, diisi (filled), atau ditutup (closed) memiliki urgensi terendah
+            if (isArchived || status === 'filled' || status === 'closed') {
+                return 999999;
+            }
+
+            const unreviewed = parseInt(card.dataset.unreviewed) || 0;
+            const quota = parseInt(card.dataset.quota) || 0;
+            const accepted = parseInt(card.dataset.accepted) || 0;
+
+            // Jika kuota sudah penuh, tidak mendesak
+            if (quota > 0 && accepted >= quota) {
+                return 999999;
+            }
+
+            // Hitung sisa hari aktual jika ada deadline
+            let baseDeadlineDays = parseFloat(card.dataset.deadlineDays);
+            const hasActualDeadline = !isNaN(baseDeadlineDays) && baseDeadlineDays !== 30;
+
+            // Hitung sisa hari virtual berdasarkan kuota (Opsi A: makin sedikit sisa kuota, makin mendesak)
+            let virtualDeadlineDays = Infinity;
+            if (quota > 0) {
+                const remainingSlots = quota - accepted;
+                virtualDeadlineDays = 30 * (remainingSlots / quota);
+            }
+
+            let finalDeadlineDays;
+            if (hasActualDeadline) {
+                // Ambil sisa hari terkecil (paling mendesak) antara deadline aktual vs kuota
+                finalDeadlineDays = Math.min(baseDeadlineDays, virtualDeadlineDays);
+            } else if (quota > 0) {
+                finalDeadlineDays = virtualDeadlineDays;
+            } else {
+                finalDeadlineDays = 30;
+            }
+
+            // Jika batas waktu sudah lewat, posisinya di bawah lowongan aktif biasa
+            if (finalDeadlineDays < 0) {
+                return 888888;
+            }
+
+            return finalDeadlineDays - (unreviewed / 20);
+        }
 
         list.sort((a, b) => {
             if (mode === 'pelamar-desc') return parseInt(b.dataset.total) - parseInt(a.dataset.total);
             if (mode === 'urgency') {
-                const ua = parseInt(a.dataset.deadlineDays) - (parseInt(a.dataset.unreviewed) / 20);
-                const ub = parseInt(b.dataset.deadlineDays) - (parseInt(b.dataset.unreviewed) / 20);
-                return ua - ub;
+                return getUrgencyScore(a) - getUrgencyScore(b);
             }
             if (mode === 'newest') return parseInt(a.dataset.daysSince) - parseInt(b.dataset.daysSince);
             if (mode === 'alpha') return a.dataset.title.localeCompare(b.dataset.title);
@@ -189,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Check if the current order in the DOM matches the sorted list
-        const currentChildren = Array.from(container.children).filter(el => el.classList.contains('lowongan-card') && el.style.display !== 'none');
+        const currentChildren = Array.from(container.children).filter(el => el.classList.contains('lowongan-card'));
         let orderChanged = currentChildren.length !== list.length;
         if (!orderChanged) {
             for (let i = 0; i < list.length; i++) {
