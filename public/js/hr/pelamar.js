@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const searchMatch = !state.search || titleMatch || name.includes(state.search) || email.includes(state.search);
 
                 let focusMatch = true;
-                if (state.focus === 'review') focusMatch = (status === 'submitted' || status === 'shortlisted');
+                if (state.focus === 'review') focusMatch = (status === 'submitted');
                 if (state.focus === 'interview') focusMatch = (status === 'interview');
                 if (state.focus === 'decision') focusMatch = (status === 'shortlisted');
 

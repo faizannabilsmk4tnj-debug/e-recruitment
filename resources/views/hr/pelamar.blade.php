@@ -89,7 +89,7 @@
             <button class="quick-filter active-quick bg-green-800 text-white font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="all">All</button>
             <button class="quick-filter bg-gray-50 border border-gray-200 text-gray-600 hover:border-amber-300 hover:text-amber-700 font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="review">
                 <span class="inline-block w-1.5 h-1.5 bg-amber-400 rounded-full mr-1"></span>
-                Needs Review <span class="text-gray-400 ml-0.5">({{ $submittedCount + $shortlistedCount }})</span>
+                Needs Review <span class="text-gray-400 ml-0.5">({{ $submittedCount }})</span>
             </button>
             <button class="quick-filter bg-gray-50 border border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-700 font-semibold px-3.5 py-1.5 rounded-full text-xs transition-all" data-focus="interview">
                 <span class="inline-block w-1.5 h-1.5 bg-blue-500 rounded-full mr-1"></span>
