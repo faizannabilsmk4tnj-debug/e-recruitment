@@ -356,18 +356,66 @@
                 <h3 class="text-lg font-bold text-gray-900 mb-5">Activity Log</h3>
                 <div id="activity-log" class="space-y-4 max-h-[420px] overflow-y-auto pr-1">
                     @forelse($statusLogs as $log)
-                        <div class="border-l-2 border-green-700 pl-4">
-                            <div class="flex items-center justify-between gap-3">
-                                <div class="text-xs font-bold text-gray-900">{{ $log->changer_name }}</div>
-                                <div class="text-[10px] text-gray-400">{{ \Carbon\Carbon::parse($log->created_at)->format('d M Y H:i') }}</div>
+                        @php
+                            $isStatusChange = $log->old_status !== $log->new_status;
+                            $isPrivilege = str_contains(strtolower($log->reason ?? ''), 'privilege');
+                            $isEval = str_contains(strtolower($log->reason ?? ''), 'evaluated interview') || str_contains(strtolower($log->reason ?? ''), 'recommendation:');
+                            // Determine accent color
+                            if ($isStatusChange) {
+                                $accentClass = 'border-green-600';
+                                $badgeBg = 'bg-green-50 text-green-700 border-green-200';
+                                $icon = '🔄';
+                                $typeLabel = 'Status Changed';
+                            } elseif ($isPrivilege) {
+                                $isPivGrant = str_contains(strtolower($log->reason ?? ''), 'granted');
+                                $accentClass = $isPivGrant ? 'border-blue-500' : 'border-orange-400';
+                                $badgeBg = $isPivGrant ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-orange-50 text-orange-700 border-orange-200';
+                                $icon = $isPivGrant ? '🔓' : '🔒';
+                                $typeLabel = $isPivGrant ? 'Access Granted' : 'Access Revoked';
+                            } elseif ($isEval) {
+                                $accentClass = 'border-purple-500';
+                                $badgeBg = 'bg-purple-50 text-purple-700 border-purple-200';
+                                $icon = '📋';
+                                $typeLabel = 'Interview Evaluated';
+                            } else {
+                                $accentClass = 'border-gray-300';
+                                $badgeBg = 'bg-gray-50 text-gray-600 border-gray-200';
+                                $icon = '📝';
+                                $typeLabel = 'Note';
+                            }
+                        @endphp
+                        <div class="border-l-2 {{ $accentClass }} pl-4">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <span class="text-xs font-bold text-gray-900">{{ $log->changer_name }}</span>
+                                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border {{ $badgeBg }}">
+                                            {{ $icon }} {{ $typeLabel }}
+                                        </span>
+                                    </div>
+                                    @if($isStatusChange)
+                                        <div class="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
+                                            <span class="font-medium">{{ $statusLabels[$log->old_status] ?? ucfirst($log->old_status) }}</span>
+                                            <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                            <span class="font-bold text-green-700">{{ $statusLabels[$log->new_status] ?? ucfirst($log->new_status) }}</span>
+                                        </div>
+                                    @elseif(!$isPrivilege && !$isEval)
+                                        <div class="text-[10px] text-gray-400 mt-0.5">Status: {{ $statusLabels[$log->new_status] ?? ucfirst($log->new_status) }}</div>
+                                    @endif
+                                </div>
+                                <div class="text-[10px] text-gray-400 whitespace-nowrap">{{ \Carbon\Carbon::parse($log->created_at)->format('d M Y H:i') }}</div>
                             </div>
-                            <div class="text-xs text-gray-500 mt-1">{{ $statusLabels[$log->old_status] ?? $log->old_status }} -> {{ $statusLabels[$log->new_status] ?? $log->new_status }}</div>
-                            @if($log->reason)<div class="text-sm text-gray-700 mt-2 bg-gray-50 rounded-lg p-3">{{ $log->reason }}</div>@endif
+                            @if($log->reason && !$isPrivilege)
+                                <div class="text-sm text-gray-700 mt-2 bg-gray-50 rounded-lg p-3 leading-relaxed">{{ $log->reason }}</div>
+                            @elseif($isPrivilege)
+                                <div class="text-xs text-gray-500 mt-1.5 italic">{{ $log->reason }}</div>
+                            @endif
                         </div>
                     @empty
                         <p class="text-sm text-gray-400">No activity logged yet.</p>
                     @endforelse
                 </div>
+
             </div>
 
 

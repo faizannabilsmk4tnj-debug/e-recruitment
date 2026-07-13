@@ -278,7 +278,16 @@ class VacancyController extends Controller
         $application->load(['user', 'job']);
         NotificationService::notifyNewApplication($application);
 
-        // Create log entry if needed, but not strictly required
+        // Log initial submission so Activity Log always has a complete trail
+        \Illuminate\Support\Facades\DB::table('application_status_logs')->insert([
+            'application_id' => $application->id,
+            'changed_by'     => $userId,
+            'old_status'     => 'applied',
+            'new_status'     => 'applied',
+            'reason'         => 'Application submitted by candidate.',
+            'created_at'     => now(),
+        ]);
+
         return response()->json([
             'success' => true,
             'message' => 'Application successfully submitted!',

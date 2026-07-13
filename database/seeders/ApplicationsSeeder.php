@@ -131,5 +131,46 @@ class ApplicationsSeeder extends Seeder
                 'updated_at'   => now()->subDays(1),
             ],
         ]);
+
+        // Seed realistic status history logs so Activity Log has meaningful trail data
+        $hrId = 1; // HR Admin
+        DB::table('application_status_logs')->insert([
+            // App 1: Budi Santoso — applied → shortlisted → interview
+            ['application_id' => 1, 'changed_by' => $hrId, 'old_status' => 'applied',      'new_status' => 'applied',      'reason' => 'Application submitted by candidate.',                    'created_at' => now()->subDays(5)],
+            ['application_id' => 1, 'changed_by' => $hrId, 'old_status' => 'applied',      'new_status' => 'shortlisted',  'reason' => 'Kandidat memiliki dasar Flutter yang kuat.',              'created_at' => now()->subDays(4)],
+            ['application_id' => 1, 'changed_by' => $hrId, 'old_status' => 'shortlisted',  'new_status' => 'interview',    'reason' => 'Diundang ke tahap wawancara teknikal.',                   'created_at' => now()->subDays(2)],
+
+            // App 2: Sari Dewi — applied (still)
+            ['application_id' => 2, 'changed_by' => $hrId, 'old_status' => 'applied', 'new_status' => 'applied', 'reason' => 'Application submitted by candidate.', 'created_at' => now()->subDays(4)],
+
+            // App 3: Ahmad Rizki — applied → shortlisted
+            ['application_id' => 3, 'changed_by' => $hrId, 'old_status' => 'applied',     'new_status' => 'applied',     'reason' => 'Application submitted by candidate.',                       'created_at' => now()->subDays(3)],
+            ['application_id' => 3, 'changed_by' => $hrId, 'old_status' => 'applied',     'new_status' => 'shortlisted', 'reason' => 'Cocok untuk diundang interview tahap berikutnya.',           'created_at' => now()->subDays(1)],
+
+            // App 4: Frankie Schmidt — applied → shortlisted → interview
+            ['application_id' => 4, 'changed_by' => $hrId, 'old_status' => 'applied',     'new_status' => 'applied',     'reason' => 'Application submitted by candidate.',                       'created_at' => now()->subDays(6)],
+            ['application_id' => 4, 'changed_by' => $hrId, 'old_status' => 'applied',     'new_status' => 'shortlisted', 'reason' => 'Strong React background.',                                  'created_at' => now()->subDays(4)],
+            ['application_id' => 4, 'changed_by' => $hrId, 'old_status' => 'shortlisted', 'new_status' => 'interview',   'reason' => 'Good communication skills, strong technical foundation.',   'created_at' => now()->subDays(2)],
+
+            // App 5: Milton Howe III — applied → shortlisted → interview → accepted
+            ['application_id' => 5, 'changed_by' => $hrId, 'old_status' => 'applied',     'new_status' => 'applied',     'reason' => 'Application submitted by candidate.',                       'created_at' => now()->subDays(8)],
+            ['application_id' => 5, 'changed_by' => $hrId, 'old_status' => 'applied',     'new_status' => 'shortlisted', 'reason' => 'Kandidat sangat menjanjikan.',                              'created_at' => now()->subDays(6)],
+            ['application_id' => 5, 'changed_by' => $hrId, 'old_status' => 'shortlisted', 'new_status' => 'interview',   'reason' => 'Diundang ke wawancara teknikal dan budaya perusahaan.',     'created_at' => now()->subDays(4)],
+            ['application_id' => 5, 'changed_by' => $hrId, 'old_status' => 'interview',   'new_status' => 'accepted',    'reason' => 'Lolos semua tahapan seleksi dengan nilai sangat baik.',     'created_at' => now()->subDays(1)],
+
+            // App 6: Hattie Gerlach — applied → rejected
+            ['application_id' => 6, 'changed_by' => $hrId, 'old_status' => 'applied', 'new_status' => 'applied',  'reason' => 'Application submitted by candidate.',                            'created_at' => now()->subDays(7)],
+            ['application_id' => 6, 'changed_by' => $hrId, 'old_status' => 'applied', 'new_status' => 'rejected', 'reason' => 'Kurang berpengalaman di bidang korporat L&D.',                   'created_at' => now()->subDays(3)],
+
+            // App 7: Madeline Pollich — applied → shortlisted → interview
+            ['application_id' => 7, 'changed_by' => $hrId, 'old_status' => 'applied',     'new_status' => 'applied',     'reason' => 'Application submitted by candidate.',                      'created_at' => now()->subDays(4)],
+            ['application_id' => 7, 'changed_by' => $hrId, 'old_status' => 'applied',     'new_status' => 'shortlisted', 'reason' => 'Excellent statistical knowledge.',                          'created_at' => now()->subDays(3)],
+            ['application_id' => 7, 'changed_by' => $hrId, 'old_status' => 'shortlisted', 'new_status' => 'interview',   'reason' => 'Diundang ke wawancara dengan tim data.',                   'created_at' => now()->subDays(1)],
+
+            // App 8, 9, 10: still applied
+            ['application_id' => 8,  'changed_by' => $hrId, 'old_status' => 'applied', 'new_status' => 'applied', 'reason' => 'Application submitted by candidate.', 'created_at' => now()->subDays(2)],
+            ['application_id' => 9,  'changed_by' => $hrId, 'old_status' => 'applied', 'new_status' => 'applied', 'reason' => 'Application submitted by candidate.', 'created_at' => now()->subDays(2)],
+            ['application_id' => 10, 'changed_by' => $hrId, 'old_status' => 'applied', 'new_status' => 'applied', 'reason' => 'Application submitted by candidate.', 'created_at' => now()->subDays(1)],
+        ]);
     }
 }

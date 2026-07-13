@@ -391,6 +391,14 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
             ]);
         }
 
+        // Guard: reject if status is not actually changing
+        if ($oldStatus === $newStatus) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Applicant status is already ' . ucfirst($newStatus) . '. No change was made.',
+            ], 422);
+        }
+
         $application->status = $newStatus;
         if ($request->has('reason')) {
             $application->hr_notes = $request->reason;
