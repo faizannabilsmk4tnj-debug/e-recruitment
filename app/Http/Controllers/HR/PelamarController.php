@@ -33,31 +33,31 @@ class PelamarController extends Controller
         // 1. Calculate stats for cards (excluding archived vacancies)
         $totalApplicants = Application::whereHas('job', function ($q) {
             $q->where('is_archived', false);
-        })->count();
+        })->whereHas('user')->count();
         $submittedCount  = Application::where('status', 'applied')
             ->whereHas('job', function ($q) {
                 $q->where('is_archived', false);
-            })->count();
+            })->whereHas('user')->count();
         $shortlistedCount = Application::where('status', 'shortlisted')
             ->whereHas('job', function ($q) {
                 $q->where('is_archived', false);
-            })->count();
+            })->whereHas('user')->count();
         $interviewCount  = Application::where('status', 'interview')
             ->whereHas('job', function ($q) {
                 $q->where('is_archived', false);
-            })->count();
+            })->whereHas('user')->count();
         $acceptedCount   = Application::where('status', 'accepted')
             ->whereHas('job', function ($q) {
                 $q->where('is_archived', false);
-            })->count();
+            })->whereHas('user')->count();
         $rejectedCount   = Application::where('status', 'rejected')
             ->whereHas('job', function ($q) {
                 $q->where('is_archived', false);
-            })->count();
+            })->whereHas('user')->count();
         $decisionCount   = Application::whereIn('status', ['shortlisted'])
             ->whereHas('job', function ($q) {
                 $q->where('is_archived', false);
-            })->count();
+            })->whereHas('user')->count();
 
         // 2. Fetch job postings (both active and archived)
         $jobs = JobPosting::with(['category', 'applications.user.profile'])
@@ -315,7 +315,7 @@ class PelamarController extends Controller
             );
         }
 
-        $html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+$html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <title>CV — ' . $name . '</title>
 <style>
 *{box-sizing:border-box}
@@ -332,14 +332,14 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
 <div class="page">
 ' . $blocksHtml . '
 </div>
-<script>
-    if (window.location.search.indexOf("download=1") > -1) {
-        window.print();
-    }
-</script>
 </body></html>';
 
         $headers = ['Content-Type' => 'text/html; charset=utf-8'];
+        
+        if ($request->has('download')) {
+            $filename = 'CV_' . str_replace(' ', '_', $name) . '.html';
+            $headers['Content-Disposition'] = 'attachment; filename="' . $filename . '"';
+        }
         
         return response($html, 200, $headers);
     }
