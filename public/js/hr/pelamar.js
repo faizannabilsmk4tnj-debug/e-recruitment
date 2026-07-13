@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (typeof updateQuickFilterUI === 'function') {
         updateQuickFilterUI();
     }
+    // Note: updateQuickFilterUI will be called once again after full init via initStatCardUI()
 
     const btnToggleArchived = document.getElementById('btn-toggle-archived');
     if (btnToggleArchived) {
@@ -96,13 +97,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 const searchMatch = !state.search || titleMatch || name.includes(state.search) || email.includes(state.search);
 
                 let focusMatch = true;
-                if (state.focus === 'review') focusMatch = (status === 'submitted');
+                if (state.focus === 'review' || state.focus === 'submitted') focusMatch = (status === 'submitted');
                 if (state.focus === 'interview') focusMatch = (status === 'interview');
-                if (state.focus === 'decision') focusMatch = (status === 'shortlisted');
+                if (state.focus === 'decision' || state.focus === 'shortlisted') focusMatch = (status === 'shortlisted');
+                if (state.focus === 'accepted') focusMatch = (status === 'accepted');
+                if (state.focus === 'rejected') focusMatch = (status === 'rejected');
 
                 // Per-card tab filter only applies when no global focus filter is active.
-                // If a global focus is set (review/interview/decision), the tab is bypassed.
-                const statusTabMatch = (state.focus !== 'all') || (statusTab === 'all') || (status === statusTab);
+                // If a global focus is set (any status filter), the tab is bypassed.
+                const nonAllFocus = ['review','submitted','interview','decision','shortlisted','accepted','rejected'];
+                const statusTabMatch = nonAllFocus.includes(state.focus) || (statusTab === 'all') || (status === statusTab);
 
                 const show = searchMatch && focusMatch && statusTabMatch;
                 row.style.display = show ? '' : 'none';
@@ -318,16 +322,51 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ===== QUICK FILTER =====
+    // ===== QUICK FILTER + STAT CARD FILTER =====
+    // Map stat card focus values to their matching quick-filter pill focus values
+    const statCardToPillMap = {
+        'all': 'all',
+        'submitted': 'review',
+        'shortlisted': 'decision',
+        'interview': 'interview',
+        'accepted': 'accepted',
+        'rejected': 'rejected',
+    };
+
     function updateQuickFilterUI() {
+        // Sync quick-filter pills
         document.querySelectorAll('.quick-filter').forEach(btn => {
-            const isActive = btn.dataset.focus === state.focus;
+            // A pill is active if its focus matches state.focus OR the mapped alias matches
+            const isActive = btn.dataset.focus === state.focus
+                || (state.focus === 'submitted' && btn.dataset.focus === 'review')
+                || (state.focus === 'shortlisted' && btn.dataset.focus === 'decision');
             if (isActive) {
                 btn.classList.add('active-quick', 'bg-green-800', 'text-white');
                 btn.classList.remove('bg-gray-50', 'border', 'border-gray-200', 'text-gray-600');
             } else {
                 btn.classList.remove('active-quick', 'bg-green-800', 'text-white');
                 btn.classList.add('bg-gray-50', 'border', 'border-gray-200', 'text-gray-600');
+            }
+        });
+
+        // Sync stat cards
+        document.querySelectorAll('.stat-card-filter').forEach(card => {
+            const cardFocus = card.dataset.focus;
+            // Card is active if it directly matches or if its alias maps to the current focus
+            const isActive = cardFocus === state.focus
+                || (cardFocus === 'all' && state.focus === 'all')
+                || (cardFocus === 'submitted' && (state.focus === 'submitted' || state.focus === 'review'))
+                || (cardFocus === 'shortlisted' && (state.focus === 'shortlisted' || state.focus === 'decision'))
+                || (cardFocus === 'interview' && state.focus === 'interview')
+                || (cardFocus === 'accepted' && state.focus === 'accepted')
+                || (cardFocus === 'rejected' && state.focus === 'rejected');
+
+            if (isActive) {
+                card.classList.add('ring-2', 'ring-offset-1', 'scale-[1.02]', 'shadow-lg');
+                card.classList.remove('shadow-sm');
+            } else {
+                card.classList.remove('ring-2', 'ring-offset-1', 'scale-[1.02]', 'shadow-lg');
+                card.classList.add('shadow-sm');
             }
         });
     }
@@ -340,6 +379,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 cards().forEach(c => expandCard(c));
             }
             apply();
+        });
+    });
+
+    // Stat card click → trigger the same focus filter
+    document.querySelectorAll('.stat-card-filter').forEach(card => {
+        card.addEventListener('click', function () {
+            state.focus = this.dataset.focus;
+            updateQuickFilterUI();
+            if (state.focus !== 'all') {
+                cards().forEach(c => expandCard(c));
+            }
+            apply();
+            // Smooth scroll down to the list
+            const container = document.getElementById('lowongan-container');
+            if (container) container.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
 
@@ -1224,5 +1278,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial
     initCountdownTimers();
     apply();
+    updateQuickFilterUI(); // sync stat cards & pills with restored state
 });
 

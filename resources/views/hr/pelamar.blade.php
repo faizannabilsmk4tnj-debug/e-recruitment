@@ -48,39 +48,46 @@
         </button>
     </div>
 
-    <!-- 6 Summary Stat Cards (2x3 Grid) -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <!-- Total Card: left-accent border black/dark-gray -->
-        <div class="bg-white rounded-xl border-l-4 border-gray-800 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm">
+    <!-- 6 Summary Stat Cards (2x3 Grid) — Also act as filter buttons -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+        <!-- Total Card -->
+        <button class="stat-card-filter text-left bg-white rounded-xl border-l-4 border-gray-800 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer focus:outline-none" data-focus="all">
             <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Total Applicants</p>
             <p class="text-2xl font-extrabold text-gray-900 mt-1">{{ $totalApplicants }}</p>
-        </div>
-        <!-- Submitted Card: left-accent border gray-300 -->
-        <div class="bg-white rounded-xl border-l-4 border-gray-300 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm">
+            <p class="text-[10px] text-gray-400 mt-1 font-medium">Click to show all</p>
+        </button>
+        <!-- Submitted Card -->
+        <button class="stat-card-filter text-left bg-white rounded-xl border-l-4 border-gray-400 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer focus:outline-none" data-focus="submitted">
             <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Submitted</p>
             <p class="text-2xl font-extrabold text-gray-900 mt-1">{{ $submittedCount }}</p>
-        </div>
-        <!-- Shortlisted Card: left-accent border amber-400 -->
-        <div class="bg-white rounded-xl border-l-4 border-amber-400 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm">
+            <p class="text-[10px] text-gray-400 mt-1 font-medium">Awaiting review</p>
+        </button>
+        <!-- Shortlisted Card -->
+        <button class="stat-card-filter text-left bg-white rounded-xl border-l-4 border-amber-400 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer focus:outline-none" data-focus="shortlisted">
             <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Shortlisted</p>
             <p class="text-2xl font-extrabold text-gray-900 mt-1">{{ $shortlistedCount }}</p>
-        </div>
-        <!-- Interview Card: left-accent border blue-500 -->
-        <div class="bg-white rounded-xl border-l-4 border-blue-500 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm">
+            <p class="text-[10px] text-amber-400 mt-1 font-medium">Needs decision</p>
+        </button>
+        <!-- Interview Card -->
+        <button class="stat-card-filter text-left bg-white rounded-xl border-l-4 border-blue-500 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer focus:outline-none" data-focus="interview">
             <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Interview</p>
             <p class="text-2xl font-extrabold text-gray-900 mt-1">{{ $interviewCount }}</p>
-        </div>
-        <!-- Accepted Card: left-accent border green-600 -->
-        <div class="bg-white rounded-xl border-l-4 border-green-600 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm">
+            <p class="text-[10px] text-blue-400 mt-1 font-medium">In process</p>
+        </button>
+        <!-- Accepted Card -->
+        <button class="stat-card-filter text-left bg-white rounded-xl border-l-4 border-green-600 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer focus:outline-none" data-focus="accepted">
             <p class="text-[10px] font-bold text-green-700 uppercase tracking-widest">Accepted</p>
             <p class="text-2xl font-extrabold text-gray-900 mt-1">{{ $acceptedCount }}</p>
-        </div>
-        <!-- Rejected Card: left-accent border red-600 -->
-        <div class="bg-white rounded-xl border-l-4 border-red-600 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm">
+            <p class="text-[10px] text-green-400 mt-1 font-medium">Hired</p>
+        </button>
+        <!-- Rejected Card -->
+        <button class="stat-card-filter text-left bg-white rounded-xl border-l-4 border-red-500 border-y border-r border-r-gray-100 border-y-gray-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer focus:outline-none" data-focus="rejected">
             <p class="text-[10px] font-bold text-red-600 uppercase tracking-widest">Rejected</p>
             <p class="text-2xl font-extrabold text-gray-900 mt-1">{{ $rejectedCount }}</p>
-        </div>
+            <p class="text-[10px] text-red-400 mt-1 font-medium">Not selected</p>
+        </button>
     </div>
+
 
     <!-- Quick Filter Pills (Global Status Filter) -->
     <div class="bg-white rounded-xl border border-gray-100 p-4 mb-4">
