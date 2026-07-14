@@ -461,7 +461,7 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
         $request->validate([
             'scheduled_at' => 'required|date',
             'duration_minutes' => 'required|integer',
-            'interview_type' => 'required|in:online,offline,phone',
+            'interview_type' => 'required|in:online,offline', // Konsisten dengan InterviewController::store()
             'location_or_link' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);

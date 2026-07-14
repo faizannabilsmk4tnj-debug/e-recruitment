@@ -23,3 +23,7 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Non-application files (documentation & tools)
+/Normalisasi
+/word
