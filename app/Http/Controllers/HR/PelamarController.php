@@ -23,13 +23,6 @@ class PelamarController extends Controller
      */
     public function index()
     {
-        // Auto-run migrations if any columns are missing or if bio column still exists in user_profiles
-        if (!\Illuminate\Support\Facades\Schema::hasColumn('job_postings', 'is_archived') || 
-            !\Illuminate\Support\Facades\Schema::hasColumn('applications', 'is_seen') || 
-            \Illuminate\Support\Facades\Schema::hasColumn('user_profiles', 'bio')) {
-            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        }
-
         // 1. Calculate stats for cards (excluding archived vacancies)
         $totalApplicants = Application::whereHas('job', function ($q) {
             $q->where('is_archived', false);
@@ -296,8 +289,9 @@ class PelamarController extends Controller
         $phone    = e($user->phone ?? (optional($profile)->phone ?? ''));
         $city     = e(optional($profile)->city ?? '');
         $province = e(optional($profile)->province ?? '');
-        $linkedin = e(optional($profile)->linkedin_url ?? '');
-        $bio      = e(optional($profile)->bio ?? '');
+        // Kolom linkedin_url & bio telah dihapus via migration (drop_bio_and_linkedin_url)
+        $linkedin = '';
+        $bio      = '';
 
         $blocksHtml = '';
 
@@ -466,8 +460,19 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
             'notes' => 'nullable|string',
         ]);
 
-        // Check for schedule overlap
-        $overlap = \App\Http\Controllers\HR\InterviewController::checkOverlap($request->scheduled_at, $request->duration_minutes);
+        $application = Application::findOrFail($id);
+        $oldStatus = $application->status;
+
+        // Check if there is an existing scheduled interview for this application
+        $interview = Interview::where('application_id', $application->id)
+            ->where('status', 'scheduled')
+            ->first();
+
+        $isNew = !$interview;
+        $excludeId = $isNew ? null : $interview->id;
+
+        // Check for schedule overlap (excluding our own interview if we're updating it)
+        $overlap = \App\Http\Controllers\HR\InterviewController::checkOverlap($request->scheduled_at, $request->duration_minutes, $excludeId);
         if ($overlap['has_overlap']) {
             return response()->json([
                 'success' => false,
@@ -475,13 +480,12 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
             ], 422);
         }
 
-        $application = Application::findOrFail($id);
-        $oldStatus = $application->status;
+        if ($isNew) {
+            $interview = new Interview();
+            $interview->application_id = $application->id;
+            $interview->scheduled_by = auth()->id() ?? 1;
+        }
 
-        // 1. Create interview record
-        $interview = new Interview();
-        $interview->application_id = $application->id;
-        $interview->scheduled_by = auth()->id() ?? 1;
         $interview->scheduled_at = $request->scheduled_at;
         $interview->duration_minutes = $request->duration_minutes;
         $interview->interview_type = $request->interview_type;
@@ -501,17 +505,19 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
                 'changed_by' => auth()->id() ?? 1,
                 'old_status' => $oldStatus,
                 'new_status' => 'interview',
-                'reason' => 'Scheduled ' . $request->interview_type . ' interview. Notes: ' . ($request->notes ?? '-'),
+                'reason' => ($isNew ? 'Scheduled ' : 'Updated schedule for ') . $request->interview_type . ' interview. Notes: ' . ($request->notes ?? '-'),
                 'created_at' => now(),
             ]);
         } else {
-            // Log interview addition without status change
+            // Log interview addition/update without status change
             DB::table('application_status_logs')->insert([
                 'application_id' => $application->id,
                 'changed_by' => auth()->id() ?? 1,
                 'old_status' => 'interview',
                 'new_status' => 'interview',
-                'reason' => 'Scheduled new interview: ' . $request->interview_type . ' interview.',
+                'reason' => $isNew 
+                    ? ('Scheduled new interview: ' . $request->interview_type . ' interview.') 
+                    : ('Updated existing interview schedule to: ' . $request->interview_type . ' interview.'),
                 'created_at' => now(),
             ]);
         }
@@ -522,7 +528,7 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
 
         return response()->json([
             'success' => true,
-            'message' => 'Interview scheduled successfully.'
+            'message' => $isNew ? 'Interview scheduled successfully.' : 'Interview schedule updated successfully.'
         ]);
     }
 

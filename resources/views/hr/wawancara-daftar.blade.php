@@ -52,11 +52,11 @@
             <h1 class="text-3xl font-extrabold text-gray-900">Interview List</h1>
         </div>
         <div class="flex items-center gap-4">
-            <!-- Search Form -->
             <form action="/hr/wawancara/daftar" method="GET" class="relative">
                 @if(request('status')) <input type="hidden" name="status" value="{{ request('status') }}"> @endif
                 @if(request('type')) <input type="hidden" name="type" value="{{ request('type') }}"> @endif
                 @if(request('date')) <input type="hidden" name="date" value="{{ request('date') }}"> @endif
+                @if(request('show_decided')) <input type="hidden" name="show_decided" value="1"> @endif
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search sessions..." class="pl-9 pr-4 py-2 bg-gray-100/50 border border-transparent rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:bg-white w-64 transition-all">
             </form>
@@ -258,11 +258,18 @@
                 </div>
             </div>
 
+            <div class="flex items-center gap-2 pb-2.5 select-none cursor-pointer">
+                <input type="checkbox" name="show_decided" value="1" id="filter-show-decided" @checked(request('show_decided') === '1') onchange="this.form.submit()" class="w-4.5 h-4.5 text-green-800 focus:ring-green-500 border-gray-250 rounded cursor-pointer transition">
+                <label for="filter-show-decided" class="text-xs font-bold text-gray-600 cursor-pointer">
+                    Show Decided Candidates
+                </label>
+            </div>
+
             <button type="submit" class="bg-green-800 text-white p-2.5 rounded-lg shadow-sm hover:bg-green-900 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             </button>
 
-            @if(request()->anyFilled(['search', 'status', 'type', 'date']))
+            @if(request()->anyFilled(['search', 'status', 'type', 'date', 'show_decided']))
             <a href="/hr/wawancara/daftar" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-semibold transition-colors self-center">
                 Clear Filters
             </a>
@@ -299,15 +306,16 @@
                         'rescheduled' => 'text-amber-700 bg-amber-50 border border-amber-200'
                     ];
                     $statusClass = $statusClasses[$interview->status] ?? 'text-gray-700 bg-gray-50 border border-gray-200';
-                    $isAccepted = $interview->application && $interview->application->status === 'accepted';
+                    $isDecided = $interview->application && in_array($interview->application->status, ['accepted', 'rejected']);
+                    $decidedLabel = $interview->application ? ($interview->application->status === 'accepted' ? 'Accepted' : 'Rejected') : 'Decided';
                 @endphp
-                <tr class="hover:bg-gray-50/50 transition-colors group {{ $isAccepted ? 'opacity-60 bg-gray-100/90 border-gray-200 cursor-not-allowed' : 'cursor-pointer' }}" 
-                    @if($isAccepted) onclick="event.preventDefault();" @else onclick="window.location.href='/hr/pelamar/{{ $interview->application_id }}'" @endif>
+                <tr class="hover:bg-gray-50/50 transition-colors group {{ $isDecided ? 'opacity-65 bg-gray-50/90 border-gray-250 cursor-not-allowed select-none' : 'cursor-pointer' }}" 
+                    @if($isDecided) onclick="event.preventDefault();" @else onclick="window.location.href='/hr/pelamar/{{ $interview->application_id }}'" @endif>
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full {{ $avatarBg }} flex items-center justify-center font-bold text-xs shrink-0">{{ $initials }}</div>
                             <div>
-                                <p class="font-bold text-sm text-gray-900 {{ !$isAccepted ? 'group-hover:text-green-800' : '' }} transition-colors">{{ $candidateName }}</p>
+                                <p class="font-bold text-sm text-gray-900 {{ !$isDecided ? 'group-hover:text-green-800' : '' }} transition-colors">{{ $candidateName }}</p>
                                 <p class="text-xs text-gray-400">{{ $candidateEmail }}</p>
                             </div>
                         </div>
@@ -339,7 +347,7 @@
                                 @if($interview->attendance_photo)
                                     <a href="{{ $interview->attendance_photo }}" target="_blank" class="text-[9px] font-bold text-green-700 hover:text-green-800 underline flex items-center gap-1 mt-0.5 w-fit">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-2.5 h-2.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                                        Selfie Photo
+                                        {{ $interview->interview_type === 'online' ? 'Zoom Screenshot' : 'Selfie Photo' }}
                                     </a>
                                 @endif
                             @elseif($interview->attendance_status === 'absent')
@@ -362,30 +370,36 @@
                     </td>
                     <td class="px-6 py-4 text-right" onclick="event.stopPropagation()">
                         <div class="flex justify-end gap-2">
-                             @if($isAccepted)
-                                <span class="text-gray-400 font-semibold text-xs bg-gray-100 px-2 py-1 rounded cursor-not-allowed select-none" title="Accepted (No action allowed)">
+                             @if($isDecided)
+                                <span class="text-gray-450 font-semibold text-xs bg-gray-100 px-2 py-1 rounded cursor-not-allowed select-none" title="{{ $decidedLabel }} (No action allowed)">
                                     Profile
                                 </span>
-                                <span class="text-gray-400 font-semibold text-xs bg-gray-100 px-2 py-1 rounded cursor-not-allowed select-none" title="Accepted (No action allowed)">
-                                    Reschedule
+                                <span class="text-gray-450 font-semibold text-xs bg-gray-100 px-2 py-1 rounded cursor-not-allowed select-none" title="{{ $decidedLabel }} (No action allowed)">
+                                    {{ $interview->status === 'completed' ? 'Final Decision' : 'Reschedule' }}
                                 </span>
-                                <span class="text-gray-400 font-semibold text-xs bg-gray-100 px-2 py-1 rounded cursor-not-allowed select-none" title="Accepted (No action allowed)">
+                                <span class="text-gray-450 font-semibold text-xs bg-gray-100 px-2 py-1 rounded cursor-not-allowed select-none" title="{{ $decidedLabel }} (No action allowed)">
                                     Status / Evaluate
                                 </span>
-                                <span class="text-gray-400 font-semibold text-xs bg-gray-100 px-2 py-1 rounded cursor-not-allowed select-none" title="Accepted (No action allowed)">
+                                <span class="text-gray-450 font-semibold text-xs bg-gray-100 px-2 py-1 rounded cursor-not-allowed select-none" title="{{ $decidedLabel }} (No action allowed)">
                                     Delete
                                 </span>
                             @else
-                                <a href="/hr/pelamar/{{ $interview->application_id }}" class="text-green-800 hover:text-green-950 font-semibold text-xs bg-green-50 hover:bg-green-100 px-2 py-1 rounded transition-colors" title="View Profile">
+                                <a href="/hr/pelamar/{{ $interview->application_id }}" class="text-green-800 hover:text-green-950 font-semibold text-xs bg-green-50 hover:bg-green-100 px-2 py-1 rounded transition-colors shadow-sm" title="View Profile">
                                     Profile
                                 </a>
-                                <button onclick='openRescheduleModal(@json($interview))' class="text-blue-800 hover:text-blue-950 font-semibold text-xs bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded transition-colors" title="Reschedule">
-                                    Reschedule
-                                </button>
-                                <button onclick='openStatusModal(@json($interview))' class="text-amber-800 hover:text-amber-950 font-semibold text-xs bg-amber-50 hover:bg-amber-100 px-2 py-1 rounded transition-colors" title="Status & Evaluation">
+                                @if($interview->status === 'completed')
+                                    <button onclick='openFinalDecisionModal(@json($interview))' class="text-purple-800 hover:text-purple-950 font-bold text-xs bg-purple-50 hover:bg-purple-100 px-2.5 py-1 rounded transition-colors shadow-sm" title="Final hiring decision">
+                                        Final Decision
+                                    </button>
+                                @else
+                                    <button onclick='openRescheduleModal(@json($interview))' class="text-blue-800 hover:text-blue-950 font-semibold text-xs bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded transition-colors shadow-sm" title="Reschedule">
+                                        Reschedule
+                                    </button>
+                                @endif
+                                <button onclick='openStatusModal(@json($interview))' class="text-amber-800 hover:text-amber-950 font-semibold text-xs bg-amber-50 hover:bg-amber-100 px-2 py-1 rounded transition-colors shadow-sm" title="Status & Evaluation">
                                     Status / Evaluate
                                 </button>
-                                <button onclick="deleteInterview({{ $interview->id }})" class="text-red-800 hover:text-red-950 font-semibold text-xs bg-red-50 hover:bg-red-100 px-2 py-1 rounded transition-colors" title="Delete">
+                                <button onclick="deleteInterview({{ $interview->id }})" class="text-red-800 hover:text-red-950 font-semibold text-xs bg-red-50 hover:bg-red-100 px-2 py-1 rounded transition-colors shadow-sm" title="Delete">
                                     Delete
                                 </button>
                             @endif
@@ -487,7 +501,14 @@
                     <select name="application_id" required class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
                         <option value="">-- Choose Candidate --</option>
                         @foreach($applications as $app)
-                            <option value="{{ $app->id }}">{{ $app->user->name ?? 'N/A' }} - {{ $app->job->title ?? 'N/A' }} (Status: {{ ucfirst($app->status) }})</option>
+                            @php
+                                $hasCompletedInterview = $app->interviews->where('status', 'completed')->isNotEmpty();
+                            @endphp
+                            <option value="{{ $app->id }}" {{ $hasCompletedInterview ? 'disabled class=text-gray-400 bg-gray-50' : '' }}>
+                                {{ $app->user->name ?? 'N/A' }} - {{ $app->job->title ?? 'N/A' }} 
+                                (Status: {{ ucfirst($app->status) }}) 
+                                {!! $hasCompletedInterview ? ' &mdash; [Interview Completed]' : '' !!}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -563,7 +584,16 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Notes</label>
-                    <textarea name="notes" rows="3" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Notes..."></textarea>
+                    
+                    {{-- Quick Templates for Interview Notes --}}
+                    <div id="buat-notes-templates-container" class="mb-3">
+                        <span class="block text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Choose Interview Notes Template:</span>
+                        <div class="flex flex-col gap-1.5 max-h-36 overflow-y-auto p-1 bg-gray-50 border border-gray-150 rounded-xl" id="buat-notes-templates-list">
+                            <!-- populated by JS -->
+                        </div>
+                    </div>
+
+                    <textarea name="notes" id="buat_notes" rows="3" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Notes..."></textarea>
                 </div>
             </div>
             <div class="border-t border-gray-100 px-8 py-4 flex items-center justify-between bg-white">
@@ -665,6 +695,15 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Notes</label>
+                    
+                    {{-- Quick Templates for Reschedule Notes --}}
+                    <div id="reschedule-notes-templates-container" class="mb-3">
+                        <span class="block text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Choose Interview Notes Template:</span>
+                        <div class="flex flex-col gap-1.5 max-h-36 overflow-y-auto p-1 bg-gray-50 border border-gray-150 rounded-xl" id="reschedule-notes-templates-list">
+                            <!-- populated by JS -->
+                        </div>
+                    </div>
+
                     <textarea name="notes" id="reschedule-notes" rows="3" class="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Notes..."></textarea>
                 </div>
             </div>
@@ -799,6 +838,13 @@
     }
     function closeScheduleModal() {
         document.getElementById('modal-buat').classList.add('hidden');
+        // Hapus hash dari URL tanpa reload
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+
+    // Auto-open modal jika diarahkan dari Month View via #new
+    if (window.location.hash === '#new') {
+        openScheduleModal();
     }
 
     document.getElementById('form-buat').addEventListener('submit', async function(e) {
@@ -1081,8 +1127,7 @@
         const id = document.getElementById('reschedule-id').value;
         const fd = new FormData(this);
         try {
-            const data = await submitJson(`/hr/wawancara/${id}`, 'POST', {
-                _method: 'PUT',
+            const data = await submitJson(`/hr/wawancara/${id}`, 'PUT', {
                 scheduled_at: fd.get('scheduled_at'),
                 duration_minutes: fd.get('duration_minutes'),
                 interview_type: fd.get('interview_type'),
@@ -1225,19 +1270,42 @@
         }
     });
 
-    // Delete Session
-    async function deleteInterview(id) {
-        if (!confirm('Are you sure you want to delete this interview session? This action cannot be undone.')) return;
-        try {
-            const data = await submitJson(`/hr/wawancara/${id}`, 'POST', {
-                _method: 'DELETE'
+    // Delete Session with Custom Modal
+    let deleteTargetId = null;
+
+    window.deleteInterview = function(id) {
+        deleteTargetId = id;
+        document.getElementById('modal-delete-confirm').classList.remove('hidden');
+    };
+
+    window.closeDeleteConfirmModal = function() {
+        document.getElementById('modal-delete-confirm').classList.add('hidden');
+        deleteTargetId = null;
+    };
+
+    // Attach click handler to the delete confirmation button
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnConfirmDelete = document.getElementById('btn-confirm-delete-action');
+        if (btnConfirmDelete) {
+            btnConfirmDelete.addEventListener('click', async function() {
+                if (!deleteTargetId) return;
+                
+                btnConfirmDelete.disabled = true;
+                btnConfirmDelete.innerHTML = `<svg class="animate-spin w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Deleting...`;
+                
+                try {
+                    const data = await submitJson(`/hr/wawancara/${deleteTargetId}`, 'DELETE', {});
+                    closeDeleteConfirmModal();
+                    showToast(data.message || 'Interview session deleted.');
+                    setTimeout(() => window.location.reload(), 1000);
+                } catch(err) {
+                    showToast(err.message, 'error');
+                    btnConfirmDelete.disabled = false;
+                    btnConfirmDelete.innerHTML = 'Delete Session';
+                }
             });
-            showToast(data.message || 'Interview session deleted.');
-            setTimeout(() => window.location.reload(), 1000);
-        } catch(err) {
-            showToast(err.message, 'error');
         }
-    }
+    });
 </script>
 
 {{-- ===== MODAL: REVIEW RESCHEDULE REQUEST ===== --}}
@@ -1907,9 +1975,168 @@
         if (buatTemplateSelect) buatTemplateSelect.value = '';
     };
 
+    // ===== INTERVIEW NOTES QUICK TEMPLATES =====
+    const interviewNotesTemplates = [
+        "The interview will be conducted online via Google Meet. Please prepare your CV and portfolio.",
+        "Offline (face-to-face) interview at the Ecogreen main office. Please arrive 15 minutes before the scheduled time dressed in professional business attire.",
+        "Initial screening (introductory) chat via phone to align expectations and scheduling."
+    ];
+
+    function populateNotesTemplates(containerId, textareaId) {
+        const container = document.getElementById(containerId);
+        const textarea = document.getElementById(textareaId);
+        if (!container || !textarea) return;
+        
+        container.innerHTML = '';
+        interviewNotesTemplates.forEach(tpl => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'w-full text-left text-[11px] bg-white hover:bg-green-50/50 border border-gray-200 hover:border-green-300 rounded-lg p-2 text-gray-700 transition cursor-pointer font-medium leading-relaxed';
+            btn.textContent = tpl;
+            btn.addEventListener('click', () => {
+                textarea.value = tpl;
+            });
+            container.appendChild(btn);
+        });
+    }
+
     // Initial loading
     populateCentralLocationTemplatesSummary();
     populateModalTemplateSelects();
+    populateNotesTemplates('buat-notes-templates-list', 'buat_notes');
+    populateNotesTemplates('reschedule-notes-templates-list', 'reschedule-notes');
+
+    // ===== FINAL DECISION MODAL LOGIC =====
+    window.openFinalDecisionModal = function(interview) {
+        const appId = interview.application_id;
+        const candidateName = interview.application?.user?.name || 'Candidate';
+        const jobTitle = interview.application?.job?.title || 'N/A';
+        const score = interview.result?.score || '—';
+        const rec = interview.result?.recommendation || '—';
+        const feedback = interview.result?.feedback || 'No evaluator feedback provided.';
+
+        document.getElementById('fd-application-id').value = appId;
+        document.getElementById('fd-subtitle').textContent = `Choose final result for ${candidateName}`;
+        document.getElementById('fd-job-title').textContent = jobTitle;
+        document.getElementById('fd-eval-score').textContent = score !== '—' ? `${score}/100` : score;
+        
+        const recSpan = document.getElementById('fd-eval-rec');
+        recSpan.textContent = rec;
+        if (rec.toLowerCase() === 'proceed') {
+            recSpan.className = 'uppercase ml-1 px-1.5 py-0.5 rounded font-black bg-green-100 text-green-800 text-[10px]';
+        } else if (rec.toLowerCase() === 'hold') {
+            recSpan.className = 'uppercase ml-1 px-1.5 py-0.5 rounded font-black bg-amber-100 text-amber-800 text-[10px]';
+        } else {
+            recSpan.className = 'uppercase ml-1 px-1.5 py-0.5 rounded font-black bg-red-100 text-red-800 text-[10px]';
+        }
+
+        document.getElementById('fd-eval-feedback').textContent = feedback;
+        
+        // Reset form inputs
+        const radioDecision = document.getElementsByName('decision');
+        for (let r of radioDecision) {
+            r.checked = false;
+        }
+        document.getElementById('fd-reason').value = '';
+        document.getElementById('lbl-fd-reason').textContent = 'Notes / Hiring Details';
+        document.getElementById('fd-reason').placeholder = 'Enter reason, next steps, or explanation...';
+        
+        // Reset templates
+        document.getElementById('fd-templates-section').classList.add('hidden');
+        document.getElementById('fd-templates-list').innerHTML = '';
+        
+        // Show Modal
+        document.getElementById('modal-final-decision').classList.remove('hidden');
+    };
+
+    window.closeFinalDecisionModal = function() {
+        document.getElementById('modal-final-decision').classList.add('hidden');
+    };
+
+    const acceptDecisionTemplates = [
+        "Passed all interview stages with outstanding technical scores. Recommended for sending the official Job Offer Letter.",
+        "Demonstrated strong alignment with corporate culture and solid communication skills. Commencing onboarding preparation.",
+        "Strong profile with relevant industry experience. Recommended to proceed with standard salary negotiation."
+    ];
+
+    const rejectDecisionTemplates = [
+        "Unfortunately, the technical score during the evaluation was below the minimum required standard. Profile archived.",
+        "The candidate does not meet the minimum years of experience required for this position. Profile archived.",
+        "Lacks necessary practical experience with the required technology stack. Wish the candidate the best in their future career."
+    ];
+
+    function populateDecisionTemplates(type) {
+        const container = document.getElementById('fd-templates-list');
+        const textarea = document.getElementById('fd-reason');
+        const section = document.getElementById('fd-templates-section');
+        if (!container || !textarea || !section) return;
+
+        container.innerHTML = '';
+        const templates = type === 'accepted' ? acceptDecisionTemplates : rejectDecisionTemplates;
+        
+        templates.forEach(tpl => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'w-full text-left text-[11px] bg-white hover:bg-indigo-50/50 border border-gray-200 hover:border-indigo-300 rounded-lg p-2 text-gray-700 transition cursor-pointer font-medium leading-relaxed';
+            btn.textContent = tpl;
+            btn.addEventListener('click', () => {
+                textarea.value = tpl;
+            });
+            container.appendChild(btn);
+        });
+
+        section.classList.remove('hidden');
+    }
+
+    // Update label text dynamically based on decision selected
+    document.addEventListener('DOMContentLoaded', () => {
+        const radios = document.getElementsByName('decision');
+        const reasonLabel = document.getElementById('lbl-fd-reason');
+        const reasonTextarea = document.getElementById('fd-reason');
+
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'accepted') {
+                    reasonLabel.textContent = 'Hiring details / Offer justification';
+                    reasonTextarea.placeholder = 'e.g. Approved due to excellent technical skill and team fit. Commencing offer letter preparation...';
+                    populateDecisionTemplates('accepted');
+                } else if (this.value === 'rejected') {
+                    reasonLabel.textContent = 'Rejection reason / Feedback for candidate';
+                    reasonTextarea.placeholder = 'e.g. Does not meet minimum experience criteria or failed core technical evaluation...';
+                    populateDecisionTemplates('rejected');
+                }
+            });
+        });
+
+        // Submit form
+        const formFD = document.getElementById('form-final-decision');
+        if (formFD) {
+            formFD.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const appId = document.getElementById('fd-application-id').value;
+                const decision = Array.from(document.getElementsByName('decision')).find(r => r.checked)?.value;
+                const reason = document.getElementById('fd-reason').value;
+                
+                const btnSubmit = document.getElementById('btn-submit-final-decision');
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = `<svg class="animate-spin w-4 h-4 text-white inline-block mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Submitting...`;
+
+                try {
+                    const data = await submitJson(`/hr/pelamar/${appId}/status`, 'POST', {
+                        status: decision,
+                        reason: reason
+                    });
+                    closeFinalDecisionModal();
+                    showToast(data.message || 'Status successfully updated.');
+                    setTimeout(() => window.location.reload(), 1000);
+                } catch(err) {
+                    showToast(err.message, 'error');
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = 'Submit Decision';
+                }
+            });
+        }
+    });
 </script>
 
 <!-- Modal: Central Location Templates Manager -->
@@ -1966,6 +2193,142 @@
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end">
                 <button type="button" onclick="closeCentralLocTemplateModal()" class="bg-white border border-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-xs hover:bg-gray-50 transition-colors shadow-sm">Close</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Custom Delete Confirmation -->
+<div id="modal-delete-confirm" class="fixed inset-0 z-[150] hidden">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="closeDeleteConfirmModal()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-gray-150 max-w-md w-full overflow-hidden animate-card">
+            <div class="p-6 text-center space-y-4">
+                <!-- Warning Icon -->
+                <div class="mx-auto w-12 h-12 bg-red-50 text-red-600 rounded-full flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                </div>
+                
+                <!-- Content -->
+                <div class="space-y-1.5">
+                    <h3 class="font-extrabold text-base text-gray-950">Delete Interview Session?</h3>
+                    <p class="text-xs text-gray-500 font-medium leading-relaxed">
+                        Are you sure you want to delete this interview session? This action is permanent and cannot be undone.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end gap-3">
+                <button type="button" onclick="closeDeleteConfirmModal()" class="bg-white border border-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-lg text-xs hover:bg-gray-50 transition-colors shadow-sm">
+                    Cancel
+                </button>
+                <button type="button" id="btn-confirm-delete-action" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-xs transition-colors shadow-md flex items-center gap-1.5">
+                    Delete Session
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Final Decision (Accept/Reject Candidate) -->
+<div id="modal-final-decision" class="fixed inset-0 z-[120] hidden">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="closeFinalDecisionModal()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-gray-150 max-w-lg w-full overflow-hidden animate-card">
+            
+            <!-- Header -->
+            <div class="px-6 py-5 bg-indigo-900 text-white flex items-center justify-between">
+                <div>
+                    <h3 class="font-extrabold text-lg">Final Hiring Decision</h3>
+                    <p class="text-xs text-indigo-200 font-semibold mt-0.5" id="fd-subtitle">Choose final result for applicant</p>
+                </div>
+                <button type="button" onclick="closeFinalDecisionModal()" class="text-indigo-200 hover:text-white bg-indigo-850 rounded-full p-1.5 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <form id="form-final-decision" class="p-6 space-y-6">
+                <input type="hidden" id="fd-application-id" name="application_id">
+                
+                <!-- Candidate Brief Info -->
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex items-center justify-between text-xs">
+                    <div>
+                        <span class="block font-bold text-gray-400 uppercase tracking-wider mb-1">Position Applied</span>
+                        <span class="font-extrabold text-sm text-gray-850" id="fd-job-title">—</span>
+                    </div>
+                    <div class="text-right border-l border-gray-200 pl-4">
+                        <span class="block font-bold text-gray-400 uppercase tracking-wider mb-1">Interview Score</span>
+                        <span class="font-black text-sm text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-150" id="fd-eval-score">—</span>
+                    </div>
+                </div>
+
+                <!-- Evaluation Notes Summary -->
+                <div class="bg-indigo-50/50 rounded-xl p-4 border border-indigo-100 text-xs">
+                    <div class="flex items-center gap-1.5 text-indigo-900 font-bold mb-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-indigo-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        HR Evaluator Recommendation: <span id="fd-eval-rec">—</span>
+                    </div>
+                    <p class="text-gray-600 font-medium leading-relaxed italic" id="fd-eval-feedback">—</p>
+                </div>
+
+                <!-- Decision Toggle -->
+                <div class="space-y-3">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest">Select Hiring Result</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Option: Accept -->
+                        <label class="relative flex items-center justify-between p-4 bg-white border border-gray-250 hover:border-green-300 rounded-xl cursor-pointer transition shadow-sm hover:shadow group">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="decision" value="accepted" class="w-4.5 h-4.5 text-green-600 focus:ring-green-500 border-gray-300 rounded-full" required>
+                                <div>
+                                    <span class="block text-sm font-extrabold text-gray-900 group-hover:text-green-800 transition-colors">Accept (Lolos)</span>
+                                    <span class="text-[10px] font-semibold text-gray-400">Offer job / proceed onboarding</span>
+                                </div>
+                            </div>
+                            <span class="w-8 h-8 rounded-full bg-green-50 group-hover:bg-green-100 text-green-700 flex items-center justify-center font-bold text-sm">✓</span>
+                        </label>
+
+                        <!-- Option: Reject -->
+                        <label class="relative flex items-center justify-between p-4 bg-white border border-gray-250 hover:border-red-300 rounded-xl cursor-pointer transition shadow-sm hover:shadow group">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="decision" value="rejected" class="w-4.5 h-4.5 text-red-600 focus:ring-red-500 border-gray-300 rounded-full" required>
+                                <div>
+                                    <span class="block text-sm font-extrabold text-gray-900 group-hover:text-red-800 transition-colors">Reject (Gagal)</span>
+                                    <span class="text-[10px] font-semibold text-gray-400">Archive / send rejection email</span>
+                                </div>
+                            </div>
+                            <span class="w-8 h-8 rounded-full bg-red-50 group-hover:bg-red-100 text-red-700 flex items-center justify-center font-bold text-sm">✕</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Notes / Reason -->
+                <div class="space-y-1.5">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest" id="lbl-fd-reason">Feedback / Offer Details</label>
+                    <textarea name="reason" id="fd-reason" rows="3" placeholder="Enter reason, next steps, or explanation..." class="w-full px-3 py-2 bg-white border border-gray-250 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-400 font-medium" required></textarea>
+                </div>
+
+                <!-- Decision Templates -->
+                <div id="fd-templates-section" class="space-y-1.5 hidden">
+                    <span class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest">Quick Templates</span>
+                    <div id="fd-templates-list" class="space-y-2 max-h-32 overflow-y-auto pr-1">
+                        <!-- Populated dynamically by JS -->
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="pt-2 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeFinalDecisionModal()" class="bg-white border border-gray-250 text-gray-700 font-semibold px-4 py-2 rounded-lg text-xs hover:bg-gray-50 transition shadow-sm">
+                        Cancel
+                    </button>
+                    <button type="submit" id="btn-submit-final-decision" class="bg-indigo-900 hover:bg-indigo-950 text-white font-bold px-4 py-2 rounded-lg text-xs transition shadow-md">
+                        Submit Decision
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

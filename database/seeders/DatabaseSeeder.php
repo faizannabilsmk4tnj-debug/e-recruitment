@@ -44,6 +44,9 @@ class DatabaseSeeder extends Seeder
 
             // 9. Notifikasi (FK ke users)
             NotificationsSeeder::class,
+
+            // 10. Data Pelamar Lengkap (Shin - 100% complete)
+            CompleteApplicantSeeder::class,
         ]);
     }
 }

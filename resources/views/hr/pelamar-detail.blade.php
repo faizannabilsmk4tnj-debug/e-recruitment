@@ -6,6 +6,12 @@
 
 @php
     $empty = 'Not specified';
+    $val = function($value) {
+        if ($value === null || $value === '' || $value === false || (is_string($value) && trim($value) === '')) {
+            return '<span class="text-gray-400 font-normal italic">Not specified</span>';
+        }
+        return e($value);
+    };
     $statusLabels = [
         'applied' => 'Submitted',
         'shortlisted' => 'Shortlisted',
@@ -110,12 +116,12 @@
             <section class="bg-white rounded-xl border border-gray-100 p-6">
                 <h3 class="text-lg font-bold text-gray-900 mb-5">Personal Information</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-                    <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">NIK</div><div class="text-sm font-semibold text-gray-900">{{ optional($profile)->nik ?? $empty }}</div></div>
+                    <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">NIK</div><div class="text-sm font-semibold text-gray-900">{!! $val(optional($profile)->nik) !!}</div></div>
                     <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Full Name</div><div class="text-sm font-semibold text-gray-900">{{ $user->name }}</div></div>
-                    <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Gender</div><div class="text-sm font-semibold text-gray-900">{{ optional($profile)->gender ? ucfirst($profile->gender) : $empty }}</div></div>
-                    <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Marital Status</div><div class="text-sm font-semibold text-gray-900">{{ optional($profile)->marital_status ? ucfirst($profile->marital_status) : $empty }}</div></div>
-                    <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Birth</div><div class="text-sm font-semibold text-gray-900">{{ collect([optional($profile)->birth_place, optional(optional($profile)->birth_date)->format('d M Y')])->filter()->implode(', ') ?: $empty }}</div></div>
-                    <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Age</div><div class="text-sm font-semibold text-gray-900">{{ $age }}</div></div>
+                    <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Gender</div><div class="text-sm font-semibold text-gray-900">{!! $val(optional($profile)->gender ? ucfirst($profile->gender) : null) !!}</div></div>
+                    <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Marital Status</div><div class="text-sm font-semibold text-gray-900">{!! $val(optional($profile)->marital_status ? ucfirst($profile->marital_status) : null) !!}</div></div>
+                    <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Birth</div><div class="text-sm font-semibold text-gray-900">{!! $val(collect([optional($profile)->birth_place, optional(optional($profile)->birth_date)->format('d M Y')])->filter()->implode(', ')) !!}</div></div>
+                    <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Age</div><div class="text-sm font-semibold text-gray-900">{!! $val($age !== 'N/A' ? $age : null) !!}</div></div>
                 </div>
             </section>
 
@@ -140,12 +146,18 @@
                         <div class="text-sm text-gray-500 mt-2">GPA: {{ $education->gpa ?? optional($profile)->gpa ?? $empty }}</div>
                     </div>
                 @empty
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
-                        <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Latest Education</div><div class="text-sm font-semibold text-gray-900">{{ optional($profile)->latest_education ? strtoupper($profile->latest_education) : $empty }}</div></div>
-                        <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">School / University</div><div class="text-sm font-semibold text-gray-900">{{ optional($profile)->school_name ?? $empty }}</div></div>
-                        <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Graduation</div><div class="text-sm font-semibold text-gray-900">{{ optional($profile)->education_completed_at ?? $empty }}</div></div>
-                        <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">GPA</div><div class="text-sm font-semibold text-gray-900">{{ optional($profile)->gpa ?? $empty }}</div></div>
-                    </div>
+                    @if(optional($profile)->school_name || optional($profile)->latest_education)
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+                            <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Latest Education</div><div class="text-sm font-semibold text-gray-900">{!! $val(optional($profile)->latest_education ? strtoupper($profile->latest_education) : null) !!}</div></div>
+                            <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">School / University</div><div class="text-sm font-semibold text-gray-900">{!! $val(optional($profile)->school_name) !!}</div></div>
+                            <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Graduation</div><div class="text-sm font-semibold text-gray-900">{!! $val(optional($profile)->education_completed_at) !!}</div></div>
+                            <div><div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">GPA</div><div class="text-sm font-semibold text-gray-900">{!! $val(optional($profile)->gpa) !!}</div></div>
+                        </div>
+                    @else
+                        <div class="bg-gray-50/50 border border-dashed border-gray-200 rounded-xl p-4 text-center">
+                            <p class="text-xs text-gray-400 font-medium italic">No education data recorded</p>
+                        </div>
+                    @endif
                 @endforelse
             </section>
 
@@ -155,11 +167,11 @@
                     <div class="bg-green-50/40 border border-green-100 rounded-xl p-5">
                         <h4 class="text-sm font-bold text-green-900 tracking-wider mb-4">ID Card Address</h4>
                         <div class="space-y-3 text-sm">
-                            <div><span class="font-semibold text-gray-900">Province:</span> {{ optional($profile)->ktp_province ?? $empty }}</div>
-                            <div><span class="font-semibold text-gray-900">City:</span> {{ optional($profile)->ktp_city ?? $empty }}</div>
-                            <div><span class="font-semibold text-gray-900">District:</span> {{ optional($profile)->ktp_district ?? $empty }}</div>
-                            <div><span class="font-semibold text-gray-900">Sub-district:</span> {{ optional($profile)->ktp_subdistrict ?? $empty }}</div>
-                            <div><span class="font-semibold text-gray-900">Address:</span> {{ optional($profile)->ktp_address ?? optional($profile)->address ?? $empty }}</div>
+                            <div><span class="font-semibold text-gray-900">Province:</span> {!! $val(optional($profile)->ktp_province) !!}</div>
+                            <div><span class="font-semibold text-gray-900">City:</span> {!! $val(optional($profile)->ktp_city) !!}</div>
+                            <div><span class="font-semibold text-gray-900">District:</span> {!! $val(optional($profile)->ktp_district) !!}</div>
+                            <div><span class="font-semibold text-gray-900">Sub-district:</span> {!! $val(optional($profile)->ktp_subdistrict) !!}</div>
+                            <div><span class="font-semibold text-gray-900">Address:</span> {!! $val(optional($profile)->ktp_address ?? optional($profile)->address) !!}</div>
                         </div>
                     </div>
                     <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
@@ -170,11 +182,11 @@
                             @endif
                         </div>
                         <div class="space-y-3 text-sm">
-                            <div><span class="font-semibold text-gray-900">Province:</span> {{ optional($profile)->dom_province ?? optional($profile)->province ?? $empty }}</div>
-                            <div><span class="font-semibold text-gray-900">City:</span> {{ optional($profile)->dom_city ?? optional($profile)->city ?? $empty }}</div>
-                            <div><span class="font-semibold text-gray-900">District:</span> {{ optional($profile)->dom_district ?? $empty }}</div>
-                            <div><span class="font-semibold text-gray-900">Sub-district:</span> {{ optional($profile)->dom_subdistrict ?? $empty }}</div>
-                            <div><span class="font-semibold text-gray-900">Address:</span> {{ optional($profile)->dom_address ?? optional($profile)->address ?? $empty }}</div>
+                            <div><span class="font-semibold text-gray-900">Province:</span> {!! $val(optional($profile)->dom_province ?? optional($profile)->province) !!}</div>
+                            <div><span class="font-semibold text-gray-900">City:</span> {!! $val(optional($profile)->dom_city ?? optional($profile)->city) !!}</div>
+                            <div><span class="font-semibold text-gray-900">District:</span> {!! $val(optional($profile)->dom_district) !!}</div>
+                            <div><span class="font-semibold text-gray-900">Sub-district:</span> {!! $val(optional($profile)->dom_subdistrict) !!}</div>
+                            <div><span class="font-semibold text-gray-900">Address:</span> {!! $val(optional($profile)->dom_address ?? optional($profile)->address) !!}</div>
                         </div>
                     </div>
                 </div>
@@ -192,7 +204,9 @@
                                 @if($work->description)<p class="text-sm text-gray-500 mt-2">{{ $work->description }}</p>@endif
                             </div>
                         @empty
-                            <p class="text-sm text-gray-400">No work experience added.</p>
+                            <div class="bg-gray-50/50 border border-dashed border-gray-200 rounded-xl p-4 text-center">
+                                <p class="text-xs text-gray-400 font-medium italic">No work experience recorded</p>
+                            </div>
                         @endforelse
                     </div>
 
@@ -205,7 +219,9 @@
                                 @if($org->description)<p class="text-sm text-gray-500 mt-2">{{ $org->description }}</p>@endif
                             </div>
                         @empty
-                            <p class="text-sm text-gray-400">No organization experience added.</p>
+                            <div class="bg-gray-50/50 border border-dashed border-gray-200 rounded-xl p-4 text-center">
+                                <p class="text-xs text-gray-400 font-medium italic">No organization experience recorded</p>
+                            </div>
                         @endforelse
                     </div>
 
@@ -215,7 +231,9 @@
                             @forelse($skills as $skill)
                                 <span class="text-xs font-semibold text-green-800 bg-green-50 border border-green-200 px-3 py-1 rounded-full">{{ $skill->skill_name }}</span>
                             @empty
-                                <span class="text-sm text-gray-400">No skills added.</span>
+                                <div class="bg-gray-50/50 border border-dashed border-gray-200 rounded-xl p-4 text-center w-full">
+                                    <p class="text-xs text-gray-400 font-medium italic">No skills recorded</p>
+                                </div>
                             @endforelse
                         </div>
                     </div>
@@ -436,7 +454,7 @@
             </button>
         </div>
 
-        <form id="form-interview" class="flex-1 flex flex-col">
+        <form id="form-interview" class="flex-1 flex flex-col min-h-0">
             @csrf
             <div class="flex-1 overflow-y-auto px-8 py-6 space-y-5">
                 <div>
@@ -936,16 +954,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         quickModal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
     };
 
     window.switchToInterviewModal = function() {
         closeQuickStatusModal();
         const interviewModal = document.getElementById('modal-jadwal');
-        if (interviewModal) interviewModal.classList.remove('hidden');
+        if (interviewModal) {
+            interviewModal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
     };
 
     window.closeQuickStatusModal = function() {
         quickModal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
     };
 
     window.toggleAdminOverride = function() {
@@ -1183,8 +1206,14 @@ document.addEventListener('DOMContentLoaded', function () {
     interviewMinute.addEventListener('change', triggerInterviewUpdate);
     interviewDuration.addEventListener('change', triggerInterviewUpdate);
 
-    const openModal = () => modal.classList.remove('hidden');
-    const closeModal = () => modal.classList.add('hidden');
+    const openModal = () => {
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    };
+    const closeModal = () => {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    };
 
     const btnInterview = document.getElementById('btn-action-interview');
     if (btnInterview) btnInterview.addEventListener('click', openModal);

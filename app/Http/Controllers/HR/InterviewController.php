@@ -23,6 +23,18 @@ class InterviewController extends Controller
     {
         $query = Interview::with(['application.user', 'application.job', 'scheduler', 'result.reviewer']);
 
+        // By default, hide interviews for decided applications (accepted/rejected)
+        // If show_decided is true, we display them but order them at the bottom
+        if ($request->get('show_decided') === '1') {
+            $query->join('applications', 'interviews.application_id', '=', 'applications.id')
+                  ->select('interviews.*')
+                  ->orderByRaw("CASE WHEN applications.status IN ('accepted', 'rejected') THEN 1 ELSE 0 END ASC");
+        } else {
+            $query->whereHas('application', function($q) {
+                $q->whereNotIn('status', ['accepted', 'rejected']);
+            });
+        }
+
         // Search candidate name or job title or email
         if ($request->filled('search')) {
             $search = $request->get('search');
@@ -64,7 +76,7 @@ class InterviewController extends Controller
             }
         }
 
-        $interviews = $query->orderBy('scheduled_at', 'desc')->paginate(10)->withQueryString();
+        $interviews = $query->orderBy('interviews.scheduled_at', 'desc')->paginate(10)->withQueryString();
 
         // Calculate statistics for cards
         $totalScheduled = Interview::where('status', 'scheduled')->count();
@@ -76,9 +88,11 @@ class InterviewController extends Controller
 
         $avgDuration = round(Interview::avg('duration_minutes') ?? 45);
 
-        // Fetch active applications for the schedule modal dropdown
-        $applications = Application::with(['user', 'job'])
-            ->whereIn('status', ['applied', 'shortlisted', 'interview'])
+        // Fetch applications for schedule modal:
+        // Hanya shortlisted + interview (termasuk yang sudah selesai interview, nanti di-disable di view)
+        $applications = Application::with(['user', 'job', 'interviews'])
+            ->whereIn('status', ['shortlisted', 'interview'])
+            ->whereHas('user')
             ->get();
 
         // Pending reschedule requests from applicants
@@ -244,8 +258,19 @@ class InterviewController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        // Check for schedule overlap
-        $overlap = self::checkOverlap($request->scheduled_at, $request->duration_minutes);
+        $application = Application::findOrFail($request->application_id);
+        $oldStatus = $application->status;
+
+        // Check if there is an existing scheduled interview for this application
+        $interview = Interview::where('application_id', $application->id)
+            ->where('status', 'scheduled')
+            ->first();
+
+        $isNew = !$interview;
+        $excludeId = $isNew ? null : $interview->id;
+
+        // Check for schedule overlap (excluding our own interview if we're updating it)
+        $overlap = self::checkOverlap($request->scheduled_at, $request->duration_minutes, $excludeId);
         if ($overlap['has_overlap']) {
             return response()->json([
                 'success' => false,
@@ -253,12 +278,12 @@ class InterviewController extends Controller
             ], 422);
         }
 
-        $application = Application::findOrFail($request->application_id);
-        $oldStatus = $application->status;
+        if ($isNew) {
+            $interview = new Interview();
+            $interview->application_id = $application->id;
+            $interview->scheduled_by = auth()->id() ?? 1;
+        }
 
-        $interview = new Interview();
-        $interview->application_id = $application->id;
-        $interview->scheduled_by = auth()->id() ?? 1;
         $interview->scheduled_at = $request->scheduled_at;
         $interview->duration_minutes = $request->duration_minutes;
         $interview->interview_type = $request->interview_type;
@@ -277,14 +302,26 @@ class InterviewController extends Controller
                 'changed_by' => auth()->id() ?? 1,
                 'old_status' => $oldStatus,
                 'new_status' => 'interview',
-                'reason' => 'Scheduled ' . $request->interview_type . ' interview via Management System.',
+                'reason' => ($isNew ? 'Scheduled ' : 'Updated schedule for ') . $request->interview_type . ' interview via Management System.',
+                'created_at' => now(),
+            ]);
+        } else {
+            // Log update/addition without status change
+            DB::table('application_status_logs')->insert([
+                'application_id' => $application->id,
+                'changed_by' => auth()->id() ?? 1,
+                'old_status' => 'interview',
+                'new_status' => 'interview',
+                'reason' => $isNew 
+                    ? ('Scheduled new interview: ' . $request->interview_type . ' interview via Management System.') 
+                    : ('Updated existing interview schedule to: ' . $request->interview_type . ' interview via Management System.'),
                 'created_at' => now(),
             ]);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Interview session scheduled successfully.'
+            'message' => $isNew ? 'Interview session scheduled successfully.' : 'Interview session schedule updated successfully.'
         ]);
     }
 

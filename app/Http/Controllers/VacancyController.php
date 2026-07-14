@@ -114,9 +114,11 @@ class VacancyController extends Controller
                 ->with('error', 'You do not have access privilege to apply for jobs.');
         }
 
-        if ($user->getProfileCompletionPercentage() < 75) {
+        $reqStatus = $user->getApplyRequirementsStatus();
+        if (!$reqStatus['eligible']) {
+            $msg = 'Please complete the following mandatory data before applying: ' . implode(', ', $reqStatus['missing']) . '.';
             return redirect()->route('pelamar.profil.edit')
-                ->with('error', 'Your profile completion is only ' . $user->getProfileCompletionPercentage() . '%. Please complete your profile data to at least 75% before applying for jobs.');
+                ->with('error', $msg);
         }
 
         // Check eligibility via Stored Function (fn_cek_kelayakan_melamar)
@@ -157,10 +159,12 @@ class VacancyController extends Controller
             ], 403);
         }
 
-        if ($user->getProfileCompletionPercentage() < 75) {
+        $reqStatus = $user->getApplyRequirementsStatus();
+        if (!$reqStatus['eligible']) {
+            $msg = 'Please complete the following mandatory data before applying: ' . implode(', ', $reqStatus['missing']) . '.';
             return response()->json([
                 'success' => false,
-                'message' => 'Your profile completion is only ' . $user->getProfileCompletionPercentage() . '%. Please complete your profile data to at least 75% before applying for jobs.'
+                'message' => $msg
             ], 422);
         }
 

@@ -67,10 +67,10 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button class="text-gray-400 hover:text-green-700 transition-colors" title="View">
+                            <button id="file-view" type="button" class="text-gray-400 hover:text-green-700 transition-colors" title="View">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
-                            <button id="file-remove" class="text-gray-400 hover:text-red-500 transition-colors" title="Delete">
+                            <button id="file-remove" type="button" class="text-gray-400 hover:text-red-500 transition-colors" title="Delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                             </button>
                         </div>
@@ -94,60 +94,71 @@
         <!-- RIGHT: Info Kontak & Submit -->
         <div class="w-80 shrink-0">
             <div class="bg-white rounded-xl border border-gray-200 p-6">
-                <div class="flex items-center gap-2 mb-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    <h2 class="font-bold text-gray-900">Contact Information</h2>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                    </div>
+                    <h2 class="font-bold text-gray-900">Application Summary</h2>
                 </div>
 
-                <div class="space-y-5">
-                    <div class="flex items-start gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        <div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Full Name</p>
-                            <p class="text-sm font-semibold text-gray-900 mt-0.5">{{ $user->name }}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                        <div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Email</p>
-                            <p class="text-sm font-semibold text-gray-900 mt-0.5">{{ $user->email }}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91"/></svg>
-                        <div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Phone Number</p>
-                            <p class="text-sm font-semibold text-gray-900 mt-0.5">{{ $profile->phone ?? $user->phone ?? '-' }}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                        <div>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Location</p>
-                            <p class="text-sm font-semibold text-gray-900 mt-0.5">
-                                @if(optional($profile)->city || optional($profile)->province)
-                                    {{ $profile->city ?? '' }}{{ $profile->city && $profile->province ? ', ' : '' }}{{ $profile->province ?? '' }}
-                                @else
-                                    -
-                                @endif
-                            </p>
-                        </div>
-                    </div>
+                <div class="border-b border-gray-150 pb-4 mb-4">
+                    <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Applying For</p>
+                    <p class="text-sm font-bold text-gray-900 mt-1 leading-snug">{{ $vacancy->title }}</p>
+                    <p class="text-xs text-green-700 font-semibold mt-0.5">PT Ecogreen Oleochemicals</p>
                 </div>
 
                 <!-- Actions -->
-                <div class="mt-8 space-y-3">
-                    <button id="btn-kirim" class="flex items-center justify-center gap-2 w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors">
+                <div class="space-y-3">
+                    <button id="btn-kirim" class="flex items-center justify-center gap-2 w-full bg-green-800 hover:bg-green-700 text-white font-semibold py-3 rounded-lg text-sm transition-colors shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                         Submit Application
                     </button>
-                    <button onclick="history.back()" class="w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg text-sm hover:bg-gray-50 transition-colors">
-                        Back to Edit
-                    </button>
                 </div>
 
-                <p class="text-xs text-gray-400 text-center mt-4 leading-relaxed">By clicking "Submit Application", you agree to the Privacy Policy of PT Ecogreen Oleochemicals.</p>
+                <p class="text-[11px] text-gray-400 text-center mt-4 leading-relaxed">By clicking "Submit Application", you agree to the Privacy Policy of PT Ecogreen Oleochemicals.</p>
+            </div>
+        </div>
+</div>
+
+<!-- CV Preview Modal -->
+<div id="preview-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-gray-900 bg-opacity-60 transition-opacity" id="preview-modal-backdrop"></div>
+
+    <!-- Modal panel -->
+    <div class="relative bg-white rounded-2xl overflow-hidden shadow-2xl transform transition-all max-w-4xl w-full h-[80vh] flex flex-col z-10">
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+            <div>
+                <h3 class="text-base font-bold text-gray-900" id="preview-modal-title">CV Preview</h3>
+                <p class="text-xs text-gray-500 mt-0.5" id="preview-modal-subtitle"></p>
+            </div>
+            <button id="close-preview-modal" type="button" class="text-gray-400 hover:text-gray-500 transition-colors p-1.5 hover:bg-gray-150 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Modal Body (Iframe) -->
+        <div class="flex-1 bg-gray-100 p-4 relative overflow-hidden flex items-center justify-center">
+            <iframe id="preview-iframe" class="w-full h-full rounded-lg border border-gray-250 hidden bg-white shadow-sm"></iframe>
+            <!-- fallback text for non-PDF files -->
+            <div id="preview-fallback" class="hidden text-center p-8">
+                <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h4 class="font-bold text-gray-800 text-base">Cannot Preview This File Format</h4>
+                <p class="text-sm text-gray-500 mt-2 max-w-md mx-auto">This file format is not supported for inline preview. Please review using the download button below instead.</p>
+                <a id="preview-download-fallback" href="#" download class="inline-flex items-center gap-2 mt-5 bg-green-800 hover:bg-green-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download File
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -162,8 +173,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const fileInfo = document.getElementById('file-info');
     const fileName = document.getElementById('file-name');
     const fileMeta = document.getElementById('file-meta');
+    const fileView = document.getElementById('file-view');
     const fileRemove = document.getElementById('file-remove');
     const resumeTitleInput = document.getElementById('resume-title');
+    let currentFileUrl = null;
 
     fileInput.addEventListener('change', function () {
         const file = this.files[0];
@@ -186,6 +199,12 @@ document.addEventListener('DOMContentLoaded', function () {
         uploadArea.classList.add('hidden');
         fileInfo.classList.remove('hidden');
 
+        // Revoke old URL if exists and create new Object URL for preview
+        if (currentFileUrl) {
+            URL.revokeObjectURL(currentFileUrl);
+        }
+        currentFileUrl = URL.createObjectURL(file);
+
         // Automatically set file name as resume title if it's empty
         if (!resumeTitleInput.value.trim()) {
             const nameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
@@ -197,7 +216,71 @@ document.addEventListener('DOMContentLoaded', function () {
         fileInput.value = '';
         fileInfo.classList.add('hidden');
         uploadArea.classList.remove('hidden');
+        if (currentFileUrl) {
+            URL.revokeObjectURL(currentFileUrl);
+            currentFileUrl = null;
+        }
     });
+
+    const previewModal = document.getElementById('preview-modal');
+    const closePreviewModal = document.getElementById('close-preview-modal');
+    const previewModalBackdrop = document.getElementById('preview-modal-backdrop');
+    const previewIframe = document.getElementById('preview-iframe');
+    const previewFallback = document.getElementById('preview-fallback');
+    const previewModalSubtitle = document.getElementById('preview-modal-subtitle');
+    const previewDownloadFallback = document.getElementById('preview-download-fallback');
+
+    function openModal() {
+        if (!currentFileUrl) return;
+        
+        const file = fileInput.files[0];
+        if (file) {
+            previewModalSubtitle.textContent = file.name + ' (' + (file.size / (1024 * 1024)).toFixed(2) + ' MB)';
+            
+            if (file.type === 'application/pdf') {
+                previewIframe.src = currentFileUrl;
+                previewIframe.classList.remove('hidden');
+                previewFallback.classList.add('hidden');
+            } else {
+                previewDownloadFallback.href = currentFileUrl;
+                previewDownloadFallback.download = file.name;
+                previewIframe.src = '';
+                previewIframe.classList.add('hidden');
+                previewFallback.classList.remove('hidden');
+            }
+        }
+
+        previewModal.classList.remove('hidden');
+        previewModal.classList.add('flex');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeModal() {
+        previewModal.classList.add('hidden');
+        previewModal.classList.remove('flex');
+        document.body.classList.remove('overflow-hidden');
+        previewIframe.src = '';
+    }
+
+    if (fileView) {
+        fileView.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (currentFileUrl) {
+                openModal();
+            } else {
+                alert('No file available for preview.');
+            }
+        });
+    }
+
+    if (closePreviewModal) {
+        closePreviewModal.addEventListener('click', closeModal);
+    }
+    if (previewModalBackdrop) {
+        previewModalBackdrop.addEventListener('click', closeModal);
+    }
+
+
 
     // Drag & drop
     uploadArea.addEventListener('dragover', function (e) {

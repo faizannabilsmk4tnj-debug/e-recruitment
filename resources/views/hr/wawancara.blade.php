@@ -56,6 +56,12 @@
                 </div>
             </div>
 
+            <!-- Schedule New Button -->
+            <a href="/hr/wawancara/daftar#new" class="bg-green-800 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-green-900 transition-colors shadow-sm flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                Schedule New
+            </a>
+
             <div class="flex items-center bg-gray-100 rounded-lg p-1 border border-gray-200 shadow-inner">
                 <a href="/hr/wawancara/daftar" class="px-3.5 py-1.5 text-xs font-bold text-gray-500 rounded-md hover:text-gray-900 transition-colors">List View</a>
                 <span class="px-3.5 py-1.5 text-xs font-bold text-green-900 bg-white shadow-sm rounded-md transition-colors">Month View</span>

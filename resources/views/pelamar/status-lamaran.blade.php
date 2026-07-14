@@ -199,16 +199,6 @@
                             <p class="font-bold text-sm text-gray-900">Application Submitted</p>
                             <p class="text-xs text-gray-400 mt-0.5">{{ $submittedDate->format('d M Y, H:i') }} WIB</p>
                             <p class="text-xs text-gray-500 mt-1 font-medium">Documents successfully uploaded and verified by the system.</p>
-                            
-                            @if($app->is_seen)
-                                <div class="mt-2 bg-blue-50/60 border border-blue-100 rounded-lg p-2.5 flex items-start gap-2 max-w-xs">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                                    <div>
-                                        <p class="text-[11px] font-bold text-blue-800">Opened by HR</p>
-                                        <p class="text-[10px] text-blue-600/80">HR has opened and is currently reviewing your documents.</p>
-                                    </div>
-                                </div>
-                            @endif
                         </div>
 
                         <!-- Step 2: Shortlisted (Only if they actually got shortlisted before withdrawing) -->
@@ -222,6 +212,18 @@
                                 <p class="text-xs text-gray-500 mt-1 font-medium">
                                     {{ $reviewedLog->reason ?? 'Your application has been shortlisted by the recruitment team.' }}
                                 </p>
+                            </div>
+                        @elseif($app->is_seen)
+                            <div class="relative">
+                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white"></div>
+                                <p class="font-bold text-sm text-blue-800">Review in Progress (Before Withdrawal)</p>
+                                <div class="mt-2 bg-blue-50/60 border border-blue-100 rounded-lg p-2.5 flex items-start gap-2 max-w-xs">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    <div>
+                                        <p class="text-[11px] font-bold text-blue-800">Opened by HR</p>
+                                        <p class="text-[10px] text-blue-600/80">HR had opened and was reviewing your documents.</p>
+                                    </div>
+                                </div>
                             </div>
                         @endif
 
@@ -245,16 +247,6 @@
                             <p class="font-bold text-sm text-gray-900">Application Submitted</p>
                             <p class="text-xs text-gray-400 mt-0.5">{{ $submittedDate->format('d M Y, H:i') }} WIB</p>
                             <p class="text-xs text-gray-500 mt-1 font-medium">Documents successfully uploaded and verified by the system.</p>
-                            
-                            @if($app->is_seen)
-                                <div class="mt-2 bg-blue-50/60 border border-blue-100 rounded-lg p-2.5 flex items-start gap-2 max-w-xs">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                                    <div>
-                                        <p class="text-[11px] font-bold text-blue-800">Opened by HR</p>
-                                        <p class="text-[10px] text-blue-600/80">HR has opened and is currently reviewing your documents.</p>
-                                    </div>
-                                </div>
-                            @endif
                         </div>
 
                         <!-- Step 2: Shortlisted ✓ -->
@@ -295,25 +287,29 @@
                             <p class="font-bold text-sm text-gray-900">Application Submitted</p>
                             <p class="text-xs text-gray-400 mt-0.5">{{ $submittedDate->format('d M Y, H:i') }} WIB</p>
                             <p class="text-xs text-gray-500 mt-1 font-medium">Documents successfully uploaded and verified by the system.</p>
-                            
-                            @if($app->is_seen)
-                                <div class="mt-2 bg-blue-50/60 border border-blue-100 rounded-lg p-2.5 flex items-start gap-2 max-w-xs">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                                    <div>
-                                        <p class="text-[11px] font-bold text-blue-800">Opened by HR</p>
-                                        <p class="text-[10px] text-blue-600/80">HR has opened and is currently reviewing your documents.</p>
-                                    </div>
-                                </div>
-                            @endif
                         </div>
 
                         <!-- Step 2: Shortlisted -->
                         @if(in_array($app->status, ['applied']))
                             <!-- Pending state -->
                             <div class="relative">
-                                <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
-                                <p class="font-bold text-sm text-gray-500">Shortlisted</p>
-                                <p class="text-xs text-gray-400 mt-0.5 italic">Awaiting shortlist selection by HR.</p>
+                                @if($app->is_seen)
+                                    <!-- Opened by HR (Review in progress) -->
+                                    <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white ring-4 ring-blue-100 animate-pulse"></div>
+                                    <p class="font-bold text-sm text-blue-800">Review in Progress</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Under Review</p>
+                                    <div class="mt-2 bg-blue-50/60 border border-blue-100 rounded-lg p-2.5 flex items-start gap-2 max-w-xs">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                        <div>
+                                            <p class="text-[11px] font-bold text-blue-800">Opened by HR</p>
+                                            <p class="text-[10px] text-blue-600/80">HR has opened and is currently reviewing your documents.</p>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="absolute -left-6 top-0.5 w-3.5 h-3.5 bg-gray-300 rounded-full border-2 border-white"></div>
+                                    <p class="font-bold text-sm text-gray-500">Shortlisted</p>
+                                    <p class="text-xs text-gray-400 mt-0.5 italic">Awaiting shortlist selection by HR.</p>
+                                @endif
                             </div>
                         @else
                             <!-- Completed state -->
@@ -442,7 +438,7 @@
                                                          @if($latestInterview->attendance_photo)
                                                              <a href="{{ $latestInterview->attendance_photo }}" target="_blank" class="mt-1 text-[10px] text-green-700 hover:text-green-800 underline font-semibold flex items-center gap-1">
                                                                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                                                                 View Selfie Photo
+                                                                 {{ $latestInterview->interview_type === 'online' ? 'View Zoom Screenshot' : 'View Selfie Photo' }}
                                                              </a>
                                                          @endif
                                                      </div>
@@ -712,6 +708,28 @@
                 <!-- Fallback input (capture="user" forces camera on mobile) -->
                 <input type="file" id="attendance_photo" accept="image/*" capture="user" class="hidden" onchange="previewFallbackPhoto(this)">
                 <canvas id="camera-canvas" class="hidden"></canvas>
+            </div>
+
+            <!-- Screenshot Upload field (only visible for online interviews) -->
+            <div id="hadir-screenshot-section" class="hidden mb-6">
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Upload Zoom / Google Meet Call Screenshot <span class="text-red-500">*</span></label>
+                
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-green-600 transition-colors" id="screenshot-upload-area" onclick="document.getElementById('screenshot_file').click()">
+                    <div id="screenshot-placeholder-content" class="space-y-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+                        </svg>
+                        <p class="text-xs font-bold text-gray-600">Click to upload Zoom screenshot</p>
+                        <p class="text-[10px] text-gray-400">PNG, JPG, or JPEG (Max 5MB)</p>
+                    </div>
+                    <div id="screenshot-preview-container" class="hidden relative">
+                        <img id="screenshot-preview-img" src="#" alt="Screenshot Preview" class="max-h-40 mx-auto rounded-lg object-contain border border-gray-200">
+                        <button type="button" class="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 shadow-md" onclick="removeUploadedScreenshot(event)">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <input type="file" id="screenshot_file" accept="image/*" class="hidden" onchange="previewScreenshotUpload(this)">
             </div>
 
             <input type="hidden" id="hadir-interview-id">
@@ -1174,10 +1192,14 @@ document.addEventListener('DOMContentLoaded', function () {
         // Toggle Photo section for offline interviews
         if (interviewType === 'offline') {
             document.getElementById('hadir-photo-section').classList.remove('hidden');
+            document.getElementById('hadir-screenshot-section').classList.add('hidden');
             capturedBlob = null;
             startCamera();
         } else {
             document.getElementById('hadir-photo-section').classList.add('hidden');
+            document.getElementById('hadir-screenshot-section').classList.remove('hidden');
+            capturedBlob = null;
+            removeUploadedScreenshot();
             if (cameraStream) {
                 cameraStream.getTracks().forEach(track => track.stop());
                 cameraStream = null;
@@ -1190,6 +1212,38 @@ document.addEventListener('DOMContentLoaded', function () {
         if (typeof event !== 'undefined') {
             event.stopPropagation();
         }
+    };
+
+    window.previewScreenshotUpload = function(input) {
+        const file = input.files[0];
+        if (file) {
+            capturedBlob = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const placeholder = document.getElementById('screenshot-placeholder-content');
+                const previewImg = document.getElementById('screenshot-preview-img');
+                const previewContainer = document.getElementById('screenshot-preview-container');
+                
+                previewImg.src = e.target.result;
+                placeholder.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        }
+    };
+
+    window.removeUploadedScreenshot = function(event) {
+        if (event) {
+            event.stopPropagation();
+        }
+        capturedBlob = null;
+        document.getElementById('screenshot_file').value = '';
+        
+        const placeholder = document.getElementById('screenshot-placeholder-content');
+        const previewContainer = document.getElementById('screenshot-preview-container');
+        
+        placeholder.classList.remove('hidden');
+        previewContainer.classList.add('hidden');
     };
 
     window.closeHadirModal = function() {
@@ -1211,9 +1265,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const btn = document.getElementById('btn-confirm-hadir');
         const interviewId = document.getElementById('hadir-interview-id').value;
         const isOffline = !document.getElementById('hadir-photo-section').classList.contains('hidden');
+        const isOnline = !document.getElementById('hadir-screenshot-section').classList.contains('hidden');
 
         if (isOffline && !capturedBlob) {
             alert('Please take a selfie photo first.');
+            return;
+        }
+
+        if (isOnline && !capturedBlob) {
+            alert('Please upload a screenshot of your Zoom/Google Meet call first.');
             return;
         }
         
@@ -1221,8 +1281,8 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
         
         const formData = new FormData();
-        if (isOffline && capturedBlob) {
-            const filename = capturedBlob.name || 'selfie.jpg';
+        if (capturedBlob) {
+            const filename = capturedBlob.name || 'attendance.jpg';
             formData.append('attendance_photo', capturedBlob, filename);
         }
         

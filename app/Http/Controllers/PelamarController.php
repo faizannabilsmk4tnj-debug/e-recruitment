@@ -139,7 +139,7 @@ class PelamarController extends Controller
             ], 422);
         }
 
-        // 2. Photo validation for Offline interviews
+        // 2. Photo/Screenshot validation based on interview type
         $photoUrl = null;
         if ($interview->interview_type === 'offline') {
             if (!$request->hasFile('attendance_photo')) {
@@ -148,7 +148,17 @@ class PelamarController extends Controller
                     'message' => 'Attendance proof photo (selfie at the location) is required for offline interviews.'
                 ], 422);
             }
-            
+        } else {
+            // Online interview
+            if (!$request->hasFile('attendance_photo')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Zoom/Google Meet call screenshot is required for online interviews.'
+                ], 422);
+            }
+        }
+
+        if ($request->hasFile('attendance_photo')) {
             $file = $request->file('attendance_photo');
             $filename = 'attendance_' . $interview->id . '_' . time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('attendance_photos', $filename, 'public');
