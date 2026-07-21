@@ -92,10 +92,14 @@ document.addEventListener('DOMContentLoaded', function () {
             input.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter') btnLogin.click();
             });
+            input.addEventListener('input', function () {
+                if (alertError) alertError.classList.add('hidden');
+            });
         });
     }
 
     function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        // Standard email validation regex
+        return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
     }
 });

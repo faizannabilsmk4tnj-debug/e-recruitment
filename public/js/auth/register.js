@@ -12,6 +12,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirmInput = document.getElementById('password_confirmation');
     const termsCheckbox = document.getElementById('terms');
 
+    // Clear errors dynamically on input
+    [namaInput, emailInput, passwordInput, confirmInput].forEach(input => {
+        if (input) {
+            input.addEventListener('input', function () {
+                input.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+                const parent = input.closest('.relative')?.parentElement || input.parentElement;
+                parent.querySelectorAll('.field-error').forEach(el => el.remove());
+            });
+        }
+    });
+
     if (btnRegister) {
         btnRegister.addEventListener('click', async function () {
             // Clear previous error styles
@@ -35,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showFieldError(emailInput, 'Email address is required.');
                 hasError = true;
             } else if (!isValidEmail(email)) {
-                showFieldError(emailInput, 'Invalid email format.');
+                showFieldError(emailInput, 'Invalid email format (e.g. example@gmail.com).');
                 hasError = true;
             }
 
@@ -99,7 +110,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // === Helpers ===
     function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        // Standard email validation regex
+        return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
     }
 
     function showFieldError(input, message) {
