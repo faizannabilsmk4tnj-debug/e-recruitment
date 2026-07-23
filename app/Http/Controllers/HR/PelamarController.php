@@ -11,6 +11,7 @@ use App\Models\Education;
 use App\Models\WorkExperience;
 use App\Models\OrganizationExperience;
 use App\Models\ApplicantSkill;
+use App\Models\Portofolio;
 use App\Models\UserProfile;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
@@ -266,6 +267,7 @@ class PelamarController extends Controller
         $educations    = Education::where('user_id', $user->id)->orderByDesc('start_year')->get();
         $organizations = OrganizationExperience::where('user_id', $user->id)->orderByDesc('start_date')->get();
         $skills        = ApplicantSkill::where('user_id', $user->id)->get();
+        $portos        = Portofolio::where('user_id', $user->id)->get();
 
         // Try to fetch primary template or fallback to first
         $template = CvTemplate::where('status', 'published')->orderByDesc('is_default')->first();
@@ -305,7 +307,25 @@ class PelamarController extends Controller
                 $type, $accentColor,
                 $name, $initials, $position,
                 $email, $phone, $city, $province, $linkedin, $bio,
-                $works, $educations, $organizations, $skills
+                $works, $educations, $organizations, $skills, $portos
+            );
+        }
+
+        if (!in_array('certificates', $blockTypes)) {
+            $blocksHtml .= $this->renderBlockHtml(
+                'certificates', $accentColor,
+                $name, $initials, $position,
+                $email, $phone, $city, $province, $linkedin, $bio,
+                $works, $educations, $organizations, $skills, $portos
+            );
+        }
+
+        if (!in_array('portfolio', $blockTypes)) {
+            $blocksHtml .= $this->renderBlockHtml(
+                'portfolio', $accentColor,
+                $name, $initials, $position,
+                $email, $phone, $city, $province, $linkedin, $bio,
+                $works, $educations, $organizations, $skills, $portos
             );
         }
 
@@ -675,7 +695,7 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
         string $type, string $accent,
         string $name, string $initials, string $position,
         string $email, string $phone, string $city, string $province, string $linkedin, string $bio,
-        $works, $educations, $organizations, $skills
+        $works, $educations, $organizations, $skills, $portos = null
     ): string {
         switch ($type) {
             case 'header':
@@ -803,6 +823,85 @@ body{margin:0;background:#fff;display:flex;flex-direction:column;align-items:cen
                         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
                              color:' . $accent . ';margin-bottom:8px">Skills</div>
                         <div style="display:flex;flex-wrap:wrap;gap:4px">' . $inner . '</div>
+                    </div>
+                </div>';
+
+            case 'certificates':
+                $inner = '';
+                $hasCerts = false;
+                if ($skills && $skills->count()) {
+                    foreach ($skills as $s) {
+                        if ($s->cert_name || $s->cert_file_path) {
+                            $hasCerts = true;
+                            $certTitle = e($s->cert_name ?: $s->skill_name . ' Certificate');
+                            $skillTag = e($s->skill_name);
+                            $imgHtml = '';
+                            if ($s->cert_file_path) {
+                                $ext = strtolower(pathinfo($s->cert_file_path, PATHINFO_EXTENSION));
+                                $fileUrl = asset('storage/' . $s->cert_file_path);
+                                if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'])) {
+                                    $imgHtml = '<div style="margin-top:6px;"><img src="' . $fileUrl . '" alt="' . $certTitle . '" style="max-width:100%;max-height:180px;border-radius:6px;border:1px solid #e2e8f0;object-fit:contain;"></div>';
+                                } else {
+                                    $imgHtml = '<div style="margin-top:4px;"><a href="' . $fileUrl . '" target="_blank" style="font-size:10px;color:#15803d;text-decoration:underline;">📄 View Certificate File (' . strtoupper($ext) . ')</a></div>';
+                                }
+                            }
+                            $inner .= '<div style="margin-bottom:12px;padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;">
+                                    <div style="font-size:11px;font-weight:700;color:#1e293b;">📜 ' . $certTitle . '</div>
+                                    <span style="font-size:9px;background:#e2e8f0;color:#334155;padding:1px 6px;border-radius:4px;">' . $skillTag . '</span>
+                                </div>
+                                ' . $imgHtml . '
+                            </div>';
+                        }
+                    }
+                }
+                if (!$hasCerts) return '';
+                return '<div class="blk" data-type="certificates">
+                    <div style="padding:16px 28px">
+                        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+                             color:' . $accent . ';margin-bottom:10px;border-bottom:1.5px solid ' . $accent . ';padding-bottom:4px">Certificates & Credentials</div>
+                        ' . $inner . '
+                    </div>
+                </div>';
+
+            case 'portfolio':
+                if (!$portos || $portos->isEmpty()) return '';
+                $inner = '';
+                foreach ($portos as $p) {
+                    $pTitle = e($p->title);
+                    $pDesc = e($p->description ?? '');
+                    $pLink = $p->link_url ? e($p->link_url) : '';
+                    $pFile = $p->file_url;
+                    
+                    $linkHtml = '';
+                    if ($pLink) {
+                        $linkHtml = '<div style="margin-top:4px;font-size:10px;"><a href="' . $pLink . '" target="_blank" style="color:#2563eb;text-decoration:underline;word-break:break-all;">🔗 ' . $pLink . '</a></div>';
+                    }
+
+                    $imgHtml = '';
+                    if ($pFile) {
+                        $ext = strtolower(pathinfo($pFile, PATHINFO_EXTENSION));
+                        $fileUrl = asset('storage/' . $pFile);
+                        if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'])) {
+                            $imgHtml = '<div style="margin-top:6px;"><img src="' . $fileUrl . '" alt="' . $pTitle . '" style="max-width:100%;max-height:220px;border-radius:6px;border:1px solid #e2e8f0;object-fit:contain;"></div>';
+                        } else {
+                            $imgHtml = '<div style="margin-top:4px;"><a href="' . $fileUrl . '" target="_blank" style="font-size:10px;color:#15803d;text-decoration:underline;">📁 View Portfolio File (' . strtoupper($ext) . ')</a></div>';
+                        }
+                    }
+
+                    $inner .= '<div style="margin-bottom:14px;padding:10px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;">
+                        <div style="font-size:12px;font-weight:700;color:#0f172a;">💼 ' . $pTitle . '</div>
+                        ' . ($pDesc ? '<p style="font-size:10px;color:#475569;margin:4px 0;line-height:1.5;">' . $pDesc . '</p>' : '') . '
+                        ' . $imgHtml . '
+                        ' . $linkHtml . '
+                    </div>';
+                }
+
+                return '<div class="blk" data-type="portfolio">
+                    <div style="padding:16px 28px">
+                        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+                             color:' . $accent . ';margin-bottom:10px;border-bottom:1.5px solid ' . $accent . ';padding-bottom:4px">Portfolio & Projects</div>
+                        ' . $inner . '
                     </div>
                 </div>';
 

@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function isValidEmail(email) {
-        // Standard email validation regex
-        return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+        // Enforce valid email format with trusted email providers (.com)
+        return /^[a-zA-Z0-9._%+-]+@(gmail|yahoo|ymail|outlook|hotmail|live|icloud|ecogreen)\.com$/i.test(email);
     }
 });

@@ -28,16 +28,16 @@ class ApplicantProfileController extends Controller
         $validated = $request->validate([
             'nik' => ['nullable', 'digits:16'],
             'name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', 'max:150', Rule::unique('users', 'email')->ignore($user->id)],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'email' => ['required', 'string', 'email', 'max:150', 'regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo|ymail|outlook|hotmail|live|icloud|ecogreen)\.com$/i', Rule::unique('users', 'email')->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'max:20', 'regex:/^[\d\+\-\s\(\)]+$/'],
             'gender' => ['nullable', Rule::in(['male', 'female'])],
-            'birth_place' => ['nullable', 'string', 'max:100'],
+            'birth_place' => ['required', 'string', 'max:100', 'regex:/^(?=(?:.*[a-zA-Z]){2,})[a-zA-Z\s\.\,\'-]+$/i'],
             'birth_date' => ['nullable', 'date', 'before:today'],
             'marital_status' => ['nullable', Rule::in(['single', 'married', 'divorced'])],
             'latest_education' => ['nullable', Rule::in(['sma', 'd3', 's1', 's2', 's3'])],
             'school_name' => ['nullable', 'string', 'max:150'],
             'education_completed_at' => ['nullable', 'date_format:Y-m'],
-            'gpa' => ['nullable', 'string', 'max:20'],
+            'gpa' => ['nullable', 'numeric', 'min:0', 'max:4.00'],
             'ktp_province' => ['nullable', 'string', 'max:100'],
             'ktp_city' => ['nullable', 'string', 'max:100'],
             'ktp_district' => ['nullable', 'string', 'max:100'],
@@ -49,6 +49,15 @@ class ApplicantProfileController extends Controller
             'dom_subdistrict' => ['nullable', 'string', 'max:100'],
             'dom_address' => ['nullable', 'string', 'max:255'],
             'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+        ], [
+            'nik.digits' => 'NIK must be 16 digits.',
+            'email.regex' => 'Invalid email domain. Please use a trusted provider (e.g. @gmail.com, @yahoo.com, @outlook.com).',
+            'phone.regex' => 'The phone number format is invalid.',
+            'birth_place.required' => 'Place of birth is required.',
+            'birth_place.regex' => 'Place of birth must contain a valid location name.',
+            'gpa.numeric' => 'GPA must be a valid number.',
+            'gpa.min' => 'GPA cannot be less than 0.00.',
+            'gpa.max' => 'GPA cannot exceed 4.00.',
         ]);
 
         try {

@@ -94,8 +94,14 @@
     <div class="grid grid-cols-2 gap-x-8 gap-y-5 mb-10">
         <!-- NIK -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">NIK (National ID Number)</label>
-            <input type="text" id="nik" name="nik" value="{{ old('nik', $profile?->nik) }}" placeholder="Enter 16-digit NIK" maxlength="16" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+            <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-sm font-medium text-gray-700">NIK (National ID Number)</label>
+                <span id="nik-error" class="text-xs font-semibold text-red-500 hidden">NIK harus 16 digit</span>
+            </div>
+            <input type="text" id="nik" name="nik" value="{{ old('nik', $profile?->nik) }}" placeholder="Enter 16-digit NIK" maxlength="16" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all @error('nik') border-red-500 @enderror">
+            @error('nik')
+                <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+            @enderror
         </div>
         <!-- Nama Lengkap -->
         <div>
@@ -114,19 +120,35 @@
         <!-- Nomor Telepon -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1.5">Phone Number</label>
-            <input type="tel" id="telepon" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="+62 812 3456 7890" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+            <input type="tel" id="telepon" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="+62 812 3456 7890" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all @error('phone') border-red-500 @enderror">
+            @error('phone')
+                <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+            @enderror
         </div>
         <!-- Email Address -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
-            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" placeholder="email@example.com" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" placeholder="email@example.com" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all @error('email') border-red-500 @enderror">
+            @error('email')
+                <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+            @enderror
         </div>
         <!-- Tempat/Tanggal Lahir -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1.5">Place / Date of Birth</label>
             <div class="grid grid-cols-2 gap-3">
-                <input type="text" id="tempat-lahir" name="birth_place" value="{{ old('birth_place', $profile?->birth_place) }}" placeholder="City" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
-                <input type="date" id="tanggal-lahir" name="birth_date" value="{{ old('birth_date', optional($profile?->birth_date)->format('Y-m-d')) }}" autocomplete="off" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <div>
+                    <input type="text" id="tempat-lahir" name="birth_place" value="{{ old('birth_place', $profile?->birth_place) }}" placeholder="City / Location" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all @error('birth_place') border-red-500 @enderror">
+                    @error('birth_place')
+                        <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <input type="date" id="tanggal-lahir" name="birth_date" value="{{ old('birth_date', optional($profile?->birth_date)->format('Y-m-d')) }}" autocomplete="off" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all @error('birth_date') border-red-500 @enderror">
+                    @error('birth_date')
+                        <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
         </div>
         <!-- Umur -->
@@ -175,8 +197,14 @@
                 <input type="month" id="selesai-pendidikan" name="education_completed_at" value="{{ old('education_completed_at', $profile?->education_completed_at) }}" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">GPA / Average Score</label>
-                <input type="text" id="ipk" name="gpa" value="{{ old('gpa', $profile?->gpa) }}" placeholder="Example: 3.75 / 4.00" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <div class="flex items-center justify-between mb-1.5">
+                    <label class="block text-sm font-medium text-gray-700">GPA / Average Score</label>
+                    <span id="gpa-error" class="text-xs font-semibold text-red-500 hidden">Maksimal 4.00</span>
+                </div>
+                <input type="text" id="ipk" name="gpa" value="{{ old('gpa', $profile?->gpa) }}" placeholder="Example: 3.75" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all @error('gpa') border-red-500 @enderror">
+                @error('gpa')
+                    <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                @enderror
             </div>
         </div>
     </div>

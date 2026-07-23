@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showFieldError(emailInput, 'Email address is required.');
                 hasError = true;
             } else if (!isValidEmail(email)) {
-                showFieldError(emailInput, 'Invalid email format (e.g. example@gmail.com).');
+                showFieldError(emailInput, 'Invalid email domain. Please use a trusted provider (e.g. @gmail.com, @yahoo.com, @outlook.com).');
                 hasError = true;
             }
 
@@ -110,8 +110,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // === Helpers ===
     function isValidEmail(email) {
-        // Standard email validation regex
-        return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+        // Enforce valid email format with trusted email providers (.com)
+        return /^[a-zA-Z0-9._%+-]+@(gmail|yahoo|ymail|outlook|hotmail|live|icloud|ecogreen)\.com$/i.test(email);
     }
 
     function showFieldError(input, message) {

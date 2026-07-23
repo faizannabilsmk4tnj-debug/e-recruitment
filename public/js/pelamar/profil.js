@@ -91,10 +91,59 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const nikInput = document.getElementById('nik');
+    const nikErrorSpan = document.getElementById('nik-error');
     if (nikInput) {
-        nikInput.addEventListener('input', function () {
-            this.value = this.value.replace(/\D/g, '').slice(0, 16);
+        function validateNikLength() {
+            const val = nikInput.value.replace(/\D/g, '').slice(0, 16);
+            nikInput.value = val;
+            if (val.length > 0 && val.length < 16) {
+                if (nikErrorSpan) {
+                    nikErrorSpan.textContent = `NIK harus 16 digit (${val.length}/16)`;
+                    nikErrorSpan.classList.remove('hidden');
+                }
+                nikInput.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+            } else {
+                if (nikErrorSpan) {
+                    nikErrorSpan.classList.add('hidden');
+                }
+                nikInput.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+            }
+        }
+        nikInput.addEventListener('input', validateNikLength);
+        validateNikLength();
+    }
+
+    const teleponInput = document.getElementById('telepon');
+    if (teleponInput) {
+        teleponInput.addEventListener('input', function () {
+            this.value = this.value.replace(/[^\d\+\-\s\(\)]/g, '');
         });
+    }
+
+    const ipkInput = document.getElementById('ipk');
+    const gpaErrorSpan = document.getElementById('gpa-error');
+    if (ipkInput) {
+        function validateGpa() {
+            const valStr = ipkInput.value.replace(',', '.').trim();
+            if (!valStr) {
+                if (gpaErrorSpan) gpaErrorSpan.classList.add('hidden');
+                ipkInput.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+                return;
+            }
+            const valNum = parseFloat(valStr);
+            if (isNaN(valNum) || valNum < 0 || valNum > 4.00) {
+                if (gpaErrorSpan) {
+                    gpaErrorSpan.textContent = valNum > 4.00 ? 'Maksimal 4.00' : 'IPK tidak valid';
+                    gpaErrorSpan.classList.remove('hidden');
+                }
+                ipkInput.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+            } else {
+                if (gpaErrorSpan) gpaErrorSpan.classList.add('hidden');
+                ipkInput.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+            }
+        }
+        ipkInput.addEventListener('input', validateGpa);
+        validateGpa();
     }
 
     const btnSimpan = document.getElementById('btn-simpan');

@@ -16,6 +16,13 @@ class AuthController extends Controller
 
     public function loginApplicant(Request $request)
     {
+        if (!filter_var($request->email, FILTER_VALIDATE_EMAIL) || !preg_match('/^[a-zA-Z0-9._%+-]+@(gmail|yahoo|ymail|outlook|hotmail|live|icloud|ecogreen)\.com$/i', $request->email ?? '')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid email domain. Please use a trusted provider (e.g. @gmail.com, @yahoo.com, @outlook.com).'
+            ]);
+        }
+
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
@@ -50,6 +57,13 @@ class AuthController extends Controller
 
     public function loginHr(Request $request)
     {
+        if (!filter_var($request->email, FILTER_VALIDATE_EMAIL) || !preg_match('/^[a-zA-Z0-9._%+-]+@(gmail|yahoo|ymail|outlook|hotmail|live|icloud|ecogreen)\.com$/i', $request->email ?? '')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid email domain. Please use a trusted provider (e.g. @gmail.com, @yahoo.com, @outlook.com).'
+            ]);
+        }
+
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
@@ -94,12 +108,13 @@ class AuthController extends Controller
     {
         $validator = \Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo|ymail|outlook|hotmail|live|icloud|ecogreen)\.com$/i'],
             'password' => 'required|string|min:8|confirmed',
         ], [
             'nama.required' => 'Full name is required.',
             'email.required' => 'Email is required.',
             'email.email' => 'Invalid email format.',
+            'email.regex' => 'Invalid email domain. Please use a trusted provider (e.g. @gmail.com, @yahoo.com, @outlook.com).',
             'email.unique' => 'Email is already registered.',
             'password.required' => 'Password is required.',
             'password.min' => 'Password must be at least 8 characters.',

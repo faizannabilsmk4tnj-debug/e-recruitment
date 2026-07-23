@@ -263,6 +263,82 @@
                 </div>
             </div>
 
+            {{-- Uploaded Supporting Documents (KU-56) --}}
+            <div id="uploaded-docs-section" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-50">
+                    <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider">Uploaded Documents</h3>
+                    <span class="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full">Included in Export</span>
+                </div>
+
+                <div class="space-y-4">
+                    {{-- Certs List --}}
+                    @php
+                        $certSkills = $skills->filter(fn($s) => !empty($s->cert_file_path) || !empty($s->cert_name));
+                    @endphp
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-2">Certificates ({{ $certSkills->count() }})</p>
+                        @if($certSkills->count() > 0)
+                            <div class="space-y-2">
+                                @foreach($certSkills as $cs)
+                                    <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-100 text-xs">
+                                        <div class="flex items-center gap-2 overflow-hidden">
+                                            <span class="text-base">📜</span>
+                                            <div class="truncate">
+                                                <p class="font-bold text-gray-800 truncate">{{ $cs->cert_name ?: $cs->skill_name . ' Cert' }}</p>
+                                                <p class="text-[10px] text-gray-500">{{ $cs->skill_name }}</p>
+                                            </div>
+                                        </div>
+                                        @if($cs->cert_file_path)
+                                            <a href="{{ asset('storage/'.$cs->cert_file_path) }}" target="_blank" class="text-[10px] font-bold text-green-700 hover:underline shrink-0 ml-2">View File ↗</a>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-xs text-gray-400 italic">No certificates uploaded yet.</p>
+                        @endif
+                    </div>
+
+                    {{-- Portfolio List --}}
+                    <div class="pt-2 border-t border-gray-100">
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-2">Portfolio Items ({{ $portos->count() }})</p>
+                        @if($portos->count() > 0)
+                            <div class="space-y-2">
+                                @foreach($portos as $p)
+                                    <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-100 text-xs">
+                                        <div class="flex items-center gap-2 overflow-hidden">
+                                            <span class="text-base">💼</span>
+                                            <div class="truncate">
+                                                <p class="font-bold text-gray-800 truncate">{{ $p->title }}</p>
+                                                <p class="text-[10px] text-gray-500 truncate">
+                                                    @if($p->file_url && $p->link_url)
+                                                        File & Link Attached
+                                                    @elseif($p->file_url)
+                                                        File Attached
+                                                    @elseif($p->link_url)
+                                                        Link Attached
+                                                    @endif
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2 shrink-0 ml-2">
+                                            @if($p->file_url)
+                                                <a href="{{ asset('storage/'.$p->file_url) }}" target="_blank" class="text-[10px] font-bold text-green-700 hover:underline">File ↗</a>
+                                            @endif
+                                            @if($p->link_url)
+                                                <a href="{{ $p->link_url }}" target="_blank" class="text-[10px] font-bold text-blue-600 hover:underline">Link ↗</a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-xs text-gray-400 italic">No portfolio items uploaded yet.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
             {{-- Tips Profesional --}}
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 shadow-sm">
                 <div class="flex items-start gap-3">
